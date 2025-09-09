@@ -9,7 +9,7 @@ If you find one, please report it to the #future-game-design thread for this gam
 ## Required Software
 
 - BizHawk: [Bizhawk Releases from TASVideos](https://tasvideos.org/BizHawk/ReleaseHistory)
-  - Version 2.10 is recommended
+  - Version 2.10+ is recommended
   - **Important**: Upon opening the emulator for the first time, go to `Config > Customize... > Advanced` 
     and **disable** `AutoSaveRam`. Else, save data might not be properly saved.
   - Detailed installation instructions for BizHawk can be found at the above link.
@@ -22,11 +22,9 @@ If you find one, please report it to the #future-game-design thread for this gam
 ## Optional Software
 
 - BizhHawk Client w/ Universal Tracker: 
-  - [BizHawk Client w/ Universal Tracker Version 1.3.0](https://github.com/Rurusachi/Archipelago/releases/tag/BizhawkUT_1.3.0) —
-    There is no Poptracker pack for this apworld at the moment, however there is
-    limited map support for Universal Tracker. **Requires**: Latest compatible version of [Universal Tracker](https://github.com/FarisTheAncient/Archipelago/releases/tag/Tracker_v0.2.14).
-  - Both Universal Tracker and the BizHawk Client w/ Universal Tracker apworlds must be added to your `custom_worlds`
-    folder in your Archipelago install. They should not be in `lib/worlds`.
+  - BizHawk Client w/ Universal Tracker — There is no Poptracker pack for this apworld at the moment, however there is limited map support for Universal Tracker. **Requires**: Latest compatible version of Universal Tracker.
+  - Both Universal Tracker and the BizHawk Client w/ Universal Tracker apworlds must be added to your `custom_worlds` folder in your Archipelago install. They should not be in `lib/worlds`.
+  - Visit the `Universal Tracker` channel in the Archipelago Discord server for links to both apworld releases.
 
 ## Generating and Patching a Game
 
