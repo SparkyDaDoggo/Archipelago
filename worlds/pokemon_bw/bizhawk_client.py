@@ -25,7 +25,7 @@ class PokemonBWClient(BizHawkClient):
     patch_suffix = (".apblack", ".apwhite")
 
     ram_read_write_domain = "Main RAM"
-    rom_read_only_domain = "File on Disk"  # Doesn't work :(
+    rom_read_only_domain = "ROM"  # Only works on BizHawk 2.10+
     flags_amount = 2912
     flag_bytes_amount = math.ceil(flags_amount/8)
     dex_amount = 650
@@ -58,7 +58,6 @@ class PokemonBWClient(BizHawkClient):
         self.missing_flag_loc_ids: list[list[int]] = [[] for _ in range(self.flags_amount)]
         self.missing_dex_flag_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.save_data_address = 0
-        self.received_items_count = 0
         self.goal_checking_method: Callable[["PokemonBWClient", "BizHawkClientContext"],
                                             Coroutine[Any, Any, bool]] | None = None
         self.logger = logging.getLogger("Client")
@@ -118,7 +117,13 @@ class PokemonBWClient(BizHawkClient):
         to have passed your validator when this function is called, and the emulator is very likely to be connected."""
 
         try:
-            if not ctx.server or not ctx.server.socket.open or ctx.server.socket.closed or self.debug_halt:
+            if (
+                not ctx.server or
+                not ctx.server.socket.open or
+                ctx.server.socket.closed or
+                ctx.slot_data is None or
+                self.debug_halt
+            ):
                 return
             read = await bizhawk.read(
                 ctx.bizhawk_ctx, (

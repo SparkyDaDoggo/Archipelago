@@ -1,6 +1,15 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.2.2
+
+This update was published after 0.3.2, thereby including a few retroactive bug fixes and QoL things:
+- Fixed rare(?) BizHawk client crashing due to slotdata not being received yet
+- Fixed items getting lost after soft resetting after receiving an item after the last save
+- Made key items and other important items get checked and re-added if not in save file after connecting
+- Fixed TM/HM checking NPC not showing up when pokemon_master is chosen as the goal
+- Changed the item description of a few non-vanilla key items
+
 ## 0.2.1
 
 - Fixed UT not working
