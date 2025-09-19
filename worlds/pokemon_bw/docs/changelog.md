@@ -10,6 +10,12 @@ This update was published after 0.3.2, thereby including a few retroactive bug f
 - Fixed TM/HM checking NPC not showing up when pokemon_master is chosen as the goal
 - Changed the item description of a few non-vanilla key items
 
+New fixes:
+- Fixed fossils not being revivable after the Plasma grunts stole the Dragon Skull
+- Fixed Professor Juniper ignoring the national dex for hre TM rewards
+- Fixed Professor Juniper not always being in the lab
+- Fixed Champion goal triggering after fighting Ghetsis
+
 ## 0.2.1
 
 - Fixed UT not working

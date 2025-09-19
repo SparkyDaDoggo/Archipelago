@@ -37,11 +37,11 @@ def get_method(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> Callab
 
 
 async def defeat_ghetsis(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> bool:
-    return client.flags_cache[2400//8] & 1 != 0
+    return client.flags_cache[0x1D3//8] & 8 != 0
 
 
 async def become_champion(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> bool:
-    return client.flags_cache[2427//8] & 8 != 0
+    return client.flags_cache[0x1D4//8] & 16 != 0
 
 
 async def defeat_cynthia(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> bool:

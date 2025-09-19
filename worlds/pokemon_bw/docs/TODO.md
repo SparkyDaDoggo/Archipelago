@@ -25,15 +25,8 @@
 - incorrect evolution logic, give warning in release notes
 - case insensitivity for all optionsets, by making new class with overridden methods and have everything inheriting from that
 - add detected rom header in patching process if wrong
-
-# 0.2.2
-
-important bug fixing update
-- fossils not revivable under certain conditions
-- fix pokemon master goal (see fixes from 0.3.x)
-- juniper only checking regional dex for locations before obtaining the national dex
-- juniper not always in lab?
-- champion goal sending goal even after fighting ghetsis
+- reduce different forms weight in randomization
+- remove arceus types
 
 # 0.4.0
 
