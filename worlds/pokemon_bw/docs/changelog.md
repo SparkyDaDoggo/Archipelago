@@ -1,6 +1,10 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.2.3
+
+- Fixed certain AP-only NPCs not showing up in save files that were affected by a bug from before 0.2.2
+
 ## 0.2.2
 
 This update was published after 0.3.2, thereby including a few retroactive bug fixes and QoL things:

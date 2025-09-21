@@ -36,6 +36,16 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
                  client.ram_read_write_domain),
             )
         )
+        client.flags_cache[0x192 // 8] |= 4
+    else:
+        await bizhawk.write(
+            ctx.bizhawk_ctx, (
+                (client.save_data_address+client.flags_offset+(0x192//8),
+                 [client.flags_cache[0x192//8] & 251],
+                 client.ram_read_write_domain),
+            )
+        )
+        client.flags_cache[0x192 // 8] &= 251
     if ctx.slot_data["options"]["season_control"] == "vanilla":
         await bizhawk.write(
             ctx.bizhawk_ctx, (
@@ -44,15 +54,25 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
                  client.ram_read_write_domain),
             )
         )
-    elif ctx.slot_data["options"]["season_control"] == "randomized":
-        for network_item in ctx.items_received:
-            name = ctx.item_names.lookup_in_game(network_item.item)
-            if name in seasons.table:
-                await bizhawk.write(
-                    ctx.bizhawk_ctx, (
-                        (client.save_data_address+client.var_offset+(2*0xC1),
-                         [seasons.table[name].var_value],
-                         client.ram_read_write_domain),
+        client.flags_cache[0x193 // 8] |= 8
+    else:
+        await bizhawk.write(
+            ctx.bizhawk_ctx, (
+                (client.save_data_address+client.flags_offset+(0x193//8),
+                 [client.flags_cache[0x193//8] & 247],
+                 client.ram_read_write_domain),
+            )
+        )
+        client.flags_cache[0x193 // 8] &= 247
+        if ctx.slot_data["options"]["season_control"] == "randomized":
+            for network_item in ctx.items_received:
+                name = ctx.item_names.lookup_in_game(network_item.item)
+                if name in seasons.table:
+                    await bizhawk.write(
+                        ctx.bizhawk_ctx, (
+                            (client.save_data_address+client.var_offset+(2*0xC1),
+                             [seasons.table[name].var_value],
+                             client.ram_read_write_domain),
+                        )
                     )
-                )
-                break
+                    break
