@@ -126,7 +126,7 @@ class PokemonBWWorld(World):
                         setattr(self.options, key, opt.from_any(value))
                 self.seed = re_ge_slot_data["seed"]
                 loaded_ut_version = re_ge_slot_data.get("ut_compatibility", (0, 3, 2))
-                if version.ut() != re_ge_slot_data["ut_compatibility"]:
+                if version.ut() != loaded_ut_version:
                     logging.warning("UT compatibility mismatch detected. You can continue tracking with this "
                                     "apworld version, but tracking might not be entirely accurate.")
 

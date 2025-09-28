@@ -1,6 +1,10 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.7
+
+- Fixed updating past 0.3.3 leading to UT crashing
+
 ## 0.3.6
 
 - Added evolutions to extended Dexsanity hints
