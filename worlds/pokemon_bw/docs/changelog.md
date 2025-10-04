@@ -1,6 +1,10 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.8
+
+- Fixed Master Ball sellers not working if the multiworld was generated before 0.3.4
+
 ## 0.3.7
 
 - Fixed updating past 0.3.3 leading to UT crashing

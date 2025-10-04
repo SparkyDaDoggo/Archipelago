@@ -45,20 +45,21 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
                     break
 
     master_ball_cost: int = ctx.slot_data["master_ball_seller_cost"]
+    seller_modifiers = [mod.casefold() for mod in ctx.slot_data["options"]["master_ball_seller"]]
     await client.write_var(ctx, 0xF2, master_ball_cost)
-    if "ns castle" in ctx.slot_data["options"]["master_ball_seller"]:
+    if "ns castle" in seller_modifiers:
         await client.write_set_flag(ctx, 0x1CF)
     else:
         await client.write_unset_flag(ctx, 0x1CF)
-    if "pc" in ctx.slot_data["options"]["master_ball_seller"]:
+    if "pc" in seller_modifiers:
         await client.write_set_flag(ctx, 0x1D1)
     else:
         await client.write_unset_flag(ctx, 0x1D1)
-    if "cherens mom" in ctx.slot_data["options"]["master_ball_seller"]:
+    if "cherens mom" in seller_modifiers:
         await client.write_set_flag(ctx, 0x1D2)
     else:
         await client.write_unset_flag(ctx, 0x1D2)
-    if "undella mansion seller" in ctx.slot_data["options"]["master_ball_seller"]:
+    if "undella mansion seller" in seller_modifiers:
         await client.write_set_flag(ctx, 0x1D0)
     else:
         await client.write_unset_flag(ctx, 0x1D0)
