@@ -23,11 +23,11 @@ without stopping multiworld genration.
 
 Every entry consists of 3 to 5 arguments:
 - `map` determines which map (i.e. which encounter table) this entry should be placed into. 
-  You can find a list of all map names on [this site](data/maps.md).
+  You can find a list of all map names on [this site](encounter%20plando%20maps.md).
   The map names must match the names on that site exactly (except for casing).
 - `seasons`/`season` is an optional argument that determines which season(s) this entry should be placed into. 
   However, not all maps support different encounters for different seasons. 
-  You can find a list of all map supporting different seasons on [this site](data/maps.md).
+  You can find a list of all map supporting different seasons on [this site](encounter%20plando%20maps.md).
   If the map does not support different seasons, you **have to omit** this argument.
   Else, you can either write a single season or a list of seasons.
 - `method` determines which encounter method this entry should be placed into. 
@@ -38,14 +38,14 @@ Every entry consists of 3 to 5 arguments:
 - `slots`/`slot` is an optional argument that determines the exact slot(s) of the entry in the specified method.
   You can either put in a single number, a list of numbers, or omit this argument.
   If omitted, this entry will be placed into all slots of the specified method.
-  See [this site](data/slot%20values.md) for further information on allowed values.
+  See [this site](encounter%20plando%20slot%20values.md) for further information on allowed values.
 - `species` determines which species should be placed into the specified slot(s).
   You can either put in a single species name or a list of species names.
   `None` can be used (preferably in lists) to make the generator not plando any species into the specified slot(s).
   If multiple species are provided, a random one out of them is chosen.
   Writing the same species multiple times is allowed and can increase its chance of being chosen over 
   the other species in the list.
-  See [this site](data/species.md) for a list of all species names.
+  See [this site](encounter%20plando%20species.md) for a list of all species names.
   Note that different forms have different names, e.g. Unown (A)/(B)/...
 
 Specifying a slot that does not exist in the game (e.g. `Grass` slots in Striaton City) will not have any effect

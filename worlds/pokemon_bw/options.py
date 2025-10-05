@@ -32,7 +32,7 @@ class CasefoldOptionSet(OptionSet):
 
     def __init__(self, value: typing.Iterable[str]):
         self.value = set(val.casefold() for val in value)
-        super(OptionSet, self).__init__()
+        super(OptionSet, self).__init__()  # To make it not call super.__init__? Not sure
 
     def __contains__(self, item: str):
         return item.casefold() in self.value
@@ -733,6 +733,7 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
 class ShuffleBadgeRewards(Choice):
     """
     Determines how gym badges are randomized and what items gym badge locations can have.
+    This option might not be entirely strict (depending on other options and worlds).
     - **Vanilla** - Gym badges will stay at their vanilla locations.
     - **Shuffle** - Gym badges are shuffled between the gym leaders.
     - **Any badge** - Puts the badges into the item pool, while only allowing items that have the word "badge" in their name (which also applies to gym badges of other games/worlds) being placed at gym leaders.
@@ -749,6 +750,7 @@ class ShuffleBadgeRewards(Choice):
 class ShuffleTMRewards(Choice):
     """
     Determines what items NPCs, who would normally give TMs or HMs, can have.
+    This option might not be entirely strict (depending on other options and worlds).
     - **Shuffle** - These NPCs will always give a TM or HM from the same world.
     - **HM with Badge** - Like "Shuffle", but puts each HM (and TM70 Flash) at a gym leader's badge reward (including the TM from Clay on route 6).
     - **Any TM/HM** - These NPCs will give any item that starts with "TM" or "HM" followed by any digit (which also applies to TMs and HMs of other games/worlds).

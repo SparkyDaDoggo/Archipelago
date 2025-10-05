@@ -79,7 +79,7 @@ table: dict[str, FlagLocationData] = {
     "Castelia City - Item from manager in Café Sonata": FlagLocationData(164, always_default, "Castelia City", None, None),
     "Castelia City - Item from Iris in Plasma hideout": FlagLocationData(0x199, always_default, "Castelia City", None, None),
     "Castelia City - Item from dancers": FlagLocationData(0x196, always_default, "Castelia City", None, None),
-    "Castelia City - Item from scientist in building in northern street": FlagLocationData(328, always_default, "Castelia City", None, has_25_species),
+    "Castelia City - Item from scientist in northern street for seeing 20 species": FlagLocationData(328, always_default, "Castelia City", None, has_25_species),
     # The rom editor cannot decompile the script for the Passerby Analytics HQ properly
     # "Passerby Analytics HQ - Item for answering all questionnaires": FlagLocationData(0000000, always_default, "Castelia City", None, None),
     # I think this one requires connecting with other save files too
@@ -210,7 +210,7 @@ table: dict[str, FlagLocationData] = {
     # "Opelucid City - Item from NPC for showing a pokémon knowing Charge from opposite version": FlagLocationData(0000000, always_default, "Opelucid City", None, None),
     "Opelucid City - Item from Professor Juniper": FlagLocationData(0x1B1, always_default, "Opelucid City", None, None),
     "Route 10 - Item from veteran near northern bridge": FlagLocationData(263, always_default, "Route 10", None, None),
-    "Route 10 - Item from Bianka #1": FlagLocationData(0x1B2, always_default, "Route 10", None, None),
-    "Route 10 - Item from Bianka #2": FlagLocationData(0x1B2, always_default, "Route 10", None, None),
+    "Route 10 - Item from Bianca #1": FlagLocationData(0x1B2, always_default, "Route 10", None, None),
+    "Route 10 - Item from Bianca #2": FlagLocationData(0x1B2, always_default, "Route 10", None, None),
     "N's Castle - Item from grunt in 3F left room": FlagLocationData(362, always_default, "N's Castle", None, None),
 }

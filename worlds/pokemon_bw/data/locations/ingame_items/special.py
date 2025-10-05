@@ -4,9 +4,8 @@ from ..rules import *
 from ..progress_type import *
 from ... import FlagLocationData, TMLocationData
 
-no_surf: Callable[[str], bool] = lambda name: "HM03" not in name
-no_cut: Callable[[str], bool] = lambda name: "HM01" not in name
-no_surf_and_waterfall: Callable[[str], bool] = lambda name: "HM03" not in name and "HM05" not in name
+# What if Rood gets Cut and Fennel gets Surf? That would be a guaranteed "unreachable locations
+no_hm: Callable[[str], bool] = lambda name: not (len(name) > 2 and name[:2].lower() == "hm" and name[2].isdigit())
 
 gym_badges: dict[str, FlagLocationData] = {
     "Striaton Gym - Badge reward": FlagLocationData(0x172, key_item_location, "Striaton City", None, None),
@@ -34,8 +33,8 @@ tm_hm_ncps: dict[str, TMLocationData] = {
     "Nuvema Town - TM from Professor Juniper for seeing 25 species": TMLocationData(174, always_default, "Nuvema Town", None, None, has_25_species),
     "Nuvema Town - TM from Professor Juniper for seeing 60 species": TMLocationData(175, always_default, "Nuvema Town", None, None, has_60_species),
     "Nuvema Town - TM from Professor Juniper for seeing 115 species": TMLocationData(176, always_default, "Nuvema Town", None, None, has_115_species),
-    "Route 18 - TM from sage Rood": TMLocationData(0x186, always_default, "Route 18", None, no_surf, can_beat_ghetsis),
-    "Striaton City - TM from Fennel": TMLocationData(0x18D, always_default, "Striaton City", None, no_cut, None),
+    "Route 18 - TM from sage Rood": TMLocationData(0x186, always_default, "Route 18", None, no_hm, can_beat_ghetsis),
+    "Striaton City - TM from Fennel": TMLocationData(0x18D, always_default, "Striaton City", None, None, None),
     "Dreamyard - TM from sage Gorm": TMLocationData(0x19A, always_default, "Dreamyard South", None, None, None),
     "Pinwheel Forest Outside - TM from woman near Nacrene City": TMLocationData(271, always_default, "Pinwheel Forest Outside", None, None, None),
     "Castelia City - TM from hiker in building in Castelia Street": TMLocationData(265, always_default, "Castelia City", None, None, None),
@@ -56,7 +55,7 @@ tm_hm_ncps: dict[str, TMLocationData] = {
     "Route 8 - TM from western parasol lady": TMLocationData(258, always_default, "Route 8", None, None, None),
     "Tubeline Bridge - TM from battle girl": TMLocationData(260, always_default, "Tubeline Bridge", None, None, None),
     "Route 9 - TM from infielder": TMLocationData(0x1A9, always_default, "Route 9", None, None, None),
-    "Route 14 - TM from sage Giallo": TMLocationData(0x1AD, always_default, "Route 14", None, no_surf_and_waterfall, can_use_waterfall),
+    "Route 14 - TM from sage Giallo": TMLocationData(0x1AD, always_default, "Route 14", None, no_hm, can_use_waterfall),
     "Undella Town - TM from girl": TMLocationData(346, always_default, "Undella Town", None, None, None),
     "Route 13 - TM from Wingull": TMLocationData(0x1AE, always_default, "Route 13", None, None, has_all_grams),
 }

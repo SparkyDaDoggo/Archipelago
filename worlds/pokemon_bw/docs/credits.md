@@ -1,11 +1,27 @@
-### Contributors
+## Contributors
+
+### Main development
 
 - BlastSlimey
 - SparkyDaDoggo / Eevee658
-- palex00
-- Various users in the #future-game-design thread
 
-### Resources
+### Universal Tracker integration
+
+- palex00
+- RadisNoir
+- darkfire
+- Darvitz
+
+### Other contributions
+
+- Darvitz
+- Seatori
+
+### Testing and bug reporting
+
+- Various users in the #future-game-design thread and custom games channel
+
+## Resources
 
 - Bulbapedia (various contributors)
 - Action Replay cheat codes (various contributors)

@@ -6,18 +6,25 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ### Content and QoL
 
 - Added `Modify Levels` option (expanded from v0.3.99 pre-release)
-  - Method 1 (how it will be shown on Webhost):
+  - Simple method (how it will be shown on Webhost):
     - Encounter types: `Trainer`, `Wild`
     - Modes: `Multiply`, `Add`, `Power`
-  - Method 2 (cannot be shown on Webhost, but with more capabilities)
-    - Same as method 1, but accepts multiple chained calculations
+  - Advanced method (cannot be shown on Webhost, but with more capabilities)
+    - Same as simple, but accepts multiple chained calculations
 - Made `Randomize` automatically being included in wild and trainer pokémon randomization if other modifiers are included (@Darvitz2)
 - Added many more maps for UT tracking and auto-tabbing
 
-### Bug fixes
+### Bug fixes and technical stuff
 
 - Fixed `Pokémon Randomization Adjustments` crashing when given an empty dictionary
 - Fixed Wellspring Cave B1F not being considered in `Require Flash` logic modifier (@Seatori)
+- Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
+- Fixed badge and TM/HM locations not being excludable or prioritizable
+- Changed some locations' names
+- Added a missing hidden item location in Chargestone Cave B2F
+- Fixed "Striaton City - TM from Fennel" not being able to contain an HM with certain potions
+- Reduced frequency of different forms of the same pokémon in randomization
+- Fixed season-dependant locations not being excluded when wild pokémon are randomized
 
 ## 0.3.999 (pre-release)
 
@@ -29,6 +36,10 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added `Modify Levels` option
   - Modes: `Multiply`, `Add`, `Power`
   - Encounter types: Trainer, Wild
+
+## 0.3.8
+
+- Fixed Master Ball sellers not working if the multiworld was generated before 0.3.4
 
 ## 0.3.7
 

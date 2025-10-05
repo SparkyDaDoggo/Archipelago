@@ -68,6 +68,10 @@ Version 1.0.0 will happen when certain important features are implemented.
 - Randomization Blacklist
   - Wild pokémon
   - Trainer pokémon
+- Modify Levels option
+  - Simple method, shown on Webhost
+  - Advanced method, more capabilities
+- UT auto-tabbing
 
 ### Another update #1: Pokédex stuff
 

@@ -114,7 +114,7 @@
 {"name": "Castelia City - Item from Iris in Plasma hideout"},
 {"name": "Castelia City - Item from manager in Café Sonata"},
 {"name": "Castelia City - Item from scientist at Thumb Pier"},
-{"name": "Castelia City - Item from scientist in building in northern street"},
+{"name": "Castelia City - Item from scientist in northern street for seeing 20 species"},
 {"name": "Castelia City - Item in Plasma hideout"},
 {"name": "Castelia City - TM from hiker in building in Castelia Street"},
 {"name": "Castelia City - TM from man in black behind dumpster"},
@@ -202,7 +202,8 @@
 {"name": "Chargestone Cave - B1F east hidden item"},
 {"name": "Chargestone Cave - B1F north item"},
 {"name": "Chargestone Cave - B1F west hidden item"},
-{"name": "Chargestone Cave - B2F hidden item"},
+{"name": "Chargestone Cave - B2F east hidden item"},
+{"name": "Chargestone Cave - B2F west hidden item"},
 {"name": "Chargestone Cave - B2F north east item"},
 {"name": "Chargestone Cave - B2F south east item"},
 {"name": "Chargestone Cave - B2F south west item"},
@@ -474,11 +475,11 @@
 {"name": "Mistralton Cave - 2F south east hidden item"},
 {"name": "Mistralton Cave - 2F south item"},
 {"name": "Mistralton Cave - 2F south west hidden item"},
-{"name": "Mistralton Cave - 3F north east hidden item"},
-{"name": "Mistralton Cave - 3F north east item"},
-{"name": "Mistralton Cave - 3F north west hidden item"},
-{"name": "Mistralton Cave - 3F north west item"},
-{"name": "Mistralton Cave - 3F south west item"}
+{"name": "Guidance Chamber - North east hidden item"},
+{"name": "Guidance Chamber - North east item"},
+{"name": "Guidance Chamber - North west hidden item"},
+{"name": "Guidance Chamber - North west item"},
+{"name": "Guidance Chamber - South west item"}
         ],
         "map_locations": [
             {
@@ -743,8 +744,8 @@
         "sections": [
 {"name": "Route 10 - Center item"},
 {"name": "Route 10 - Hidden item on western cliff"},
-{"name": "Route 10 - Item from Bianka #1"},
-{"name": "Route 10 - Item from Bianka #2"},
+{"name": "Route 10 - Item from Bianca #1"},
+{"name": "Route 10 - Item from Bianca #2"},
 {"name": "Route 10 - Item from veteran near northern bridge"},
 {"name": "Route 10 - Item in dark grass #1"},
 {"name": "Route 10 - Item in dark grass #2"},

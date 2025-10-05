@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 def generate_wild_encounters(world: "PokemonBWWorld",
                              species_checklist: tuple[list[str], set[str]],
                              slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
-    from ...data.pokemon.species import by_name, by_id
+    from ...data.pokemon.species import by_name, by_id, forms_by_dex, get_weighted_random_species
     from ...data.locations.encounters.slots import table
     from .checklist import check_species
 
@@ -100,27 +100,27 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 continue
             break
 
-    any_species = [name for name in by_name]
-    any_species_by_type: dict[str, list[str]] = {}
-    for s in any_species:
-        for t in (by_name[s].type_1, by_name[s].type_2):
-            if t not in any_species_by_type:
-                any_species_by_type[t] = [s]
-            else:
-                any_species_by_type[t].append(s)
+    any_species_by_type: dict[str, dict[int, list[tuple[str, "SpeciesData"]]]] = {}
+    for forms_list in forms_by_dex.values():
+        for spe, data in forms_list:
+            for typ in (data.type_1, data.type_2):
+                if typ not in any_species_by_type:
+                    any_species_by_type[typ] = {data.dex_number: [(spe, data)]}
+                elif data.dex_number not in any_species_by_type[typ]:
+                    any_species_by_type[typ][data.dex_number] = [(spe, data)]
+                else:
+                    any_species_by_type[typ][data.dex_number].append((spe, data))
     for slot in itertools.chain(logic_slots, other_slots):
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
         region = table[slot].encounter_region
         area = region[:region.index(" - ")]
         while True:
-            species_name = world.random.choice(any_species)
-            species_data = by_name[species_name]
+            species_data = get_weighted_random_species(world.random, forms_by_dex)[1]
             if type_themed:
                 if area not in area_types:
                     area_types[area] = world.random.choice((species_data.type_1, species_data.type_2))
                 elif area_types[area] not in (species_data.type_1, species_data.type_2):
-                    species_name = world.random.choice(any_species_by_type[area_types[area]])
-                    species_data = by_name[species_name]
+                    species_data = get_weighted_random_species(world.random, any_species_by_type[area_types[area]])[1]
             if similar_base_stats:
                 random_stats = stats_total(species_data)
                 vanilla_stats = stats_total(by_name[by_id[versioned_species(table[slot])]])

@@ -30,7 +30,7 @@ mapping_single: dict[int, int] = {
     107 + 1024: 27,  # => "mistraltoncity_w"
     16: 28,  # => "nacrenecity"
     62: 29,  # => "nimbasacity"
-    63: 30,  # => "nimbasacityeast"
+    64: 30,  # => "nimbasacityeast"
     389: 31,  # => "nuvematown"
     120: 32,  # => "opelucidcity_b"
     120 + 1024: 33,  # => "opelucidcity_w"
@@ -150,6 +150,7 @@ mapping_single: dict[int, int] = {
 mapping_range: dict[range, int] = {
     range_incl(356, 364): 0,  # BADGE GATES, overworld
     range_incl(30, 40): 22,  # => "casteliacity"
+    range_incl(136, 146): 0,  # POKÉMON LEAGUE, overworld
     range_incl(241, 245): 38,  # => "abyssalruins1f"
     range_incl(167, 181): 104,  # => "reliccastlemaze"
 }

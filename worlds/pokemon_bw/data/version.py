@@ -20,7 +20,7 @@ compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
     (0, 3, 6): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
     (0, 3, 7): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
     (0, 3, 99): VersionCompatibility((0, 3, 99), (0, 3, 99), (0, 3, 6)),
-    (0, 3, 200): VersionCompatibility((0, 3, 99), (0, 3, 200), (0, 3, 6)),
+    (0, 3, 999): VersionCompatibility((0, 3, 99), (0, 3, 200), (0, 3, 6)),
     (0, 4, 0): VersionCompatibility((0, 4, 0), (0, 4, 0), (0, 4, 0)),
 }
 

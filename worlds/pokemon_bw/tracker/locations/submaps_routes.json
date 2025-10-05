@@ -83,7 +83,7 @@
 {"sections": [{"name": "Shopping Mall Nine - Item from worker"},{"name": "Shopping Mall Nine - Item in storage room"}], "map_locations": [{"map": "route9", "x": 388, "y": 116}]},
 {"sections": [{"name": "Route 10 - Center item"}], "map_locations": [{"map": "route10", "x": 488, "y": 242}]},
 {"sections": [{"name": "Route 10 - Hidden item on western cliff"}], "map_locations": [{"map": "route10", "x": 120, "y": 228}]},
-{"sections": [{"name": "Route 10 - Item from Bianka #1"},{"name": "Route 10 - Item from Bianka #2"}], "map_locations": [{"map": "route10", "x": 824, "y": 328}]},
+{"sections": [{"name": "Route 10 - Item from Bianca #1"},{"name": "Route 10 - Item from Bianca #2"}], "map_locations": [{"map": "route10", "x": 824, "y": 328}]},
 {"sections": [{"name": "Route 10 - Item from veteran near northern bridge"}], "map_locations": [{"map": "route10", "x": 264, "y": 184}]},
 {"sections": [{"name": "Route 10 - Item in dark grass #1"}], "map_locations": [{"map": "route10", "x": 456, "y": 16}]},
 {"sections": [{"name": "Route 10 - Item in dark grass #2"}], "map_locations": [{"map": "route10", "x": 504, "y": 28}]},

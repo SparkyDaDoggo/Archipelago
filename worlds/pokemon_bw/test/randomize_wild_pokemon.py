@@ -7,6 +7,10 @@ class PokemonBWTestBase(WorldTestBase):
     game = "Pokemon Black and White"
 
 
+class TestRandomizeWildPokemonSimple(PokemonBWTestBase):
+    options = {"randomize_wild_pokemon": ["Randomize"]}
+
+
 class TestRandomizeWildPokemonCustom(PokemonBWTestBase):
     options = {"randomize_wild_pokemon": [
         "Randomize",
