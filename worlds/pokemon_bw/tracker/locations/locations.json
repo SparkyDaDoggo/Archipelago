@@ -81,6 +81,26 @@
                 "map": "overworld",
                 "x": 496,
                 "y": 136
+            },
+            {
+                "map": "undellabay",
+                "x": 536,
+                "y": 680
+            },
+            {
+                "map": "undellabay",
+                "x": 296,
+                "y": 392
+            },
+            {
+                "map": "undellabay",
+                "x": 536,
+                "y": 168
+            },
+            {
+                "map": "undellabay",
+                "x": 776,
+                "y": 392
             }
         ]
     },
@@ -108,6 +128,11 @@
                 "map": "overworld",
                 "x": 14,
                 "y": 61
+            },
+            {
+                "map": "nimbasacity",
+                "x": 616,
+                "y": 672
             }
         ]
     },
@@ -162,6 +187,11 @@
                 "map": "overworld",
                 "x": 108,
                 "y": 100
+            },
+            {
+                "map": "route7",
+                "x": 152,
+                "y": 128
             }
         ]
     },
@@ -188,6 +218,11 @@
                 "map": "overworld",
                 "x": 234,
                 "y": 98
+            },
+            {
+                "map": "route9",
+                "x": 204,
+                "y": 408
             }
         ]
     },
@@ -339,6 +374,11 @@
                 "map": "overworld",
                 "x": 478,
                 "y": 236
+            },
+            {
+                "map": "striatoncity",
+                "x": 1112,
+                "y": 96
             }
         ]
     },
@@ -390,6 +430,11 @@
                 "map": "overworld",
                 "x": 396,
                 "y": 62
+            },
+            {
+                "map": "route13",
+                "x": 768,
+                "y": 16
             }
         ]
     },
@@ -619,11 +664,6 @@
                 "map": "overworld",
                 "x": 264,
                 "y": 182
-            },
-            {
-                "map": "nimbasacity",
-                "x": 616,
-                "y": 672
             }
         ]
     },
@@ -879,11 +919,6 @@
                 "map": "overworld",
                 "x": 414,
                 "y": 112
-            },
-            {
-                "map": "giantchasmentrance",
-                "x": 200,
-                "y": 326
             }
         ]
     },
@@ -1093,11 +1128,6 @@
                 "map": "overworld",
                 "x": 113,
                 "y": 160
-            },
-            {
-                "map": "route6",
-                "x": 120,
-                "y": 16
             }
         ]
     },
@@ -1117,11 +1147,6 @@
                 "map": "overworld",
                 "x": 102,
                 "y": 118
-            },
-            {
-                "map": "route7",
-                "x": 152,
-                "y": 128
             }
         ]
     },
@@ -1164,11 +1189,6 @@
                 "map": "overworld",
                 "x": 244,
                 "y": 86
-            },
-            {
-                "map": "route9",
-                "x": 204,
-                "y": 408
             }
         ]
     },
@@ -1210,11 +1230,6 @@
                 "map": "overworld",
                 "x": 456,
                 "y": 236
-            },
-            {
-                "map": "striatoncity",
-                "x": 1112,
-                "y": 96
             }
         ]
     },
@@ -1288,26 +1303,6 @@
                 "map": "overworld",
                 "x": 473,
                 "y": 136
-            },
-            {
-                "map": "undellabay",
-                "x": 536,
-                "y": 680
-            },
-            {
-                "map": "undellabay",
-                "x": 296,
-                "y": 392
-            },
-            {
-                "map": "undellabay",
-                "x": 536,
-                "y": 168
-            },
-            {
-                "map": "undellabay",
-                "x": 776,
-                "y": 392
             }
         ]
     },
