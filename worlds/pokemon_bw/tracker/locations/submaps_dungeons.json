@@ -112,7 +112,7 @@
 {"sections": [{"name": "Desert Resort - Hidden item near tower"}], "map_locations": [{"map": "desertresort", "x": 456, "y": 196}]},
 {"sections": [{"name": "Desert Resort - Item between Relic Castle entrances"}], "map_locations": [{"map": "desertresort", "x": 600, "y": 306}]},
 {"sections": [{"name": "Desert Resort - Item from man in black"}], "map_locations": [{"map": "desertresort", "x": 1096, "y": 504}]},
-{"sections": [{"name": "Desert Resort - Item from Professor Juniper"}], "map_locations": [{"map": "desertresort", "x": 872, "y": 242}]},
+{"sections": [{"name": "Desert Resort - Item from Professor Juniper"}], "map_locations": [{"map": "desertresort", "x": 872, "y": 274}]},
 {"sections": [{"name": "Desert Resort - Item from ranger Jaden"}], "map_locations": [{"map": "desertresort", "x": 152, "y": 744}]},
 {"sections": [{"name": "Desert Resort - Item from ranger Mylene"}], "map_locations": [{"map": "desertresort", "x": 344, "y": 680}]},
 {"sections": [{"name": "Desert Resort - North east hidden item"}], "map_locations": [{"map": "desertresort", "x": 1194, "y": 162}]},
