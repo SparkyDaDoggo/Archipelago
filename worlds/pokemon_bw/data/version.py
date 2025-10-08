@@ -7,18 +7,19 @@ class VersionCompatibility(NamedTuple):
     ut: tuple[int, int, int]
 
 
-version: tuple[int, int, int] = (0, 3, 8)
+version: tuple[int, int, int] = (0, 3, 9)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
-    (0, 3, 0): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0)),
-    (0, 3, 1): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0)),
-    (0, 3, 2): VersionCompatibility((0, 3, 0), (0, 3, 2), (0, 3, 2)),
-    (0, 3, 3): VersionCompatibility((0, 3, 0), (0, 3, 3), (0, 3, 2)),
-    (0, 3, 4): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 2)),
-    (0, 3, 5): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 2)),
-    (0, 3, 6): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
-    (0, 3, 7): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
+    (0, 3, 9): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9)),
     (0, 3, 8): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
+    (0, 3, 7): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
+    (0, 3, 6): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
+    (0, 3, 5): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 2)),
+    (0, 3, 4): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 2)),
+    (0, 3, 3): VersionCompatibility((0, 3, 0), (0, 3, 3), (0, 3, 2)),
+    (0, 3, 2): VersionCompatibility((0, 3, 0), (0, 3, 2), (0, 3, 2)),
+    (0, 3, 1): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0)),
+    (0, 3, 0): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0)),
 }
 
 

@@ -22,6 +22,7 @@ region_list: set[str] = {
     "Route 3",
     "Wellspring Cave Entrance",
     "Wellspring Cave Inner",  # behind water
+    "Wellspring Cave B1F",
     "Nacrene City",
     "Pinwheel Forest Outside",
     "Pinwheel Forest West",  # area accessible in main story

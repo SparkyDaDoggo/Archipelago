@@ -1,6 +1,13 @@
 # Important stuff
 
 
+# 0.3.10
+
+- fix nacrene city sequence break
+- New document just for roadblocks and other important stuff because rom changes doc does not list all roadblocks
+- ut auto-tabbing
+- maybe reusable tms actually possible? but definitely with restrictions
+
 # 0.4.0
 
 - somehow account for excluded locations in shuffle badges/tms

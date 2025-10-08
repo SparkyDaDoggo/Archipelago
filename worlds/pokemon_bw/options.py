@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import settings
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, OptionSet, Range, Toggle,
-                     PlandoTexts, OptionError, Option, OptionCounter)
+                     PlandoTexts, OptionError, Option, OptionCounter, StartInventoryPool)
 
 if typing.TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -956,7 +956,8 @@ class ModifyLogic(CasefoldOptionSet):
     - **Prioritize key item locations** - Marks locations, that normally contain key items (which also includes
                                           badge rewards in gyms), as priority locations, making them mostly contain
                                           progressive items.
-    - **Require Flash** - Makes Mistralton Cave and Challenger's Cave logically require TM70 Flash.
+    - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the basement of Wellspring Cave
+                          logically require TM70 Flash.
     """
     display_name = "Modify Item Pool"
     valid_keys_casefold = True
@@ -1084,6 +1085,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     # wonder_trade: WonderTrade
     # multiworld_gift_pokemon: MultiworldGiftPokemon
     # traps_percentage: TrapsPercentage
+    start_inventory_from_pool = StartInventoryPool
     modify_item_pool: ModifyItemPool
     modify_logic: ModifyLogic
     # funny_dialogue: FunnyDialog

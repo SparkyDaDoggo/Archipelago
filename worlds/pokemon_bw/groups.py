@@ -21,7 +21,8 @@ def get_location_groups() -> dict[str, set[str]]:
 
     return {
         "Dexsanity": set(dexsanity.location_table),
-        "Overworld items": set(overworld_items.table),
+        "Overworld items": set(name for tab in (overworld_items.table, overworld_items.abyssal_ruins) for name in tab),
+        "Abyssal Ruins items": set(overworld_items.abyssal_ruins),
         "Hidden items": set(hidden_items.table),
         "NPC items": {*other.table, *special.gym_badges, *special.gym_tms, *special.tm_hm_ncps},
         "Badge rewards": set(special.gym_badges),

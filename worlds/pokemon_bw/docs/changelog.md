@@ -1,6 +1,17 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.9
+
+- Added a location group for items in Abyssal Ruins
+- Added the `Start Inventory From Pool` option
+- Fixed season-dependant locations not being excluded when wild pokémon are randomized
+- Fixed Wellspring Cave B1F not being considered in `Require Flash` logic modifier (@Seatori)
+- Fixed some gym leaders not being present in their gyms in some situations
+- Fixed sage Zinzolin not appearing in Cold Storage again if first scene was played after Ghetsis
+- Fixed Bianca on route 8 only triggering when standing in front of the bridge gate
+- Fixed the Wingull on route 13 giving the item even without having all grams
+
 ## 0.3.8
 
 - Fixed Master Ball sellers not working if the multiworld was generated before 0.3.4

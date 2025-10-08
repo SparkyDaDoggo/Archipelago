@@ -148,7 +148,7 @@ table: dict[str, FlagLocationData] = {
     "Cold Storage - Item from worker": FlagLocationData(316, always_default, "Cold Storage", None, None),
     "Route 6 - Item from ranger Shanti": FlagLocationData(1420+186, always_default, "Route 6", None, None),
     "Route 6 - Item from ranger Richard": FlagLocationData(1420+182, always_default, "Route 6", None, None),
-    "Route 6 - Item from scientist for all Deerling forms": FlagLocationData(350, season_dependant, "Route 6", None, can_catch_all_deerlings),
+    "Route 6 - Item from scientist for all Deerling forms": FlagLocationData(350, deerling_dependant, "Route 6", None, can_catch_all_deerlings),
     "Route 6 - Item from child in western house": FlagLocationData(261, always_default, "Route 6", None, None),
     "Chargestone Cave - Item from Professor Juniper": FlagLocationData(0x1A3, always_default, "Chargestone Cave", None, None),
     "Chargestone Cave - Item from nugget brothers #1": FlagLocationData(169, always_default, "Chargestone Cave", None, None),

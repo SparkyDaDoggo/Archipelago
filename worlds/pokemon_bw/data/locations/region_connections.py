@@ -23,6 +23,7 @@ connections: dict[str, RegionConnectionData] = {
     "Striaton City west": RegionConnectionData("Striaton City", "Route 3", has_parcel),
     "Route 3 north west": RegionConnectionData("Route 3", "Wellspring Cave Entrance", None),
     "Surfing in Wellspring Cave": RegionConnectionData("Wellspring Cave Entrance", "Wellspring Cave Inner", can_use_surf),
+    "Wellspring Cave Stairs": RegionConnectionData("Wellspring Cave Inner", "Wellspring Cave B1F", dark_cave),
     "Route 3 south west": RegionConnectionData("Route 3", "Nacrene City", None),
     "Nacrene City west": RegionConnectionData("Nacrene City", "Pinwheel Forest Outside", None),
     "Enter Pinwheel Forest": RegionConnectionData("Pinwheel Forest Outside", "Pinwheel Forest West", has_loot_sack),
