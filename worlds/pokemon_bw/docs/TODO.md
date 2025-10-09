@@ -1,12 +1,14 @@
 # Important stuff
 
-
-# 0.3.10
-
 - fix nacrene city sequence break
-- New document just for roadblocks and other important stuff because rom changes doc does not list all roadblocks
 - ut auto-tabbing
+
+# notes for main branch
+
+- New document just for roadblocks and other important stuff because rom changes doc does not list all roadblocks
+- reformat options guides to be one document explaining all complex options and unify encounter plando docs
 - maybe reusable tms actually possible? but definitely with restrictions
+- make docs easier to read
 
 # 0.4.0
 
