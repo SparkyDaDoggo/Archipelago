@@ -101,6 +101,11 @@
                 "map": "undellabay",
                 "x": 776,
                 "y": 392
+            },
+            {
+                "map": "undellatown",
+                "x": 1008,
+                "y": 267
             }
         ]
     },
@@ -287,6 +292,43 @@
                 "map": "overworld",
                 "x": 148,
                 "y": 206
+            },
+            {
+                "map": "driftveilcity",
+                "x": 280,
+                "y": 1004
+            }
+        ]
+    },
+    {
+        "name": "Cold Storage Building",
+        "sections": [
+{"name": "Cold Storage Building - Item in container"},
+{"name": "Cold Storage Building - Item near entrance, up the stairs"},
+{"name": "Cold Storage Building - Item on first ice field"},
+{"name": "Cold Storage Building - North east item"},
+{"name": "Cold Storage Building - South east item"},
+{"name": "Cold Storage - TM from sage Zinzolin"}
+        ],
+        "map_locations": [
+            {
+                "map": "coldstorageoutside",
+                "x": 87,
+                "y": 397
+            }
+        ]
+    },
+    {
+        "name": "Cold Storage Container",
+        "sections": [
+{"name": "Cold Storage Building - Item in container"},
+{"name": "Cold Storage - TM from sage Zinzolin"}
+        ],
+        "map_locations": [
+            {
+                "map": "coldstorage",
+                "x": 78,
+                "y": 99
             }
         ]
     },
@@ -807,6 +849,20 @@
         ]
     },
     {
+        "name": "Relic Castle - Exit",
+        "sections": [
+{"name": "Relic Castle - 1F towerside item"},
+{"name": "Relic Castle - B3F towerside hidden item"}
+        ],
+        "map_locations": [
+            {
+                "map": "desertresort",
+                "x": 49,
+                "y": 50
+            }
+        ]
+    },
+    {
         "name": "Route 1",
         "sections": [
 {"name": "Route 1 - Item after catching tutorial #1"},
@@ -1283,6 +1339,11 @@
                 "map": "icirruscity",
                 "x": 166,
                 "y": 774
+            }},
+            {
+                "map": "twistmountainoutside",
+                "x": 200,
+                "y": 166
             }
         ]
     },
@@ -1313,6 +1374,11 @@
                 "map": "overworld",
                 "x": 448,
                 "y": 134
+            },
+            {
+                "map": "undellatown",
+                "x": 976,
+                "y": 267
             }
         ]
     },
