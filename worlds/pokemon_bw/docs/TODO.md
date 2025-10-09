@@ -1,7 +1,6 @@
 # Important stuff
 
 - fix nacrene city sequence break
-- ut auto-tabbing
 
 # notes for main branch
 
