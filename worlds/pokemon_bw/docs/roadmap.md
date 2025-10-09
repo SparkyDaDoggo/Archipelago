@@ -56,6 +56,7 @@ Version 1.0.0 will happen when certain important features are implemented.
     - Cost: 1000
     - Cost: 3000
     - Cost: 10000
+- UT auto-tabbing (added in later patch)
 
 ### 0.4.0
 

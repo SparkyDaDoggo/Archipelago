@@ -7,9 +7,10 @@ class VersionCompatibility(NamedTuple):
     ut: tuple[int, int, int]
 
 
-version: tuple[int, int, int] = (0, 3, 9)
+version: tuple[int, int, int] = (0, 3, 10)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
+    (0, 3, 10): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9)),
     (0, 3, 9): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9)),
     (0, 3, 8): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
     (0, 3, 7): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),

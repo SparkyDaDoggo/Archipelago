@@ -1,6 +1,10 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.10
+
+- Added many more maps and auto-tabbing (@palex00, @Radis7Noir, @Darvitz2, darkfire006)
+
 ## 0.3.9
 
 - Added a location group for items in Abyssal Ruins

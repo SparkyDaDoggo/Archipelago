@@ -1,6 +1,5 @@
 # Important stuff
 
-- fix nacrene city sequence break
 
 # notes for main branch
 
@@ -8,6 +7,7 @@
 - reformat options guides to be one document explaining all complex options and unify encounter plando docs
 - maybe reusable tms actually possible? but definitely with restrictions
 - make docs easier to read
+- fix nacrene city sequence break
 
 # 0.4.0
 
