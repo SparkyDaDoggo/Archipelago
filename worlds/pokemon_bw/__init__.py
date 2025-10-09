@@ -7,7 +7,7 @@ import settings
 from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
 from Options import Option
 from worlds.AutoWorld import World, WebWorld
-from . import items, locations, options, bizhawk_client, rom, groups
+from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
 from .data import RulesDict
 
@@ -80,7 +80,15 @@ class PokemonBWWorld(World):
     tracker_world = {
         "map_page_folder": "tracker",
         "map_page_maps": "maps/maps.json",
-        "map_page_locations": "locations/locations.json"
+        "map_page_locations": {
+            "locations/locations.json",
+            "locations/submaps_cities.json",
+            "locations/submaps_dungeons.json",
+            "locations/submaps_routes.json",
+            "locations/old_compat.json",
+        },
+        "map_page_index": tracker.map_page_index,
+        "map_page_setting_key": "pokemon_bw_map_{team}_{player}",
     }
 
     def __init__(self, multiworld: MultiWorld, player: int):
@@ -258,6 +266,7 @@ class PokemonBWWorld(World):
             "ut_compatibility": version.ut(),
             # NOT needed for UT
             "master_ball_seller_cost": self.master_ball_seller_cost,
+            "reusable_tms": self.options.reusable_tms.current_key,
         }
 
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> dict[str, Any]:
