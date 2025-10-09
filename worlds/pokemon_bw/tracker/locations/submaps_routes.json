@@ -41,7 +41,7 @@
 {"sections": [{"name": "Route 4 - South west item in sandy area"}], "map_locations": [{"map": "route4", "x": 522, "y": 1074}]},
 {"sections": [{"name": "Route 4 - TM from worker in northern building"}], "map_locations": [{"map": "route4", "x": 168, "y": 802}]},
 {"sections": [{"name": "Route 5 - Item near ledge"}], "map_locations": [{"map": "route5", "x": 362, "y": 210}]},
-{"sections": [{"name": "Route 5 - North east item"}], "map_locations": [{"map": "route5", "x": 602, "y": 146}]},
+{"sections": [{"name": "Route 5 - North east item"}], "map_locations": [{"map": "route5", "x": 873, "y": 146}]},
 {"sections": [{"name": "Route 5 - North west item"}], "map_locations": [{"map": "route5", "x": 218, "y": 130}]},
 {"sections": [{"name": "Route 5 - South west item"}], "map_locations": [{"map": "route5", "x": 220, "y": 386}]},
 {"sections": [{"name": "Route 6 - East hidden item"}], "map_locations": [{"map": "route6", "x": 872, "y": 146}]},
