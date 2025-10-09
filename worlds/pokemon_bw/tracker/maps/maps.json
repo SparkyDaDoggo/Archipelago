@@ -17,7 +17,7 @@
 {"name": "route10", "img": "images/routes/route10.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "route11", "img": "images/routes/route11.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "route12", "img": "images/routes/route12.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "route13", "img": "images/routes/route13.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "route13", "img": "images/routes/route13.png", "location_size": 32, "location_border_thickness": 2},
 {"name": "route14", "img": "images/routes/route14.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "route15", "img": "images/routes/route15.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "route16", "img": "images/routes/route16.png", "location_size": 16, "location_border_thickness": 2},
