@@ -85,6 +85,7 @@ class PokemonBWWorld(World):
             "locations/submaps_cities.json",
             "locations/submaps_dungeons.json",
             "locations/submaps_routes.json",
+            "locations/old_compat.json",
         },
         "map_page_index": tracker.map_page_index,
         "map_page_setting_key": "pokemon_bw_map_{team}_{player}",
