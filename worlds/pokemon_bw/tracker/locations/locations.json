@@ -101,11 +101,6 @@
                 "map": "undellabay",
                 "x": 776,
                 "y": 392
-            },
-            {
-                "map": "undellatown",
-                "x": 1008,
-                "y": 267
             }
         ]
     },
@@ -356,7 +351,41 @@
                 "map": "overworld",
                 "x": 230,
                 "y": 208
-            },
+            }
+        ]
+    },
+    {
+        "name": "Desert Resort + Relic Castle",
+        "sections": [
+{"name": "Desert Resort - Even more south west item"},
+{"name": "Desert Resort - Hidden item near tower"},
+{"name": "Desert Resort - Item between Relic Castle entrances"},
+{"name": "Desert Resort - Item from man in black"},
+{"name": "Desert Resort - Item from Professor Juniper"},
+{"name": "Desert Resort - Item from ranger Jaden"},
+{"name": "Desert Resort - Item from ranger Mylene"},
+{"name": "Desert Resort - North east hidden item"},
+{"name": "Desert Resort - North west item"},
+{"name": "Desert Resort - Sandy area item #1"},
+{"name": "Desert Resort - Sandy area item #2"},
+{"name": "Desert Resort - Sandy area item #3"},
+{"name": "Desert Resort - South hidden item"},
+{"name": "Desert Resort - South west item"},
+{"name": "Desert Resort - West hidden item"},
+{"name": "Relic Castle - 1F castleside item from backpacker"},
+{"name": "Relic Castle - 1F towerside item"},
+{"name": "Relic Castle - B1F castleside hidden item"},
+{"name": "Relic Castle - B1F castleside item"},
+{"name": "Relic Castle - B2F castleside item #1"},
+{"name": "Relic Castle - B2F castleside item #2"},
+{"name": "Relic Castle - B3F castleside item #1"},
+{"name": "Relic Castle - B3F castleside item #2"},
+{"name": "Relic Castle - B3F towerside hidden item"},
+{"name": "Relic Castle - B4F castleside hidden item"},
+{"name": "Relic Castle - B4F castleside item"},
+{"name": "Relic Castle - TM from sage Ryoku"}
+        ],
+        "map_locations": [
             {
                 "map": "route4",
                 "x": 22,
@@ -856,7 +885,7 @@
         ],
         "map_locations": [
             {
-                "map": "desertresort",
+                "map": "reliccastlemaze",
                 "x": 49,
                 "y": 50
             }
@@ -1334,7 +1363,35 @@
                 "map": "overworld",
                 "x": 144,
                 "y": 110
-            },
+            }
+        ]
+    },
+    {
+        "name": "Twist Mountain - Inside",
+        "sections": [
+{"name": "Twist Mountain - Item from worker near ice rock cave"},
+{"name": "Twist Mountain - Item near ice rock"},
+{"name": "Twist Mountain - Lower floor little east cave item (Winter)"},
+{"name": "Twist Mountain - Lower floor north west cave hidden item (Spring/Summer/Autumn)"},
+{"name": "Twist Mountain - Lower floor north west cave item (Spring/Summer/Autumn)"},
+{"name": "Twist Mountain - Main floor east hidden item (Winter)"},
+{"name": "Twist Mountain - Main floor east item"},
+{"name": "Twist Mountain - Main floor north hidden item #1 (Winter)"},
+{"name": "Twist Mountain - Main floor north hidden item #2 (Winter)"},
+{"name": "Twist Mountain - Main floor north west item"},
+{"name": "Twist Mountain - Main floor south item"},
+{"name": "Twist Mountain - Main floor west item"},
+{"name": "Twist Mountain - Middle floor east cave hidden item"},
+{"name": "Twist Mountain - Middle floor north cave item (Winter)"},
+{"name": "Twist Mountain - Middle floor west cave hidden item #1"},
+{"name": "Twist Mountain - Middle floor west cave hidden item #2"},
+{"name": "Twist Mountain - Middle floor west cave item #1"},
+{"name": "Twist Mountain - Middle floor west cave item #2"},
+{"name": "Twist Mountain - Upper floor north east cave hidden item"},
+{"name": "Twist Mountain - Upper floor north east cave item"},
+{"name": "Twist Mountain - Upper floor south east cave hidden item"}
+        ],
+        "map_locations": [
             {
                 "map": "icirruscity",
                 "x": 166,
@@ -1363,6 +1420,68 @@
         ]
     },
     {
+        "name": "Undella Bay + Abyssal Ruins",
+        "sections": [
+{"name": "Undella Bay - Hidden item on western shore #1"},
+{"name": "Undella Bay - Hidden item on western shore #2"},
+{"name": "Undella Bay - North hidden item"},
+
+{"name": "Abyssal Ruins 1F Center - East item"},
+{"name": "Abyssal Ruins 1F Center - North item"},
+{"name": "Abyssal Ruins 1F East - Item near center"},
+{"name": "Abyssal Ruins 1F East - Kinda south item"},
+{"name": "Abyssal Ruins 1F East - North item #1"},
+{"name": "Abyssal Ruins 1F East - North item #2"},
+{"name": "Abyssal Ruins 1F East - South item"},
+{"name": "Abyssal Ruins 1F East - West item"},
+{"name": "Abyssal Ruins 1F North - East item"},
+{"name": "Abyssal Ruins 1F North - Item east of entrance"},
+{"name": "Abyssal Ruins 1F North - Item north of center"},
+{"name": "Abyssal Ruins 1F North - Item west of entrance"},
+{"name": "Abyssal Ruins 1F North - West item"},
+{"name": "Abyssal Ruins 1F South - East item"},
+{"name": "Abyssal Ruins 1F South - Item near entrance"},
+{"name": "Abyssal Ruins 1F South - North item #1"},
+{"name": "Abyssal Ruins 1F South - North item #2"},
+{"name": "Abyssal Ruins 1F South - North west item #1"},
+{"name": "Abyssal Ruins 1F South - North west item #2"},
+{"name": "Abyssal Ruins 1F South - West item"},
+{"name": "Abyssal Ruins 1F West - East item"},
+{"name": "Abyssal Ruins 1F West - North item #1"},
+{"name": "Abyssal Ruins 1F West - North item #2"},
+{"name": "Abyssal Ruins 1F West - South east item #1"},
+{"name": "Abyssal Ruins 1F West - South east item #2"},
+{"name": "Abyssal Ruins 1F West - South item"},
+{"name": "Abyssal Ruins 2F - East item"},
+{"name": "Abyssal Ruins 2F - Item north east of center"},
+{"name": "Abyssal Ruins 2F - Item south east of center"},
+{"name": "Abyssal Ruins 2F - Item west of center"},
+{"name": "Abyssal Ruins 2F - Kinda north east item"},
+{"name": "Abyssal Ruins 2F - Kinda north item"},
+{"name": "Abyssal Ruins 2F - Kinda north west item"},
+{"name": "Abyssal Ruins 2F - Kinda south west item"},
+{"name": "Abyssal Ruins 2F - North west item"},
+{"name": "Abyssal Ruins 2F - South east item"},
+{"name": "Abyssal Ruins 2F - South west item"},
+{"name": "Abyssal Ruins 3F - Center item"},
+{"name": "Abyssal Ruins 3F - East item"},
+{"name": "Abyssal Ruins 3F - Item south of center"},
+{"name": "Abyssal Ruins 3F - Kinda north east item"},
+{"name": "Abyssal Ruins 3F - North east item"},
+{"name": "Abyssal Ruins 3F - North west item"},
+{"name": "Abyssal Ruins 3F - South west item"},
+{"name": "Abyssal Ruins 3F - West item"},
+{"name": "Abyssal Ruins 4F - Item"}
+        ],
+        "map_locations": [
+            {
+                "map": "undellatown",
+                "x": 1008,
+                "y": 267
+            }
+        ]
+    },
+    {
         "name": "Undella Town",
         "sections": [
 {"name": "Undella Town - Behind the hedges of The Riches' Mansion"},
@@ -1374,11 +1493,6 @@
                 "map": "overworld",
                 "x": 448,
                 "y": 134
-            },
-            {
-                "map": "undellatown",
-                "x": 976,
-                "y": 267
             }
         ]
     },
