@@ -4,6 +4,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ## 0.3.10
 
 - Added many more maps and auto-tabbing (@palex00, @Radis7Noir, @Darvitz2, darkfire006)
+- Fixed `Moor of Icirrus - Hidden item behind boulder` having incorrect logic
 
 ## 0.3.9
 

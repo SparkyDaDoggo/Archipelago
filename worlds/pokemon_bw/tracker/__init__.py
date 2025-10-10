@@ -152,7 +152,7 @@ mapping_range: dict[range, int] = {
     range_incl(30, 40): 19,  # => "casteliacity"
     range_incl(136, 146): 0,  # POKÉMON LEAGUE, overworld
     range_incl(241, 245): 34,  # => "abyssalruins1f"
-    range_incl(167, 181): 94,  # => "reliccastlemaze"
+    range_incl(167, 181): 93,  # => "reliccastlemaze"
 }
 
 

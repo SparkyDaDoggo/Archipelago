@@ -97,7 +97,7 @@ table: dict[str, FlagLocationData] = {
     "Moor of Icirrus - South east hidden item": FlagLocationData(1038, always_default, "Moor of Icirrus", None, None),
     "Moor of Icirrus - Hidden item near ledge": FlagLocationData(1039, always_default, "Moor of Icirrus", None, None),
     "Moor of Icirrus - North hidden item": FlagLocationData(1040, always_default, "Moor of Icirrus", None, None),
-    "Moor of Icirrus - Hidden item behind boulder": FlagLocationData(1037, always_default, "Moor of Icirrus", None, can_use_strength),
+    "Moor of Icirrus - Hidden item behind boulder": FlagLocationData(1037, season_dependant, "Moor of Icirrus", None, can_use_strength_and_set_other_than_winter),
     "Route 9 - Hidden item on road": FlagLocationData(0x1C3, always_default, "Route 9", None, None),
     "Route 9 - Hidden item near Challenger's Cave": FlagLocationData(981, always_default, "Route 9", None, None),
     "Challenger's Cave - B1F hidden item near stairs to 1F": FlagLocationData(985, always_default, "Challenger's Cave", None, None),
