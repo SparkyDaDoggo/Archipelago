@@ -1,10 +1,18 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.11
+
+- Added version without UT submaps to release
+- Fixed `Mistralton Cave 3F` locations not appearing on the overworld map in UT
+- Fixed logic of Pinwheel Forest's east side
+- Fixed logic of `Route 8 - Item from Bianca` (this got incorrect logic as a side effect of the previous fix)
+
 ## 0.3.10
 
 - Added many more maps and auto-tabbing (@palex00, @Radis7Noir, @Darvitz2, darkfire006)
 - Fixed `Moor of Icirrus - Hidden item behind boulder` having incorrect logic
+- Fixed the overworld items location group not containing abyssal ruins locations
 
 ## 0.3.9
 

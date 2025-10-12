@@ -1,41 +1,5 @@
 # Important stuff
 
-
-# notes for main branch
-
-- New document just for roadblocks and other important stuff because rom changes doc does not list all roadblocks
-- reformat options guides to be one document explaining all complex options and unify encounter plando docs
-- maybe reusable tms actually possible? but definitely with restrictions
-- make docs easier to read
-- fix nacrene city sequence break
-
-# 0.4.0
-
-- somehow account for excluded locations in shuffle badges/tms
-- reduce different forms weight in randomization
-- remove arceus types
-- Merge PR adding "Randomize" to trainer/wild if other modifiers present
-- add now-possible locations
-- fix bianca being spelled "Bianka" on some location names
-- add "for seeing 25 species" to location in Castelia City
-- Fix Guidance Chamber items being called "Mistralton Cave 3F..."
-- add missing hidden item in chargestone cave b2f and change the other hidden item's name
-- More modifiers
-  - Randomize Wild Pokémon
-    - Prevent overpowered pokémon 
-      - Gets overwritten by "Ensure all obtainable"
-      - Base stat total threshold adjustable
-  - Randomize Trainer Pokémon 
-    - Prevent overpowered pokémon
-      - Base stat total threshold adjustable
-    - Force fully evolved 
-      - Level threshold adjustable
-- Randomization Blacklist
-  - Wild pokémon 
-    - This will throw an OptionError if "Ensure all obtainable" is selected and any blacklisted is base stage
-  - Trainer pokémon
-- after everything else: check docs for up-to-date information, update tests, update location names in ut                             
-
 # Not urgent
 
 - dig with seasons patch crashes the game, not fixable?

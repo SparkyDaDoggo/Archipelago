@@ -7,9 +7,10 @@ class VersionCompatibility(NamedTuple):
     ut: tuple[int, int, int]
 
 
-version: tuple[int, int, int] = (0, 3, 10)
+version: tuple[int, int, int] = (0, 3, 11)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
+    (0, 3, 11): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9)),
     (0, 3, 10): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9)),
     (0, 3, 9): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9)),
     (0, 3, 8): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6)),
@@ -37,23 +38,35 @@ def ut() -> tuple[int, int, int]:
 
 
 if __name__ == "__main__":
-    import orjson
-    import os
-    import zipfile
+    import orjson, os, zipfile, io
 
     apworld = "pokemon_bw"
-    ver_str = ".".join(str(i) for i in version)
+    dev_dir = "D:/Games/Archipelago/custom_worlds/dev/"
 
-    with zipfile.ZipFile(f"D:/Games/Archipelago/custom_worlds/dev/{apworld}.apworld", 'w', zipfile.ZIP_DEFLATED, True, 9) as zipf:
-        metadata = {
-            "game": "Pokemon Black and White",
-            "minimum_ap_version": "0.6.3",
-            "authors": ["BlastSlimey", "SparkyDaDoggo"],
-            "world_version": ver_str
-        }
-        zipf.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
-        for root, dirs, files in os.walk("../"):
-            for file in files:
-                zipf.write(os.path.join(root, file),
-                           os.path.relpath(os.path.join(root, file),
-                                           "../../"))
+    with io.BytesIO() as no_images_apworld_io:
+        with (zipfile.ZipFile(no_images_apworld_io, "w", zipfile.ZIP_DEFLATED, True, 9) as zipf,
+              zipfile.ZipFile(dev_dir+apworld+".apworld", 'w', zipfile.ZIP_DEFLATED, True, 9) as zipf2):
+            metadata = {
+                "game": "Pokemon Black and White",
+                "minimum_ap_version": "0.6.3",
+                "authors": ["BlastSlimey", "SparkyDaDoggo"],
+                "world_version": ".".join(str(i) for i in version)
+            }
+            zipf.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
+            zipf2.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
+            for root, dirs, files in os.walk("../"):
+                if "__pycache__" in root:
+                    continue
+                for file in files:
+                    zipf2.write(os.path.join(root, file),
+                                os.path.relpath(os.path.join(root, file),
+                                                "../../"))
+                if "images" in root and not root.endswith("images"):
+                    continue
+                for file in files:
+                    zipf.write(os.path.join(root, file),
+                               os.path.relpath(os.path.join(root, file),
+                                               "../../"))
+        no_images_apworld_io.flush()
+        with zipfile.ZipFile(dev_dir+apworld+"_without_maps.zip", 'w', zipfile.ZIP_DEFLATED, True, 9) as zipf:
+            zipf.writestr(apworld+".apworld", no_images_apworld_io.getvalue())

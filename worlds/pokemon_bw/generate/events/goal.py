@@ -51,7 +51,6 @@ def create(world: "PokemonBWWorld") -> None:
             location.access_rule = lambda state: (
                 state.can_reach_region("Mistralton Cave Inner", world.player) and
                 state.can_reach_region("Victory Road", world.player) and
-                state.can_reach_region("Pinwheel Forest East", world.player) and
                 state.can_reach_region("Giant Chasm Inner Cave", world.player) and
                 state.can_reach_region("Liberty Garden", world.player) and
                 state.can_reach_region("Relic Castle Basement", world.player)
@@ -65,7 +64,6 @@ def create(world: "PokemonBWWorld") -> None:
                 # Legendary hunt, including Cobalion
                 state.can_reach_region("Mistralton Cave Inner", world.player) and
                 state.can_reach_region("Victory Road", world.player) and
-                state.can_reach_region("Pinwheel Forest East", world.player) and
                 state.can_reach_region("Giant Chasm Inner Cave", world.player) and
                 state.can_reach_region("Liberty Garden", world.player) and
                 state.can_reach_region("Relic Castle Basement", world.player) and

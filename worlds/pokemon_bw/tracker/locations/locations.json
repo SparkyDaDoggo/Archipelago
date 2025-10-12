@@ -628,11 +628,11 @@
 {"name": "Guidance Chamber - North west hidden item"},
 {"name": "Guidance Chamber - North west item"},
 {"name": "Guidance Chamber - South west item"},
-{"name": "Mistralton Cave - 3F North east hidden item"},
-{"name": "Mistralton Cave - 3F North east item"},
-{"name": "Mistralton Cave - 3F North west hidden item"},
-{"name": "Mistralton Cave - 3F North west item"},
-{"name": "Mistralton Cave - 3F South west item"}
+{"name": "Mistralton Cave - 3F north east hidden item"},
+{"name": "Mistralton Cave - 3F north east item"},
+{"name": "Mistralton Cave - 3F north west hidden item"},
+{"name": "Mistralton Cave - 3F north west item"},
+{"name": "Mistralton Cave - 3F south west item"}
         ],
         "map_locations": [
             {

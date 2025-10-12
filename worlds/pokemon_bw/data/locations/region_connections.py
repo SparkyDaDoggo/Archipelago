@@ -27,7 +27,7 @@ connections: dict[str, RegionConnectionData] = {
     "Route 3 south west": RegionConnectionData("Route 3", "Nacrene City", None),
     "Nacrene City west": RegionConnectionData("Nacrene City", "Pinwheel Forest Outside", None),
     "Enter Pinwheel Forest": RegionConnectionData("Pinwheel Forest Outside", "Pinwheel Forest West", has_loot_sack),
-    "Pinwheel Forest east": RegionConnectionData("Pinwheel Forest West", "Pinwheel Forest East", can_encounter_swords_of_justice),  # indirect connection
+    "Pinwheel Forest east": RegionConnectionData("Pinwheel Forest West", "Pinwheel Forest East", can_go_to_nimbasa_city),  # indirect connection
     "Pinwheel Forest north": RegionConnectionData("Pinwheel Forest West", "Skyarrow Bridge", has_dragon_skull),
     "Skyarrow Bridge gate": RegionConnectionData("Skyarrow Bridge", "Castelia City", None),
     "Liberty Pier": RegionConnectionData("Castelia City", "Liberty Garden", has_liberty_pass),

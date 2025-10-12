@@ -167,7 +167,7 @@ table: dict[str, FlagLocationData] = {
     "Icirrus City - Item from the former Team Rocket member's wife (Winter)": FlagLocationData(134, season_dependant, "Icirrus City", None, can_set_winter),
     "Icirrus Gym - Gym guide item": FlagLocationData(124, always_default, "Icirrus City", None, None),
     "Dragonspiral Tower - Item from Cedric Juniper": FlagLocationData(310, always_default, "Dragonspiral Tower", None, None),
-    "Route 8 - Item from Bianca": FlagLocationData(0x1A8, always_default, "Route 8", None, can_go_deeper_into_relic_castle),
+    "Route 8 - Item from Bianca": FlagLocationData(0x1A8, always_default, "Route 8", None, None),
     "Route 8 - Item from ranger Lewis": FlagLocationData(1420+184, always_default, "Route 8", None, None),
     "Route 8 - Item from ranger Annie": FlagLocationData(1420+188, always_default, "Route 8", None, None),
     "Route 8 - Item from eastern parasol lady": FlagLocationData(0x1C2, always_default, "Route 8", None, None),

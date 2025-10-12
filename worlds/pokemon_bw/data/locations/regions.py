@@ -26,7 +26,7 @@ region_list: set[str] = {
     "Nacrene City",
     "Pinwheel Forest Outside",
     "Pinwheel Forest West",  # area accessible in main story
-    "Pinwheel Forest East",  # accessible after reaching Mistralton Cave
+    "Pinwheel Forest East",  # accessible after reaching Nimbasa City
     "Skyarrow Bridge",
     "Castelia City",
     "Liberty Garden",
