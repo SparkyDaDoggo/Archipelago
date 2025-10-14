@@ -94,6 +94,12 @@ class PokemonBWWorld(World):
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
 
+        from .data.version import ap_minimum
+        from Utils import version_tuple
+        if version_tuple < ap_minimum():
+            raise Exception(f"Archipelago version too old for Pokémon BW "
+                            f"(requires minimum {ap_minimum()}, found {version_tuple}")
+
         self.strength_species: set[str] = set()
         self.cut_species: set[str] = set()
         self.surf_species: set[str] = set()
