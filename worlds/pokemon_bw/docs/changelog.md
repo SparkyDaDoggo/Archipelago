@@ -3,6 +3,9 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.12
 
+- Fixed the Wingull grams reward location not working
+- Added an error message for too old AP versions
+
 ## 0.3.11
 
 - Added version without UT submaps to release
