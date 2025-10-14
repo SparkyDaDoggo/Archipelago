@@ -1,6 +1,8 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.12
+
 ## 0.3.11
 
 - Added version without UT submaps to release
