@@ -97,7 +97,7 @@ class Goal(Choice):
     - **Champion** - Become the champion by defeating Alder
     - **Cynthia** - Defeat Cynthia in Undella Town
     - **Cobalion** - Reach and defeat/catch Cobalion in Mistralton Cave
-    - **TM/HM hunt** - Get all TMs and HMs
+    - **TM/HM hunt** - Get all TMs and HMs and show them to a scientist in Castelia City's Central Plaza
     - **Seven Sages hunt** - Find the Seven Sages
     - **Legendary hunt** - Find and defeat/catch all (stationary available) legendary encounters, including Volcarona
     - **Pokemon master** - Complete the requirements of all other goals combined
@@ -127,7 +127,8 @@ class RandomizeWildPokemon(CasefoldOptionSet):
     - **Randomize** - Toggles wild pokemon being randomized. Automatically added if any other modifier is added.
     - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving. This is automatically checked if **National pokedex** is chosen as the goal.
     - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total as the replaced encounter.
-    - **Type themed areas** - Tries to make every pokemon in an area have a certain same type.
+    - **Prevent overpowered pokemon** - Tries to prevent pokemon with a base stat total over an adjustable threshold being randomized into wild encounter slots. Other modifiers (except for **Similar base stats**) take priority in case of conflicts.
+    - **Type themed areas** - Tries to make every pokemon in an area have a certain same type. Might not be fully ensured depending on RNG.
     - **Area 1-to-1** - Keeps the amount of different encounters and their encounter rate in every area.
     - **Merge phenomenons** - Makes rustling grass, rippling water spots, dust clouds, and flying shadows in the same area have only one encounter. Takes priority over **Area 1-to-1**.
     - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance in each area to the same pokemon. Takes priority over **Area 1-to-1**.
@@ -141,6 +142,7 @@ class RandomizeWildPokemon(CasefoldOptionSet):
         "Randomize",
         "Ensure all obtainable",
         "Similar base stats",
+        "Prevent overpowered pokemon",
         "Type themed areas",
         "Area 1-to-1",
         "Merge phenomenons",
@@ -339,16 +341,20 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
     Adjust various parameters in various pokemon randomization options (more modifiers are planned).
     Any minimum parameter cannot be higher than its corresponding maximum parameter.
     - **Stats leniency** - The minimum difference between base stat totals of vanilla and randomized species (for options with **Similar base stats** activated). Allowed values are integers in range 0 to 1530.
+    - **Overpowered threshold** - The maximum base stat total (for options with **Prevent overpowered pokemon** activated). Allowed values are integers in range 200 to 1530.
     """
     display_name = "Pokemon Randomization Adjustments"
     valid_keys = [
         "Stats leniency",
+        "Overpowered threshold",
     ]
     default = {
         "Stats leniency": 10,
+        "Overpowered threshold": 500,
     }
     individual_min_max = {
         "Stats leniency": (0, 1530),
+        "Overpowered threshold": (200, 1530),
     }
 
 

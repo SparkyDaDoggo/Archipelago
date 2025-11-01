@@ -5,14 +5,14 @@ import logging
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
+    from .. import SpeciesChecklist
 
 
 def generate_wild(world: "PokemonBWWorld",
-                  species_checklist: tuple[list[str], set[str]],
+                  species_checklist: "SpeciesChecklist",
                   slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
     from ...data.pokemon.species import by_name
     from ...data.plando.encounter_maps import maps, multiple_seasons
-    from .checklist import check_species
 
     ret: dict[str, EncounterEntry] = {}
     warned = False
@@ -85,7 +85,7 @@ def generate_wild(world: "PokemonBWWorld",
                     species_id, region, (file_index, season_id, slot_in_file), True
                 )
                 if region in world.regions:
-                    check_species(world, species_checklist, species)
+                    species_checklist.check(species)
                 slots_checklist.pop(slot_name)
 
     return ret

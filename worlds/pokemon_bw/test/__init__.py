@@ -15,7 +15,7 @@
 #   one test for just "Randomize"
 #   one test for both
 # pokemon_randomization_adjustments:
-#   default {"Stats leniency": 10}
+#   default {"Stats leniency": 10, "Overpowered threshold": 500}
 #   other values irrelevant
 #   no other parameters so far
 # encounter_plando:

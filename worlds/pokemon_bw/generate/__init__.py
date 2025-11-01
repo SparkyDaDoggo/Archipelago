@@ -1,6 +1,9 @@
-from typing import NamedTuple
+from typing import NamedTuple, TYPE_CHECKING
 
 from ..data import InclusionRule, ExtendedRule
+
+if TYPE_CHECKING:
+    from ..data import SpeciesData
 
 
 class SpeciesEntry(NamedTuple):
@@ -54,3 +57,47 @@ class TrainerPokemonEntry(NamedTuple):
     # nature: int
     # held_item: str | None
     # moves: tuple[str, str, str, str] | None
+
+
+class SpeciesChecklist:
+    to_check: list[str]
+    already_checked: set[str]
+    by_name: dict[str, "SpeciesData"]
+    by_id: dict[tuple[int, int], str]
+
+    def __init__(self, initial: list[str]):
+        from ..data.pokemon.species import by_name, by_id
+
+        self.to_check = list({entry: 0 for entry in initial})
+        self.already_checked = set()
+        self.by_name = by_name
+        self.by_id = by_id
+
+    def __iter__(self):
+        return self.to_check.__iter__()
+
+    def __len__(self):
+        return len(self.to_check)
+
+    def copy_list(self):
+        return self.to_check.copy()
+
+    def add(self, species: str):
+        if species in self.to_check:
+            return
+        if species in self.already_checked:
+            return
+        self.to_check.append(species)
+
+    def check(self, species: str, loop=0):
+        if species in self.to_check:
+            self.to_check.remove(species)
+        self.already_checked.add(species)
+        # Looping evolutions are not planned to be prevented
+        if loop >= 5:
+            return
+        data = self.by_name[species]
+        for evolution in data.evolutions:
+            if evolution[0] == "Level up with party member":
+                self.add(self.by_id[(evolution[1], 0)])
+            self.check(evolution[2], loop+1)

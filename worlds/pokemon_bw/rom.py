@@ -163,12 +163,12 @@ class PatchMethods:
         accept = version.patch_accept(found_version)
 
         if accept == 1:
-            raise Exception(f"File (BW patch version: {'.'.join(str(i) for i in manifest['bw_patch_format'])}) too new "
-                            f"for this handler (BW patch version: {version.patch_file()}). "
+            raise Exception(f"File (patch version: {version_str(manifest['bw_patch_format'])}) too new "
+                            f"for this apworld (patch version: {version_str(version.patch_file())}). "
                             f"Please update your apworld.")
         elif accept == -1:
-            raise Exception(f"File (BW patch version: {'.'.join(str(i) for i in manifest['bw_patch_format'])}) too old "
-                            f"for this handler (BW patch version: {version.patch_file()}). "
+            raise Exception(f"File (patch version: {version_str(manifest['bw_patch_format'])}) too old "
+                            f"for this apworld (patch version: {version_str(version.patch_file())}). "
                             f"Either re-generate your world or downgrade to an older apworld version.")
 
         return manifest
@@ -200,3 +200,7 @@ def get_base_rom_path(version: str, file_name: str = "") -> str:
     if not os.path.exists(file_name):
         file_name = Utils.user_path(file_name)
     return file_name
+
+
+def version_str(ver: tuple[int, ...]) -> str:
+    return ".".join(str(i) for i in ver)

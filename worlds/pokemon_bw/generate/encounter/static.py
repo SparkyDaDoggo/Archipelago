@@ -1,14 +1,13 @@
 from typing import TYPE_CHECKING
-from .. import StaticEncounterEntry, TradeEncounterEntry
+from .. import StaticEncounterEntry, TradeEncounterEntry, SpeciesChecklist
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
 def generate_static_encounters(world: "PokemonBWWorld",
-                               species_checklist: tuple[list[str], set[str]]) -> dict[str, StaticEncounterEntry]:
+                               species_checklist: SpeciesChecklist) -> dict[str, StaticEncounterEntry]:
     from ...data.locations.encounters.static import static, legendary, fossils, gift
-    from .checklist import check_species
     from ...data.pokemon.species import by_id
 
     versioned_species = (
@@ -23,14 +22,13 @@ def generate_static_encounters(world: "PokemonBWWorld",
             encounters[name] = StaticEncounterEntry(
                 versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule
             )
-            check_species(world, species_checklist, by_id[versioned_species(data)])
+            species_checklist.check(by_id[versioned_species(data)])
 
     return encounters
 
 
-def generate_trade_encounters(world: "PokemonBWWorld", species_checklist: tuple[list[str], set[str]]) -> dict[str, TradeEncounterEntry]:
+def generate_trade_encounters(world: "PokemonBWWorld", species_checklist: SpeciesChecklist) -> dict[str, TradeEncounterEntry]:
     from ...data.locations.encounters.static import trade
-    from .checklist import check_species, add_species_to_check
     from ...data.pokemon.species import by_id
 
     is_black = world.options.version == "black"
@@ -52,7 +50,7 @@ def generate_trade_encounters(world: "PokemonBWWorld", species_checklist: tuple[
             versioned_wanted(data),
             data.encounter_region
         )
-        check_species(world, species_checklist, by_id[versioned_species(data)])
-        add_species_to_check(species_checklist, by_id[(versioned_wanted(data), 0)])
+        species_checklist.check(by_id[versioned_species(data)])
+        species_checklist.add(by_id[(versioned_wanted(data), 0)])
 
     return encounters

@@ -1,18 +1,20 @@
 from typing import TYPE_CHECKING
 
+from .. import SpeciesChecklist
+
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
-def get_species_checklist(world: "PokemonBWWorld") -> tuple[list[str], set[str]]:
+def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
     # Returns ({to be checked species}, {already checked species})
     # Species needed for trade are added in generate_trade_encounters()
     from ...data.pokemon.species import by_name, unova_species, by_id
 
     if "Randomize" not in world.options.randomize_wild_pokemon:
-        return [], set()
+        return SpeciesChecklist([])
     elif "Ensure all obtainable" in world.options.randomize_wild_pokemon:
-        return [species for species in by_name], set()
+        return SpeciesChecklist([species for species in by_name])
     else:  # Just "Randomize"
         always_required = [
             "Celebi",
@@ -48,30 +50,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> tuple[list[str], set[str]]
                 if spec not in always_required:
                     always_required.append(spec)
 
-        return always_required, set()
-
-
-def check_species(world: "PokemonBWWorld", checklist: tuple[list[str], set[str]], species: str, loop=0) -> None:
-    from ...data.pokemon.species import by_name, by_id
-
-    if species in checklist[0]:
-        checklist[0].remove(species)
-    checklist[1].add(species)
-
-    # Looping evolutions are not planned to be prevented
-    if loop >= 5:
-        return
-
-    data = by_name[species]
-    for evolution in data.evolutions:
-        if evolution[0] == "Level up with party member":
-            add_species_to_check(checklist, by_id[(evolution[1], 0)])
-        check_species(world, checklist, evolution[2], loop+1)
-
-
-def add_species_to_check(checklist: tuple[list[str], set[str]], species: str) -> None:
-    if species not in checklist[1]:
-        checklist[0].append(species)
+        return SpeciesChecklist(always_required)
 
 
 def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:

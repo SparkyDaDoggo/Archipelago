@@ -1,6 +1,6 @@
 import itertools
 from typing import TYPE_CHECKING, Callable
-from .. import EncounterEntry
+from .. import EncounterEntry, SpeciesChecklist
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -8,11 +8,10 @@ if TYPE_CHECKING:
 
 
 def generate_wild_encounters(world: "PokemonBWWorld",
-                             species_checklist: tuple[list[str], set[str]],
+                             species_checklist: SpeciesChecklist,
                              slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
     from ...data.pokemon.species import by_name, by_id, forms_by_dex, get_weighted_random_species
     from ...data.locations.encounters.slots import table
-    from .checklist import check_species
 
     versioned_species = (
         (lambda d: d.species_white)
@@ -43,28 +42,50 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     world.random.shuffle(other_slots)
     world.random.shuffle(copy_slots)
 
-    if len(species_checklist[0]) > len(logic_slots):
-        for species in species_checklist[0][:]:
+    if len(species_checklist) > len(logic_slots):
+        for species in species_checklist.copy_list():
             species_data = by_name[species]
             for evolution in species_data.evolutions:
                 if evolution[0] != "Level up with party member":
-                    check_species(world, species_checklist, evolution[2])
-        if len(species_checklist[0]) > len(logic_slots):
+                    species_checklist.check(evolution[2])
+        if len(species_checklist) > len(logic_slots):
             raise Exception(
                 f"More required species for randomized wild encounter than slots they could be placed in "
-                f"for player {world.player_name}: {len(species_checklist[0])} > {len(logic_slots)}"
+                f"for player {world.player_name}: {len(species_checklist)} > {len(logic_slots)}"
             )
 
     similar_base_stats = "Similar base stats" in world.options.randomize_wild_pokemon
     type_themed = "Type themed areas" in world.options.randomize_wild_pokemon
+    prevent_overpowered = "Prevent overpowered pokemon" in world.options.randomize_wild_pokemon
+    stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
     area_types: dict[str, str] = {}
     stats_total: Callable[["SpeciesData"], int] = lambda data: (
         data.base_hp + data.base_attack + data.base_defense +
         data.base_sp_attack + data.base_sp_defense + data.base_speed
     )
 
-    while len(species_checklist[0]) > 0:
-        random_species = world.random.choice(species_checklist[0])
+    # Devolve overpowered species
+    if prevent_overpowered:
+        for name, spec_data in by_name.items():
+            spec_total = stats_total(spec_data)
+            for evo_tuple in spec_data.evolutions:
+                if evo_tuple[0] == "Level up with party member":
+                    # This frickin' evolution method is too complicated once more
+                    continue
+                evolved_data = by_name[evo_tuple[2]]
+                evo_total = stats_total(evolved_data)
+                if evo_total <= stats_threshold:
+                    continue
+                if spec_total >= evo_total:
+                    # Devolving to an even stronger pre-evolution doesn't make sense
+                    continue
+                if evo_tuple[2] not in species_checklist.to_check:
+                    continue
+                species_checklist.check(evo_tuple[2])
+                species_checklist.add(name)
+
+    while len(species_checklist) > 0:
+        random_species = world.random.choice(species_checklist.to_check)
         species_data = by_name[random_species]
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
         skip_strict = False
@@ -88,7 +109,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                     (species_data.dex_number, species_data.form),
                     table[slot].encounter_region, table[slot].file_index, True
                 )
-                check_species(world, species_checklist, random_species)
+                species_checklist.check(random_species)
                 logic_slots.remove(slot)
                 break
             else:
@@ -100,8 +121,18 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 continue
             break
 
+    any_species: dict[int, list[tuple[str, "SpeciesData"]]] = forms_by_dex
+    if prevent_overpowered:
+        any_species = {
+            key: [
+                (name, data)
+                for name, data in value
+                if stats_total(data) <= stats_threshold
+            ]
+            for key, value in forms_by_dex.items()
+        }
     any_species_by_type: dict[str, dict[int, list[tuple[str, "SpeciesData"]]]] = {}
-    for forms_list in forms_by_dex.values():
+    for forms_list in any_species.values():
         for spe, data in forms_list:
             for typ in (data.type_1, data.type_2):
                 if typ not in any_species_by_type:
@@ -115,7 +146,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         region = table[slot].encounter_region
         area = region[:region.index(" - ")]
         while True:
-            species_data = get_weighted_random_species(world.random, forms_by_dex)[1]
+            species_data = get_weighted_random_species(world.random, any_species)[1]
             if type_themed:
                 if area not in area_types:
                     area_types[area] = world.random.choice((species_data.type_1, species_data.type_2))

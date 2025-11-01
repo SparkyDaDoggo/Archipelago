@@ -1,6 +1,7 @@
 # Important stuff
 
-- make docs easier to read
+- unown and burmy dexsanity not checking?
+- goal option description tm hm hunt
 
 # 0.4.0
 
@@ -8,9 +9,6 @@
 
 - More modifiers
   - Randomize Wild Pokémon
-    - Prevent overpowered pokémon 
-      - Other modifiers take priority, some op species are even required all the time
-      - Base stat total threshold adjustable
     - Prevent early Wonder Guard and fixed HP attacks
   - Randomize Trainer Pokémon 
     - Prevent overpowered pokémon
@@ -31,8 +29,12 @@
     - Will still put every species that is required to be randomized and base stage into at least one slot
     - Ignored by Encounter Plando
   - Trainer pokémon
-- reword error messages in rom.py
 - extended location hint for deerlings location and challenge rock
+- add info when wrong language detected in bizhawk_client
+- reword randomization adjustments option description
+- add info when choosing the wrong language in patching
+- rework regions + events NOW because spheres are weird without them
+- account for levels of moves needed for evolving (ancient power, ...)
 
 ## Rom
 
@@ -48,6 +50,8 @@
 - opelucid city fly flag only set after ghetsis scene?
 - make massage lady in castelia repeatable
 - baker on village bridge not repeatable
+- liberty garden blackscreen
+- defeating ghetsis again triggers champion goal
 
 ## Both
 
@@ -58,6 +62,7 @@
 - Dowsing Machine as a hard requirement for hidden items
 - one case of goal not triggering reported in sync
 - master ball seller not showing up again?
+- bgm randomization
 - after everything else: check docs for up-to-date information, update tests, update location names in ut                             
 
 # Not urgent

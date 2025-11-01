@@ -11,16 +11,20 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Modes: `Multiply`, `Add`, `Power`
   - Advanced method (cannot be shown on Webhost, but with more capabilities)
     - Same as simple, but accepts multiple chained calculations
-- Made `Randomize` automatically being included in wild and trainer pokémon randomization if other modifiers are included (@Darvitz2)
+- Made `Randomize` automatically being included in wild and trainer pokémon randomization if other modifiers are included (@Darvitz)
 - Added a location group for season-dependant item locations
 - Added an item group for fossils and another one for TMs and HMs combined
 - Reworked how wild encounters are listed in the spoiler log
 - Added glitched logic in UT for `Require Dowsing Machine` and `Require Flash` logic modifiers
 - Added `Funny Dialog` and `Text Plando` options
-  - `funny` and `efficient` modes for `Funny Dialog`
+  - `funny` and `efficient` choices for `Funny Dialog`
   - Both options require the text plando setting in the host yaml to be enabled
   - Added a setting to enable text extraction upon running a patch file
 - Added plando mode to `Dexsanity` option
+- Added more modifiers for `Randomize Wild Pokémon`:
+  - `Prevent overpowered pokemon`
+    - Other modifiers take priority over this, except `Similar base stats`
+    - Adjustable threshold
 
 ### Bug fixes and technical stuff
 
@@ -60,7 +64,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.10
 
-- Added many more maps and auto-tabbing (@palex00, @Radis7Noir, @Darvitz2, darkfire006)
+- Added many more maps and auto-tabbing (@palex00, @Radis7Noir, @Darvitz, darkfire006)
 - Fixed `Moor of Icirrus - Hidden item behind boulder` having incorrect logic
 
 ## 0.3.9

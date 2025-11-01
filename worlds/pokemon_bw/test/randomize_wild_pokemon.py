@@ -16,6 +16,7 @@ class TestRandomizeWildPokemonCustom(PokemonBWTestBase):
         "Randomize",
         "Ensure all obtainable",
         "Similar base stats",
+        "Prevent overpowered pokemon",
         "Type themed areas",
         "Area 1-to-1",
         "Merge phenomenons",
@@ -28,6 +29,7 @@ def random_combination() -> list[str]:
     for i in [
         "Ensure all obtainable",
         "Similar base stats",
+        "Prevent overpowered pokemon",
         "Type themed areas",
         "Area 1-to-1",
         "Merge phenomenons",
