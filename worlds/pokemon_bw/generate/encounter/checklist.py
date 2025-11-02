@@ -23,7 +23,12 @@ def get_species_checklist(world: "PokemonBWWorld") -> tuple[list[str], set[str]]
 
         unova = [name for name in unova_species]
         world.random.shuffle(unova)
-        always_required += unova[:115]
+        for spec in unova:
+            if "Fighting" in (unova_species[spec].type_1, unova_species[spec].type_2):
+                always_required.append(spec)
+                unova.remove(spec)
+                break
+        always_required += unova[:114]
 
         unova_guaranteed = [
             "Tornadus",
