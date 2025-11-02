@@ -1,3 +1,4 @@
+
 import zipfile
 from typing import TYPE_CHECKING
 
@@ -37,7 +38,8 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         opened_zipfile.writestr(f"wild/{file_num}", bytes(data))
 
 
-def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch") -> None:
+def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
+          files_dump: zipfile.ZipFile) -> None:
 
     narc = NARC(rom.getFileByName("a/1/2/6"))
 
@@ -60,5 +62,6 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                     game_file[game_address:game_address+2] = species
 
         narc.files[file_num] = bytes(game_file)
+        files_dump.writestr(f"a126/{file_num}", bytes(game_file))
 
     rom.setFileByName("a/1/2/6", narc.save())

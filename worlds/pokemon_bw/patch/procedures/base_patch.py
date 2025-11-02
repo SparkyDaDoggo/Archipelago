@@ -18,7 +18,7 @@ class PatchProcedure(NamedTuple):
     narc_filename: str
 
 
-def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch") -> None:
+def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch", files_dump: ZipFile) -> None:
     from ...data import version
 
     pad = rom.pad088[:0x15] + bytes(version.rom()) + bw_patch_instance.player_name.encode()

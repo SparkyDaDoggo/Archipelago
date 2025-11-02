@@ -1,4 +1,6 @@
+
 from typing import TYPE_CHECKING
+from zipfile import ZipFile
 
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.narc import NARC
@@ -7,7 +9,8 @@ if TYPE_CHECKING:
     from ...rom import PokemonBWPatch
 
 
-def patch_wild(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch") -> None:
+def patch_wild(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
+               files_dump: ZipFile) -> None:
     from ...data.adjustments import wild_levels
 
     file_wild = NARC(rom.getFileByName("a/1/2/6"))
@@ -31,10 +34,12 @@ def patch_wild(rom: NintendoDSRom, world_package: str, bw_patch_instance: "Pokem
 
     for i in range(len(files)):
         file_wild.files[i] = bytes(files[i])
+        files_dump.writestr(f"a126/{i}", bytes(files[i]))
     rom.setFileByName("a/1/2/6", file_wild.save())
 
 
-def patch_trainer(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch") -> None:
+def patch_trainer(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
+                  files_dump: ZipFile) -> None:
     from ...data.adjustments import trainer_levels
 
     file_data = NARC(rom.getFileByName("a/0/9/2"))
@@ -52,5 +57,6 @@ def patch_trainer(rom: NintendoDSRom, world_package: str, bw_patch_instance: "Po
             pos = i * pkmn_entry_length + 2
             trainer_pokemon[pos] = adjustment.calculation(trainer_pokemon[pos])
         file_pokemon.files[adjustment.trainer_id] = bytes(trainer_pokemon)
+        files_dump.writestr(f"a093/{adjustment.trainer_id}", bytes(trainer_pokemon))
 
     rom.setFileByName("a/0/9/3", file_pokemon.save())

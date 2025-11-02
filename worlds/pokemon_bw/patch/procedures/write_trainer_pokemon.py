@@ -1,3 +1,4 @@
+
 import zipfile
 from typing import TYPE_CHECKING
 
@@ -29,7 +30,8 @@ def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Z
         opened_zipfile.writestr(f"trainer/{file}_pokemon", data)
 
 
-def patch_species(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch") -> None:
+def patch_species(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
+                  files_dump: zipfile.ZipFile) -> None:
 
     trainer_narc = NARC(rom.getFileByName("a/0/9/2"))
     pokemon_narc = NARC(rom.getFileByName("a/0/9/3"))
@@ -58,6 +60,7 @@ def patch_species(rom: NintendoDSRom, world_package: str, bw_patch_instance: "Po
         if remove_unique_moves:
             trainer_file[0] &= 254
             trainer_narc.files[file_num] = bytes(trainer_file)
+            files_dump.writestr(f"a092/{file_num}", bytes(trainer_file))
             new_pokemon_file = b''
             for team_slot in range(len(pokemon_file)//entry_length):
                 file_address = team_slot * entry_length
@@ -65,6 +68,7 @@ def patch_species(rom: NintendoDSRom, world_package: str, bw_patch_instance: "Po
             pokemon_narc.files[file_num] = bytes(new_pokemon_file)
         else:
             pokemon_narc.files[file_num] = bytes(pokemon_file)
+        files_dump.writestr(f"a093/{file_num}", pokemon_narc.files[file_num])
 
     rom.setFileByName("a/0/9/2", trainer_narc.save())
     rom.setFileByName("a/0/9/3", pokemon_narc.save())
