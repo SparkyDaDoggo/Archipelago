@@ -8,8 +8,6 @@
 ## APWorld
 
 - More modifiers
-  - Randomize Wild Pokémon
-    - Prevent early Wonder Guard and fixed HP attacks
   - Randomize Trainer Pokémon 
     - Prevent overpowered pokémon
       - Base stat total threshold adjustable
@@ -63,6 +61,7 @@
 - one case of goal not triggering reported in sync
 - master ball seller not showing up again?
 - bgm randomization
+- Early game cutscenes shortening option (skipping entire parts in script)
 - after everything else: check docs for up-to-date information, update tests, update location names in ut                             
 
 # Not urgent

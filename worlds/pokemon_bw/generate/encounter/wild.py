@@ -12,6 +12,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                              slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
     from ...data.pokemon.species import by_name, by_id, forms_by_dex, get_weighted_random_species
     from ...data.locations.encounters.slots import table
+    from ...data.locations.encounters.regions import bad_early_areas
+    from ...data.pokemon.movesets_level_up import table as moveset_table
 
     versioned_species = (
         (lambda d: d.species_white)
@@ -57,6 +59,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     similar_base_stats = "Similar base stats" in world.options.randomize_wild_pokemon
     type_themed = "Type themed areas" in world.options.randomize_wild_pokemon
     prevent_overpowered = "Prevent overpowered pokemon" in world.options.randomize_wild_pokemon
+    prevent_bad_early = "Prevent bad early pokemon" in world.options.randomize_wild_pokemon
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
     area_types: dict[str, str] = {}
     stats_total: Callable[["SpeciesData"], int] = lambda data: (
@@ -88,18 +91,30 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         random_species = world.random.choice(species_checklist.to_check)
         species_data = by_name[random_species]
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
-        skip_strict = False
+        skip_type = skip_bad = False
         while True:
-            skipped_stat = False
+            skipped_stat = skipped_type = skipped_bad = False
             for slot in logic_slots:
-                if type_themed and not skip_strict:
+                if type_themed and not skip_type:
                     region = table[slot].encounter_region
                     area = region[:region.index(" - ")]
                     if area not in area_types:
                         area_types[area] = world.random.choice((species_data.type_1, species_data.type_2))
                     elif area_types[area] not in (species_data.type_1, species_data.type_2):
+                        skipped_type = True
                         continue
-                if similar_base_stats:  # stats last because it's more lenient than tape themed
+                if prevent_bad_early and not skip_bad:
+                    region = table[slot].encounter_region
+                    area = region[:region.index(" - ")]
+                    if area in bad_early_areas:
+                        if "Wonder Guard" in species_data.abilities:
+                            skipped_bad = True
+                            continue
+                        moveset = moveset_table[random_species].level_up_moves
+                        if any((move_learn[1] in ("SonicBoom", "Dragon Rage")) for move_learn in moveset):
+                            skipped_bad = True
+                            continue
+                if similar_base_stats:  # stats last because it's more lenient than others
                     random_stats = stats_total(species_data)
                     vanilla_stats = stats_total(by_name[by_id[versioned_species(table[slot])]])
                     if random_stats not in range(vanilla_stats - stat_tolerance, vanilla_stats + stat_tolerance + 1):
@@ -115,9 +130,15 @@ def generate_wild_encounters(world: "PokemonBWWorld",
             else:
                 if skipped_stat:
                     stat_tolerance += 10
-                else:
+                elif skipped_type:
                     # Force place into any slot that still kinda fits
-                    skip_strict = True
+                    skip_type = True
+                elif skipped_bad:
+                    # I really hope that this will only ever happen if someone heavily abuses encounter plando
+                    skip_bad = True
+                else:
+                    # Should be unreachable
+                    pass
                 continue
             break
 
@@ -141,17 +162,27 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                     any_species_by_type[typ][data.dex_number] = [(spe, data)]
                 else:
                     any_species_by_type[typ][data.dex_number].append((spe, data))
+    if type_themed and len(any_species_by_type) < 17:
+        raise Exception("At least one type has all its species prevented in wild randomization due to some option. "
+                        "Please remove some restrictions in your yaml.")
     for slot in itertools.chain(logic_slots, other_slots):
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
         region = table[slot].encounter_region
         area = region[:region.index(" - ")]
         while True:
-            species_data = get_weighted_random_species(world.random, any_species)[1]
+            random_species, species_data = get_weighted_random_species(world.random, any_species)[1]
             if type_themed:
                 if area not in area_types:
                     area_types[area] = world.random.choice((species_data.type_1, species_data.type_2))
                 elif area_types[area] not in (species_data.type_1, species_data.type_2):
                     species_data = get_weighted_random_species(world.random, any_species_by_type[area_types[area]])[1]
+            if prevent_bad_early:
+                if area in bad_early_areas:
+                    if "Wonder Guard" in species_data.abilities:
+                        continue
+                    moveset = moveset_table[random_species].level_up_moves
+                    if any((move_learn[1] in ("SonicBoom", "Dragon Rage")) for move_learn in moveset):
+                        continue
             if similar_base_stats:
                 random_stats = stats_total(species_data)
                 vanilla_stats = stats_total(by_name[by_id[versioned_species(table[slot])]])

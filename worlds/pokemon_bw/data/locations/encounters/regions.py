@@ -445,3 +445,19 @@ region_list: list[str] = [
     "r17 - F",
     "r17 - FR",
 ]
+
+bad_early_areas: set[str] = {
+    "StCity",
+    "Dyard (R)",
+    "Dyard (B)",
+    "PiForest (O)",
+    "PiForest (I)",
+    "P2Lab",
+    "r1",
+    "r2",
+    "r3",
+    "WeCave (1F)",
+    "WeCave (B1F)",
+    "r18",
+    "r17",
+}

@@ -6,10 +6,10 @@ if TYPE_CHECKING:
 
 
 def populate(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
-    from ...data.pokemon import movesets
+    from ...data.pokemon import movesets_tm_hm
 
     for species_name, data in catchable_species_data.items():
-        moveset = movesets.table[species_name].tm_hm_moves
+        moveset = movesets_tm_hm.table[species_name].tm_hm_moves
         if "HM04" in moveset:
             world.strength_species.add(species_name)
         if "HM01" in moveset:

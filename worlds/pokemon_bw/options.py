@@ -128,6 +128,7 @@ class RandomizeWildPokemon(CasefoldOptionSet):
     - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving. This is automatically checked if **National pokedex** is chosen as the goal.
     - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total as the replaced encounter.
     - **Prevent overpowered pokemon** - Tries to prevent pokemon with a base stat total over an adjustable threshold being randomized into wild encounter slots. Other modifiers (except for **Similar base stats**) take priority in case of conflicts.
+    - **Prevent bad early pokemon** - Prevents encountering Wonder Guard and fixed HP attacks in regions that don't have at least level 20 encounters. Might not be fully ensured depending on other options.
     - **Type themed areas** - Tries to make every pokemon in an area have a certain same type. Might not be fully ensured depending on RNG.
     - **Area 1-to-1** - Keeps the amount of different encounters and their encounter rate in every area.
     - **Merge phenomenons** - Makes rustling grass, rippling water spots, dust clouds, and flying shadows in the same area have only one encounter. Takes priority over **Area 1-to-1**.
@@ -143,6 +144,7 @@ class RandomizeWildPokemon(CasefoldOptionSet):
         "Ensure all obtainable",
         "Similar base stats",
         "Prevent overpowered pokemon",
+        "Prevent bad early pokemon",
         "Type themed areas",
         "Area 1-to-1",
         "Merge phenomenons",
@@ -153,7 +155,7 @@ class RandomizeWildPokemon(CasefoldOptionSet):
     @classmethod
     def from_any(cls, data: typing.Any):
         option = super().from_any(data)
-        if len(option.value) > 0 and "Randomize" not in option.value:
+        if len(option.value) > 0 and "Randomize" not in option:
             option.value.add("randomize")
         return option
 
@@ -193,7 +195,7 @@ class RandomizeTrainerPokemon(CasefoldOptionSet):
     @classmethod
     def from_any(cls, data: typing.Any):
         option = super().from_any(data)
-        if len(option.value.intersection(cls.require_randomize)) > 0 and "Randomize" not in option.value:
+        if len(option.value.intersection(cls.require_randomize)) > 0 and "Randomize" not in option:
             option.value.add("randomize")
         return option
 
@@ -221,7 +223,7 @@ class RandomizeStarterPokemon(CasefoldOptionSet):
     @classmethod
     def from_any(cls, data: typing.Any):
         option = super().from_any(data)
-        if len(option.value) > 0 and "Randomize" not in option.value:
+        if len(option.value) > 0 and "Randomize" not in option:
             option.value.add("randomize")
         return option
 
@@ -247,7 +249,7 @@ class RandomizeStaticPokemon(CasefoldOptionSet):
     @classmethod
     def from_any(cls, data: typing.Any):
         option = super().from_any(data)
-        if len(option.value) > 0 and "Randomize" not in option.value:
+        if len(option.value) > 0 and "Randomize" not in option:
             option.value.add("randomize")
         return option
 
@@ -271,7 +273,7 @@ class RandomizeGiftPokemon(CasefoldOptionSet):
     @classmethod
     def from_any(cls, data: typing.Any):
         option = super().from_any(data)
-        if len(option.value) > 0 and "Randomize" not in option.value:
+        if len(option.value) > 0 and "Randomize" not in option:
             option.value.add("randomize")
         return option
 
@@ -300,7 +302,7 @@ class RandomizeTradePokemon(CasefoldOptionSet):
     @classmethod
     def from_any(cls, data: typing.Any):
         option = super().from_any(data)
-        if len(option.value) > 0 and "Randomize offer" not in option.value and "Randomize request" not in option.value:
+        if len(option.value) > 0 and "Randomize offer" not in option and "Randomize request" not in option:
             option.value.add("randomize offer")
             option.value.add("randomize request")
         return option
@@ -331,7 +333,7 @@ class RandomizeLegendaryPokemon(CasefoldOptionSet):
     @classmethod
     def from_any(cls, data: typing.Any):
         option = super().from_any(data)
-        if len(option.value) > 0 and "Randomize" not in option.value:
+        if len(option.value) > 0 and "Randomize" not in option:
             option.value.add("randomize")
         return option
 
