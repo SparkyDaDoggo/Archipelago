@@ -37,7 +37,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Reduced frequency of different forms of the same pokémon in randomization
 - Wrote down levelup moveset data
 - Made sure there is always at least one fighting type pokémon obtainable (for the challenge rock)
-- Fixed constant unittest failures on GitHub
+- Fixed constant unittest failures on GitHub due to the ndspy subfolder not existing
 
 ## 0.3.999 (pre-release)
 

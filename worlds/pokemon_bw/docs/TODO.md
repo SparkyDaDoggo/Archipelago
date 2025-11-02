@@ -2,6 +2,9 @@
 
 - unown and burmy dexsanity not checking?
 - goal option description tm hm hunt
+- not being able to go into pokemon league after beating ghetsis
+- baker on village bridge not repeatable
+- defeating ghetsis again triggers champion goal
 
 # 0.4.0
 
@@ -47,9 +50,6 @@
 - fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
 - opelucid city fly flag only set after ghetsis scene?
 - make massage lady in castelia repeatable
-- baker on village bridge not repeatable
-- liberty garden blackscreen
-- defeating ghetsis again triggers champion goal
 
 ## Both
 
@@ -92,3 +92,4 @@
 - sequence break problem with npcs not moving, see channel
 - incredibly low catch chances? idk how that could be related to the apworld in any way
 - plando items having issues? plandoing basic badge into abyssal ruins sometimes raises fillerrors about this item not being placeable
+- liberty garden blackscreen
