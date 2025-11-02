@@ -52,7 +52,7 @@ class Goal(Choice):
     - **Champion** - Become the champion by defeating Alder
     - **Cynthia** - Defeat Cynthia in Undella Town
     - **Cobalion** - Reach and defeat/catch Cobalion in Mistralton Cave
-    - **TM/HM hunt** - Get all TMs and HMs
+    - **TM/HM hunt** - Get all TMs and HMs and show them to a scientist at Castelia City's Central Plaza
     - **Seven Sages hunt** - Find the Seven Sages
     - **Legendary hunt** - Find and defeat/catch all (stationary available) legendary encounters, including Volcarona
     - **Pokemon master** - Complete the requirements of all other goals combined

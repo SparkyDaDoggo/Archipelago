@@ -1,6 +1,14 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.13
+
+- Made sure there is always at least one fighting type pokémon obtainable (for the challenge rock)
+- Fixed the sandwich minigame on Village Bridge not being repeatable on the same day
+- Fixed beating Ghetsis again triggering post-Alder stuff
+- (Hopefully) fixed not being able to enter the Pokémon League after beating Ghetsis
+- Added setting for dumping patched files (for debug purposes)
+
 ## 0.3.12
 
 - Fixed the Wingull grams reward location not working

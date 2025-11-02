@@ -45,7 +45,7 @@ def ap_minimum() -> tuple[int, int, int]:
 
 
 if __name__ == "__main__":
-    import orjson, os, zipfile, io
+    import orjson, os, zipfile
 
     apworld = "pokemon_bw"
     dev_dir = "D:/Games/Archipelago/custom_worlds/dev/"
