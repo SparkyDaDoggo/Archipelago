@@ -1,6 +1,7 @@
 import os
 import pathlib
 import zipfile
+from io import BytesIO
 
 import Utils
 from settings import get_settings
@@ -127,7 +128,7 @@ class PatchMethods:
         from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
                                        level_adjustments, write_text)
 
-        patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch], None]] = {
+        patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch, zipfile.ZipFile], None]] = {
             "base_patch": base_patch.patch,
             "season_patch": season_patch.patch,
             "write_wild_pokemon": write_wild_pokemon.patch,
@@ -139,16 +140,21 @@ class PatchMethods:
             "write_text": write_text.patch,
         }
 
-        base_data = get_base_rom_bytes(version_name)
-        rom = NintendoDSRom(base_data)
-        procedures: list[str] = str(patch.get_file("procedures.txt"), "utf-8").splitlines()
-        for prod in procedures:
-            patch_procedures[prod](rom, __name__, patch)
-        if get_settings()["pokemon_bw_settings"]["extract_text"]:
-            from .patch import text_extractor
-            text_extractor.extract(rom, target)
-        with open(target, 'wb') as f:
-            f.write(rom.save(updateDeviceCapacity=True))
+        with BytesIO() as bytes_io, zipfile.ZipFile(bytes_io, "w", zipfile.ZIP_DEFLATED, True, 9) as files_dump:
+            base_data = get_base_rom_bytes(version_name)
+            rom = NintendoDSRom(base_data)
+            procedures: list[str] = str(patch.get_file("procedures.txt"), "utf-8").splitlines()
+            for prod in procedures:
+                patch_procedures[prod](rom, __name__, patch, files_dump)
+            if get_settings()["pokemon_bw_settings"]["extract_text"]:
+                from .patch import text_extractor
+                text_extractor.extract(rom, target)
+            with open(target, 'wb') as f:
+                f.write(rom.save(updateDeviceCapacity=True))
+            if get_settings()["pokemon_bw_settings"]["dump_patched_files"]:
+                with open(target.replace(".nds", "_files_dump.zip"), "wb") as dump:
+                    bytes_io.flush()
+                    dump.write(bytes_io.getvalue())
 
     @staticmethod
     def read_contents(patch: PokemonBWPatch, opened_zipfile: zipfile.ZipFile,

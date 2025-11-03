@@ -34,6 +34,10 @@ class PokemonBWSettings(settings.Group):
         """Toggles whether Encounter Plando is enabled for players in generation.
         If disabled, yamls that use Encounter Plando do not raise OptionErrors, but display a warning."""
 
+    class DumpPatchedFiles(settings.Bool):
+        """If enabled, files inside the rom that are changed as part of the patching process (except for base patches)
+        will be dumped into a zip file next to the patched rom (for debug purposes)."""
+
     class ExtractText(settings.Bool):
         """If enabled, running a patch file for this game will also produce a text file
         containing all ingame text alongside the rom."""
@@ -42,6 +46,7 @@ class PokemonBWSettings(settings.Group):
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
+    dump_patched_files: DumpPatchedFiles | bool = False
     extract_text: ExtractText | bool = False
 
 

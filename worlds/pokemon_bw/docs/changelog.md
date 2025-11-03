@@ -36,7 +36,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed "Striaton City - TM from Fennel" not being able to contain an HM with certain options
 - Reduced frequency of different forms of the same pokémon in randomization
 - Wrote down levelup moveset data
-- Made sure there is always at least one fighting type pokémon obtainable (for the challenge rock)
 - Fixed constant unittest failures on GitHub due to the ndspy subfolder not existing
 
 ## 0.3.999 (pre-release)
@@ -49,6 +48,14 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added `Modify Levels` option
   - Modes: `Multiply`, `Add`, `Power`
   - Encounter types: Trainer, Wild
+
+## 0.3.13
+
+- Made sure there is always at least one fighting type pokémon obtainable (for the challenge rock)
+- Fixed the sandwich minigame on Village Bridge not being repeatable on the same day
+- Fixed beating Ghetsis again triggering post-Alder stuff
+- (Hopefully) fixed not being able to enter the Pokémon League after beating Ghetsis
+- Added setting for dumping patched files (for debug purposes)
 
 ## 0.3.12
 
