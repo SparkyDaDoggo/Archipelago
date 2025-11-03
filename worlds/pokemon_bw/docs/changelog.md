@@ -37,6 +37,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Reduced frequency of different forms of the same pokémon in randomization
 - Wrote down levelup moveset data
 - Fixed constant unittest failures on GitHub due to the ndspy subfolder not existing
+- Fixed nondeterministic Dexsanity location creation
 
 ## 0.3.999 (pre-release)
 
