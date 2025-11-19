@@ -25,6 +25,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Prevent overpowered pokemon`
     - Other modifiers take priority over this, except `Similar base stats`
     - Adjustable threshold
+  - `Prevent bad early pokemon`
+    - Prevents Wonder Guard and fixed HP attacks before Castelia City
 
 ### Bug fixes and technical stuff
 

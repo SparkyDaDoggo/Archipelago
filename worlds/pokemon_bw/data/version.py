@@ -61,7 +61,8 @@ def ap_minimum() -> tuple[int, int, int]:
 
 
 if __name__ == "__main__":
-    import orjson, os, zipfile, io
+    import orjson, os, zipfile
+    from worlds.Files import container_version
 
     apworld = "pokemon_bw"
     dev_dir = "D:/Games/Archipelago/custom_worlds/dev/"
@@ -72,7 +73,9 @@ if __name__ == "__main__":
             "game": "Pokemon Black and White",
             "minimum_ap_version": ".".join(str(i) for i in ap_minimum()),
             "authors": ["BlastSlimey", "SparkyDaDoggo"],
-            "world_version": ".".join(str(i) for i in version)
+            "world_version": ".".join(str(i) for i in version),
+            "version": container_version,
+            "compatible_version": 7,
         }
         zipf.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
         zipf2.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))

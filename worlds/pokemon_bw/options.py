@@ -1292,7 +1292,7 @@ class ModifyLogic(CasefoldOptionSet):
     - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the basement of Wellspring Cave
                           logically require TM70 Flash.
     """
-    display_name = "Modify Item Pool"
+    display_name = "Modify Logic"
     valid_keys_casefold = True
     valid_keys = [
         "Require Dowsing Machine",

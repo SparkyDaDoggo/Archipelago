@@ -1,10 +1,14 @@
 # Important stuff
 
-- unown and burmy dexsanity not checking?
-- goal option description tm hm hunt
-- not being able to go into pokemon league after beating ghetsis
-- baker on village bridge not repeatable
-- defeating ghetsis again triggers champion goal
+- encounter plando removes slots from checklist even if other slots want to copy from it
+- poptracker stuff
+- Fixed nondeterministic Dexsanity location creation
+- trial chamber/terrakion doesn't appear without encountering cobalion
+- route 6 deerlings location bad logic again
+- fix manifest fields
+- cold storage sage duplicate increments sage counter twice
+- maybe gracidea giving NPC has to enable using it?
+- friendship evos requiring nacrene city
 
 # 0.4.0
 
@@ -34,8 +38,9 @@
 - add info when wrong language detected in bizhawk_client
 - reword randomization adjustments option description
 - add info when choosing the wrong language in patching
-- rework regions + events NOW because spheres are weird without them
+- rework events NOW because spheres are weird without them
 - account for levels of moves needed for evolving (ancient power, ...)
+- reduce arceus and unown forms in randomization, maybe another flag in speciesdata to signal being used in ensure all obtainable
 
 ## Rom
 
