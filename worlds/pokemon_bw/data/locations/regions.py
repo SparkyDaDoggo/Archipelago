@@ -95,6 +95,7 @@ region_list: set[str] = {
     "Badge Gate 7",
     "Badge Gate 8",
     "Victory Road",
+    "Trial Chamber",
     "Pokémon League",
     "N's Castle",
 }

@@ -106,8 +106,10 @@ can_set_other_than_winter: ExtendedRule = lambda state, world: (
 )
 
 can_catch_all_deerlings: ExtendedRule = lambda state, world: (
-    "Randomize" in world.options.randomize_wild_pokemon
-    or world.options.season_control == "vanilla"
+    (
+        "Randomize" not in world.options.randomize_wild_pokemon
+        and world.options.season_control == "vanilla"
+    )
     or state.has_all((
         "Deerling (Spring)", "Deerling (Summer)", "Deerling (Autumn)", "Deerling (Winter)"
     ), world.player)

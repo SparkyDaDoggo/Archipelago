@@ -201,25 +201,8 @@ class PokemonBWWorld(World):
                             f"Please report this to the devs and provide the yaml used for generating.")
         for _ in range(self.to_be_filled_locations-len(item_pool)):
             item_pool.append(self.create_item(self.get_filler_item_name()))
-        items.reserve_locked_items(self, item_pool)
-        self.multiworld.itempool += item_pool
-
-    def get_pre_fill_items(self) -> List[Item]:
-        return [
-            item
-            for item_list in self.to_be_locked_items if isinstance(item_list, list)
-            for item in item_list
-        ] + [
-            item_dict[name]
-            for item_dict in self.to_be_locked_items if isinstance(item_dict, dict)
-            for name in item_dict
-        ]
-
-    def pre_fill(self) -> None:
-        from .generate.locked_placement import place_badges_pre_fill, place_tm_hm_pre_fill
-
-        place_badges_pre_fill(self)
-        place_tm_hm_pre_fill(self)
+        items.place_locked_items(self, item_pool)
+        self.multiworld.itempool.extend(item_pool)
 
     def fill_hook(self,
                   progitempool: List[Item],
@@ -228,7 +211,7 @@ class PokemonBWWorld(World):
                   fill_locations: List[Location]) -> None:
         from .generate.locked_placement import place_tm_hm_fill, place_badges_fill
 
-        place_badges_fill(self, progitempool, fill_locations)
+        place_badges_fill(self, progitempool, usefulitempool, filleritempool, fill_locations)
         place_tm_hm_fill(self, progitempool, usefulitempool, filleritempool, fill_locations)
 
     def extend_hint_information(self, hint_data: dict[int, dict[int, str]]):

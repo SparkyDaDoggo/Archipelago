@@ -86,6 +86,6 @@ def generate_wild(world: "PokemonBWWorld",
                 )
                 if region in world.regions:
                     check_species(world, species_checklist, species)
-                slots_checklist.pop(slot_name)
+                slots_checklist[slot_name] = "FILLED"
 
     return ret

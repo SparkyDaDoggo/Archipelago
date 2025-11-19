@@ -1,6 +1,17 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.14
+
+- Fixed manifest missing the container version fields
+- Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
+- Fixed badge and TM/HM locations not being excludable or prioritizable
+- Made reaching Nacrene City a logical requirement for friendship evolutions
+- Fixed the Deerling forms location once again
+- Fixed logic of Trial Chamber (including the static Terrakion)
+- Fixed nondeterministic Dexsanity location creation#
+- Fixed generation failures for certain combinations of Encounter Plando and randomization modifiers
+
 ## 0.3.13
 
 - Made sure there is always at least one fighting type pokémon obtainable (for the challenge rock)
@@ -23,9 +34,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.10
 
-- Added many more maps and auto-tabbing (@palex00, @Radis7Noir, @Darvitz2, darkfire006)
+- Added many more maps and auto-tabbing (@palex00, @Radis7Noir, @Darvitz, darkfire006)
 - Fixed `Moor of Icirrus - Hidden item behind boulder` having incorrect logic
-- Fixed the overworld items location group not containing abyssal ruins locations
 
 ## 0.3.9
 
@@ -44,7 +54,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.7
 
-- Fixed updating past 0.3.3 leading to UT crashing
+- Fixed UT crashing when updating past 0.3.3
 
 ## 0.3.6
 

@@ -1,5 +1,9 @@
 # Important stuff
 
+- poptracker stuff
+- cold storage sage duplicate increments sage counter twice
+- maybe gracidea giving NPC has to enable using it?
+
 # Not urgent
 
 - dig with seasons patch crashes the game, not fixable?

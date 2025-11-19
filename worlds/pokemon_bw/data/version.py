@@ -8,9 +8,10 @@ class VersionCompatibility(NamedTuple):
     ap_minimum: tuple[int, int, int]
 
 
-version: tuple[int, int, int] = (0, 3, 13)
+version: tuple[int, int, int] = (0, 3, 14)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
+    (0, 3, 14): VersionCompatibility((0, 3, 0), (0, 3, 14), (0, 3, 14), (0, 6, 3)),
     (0, 3, 13): VersionCompatibility((0, 3, 0), (0, 3, 13), (0, 3, 13), (0, 6, 3)),
     (0, 3, 12): VersionCompatibility((0, 3, 0), (0, 3, 12), (0, 3, 9), (0, 6, 3)),
     (0, 3, 11): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9), (0, 6, 3)),
@@ -46,6 +47,7 @@ def ap_minimum() -> tuple[int, int, int]:
 
 if __name__ == "__main__":
     import orjson, os, zipfile
+    from worlds.Files import container_version
 
     apworld = "pokemon_bw"
     dev_dir = "D:/Games/Archipelago/custom_worlds/dev/"
@@ -56,7 +58,9 @@ if __name__ == "__main__":
             "game": "Pokemon Black and White",
             "minimum_ap_version": ".".join(str(i) for i in ap_minimum()),
             "authors": ["BlastSlimey", "SparkyDaDoggo"],
-            "world_version": ".".join(str(i) for i in version)
+            "world_version": ".".join(str(i) for i in version),
+            "version": container_version,
+            "compatible_version": 7,
         }
         zipf.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
         zipf2.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))

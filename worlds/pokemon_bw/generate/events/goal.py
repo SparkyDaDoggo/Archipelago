@@ -50,7 +50,7 @@ def create(world: "PokemonBWWorld") -> None:
             regions["N's Castle"].locations.append(location)
             location.access_rule = lambda state: (
                 state.can_reach_region("Mistralton Cave Inner", world.player) and
-                state.can_reach_region("Victory Road", world.player) and
+                state.can_reach_region("Trial Chamber", world.player) and
                 state.can_reach_region("Giant Chasm Inner Cave", world.player) and
                 state.can_reach_region("Liberty Garden", world.player) and
                 state.can_reach_region("Relic Castle Basement", world.player)
@@ -63,7 +63,7 @@ def create(world: "PokemonBWWorld") -> None:
             location.access_rule = lambda state: (
                 # Legendary hunt, including Cobalion
                 state.can_reach_region("Mistralton Cave Inner", world.player) and
-                state.can_reach_region("Victory Road", world.player) and
+                state.can_reach_region("Trial Chamber", world.player) and
                 state.can_reach_region("Giant Chasm Inner Cave", world.player) and
                 state.can_reach_region("Liberty Garden", world.player) and
                 state.can_reach_region("Relic Castle Basement", world.player) and

@@ -33,15 +33,15 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
         ext_rule: "ExtendedRule" = method.rule(f_evodata[1])
         return lambda state: ext_rule(state, world) and state.has(f_base_species, world.player)
 
-    noted_evoid_set: set[tuple[str, int]] = set()
-    current_evoid_set: set[tuple[str, int]] = set()
-    next_evoid_set: set[tuple[str, int]] = set()
+    noted_evoid_set: dict[tuple[str, int], None] = {}
+    current_evoid_set: dict[tuple[str, int], None] = {}
+    next_evoid_set: dict[tuple[str, int], None] = {}
     # Populate initial set by adding all evolutions of every (already) catchable species
     for base_species, base_speciesdata in catchable_species_data.items():
         for evoid_index in range(len(base_speciesdata.evolutions)):
             evoid = (base_species, evoid_index)
-            current_evoid_set.add(evoid)
-            noted_evoid_set.add(evoid)
+            current_evoid_set[evoid] = None
+            noted_evoid_set[evoid] = None
 
     # Iterate as long as it has been signaled that there is something new to check
     check_next = True
@@ -64,7 +64,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
                         break
                 else:
                     # If required team member not found, add this evoid to next iteration and skip adding event
-                    next_evoid_set.add(current_evoid)
+                    next_evoid_set[current_evoid] = None
                     continue
             # Creating event
             location_name = f"Evolving {current_evoid[0]} {current_evoid[1]+1}"
@@ -81,8 +81,8 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
             for evo_evodata_index in range(len(evo_speciesdata.evolutions)):
                 evo_evoid = (current_evodata[2], evo_evodata_index)
                 if evo_evoid not in noted_evoid_set:
-                    noted_evoid_set.add(evo_evoid)
-                    next_evoid_set.add(evo_evoid)
+                    noted_evoid_set[evo_evoid] = None
+                    next_evoid_set[evo_evoid] = None
         if check_next:
             current_evoid_set = next_evoid_set
-            next_evoid_set = set()
+            next_evoid_set = {}

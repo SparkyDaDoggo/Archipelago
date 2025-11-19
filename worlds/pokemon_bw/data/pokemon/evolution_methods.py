@@ -10,6 +10,7 @@ always_possible: ExtendedRule = lambda state, world: True
 can_reach_magnetic_area: ExtendedRule = lambda state, world: state.can_reach_region("Chargestone Cave", world.player)
 can_reach_moss_rock: ExtendedRule = lambda state, world: state.can_reach_region("Pinwheel Forest West", world.player)
 can_reach_ice_rock: ExtendedRule = lambda state, world: state.can_reach_region("Twist Mountain", world.player)
+can_reach_nacrene_city: ExtendedRule = lambda state, world: state.can_reach_region("Nacrene City", world.player)
 
 can_buy_item_castelia: ExtendedRule = lambda state, world: state.can_reach_region("Castelia City", world.player)
 can_get_item_chargestone: ExtendedRule = lambda state, world: state.can_reach_region("Chargestone Cave", world.player)
@@ -54,7 +55,7 @@ between_ghetsis_and_alder: ExtendedRule = lambda state, world: (
     in_vanilla_east(state, world)
     or can_challenge_alder(state, world)
 )
-is_in_appropriate_region: dict[int, ExtendedRule] = {
+is_in_appropriate_region: dict[int, ExtendedRule] = {  # Artificial logic so that you're not expected to evolve Larvesta in Striaton City
     0: always_possible,
     1: always_possible,
     2: always_possible,
@@ -85,7 +86,7 @@ methods: dict[str, EvolutionMethodData] = {
     "Stone": EvolutionMethodData(0, lambda value: can_buy_item[value]),
     "Stone male": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
     "Stone female": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
-    "Friendship": EvolutionMethodData(0, lambda value: always_possible),
+    "Friendship": EvolutionMethodData(0, lambda value: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
     "Friendship (Day)": EvolutionMethodData(0, None),  # Removed
     "Friendship (Night)": EvolutionMethodData(0, None),  # Removed
     "Trade": EvolutionMethodData(0, None),  # Removed
