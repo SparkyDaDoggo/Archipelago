@@ -4,6 +4,7 @@ from .rules import *
 connections: dict[str, RegionConnectionData] = {
     "Dexsanity": RegionConnectionData("Menu", "Pokédex", None),
     "Evolving Pokémon": RegionConnectionData("Menu", "Evolutions", None),  # No actual locations, only events
+    "Changing form": RegionConnectionData("Menu", "Form Change", None),  # No actual locations, only events
     "Starting the game": RegionConnectionData("Menu", "Nuvema Town", None),
     # South Unova, linear
     "Nuvema Town north": RegionConnectionData("Nuvema Town", "Route 1 East", None),

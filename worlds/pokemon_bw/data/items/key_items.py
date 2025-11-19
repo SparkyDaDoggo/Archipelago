@@ -32,7 +32,7 @@ vanilla: dict[str, ItemData] = {
     "Pal Pad": ItemData(0x01B5, always_useful),
     "Bicycle": ItemData(0x01C2, always_useful),
     "Vs. Recorder": ItemData(0x01D1, always_useful),
-    "Gracidea": ItemData(0x01D2, always_useful),
+    "Gracidea": ItemData(0x01D2, always_progression),
     "Dowsing Machine": ItemData(0x01D7, dowsing_machine_logic),
     "Prop Case": ItemData(0x0242, always_useful),
 }

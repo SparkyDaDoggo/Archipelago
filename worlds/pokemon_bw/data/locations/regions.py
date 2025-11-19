@@ -3,6 +3,7 @@ region_list: set[str] = {
     "Menu",
     "Pokédex",
     "Evolutions",
+    "Form Change",
     # Southern Unova
     "Nuvema Town",
     "Route 1 East",

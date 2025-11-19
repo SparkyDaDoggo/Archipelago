@@ -11,6 +11,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed logic of Trial Chamber (including the static Terrakion)
 - Fixed nondeterministic Dexsanity location creation#
 - Fixed generation failures for certain combinations of Encounter Plando and randomization modifiers
+- Added form changes for Deerling, Sawsbuck, Rotom, Deoxys, and Shaymin to logic
 
 ## 0.3.13
 

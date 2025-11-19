@@ -49,10 +49,11 @@ def create_rule_dict(world: "PokemonBWWorld") -> "RulesDict":
 
 def create_and_place_event_locations(world: "PokemonBWWorld") -> dict[str, "SpeciesData"]:
     """Returns a dict of species that are actually catchable in this world."""
-    from .generate.events import wild, static, evolutions, goal, species_tables
+    from .generate.events import wild, static, evolutions, goal, species_tables, form_change
 
     catchable_species_data: dict[str, "SpeciesData"] = wild.create(world) | static.create(world)
     evolutions.create(world, catchable_species_data)
+    form_change.create(world, catchable_species_data)
     species_tables.populate(world, catchable_species_data)
     goal.create(world)
     return catchable_species_data
