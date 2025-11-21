@@ -3,15 +3,18 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.14
 
+- Made reaching Nacrene City a logical requirement for friendship evolutions
+- Added form changes for Deerling, Sawsbuck, Rotom, Deoxys, and Shaymin to logic
+- Added `Modify Encounter Rates` option
 - Fixed manifest missing the container version fields
 - Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
 - Fixed badge and TM/HM locations not being excludable or prioritizable
-- Made reaching Nacrene City a logical requirement for friendship evolutions
 - Fixed the Deerling forms location once again
 - Fixed logic of Trial Chamber (including the static Terrakion)
 - Fixed nondeterministic Dexsanity location creation#
 - Fixed generation failures for certain combinations of Encounter Plando and randomization modifiers
-- Added form changes for Deerling, Sawsbuck, Rotom, Deoxys, and Shaymin to logic
+- Fixed small miscalculations with `Prevent rare encounters` in wild pokémon randomization
+- Fixed Sneasel not being able to evolve
 
 ## 0.3.13
 

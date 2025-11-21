@@ -10,7 +10,7 @@ from settings import get_settings
 from worlds.Files import APAutoPatchInterface
 from typing import TYPE_CHECKING, Any, Dict, Callable
 
-from .patch.procedures import base_patch, season_patch, write_wild_pokemon, level_adjustments, write_trainer_pokemon
+from .patch.procedures import base_patch, season_patch, write_wild_pokemon, level_adjustments, write_trainer_pokemon, modify_rates
 
 if TYPE_CHECKING:
     from . import PokemonBWWorld
@@ -97,6 +97,9 @@ class PatchMethods:
             procedures.append("adjust_wild_levels")
         if "Trainer" in patch.world.options.adjust_levels:
             procedures.append("adjust_trainer_levels")
+        if patch.world.options.modify_encounter_rates != "vanilla":
+            procedures.append("modify_rates")
+            modify_rates.write_patch(patch, opened_zipfile)
 
         opened_zipfile.writestr("procedures.txt", "\n".join(procedures))
 
@@ -167,6 +170,7 @@ patch_procedures: dict[str, Callable[[ndspy_rom.NintendoDSRom, str, PokemonBWPat
     "write_trainer_pokemon": write_trainer_pokemon.patch_species,
     "adjust_wild_levels": level_adjustments.patch_wild,
     "adjust_trainer_levels": level_adjustments.patch_trainer,
+    "modify_rates": modify_rates.patch,
 }
 
 

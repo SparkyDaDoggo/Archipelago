@@ -68,6 +68,29 @@ def add_species_to_check(checklist: tuple[list[str], set[str]], species: str) ->
         checklist[0].append(species)
 
 
+def random_percentage_distribution(world: "PokemonBWWorld", length: int) -> list[int]:
+    ret = []
+    remaining = 100
+    for i in reversed(range(2, length+1)):
+        rand = world.random.random() ** (i//2)
+        if int(rand * 100) % 2:
+            value = (remaining//i) + int((remaining-(remaining//i))*rand)
+        else:
+            value = (remaining//i) + int(-(remaining//i)*rand)
+        value = max(1, min(value, remaining-i+1))
+        ret.append(value)
+        remaining -= value
+    ret.append(remaining)
+    return ret
+
+
+def track_down_copy_from(copy_from: dict[str, str | None], slot: str) -> str:
+    current = slot
+    while copy_from[current] is not None:
+        current = copy_from[current]
+    return current
+
+
 def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
     from ...data.locations.encounters.slots import table
 
@@ -110,33 +133,70 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
                     copy_from[slot] = first_slot[area][species]
 
     if prevent_rare_encounters:
-        # rates = [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1] * 3 + [60, 30, 5, 4, 1] * 2 + [40, 40, 15, 4, 1] * 2
-        # {region: [slot1 rate, slot2 rate]}
+        from ...data.locations.encounters import rates
+        # Important: make copies of lists afterwards
+        if world.options.modify_encounter_rates == "plando":
+            plando = world.options.modify_encounter_rates.value
+            encounter_rates = (
+                plando["grass"] if "grass" in plando else rates.tables["vanilla"][0],
+                plando["surfing"] if "surfing" in plando else rates.tables["vanilla"][1],
+                plando["fishing"] if "fishing" in plando else rates.tables["vanilla"][2],
+            )
+            world.options.modify_encounter_rates.custom_rates = encounter_rates
+        elif world.options.modify_encounter_rates == "randomized_12":
+            encounter_rates = (
+                random_percentage_distribution(world, 12),
+                random_percentage_distribution(world, 5),
+                random_percentage_distribution(world, 5),
+            )
+            world.options.modify_encounter_rates.custom_rates = encounter_rates
+        else:
+            encounter_rates = rates.tables[world.options.modify_encounter_rates.current_key]
+        # {region: [slot1 rate, slot2 rate, ...]}
         region_added_rates: dict[str, list[int]] = {}
         for slot in copy_from:
             region = table[slot].encounter_region
             method_index = int(slot[-2:])
             if region not in region_added_rates:
                 if "G" in region[-2:]:
-                    region_added_rates[region] = [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1]
+                    region_added_rates[region] = list(encounter_rates[0])
                 elif "S" in region[-2:]:
-                    region_added_rates[region] = [60, 30, 5, 4, 1]
+                    region_added_rates[region] = list(encounter_rates[1])
                 elif "F" in region[-2:]:
-                    region_added_rates[region] = [40, 40, 15, 4, 1]
+                    region_added_rates[region] = list(encounter_rates[2])
             if copy_from[slot] is not None:
-                region_added_rates[region][int(copy_from[slot][-2:])] += region_added_rates[region][method_index]
+                to_copy = track_down_copy_from(copy_from, slot)
+                region_added_rates[region][int(to_copy[-2:])] += region_added_rates[region][method_index]
                 region_added_rates[region][method_index] = 0
-        for slot in copy_from:
-            region = table[slot].encounter_region
-            method_index = int(slot[-2:])
-            if copy_from[slot] is None:
-                if region_added_rates[region][method_index] < 10:
-                    # for next_index_down in (9/8/7/...)...0
-                    for next_index_down in reversed(range(min(method_index, 10))):
+        for slot in copy_from:  # StrCity - FR 0, 1, ...11
+            region = table[slot].encounter_region  # StrCity - FR
+            method_index = int(slot[-2:])  # 0, 1, ..., 11
+            if copy_from[slot] is None and region_added_rates[region][method_index] < 10:
+                for next_index_down in range(12):
+                    if next_index_down == method_index:
+                        continue
+                    next_slot = table[slot].encounter_region + f" {next_index_down}"
+                    tracked_slot = track_down_copy_from(copy_from, next_slot)
+                    tracked_index = int(tracked_slot[-2:])
+                    # if < 15 to distribute them more evenly
+                    if (
+                        tracked_slot != slot and
+                        region_added_rates[region][tracked_index] + region_added_rates[region][method_index] < 15
+                    ):
+                        copy_from[slot] = next_slot
+                        region_added_rates[region][tracked_index] += region_added_rates[region][method_index]
+                        region_added_rates[region][method_index] = 0
+                        break
+                else:
+                    for next_index_down in range(12):
+                        if next_index_down == method_index:
+                            continue
                         next_slot = table[slot].encounter_region + f" {next_index_down}"
-                        if copy_from[next_slot] is None:
+                        # If all slots in region were to copy this, then this wouldn't have < 10 added rate
+                        if track_down_copy_from(copy_from, next_slot) != slot:
                             copy_from[slot] = next_slot
                             region_added_rates[region][next_index_down] += region_added_rates[region][method_index]
                             region_added_rates[region][method_index] = 0
+                            break
 
     return copy_from

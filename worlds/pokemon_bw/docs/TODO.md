@@ -3,6 +3,7 @@
 - poptracker stuff
 - cold storage sage duplicate increments sage counter twice
 - maybe gracidea giving NPC has to enable using it?
+- encounter rates modifier
 
 # Not urgent
 

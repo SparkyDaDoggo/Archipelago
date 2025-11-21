@@ -785,6 +785,69 @@ class AdjustLevels(CasefoldOptionSet):
     default = ["Wild", "Trainer"]
 
 
+class ModifyEncounterRates(Choice):
+    """
+    Modifies the encounter slot rates for wild encounters.
+
+    - **Vanilla** - Keeps the vanilla encounter slot rates.
+    - **Try normalized** - Normalizes the rates for the 12 grass method slots to 8-9% each and the rates for surfing and fishing method slots to 20% each. It is recommended to **not** include **Prevent rare encounters** if wild pokemon are randomized.
+    - **Try normalized alternative** - Same as **Try normalized**, but sets 9 slots to 10% each and 3 slots to 3-4% each for grass methods. However, this works well with **Prevent rare encounters**.
+    - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the remaining slots to 5% or less each for all encounter methods.
+    - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate. Expect multiple 1% slot rates.
+
+    Alternatively, you can provide a list of custom encounter rates. See the option guides for more information.
+    """
+    display_name = "Modify Encounter Rates"
+    value: int | dict[str, list[int]]
+    custom_rates: tuple[list[int], ...] | None = None
+    option_vanilla = 0
+    option_try_normalized = 1
+    option_try_normalized_alt = 2
+    # option_force_normalized = 3
+    option_invasive = 4
+    option_randomized_12 = 5
+    # option_randomized_10 = 6
+    default = 0
+
+    def __init__(self, value: int | dict):
+        super().__init__(value)
+
+    @classmethod
+    def from_any(cls, data: typing.Any) -> Choice:
+        if isinstance(data, dict):
+            reasons: list[str] = []
+            for key, value in data.items():
+                if key.casefold() not in ("grass", "surfing", "fishing"):
+                    reasons.append(f"Unsupported method '{key}'")
+                if not isinstance(value, typing.Iterable) or any(not isinstance(val, int) for val in value):
+                    reasons.append(f"Unsupported value for method '{key}'")
+                value: list[int]
+                if key.casefold() == "grass" and not (12 <= len(value) <= 12):  # TODO change to 6 <= ... when enabling less slots
+                    reasons.append(f"Unsupported list length ({len(value)}) for method '{key}'")
+                if key.casefold() != "grass" and len(value) != 5:
+                    reasons.append(f"Unsupported list length ({len(value)}) for method '{key}'")
+                if sum(value) != 100 or any(val <= 0 for val in value):
+                    reasons.append(f"Unsupported list values ({value}) for method '{key}'")
+            if reasons:
+                raise OptionError("Bad plando formatting for modify_encounter_rates option:\n" + ", ".join(reasons))
+            data: dict[str, list[int]]
+            return cls({key.casefold(): [val for val in value] for key, value in data.items()})
+        return super().from_any(data)
+
+    def __eq__(self, other):
+        if other == "plando":
+            return isinstance(self.value, dict)
+        else:
+            return super().__eq__(other)
+
+    @property
+    def current_key(self) -> str:
+        if isinstance(self.value, dict):
+            return "plando"
+        else:
+            return self.name_lookup[self.value]
+
+
 class ExpModifier(Range):
     """
     Multiplies the experience received from defeating wild and trainer pokemon.
@@ -959,7 +1022,7 @@ class ModifyLogic(CasefoldOptionSet):
     - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the basement of Wellspring Cave
                           logically require TM70 Flash.
     """
-    display_name = "Modify Item Pool"
+    display_name = "Modify Logic"
     valid_keys_casefold = True
     valid_keys = [
         "Require Dowsing Machine",
@@ -1076,6 +1139,7 @@ class PokemonBWOptions(PerGameCommonOptions):
 
     # Miscellaneous
     adjust_levels: AdjustLevels
+    modify_encounter_rates: ModifyEncounterRates
     # exp_modifier: ExpModifier
     # all_pokemon_seen: AllPokemonSeen
     # add_fairy_type: AddFairyType

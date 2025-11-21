@@ -195,6 +195,34 @@ class TestSeasonControlRandomized(PokemonBWTestBase):
 
 
 ###################################################
+# Modify Encounter Rates                          #
+###################################################
+
+
+class TestModifyEncounterRatesTryNormalized(PokemonBWTestBase):
+    options = {"modify_encounter_rates": "try_normalized"}
+
+
+class TestModifyEncounterRatesTryNormalizedAlt(PokemonBWTestBase):
+    options = {"modify_encounter_rates": "try_normalized_alt"}
+
+
+class TestModifyEncounterRatesInvasive(PokemonBWTestBase):
+    options = {"modify_encounter_rates": "invasive"}
+
+
+class TestModifyEncounterRatesRandomized12(PokemonBWTestBase):
+    options = {"modify_encounter_rates": "randomized_12"}
+
+
+class TestModifyEncounterRatesCustom(PokemonBWTestBase):
+    options = {"modify_encounter_rates": {
+        "Grass": [12, 23, 4, 6, 18, 1, 6, 5, 5, 7, 7, 6],
+        "Fishing": [21, 19, 22, 18, 20],
+    }}
+
+
+###################################################
 # Modify Item Pool                                #
 ###################################################
 

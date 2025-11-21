@@ -251,6 +251,7 @@ class PokemonBWWorld(World):
                 "dexsanity": self.options.dexsanity.value,
                 "season_control": self.options.season_control.current_key,
                 "adjust_levels": self.options.adjust_levels.value,
+                "modify_encounter_rates": self.options.modify_encounter_rates.value,  # value property because of plando
                 "master_ball_seller": self.options.master_ball_seller.value,
                 "modify_item_pool": self.options.modify_item_pool.value,
                 "modify_logic": self.options.modify_logic.value,

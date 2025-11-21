@@ -36,6 +36,10 @@
 # season_control:
 #   default vanilla
 #   each other has its own test
+# modify_encounter_rates:
+#   default vanilla
+#   one test for each other choice each
+#   one test for custom rates
 # modify_item_pool:
 #   default []
 #   one test for all modifiers combined
