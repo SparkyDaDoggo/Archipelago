@@ -3,9 +3,10 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.14
 
+- Added `Modify Encounter Rates` option
 - Made reaching Nacrene City a logical requirement for friendship evolutions
 - Added form changes for Deerling, Sawsbuck, Rotom, Deoxys, and Shaymin to logic
-- Added `Modify Encounter Rates` option
+- Tweaked the `Adjust Levels` option for some earlier postgame maps
 - Fixed manifest missing the container version fields
 - Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
 - Fixed badge and TM/HM locations not being excludable or prioritizable
@@ -15,6 +16,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed generation failures for certain combinations of Encounter Plando and randomization modifiers
 - Fixed small miscalculations with `Prevent rare encounters` in wild pokémon randomization
 - Fixed Sneasel not being able to evolve
+- Fixed rom not being automatically updated when it should
+- Fixed incorrect level adjustments
 
 ## 0.3.13
 

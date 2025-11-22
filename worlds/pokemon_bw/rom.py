@@ -120,7 +120,7 @@ class PatchMethods:
             with open(target, "rb") as f:
                 header_part = f.read(0xA0)
                 found_rom_version = tuple(header_part[0x9D:0xA0])
-                if version.rom() != found_rom_version:
+                if version.rom() == found_rom_version:
                     return
 
         with BytesIO() as bytes_io, zipfile.ZipFile(bytes_io, "w", zipfile.ZIP_DEFLATED, True, 9) as files_dump:
