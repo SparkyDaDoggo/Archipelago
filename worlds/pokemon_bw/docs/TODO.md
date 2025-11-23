@@ -1,7 +1,5 @@
 # Important stuff
 
-- maybe gracidea giving NPC has to enable using it?
-- gym leader scripts control obedience level?
 
 # Not urgent
 
@@ -21,6 +19,8 @@
 - make reusable tms option add funny dialog
 - BizHawk 2.11 having issues with modded gen 5 roms
 - Chargestone cave make north to south shortcut open after traversing it for the first time (maybe when battled N)
+- gracidea seems to only work on fateful encounters, assembly needed
+- gym leader scripts control traded obedience level?
 
 # Single reports, cannot recreate, need to wait for more reports
 
@@ -34,3 +34,4 @@
 - incredibly low catch chances? idk how that could be related to the apworld in any way
 - plando items having issues? plandoing basic badge into abyssal ruins sometimes raises fillerrors about this item not being placeable
 - route 8 bianca items logic, apparently said to be in logic without light/dark stone, but blocked by grunts wanting the stone
+- damn wingull gram item balls
