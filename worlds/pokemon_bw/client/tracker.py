@@ -124,15 +124,5 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
             }]
         })
     if packages:
-        packages.append({
-            "cmd": "Set",
-            "key": f"pokemon_bw_dex_{ctx.team}_{ctx.slot}",
-            "default": [],
-            "want_reply": False,
-            "operations": [{
-                "operation": "update",
-                "value": {"caught": caught, "seen": seen},
-            }]
-        })
         await ctx.send_msgs(packages)
 

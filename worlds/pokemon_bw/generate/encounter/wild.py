@@ -5,16 +5,21 @@ from .. import EncounterEntry
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from ...data import SpeciesData
+    from .. import EncounterEntry
 
 
-def organize_by_method(world: "PokemonBWWorld") -> dict[str, list[str]]:
+def organize_by_method(world: "PokemonBWWorld") -> dict[str, tuple[list[str], list[int]]]:
     from ...data.pokemon.species import by_id
-    ret: dict[str, list[str]] = {}
+    # {method: ([species names], [dex numbers])}
+    ret: dict[str, tuple[list[str], list[int]]] = {}
     for slot, data in world.wild_encounter.items():
         if data.encounter_region not in ret:
-            ret[data.encounter_region] = []
-        if data.species_id not in ret[data.encounter_region]:
-            ret[data.encounter_region].append(by_id[data.species_id])
+            ret[data.encounter_region] = ([], [])
+        spec = by_id[data.species_id]
+        if spec not in ret[data.encounter_region][0]:
+            ret[data.encounter_region][0].append(spec)
+        if data.species_id[0] not in ret[data.encounter_region][1]:
+            ret[data.encounter_region][1].append(data.species_id[0])
     return ret
 
 

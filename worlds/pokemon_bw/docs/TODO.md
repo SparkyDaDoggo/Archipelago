@@ -34,4 +34,4 @@
 - incredibly low catch chances? idk how that could be related to the apworld in any way
 - plando items having issues? plandoing basic badge into abyssal ruins sometimes raises fillerrors about this item not being placeable
 - route 8 bianca items logic, apparently said to be in logic without light/dark stone, but blocked by grunts wanting the stone
-- damn wingull gram item balls
+- damn wingull gram item balls not disappearing?

@@ -119,7 +119,7 @@ class PokemonBWWorld(World):
         self.static_encounter: dict[str, StaticEncounterEntry] | None = None
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
-        self.encounter_by_method: dict[str, list[str]] = {}
+        self.encounter_by_method: dict[str, tuple[list[str], list[int]]] = {}
         self.dexsanity_numbers: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.rules_dict: RulesDict | None = None
@@ -266,7 +266,7 @@ class PokemonBWWorld(World):
             "master_ball_seller_cost": self.master_ball_seller_cost,
             "reusable_tms": self.options.reusable_tms.current_key,
             # Needed for PopTracker
-            "encounter_by_method": self.encounter_by_method,
+            "encounter_by_method": {method: lists[1] for method, lists in self.encounter_by_method.items()},
             "dexsanity_pokemon": self.dexsanity_numbers,
         }
 
