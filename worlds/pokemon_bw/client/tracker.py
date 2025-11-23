@@ -70,6 +70,12 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
         bitmap |= 32768
     if client.get_flag(0x1D4):  # Alder
         bitmap |= 65536
+    if client.get_flag(0x191):  # TM/HM scientist
+        bitmap |= 131072
+    if client.get_flag(0x178):  # Gym leader Brycen
+        bitmap |= 262144
+    if client.get_flag(841):  # Daycare man
+        bitmap |= 524288
     if bitmap != client.goal_bitmap:
         client.goal_bitmap |= bitmap
         await ctx.send_msgs([{
