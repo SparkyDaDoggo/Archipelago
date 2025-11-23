@@ -119,6 +119,8 @@ class PokemonBWWorld(World):
         self.static_encounter: dict[str, StaticEncounterEntry] | None = None
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
+        self.encounter_by_method: dict[str, list[str]] = {}
+        self.dexsanity_numbers: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.rules_dict: RulesDict | None = None
         self.master_ball_seller_cost: int = 0
@@ -178,6 +180,7 @@ class PokemonBWWorld(World):
         self.wild_encounter |= wild.generate_wild_encounters(  # only removes species
             self, species_checklist, slots_checklist
         )
+        self.encounter_by_method = wild.organize_by_method(self)
         self.trainer_teams = trainers.generate_trainer_teams(self)
 
     def create_item(self, name: str) -> items.PokemonBWItem:
@@ -262,6 +265,9 @@ class PokemonBWWorld(World):
             # NOT needed for UT
             "master_ball_seller_cost": self.master_ball_seller_cost,
             "reusable_tms": self.options.reusable_tms.current_key,
+            # Needed for PopTracker
+            "encounter_by_method": self.encounter_by_method,
+            "dexsanity_pokemon": self.dexsanity_numbers,
         }
 
     def interpret_slot_data(self, slot_data: dict[str, Any]) -> dict[str, Any]:

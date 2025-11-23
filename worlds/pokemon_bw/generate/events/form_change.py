@@ -17,6 +17,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
     #   Castform and Cherrim: Having a reliable way to change weather is too complex
     #   Burmy: Checking for access to needed maps will become too complex for door shuffling
     #   Giratina: Requires Griseous Orb to be repeatedly obtainable, maybe I'll add that later
+    #   Shaymin: Gracidea only works on fateful encounters
     #   Arceus: Forms will be removed in 0.4.0 entirely
     #   Darmanitan: Requires repeatable access to Darmanitans with hidden ability
     #   Meloetta: Not possible in BW according to PokéWiki
@@ -64,15 +65,15 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
             location.access_rule = lambda state: state.has_any(deoxys_forms, world.player)
             region.locations.append(location)
 
-    if "Shaymin" in catchable_species_data or "Shaymin (Sky)" in catchable_species_data:
-        region = world.regions["Form Change"]
-        location = PokemonBWLocation(world.player, "Change Shaymin to Sky", None, region)
-        item = PokemonBWItem("Shaymin (Sky)", ItemClassification.progression, None, world.player)
-        location.place_locked_item(item)
-        location.access_rule = lambda state: state.has_all(("Shaymin", "Gracidea"), world.player)
-        region.locations.append(location)
-        location = PokemonBWLocation(world.player, "Change Shaymin to Land", None, region)
-        item = PokemonBWItem("Shaymin", ItemClassification.progression, None, world.player)
-        location.place_locked_item(item)
-        location.access_rule = lambda state: state.has_all(("Shaymin (Sky)", "Gracidea"), world.player)
-        region.locations.append(location)
+    # if "Shaymin" in catchable_species_data or "Shaymin (Sky)" in catchable_species_data:
+    #     region = world.regions["Form Change"]
+    #     location = PokemonBWLocation(world.player, "Change Shaymin to Sky", None, region)
+    #     item = PokemonBWItem("Shaymin (Sky)", ItemClassification.progression, None, world.player)
+    #     location.place_locked_item(item)
+    #     location.access_rule = lambda state: state.has_all(("Shaymin", "Gracidea"), world.player)
+    #     region.locations.append(location)
+    #     location = PokemonBWLocation(world.player, "Change Shaymin to Land", None, region)
+    #     item = PokemonBWItem("Shaymin", ItemClassification.progression, None, world.player)
+    #     location.place_locked_item(item)
+    #     location.access_rule = lambda state: state.has_all(("Shaymin (Sky)", "Gracidea"), world.player)
+    #     region.locations.append(location)

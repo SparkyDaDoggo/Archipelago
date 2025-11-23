@@ -7,6 +7,17 @@ if TYPE_CHECKING:
     from ...data import SpeciesData
 
 
+def organize_by_method(world: "PokemonBWWorld") -> dict[str, list[str]]:
+    from ...data.pokemon.species import by_id
+    ret: dict[str, list[str]] = {}
+    for slot, data in world.wild_encounter.items():
+        if data.encounter_region not in ret:
+            ret[data.encounter_region] = []
+        if data.species_id not in ret[data.encounter_region]:
+            ret[data.encounter_region].append(by_id[data.species_id])
+    return ret
+
+
 def generate_wild_encounters(world: "PokemonBWWorld",
                              species_checklist: tuple[list[str], set[str]],
                              slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:

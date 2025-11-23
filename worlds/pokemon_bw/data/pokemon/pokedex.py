@@ -652,3 +652,5 @@ by_number = {
 }
 
 by_name: dict[str, int] = {by_number[num]: num for num in range(1, 650)}
+
+unovan_pokemon: dict[int, str] = {num: name for num, name in by_number.items() if 494 <= num <= 649}

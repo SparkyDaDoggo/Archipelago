@@ -27,6 +27,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
         return lambda state: location_table[x].special_rule(state, world)
 
     catchable_dex: dict[str, None] = {data.dex_name: None for data in catchable_species_data.values()}
+    dexsanity_numbers: list[int] = []
     count = min(world.options.dexsanity.value, len(catchable_dex))
     possible = [f"Pokédex - {species}" for species in catchable_dex]
     world.random.shuffle(possible)
@@ -34,6 +35,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
     for _ in range(count):
         name = possible.pop()  # location name
         data = location_table[name]
+        dexsanity_numbers.append(data.dex_number)
         r: "Region" = world.regions["Pokédex"]
         l: PokemonBWLocation = PokemonBWLocation(world.player, name, world.location_name_to_id[name], r)
         l.progress_type = LocationProgressType.DEFAULT
@@ -44,3 +46,5 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
         if data.ut_alias is not None:
             world.location_id_to_alias[world.location_name_to_id[name]] = data.ut_alias
         r.locations.append(l)
+
+    world.dexsanity_numbers.extend(dexsanity_numbers)
