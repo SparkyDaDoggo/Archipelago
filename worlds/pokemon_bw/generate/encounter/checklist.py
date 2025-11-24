@@ -173,8 +173,9 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
         for slot in copy_from:  # StrCity - FR 0, 1, ...11
             region = table[slot].encounter_region  # StrCity - FR
             method_index = int(slot[-2:])  # 0, 1, ..., 11
+            is_grass = region[-2:] in (" G", "DG", "RG")
             if copy_from[slot] is None and region_added_rates[region][method_index] < 10:
-                for next_index_down in range(12):
+                for next_index_down in range(12 if is_grass else 5):
                     if next_index_down == method_index:
                         continue
                     next_slot = table[slot].encounter_region + f" {next_index_down}"
@@ -190,7 +191,7 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
                         region_added_rates[region][method_index] = 0
                         break
                 else:
-                    for next_index_down in range(12):
+                    for next_index_down in range(12 if is_grass else 5):
                         if next_index_down == method_index:
                             continue
                         next_slot = table[slot].encounter_region + f" {next_index_down}"

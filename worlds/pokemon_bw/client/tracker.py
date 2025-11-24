@@ -83,10 +83,15 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
             "key": f"pokemon_bw_events_{ctx.team}_{ctx.slot}",
             "default": 0,
             "want_reply": False,
-            "operations": [{
-                "operation": "or",
-                "value": bitmap,
-            }]
+            "operations": [
+                {
+                    "operation": "default",
+                    "value": 0,
+                }, {
+                    "operation": "or",
+                    "value": bitmap,
+                }
+            ]
         }])
 
 
@@ -99,35 +104,43 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
             (client.save_data_address + client.dex_seen_offset, client.dex_bytes_amount, client.ram_read_write_domain),
         )
     )
-    caught = []
-    seen = []
-    if read[0] != client.dex_cache:
-        caught = [i for i in range(1, 650) if read[0][(i-1)//8] & 2 ** ((i-1) % 8)]
+    if read[0] != client.tracker_caught_cache:
+        caught = [i for i in range(1, 650) if read[0][(i-1)//8] & (2 ** ((i-1) % 8)) > 0]
         for eight_flags in range(len(read[0])):
-            client.dex_cache[eight_flags] |= read[0][eight_flags]
+            client.tracker_caught_cache[eight_flags] |= read[0][eight_flags]
         packages.append({
             "cmd": "Set",
             "key": f"pokemon_bw_caught_{ctx.team}_{ctx.slot}",
             "default": [],
             "want_reply": False,
-            "operations": [{
-                "operation": "update",
-                "value": caught,
-            }]
+            "operations": [
+                {
+                    "operation": "default",
+                    "value": [],
+                }, {
+                    "operation": "update",
+                    "value": caught,
+                }
+            ]
         })
-    if read[1] != client.dex_seen_cache:
-        seen = [i for i in range(1, 650) if read[1][(i-1)//8] & 2 ** ((i-1) % 8)]
+    if read[1] != client.tracker_seen_cache:
+        seen = [i for i in range(1, 650) if read[1][(i-1)//8] & (2 ** ((i-1) % 8)) > 0]
         for eight_flags in range(len(read[1])):
-            client.dex_seen_cache[eight_flags] |= read[1][eight_flags]
+            client.tracker_seen_cache[eight_flags] |= read[1][eight_flags]
         packages.append({
             "cmd": "Set",
             "key": f"pokemon_bw_seen_{ctx.team}_{ctx.slot}",
             "default": [],
             "want_reply": False,
-            "operations": [{
-                "operation": "update",
-                "value": seen,
-            }]
+            "operations": [
+                {
+                    "operation": "default",
+                    "value": [],
+                }, {
+                    "operation": "update",
+                    "value": seen,
+                }
+            ]
         })
     if packages:
         await ctx.send_msgs(packages)

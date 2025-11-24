@@ -56,7 +56,8 @@ class PokemonBWClient(BizHawkClient):
         super().__init__()
         self.flags_cache: bytearray = bytearray(self.flag_bytes_amount)
         self.dex_cache: bytearray = bytearray(self.dex_bytes_amount)
-        self.dex_seen_cache: bytearray = bytearray(self.dex_bytes_amount)
+        self.tracker_caught_cache: bytearray = bytearray(self.dex_bytes_amount)
+        self.tracker_seen_cache: bytearray = bytearray(self.dex_bytes_amount)
         self.goal_bitmap: int = 0
         self.dexsanity_included: bool = True
         self.player_name: str | None = None
