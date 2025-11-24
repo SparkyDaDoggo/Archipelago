@@ -207,7 +207,9 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             # Shuffle everything
             # If no gym location is excluded, add one random TM to HMs
             if len(gym_tm_locations) == 8:
-                hm_items.append(world.random.choice(tm_items))
+                rand_tm = world.random.choice(tm_items)
+                hm_items.append(rand_tm)
+                tm_items.remove(rand_tm)
             world.random.shuffle(hm_items)
             world.random.shuffle(other_tm_locations)
             world.random.shuffle(gym_tm_locations)

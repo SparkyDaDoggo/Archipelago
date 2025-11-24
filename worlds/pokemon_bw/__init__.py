@@ -5,7 +5,7 @@ from typing import ClassVar, Mapping, Any, List
 
 import settings
 from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
-from Options import Option
+from Options import Option, OptionError
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
@@ -155,6 +155,16 @@ class PokemonBWWorld(World):
             self.seed = self.random.getrandbits(64)
 
         self.random.seed(self.seed)
+
+        # TODO quick bandaid fix, need to fix it in another way later
+        if (
+            # False and
+            self.options.modify_encounter_rates.current_key in ("invasive", "randomized_12") and
+            "Prevent rare encounters" in self.options.randomize_wild_pokemon
+        ):
+            raise OptionError(f"Player {self.player_name}: Modify Encounter Rates choice "
+                              f"\"{self.options.modify_encounter_rates.current_key}\" (currently) not allowed "
+                              f"in combination with \"Prevent rare encounters\" in wild randomization.")
 
         cost_start, cost_end = 999999, -1
         for modifier in self.options.master_ball_seller.value:
