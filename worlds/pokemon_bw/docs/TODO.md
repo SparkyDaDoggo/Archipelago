@@ -1,14 +1,5 @@
 # Important stuff
 
-- encounter plando removes slots from checklist even if other slots want to copy from it
-- poptracker stuff
-- Fixed nondeterministic Dexsanity location creation
-- trial chamber/terrakion doesn't appear without encountering cobalion
-- route 6 deerlings location bad logic again
-- fix manifest fields
-- cold storage sage duplicate increments sage counter twice
-- maybe gracidea giving NPC has to enable using it?
-- friendship evos requiring nacrene city
 
 # 0.4.0
 
@@ -55,6 +46,7 @@
 - fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
 - opelucid city fly flag only set after ghetsis scene?
 - make massage lady in castelia repeatable
+- Fix locations in pokédex if something written to encounter tables
 
 ## Both
 
@@ -67,6 +59,7 @@
 - master ball seller not showing up again?
 - bgm randomization
 - Early game cutscenes shortening option (skipping entire parts in script)
+- move evos need access to free move relearner
 - after everything else: check docs for up-to-date information, update tests, update location names in ut                             
 
 # Not urgent
@@ -82,9 +75,11 @@
 - change rules dict to being filled on the way
 - organize imports for type hints behind TYPE_CHECKING
 - pitch webhost and template yaml notes, both individual, but template copying from webhost by default
-- Fix locations in pokédex if something written to encounter tables
 - BizHawk 2.11 having issues with modded gen 5 roms
 - rename slot methods to cave/dust cloud/etc everywhere
+- gracidea seems to only work on fateful encounters, assembly needed
+- gym leader scripts control traded obedience level?
+- wingull grams overworld items not disappearing
 
 # Single reports, cannot recreate, need to wait for more reports
 

@@ -31,8 +31,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ### Bug fixes and technical stuff
 
 - Fixed `Pokémon Randomization Adjustments` crashing when given an empty dictionary
-- Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
-- Fixed badge and TM/HM locations not being excludable or prioritizable
 - Changed some locations' names
 - Added a missing hidden item location in Chargestone Cave B2F
 - Fixed "Striaton City - TM from Fennel" not being able to contain an HM with certain options
@@ -40,17 +38,44 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Wrote down levelup moveset data
 - Fixed constant unittest failures on GitHub due to the ndspy subfolder not existing
 - Fixed nondeterministic Dexsanity location creation
+- Made the Gracidea a useless key item due to it not working on non-fateful encounters
+- Fixed the static encounter in Trial Chamber incorrectly requiring HM04 Strength
+- Fixed small error with encounter plando
 
-## 0.3.999 (pre-release)
+## 0.3.16
 
-- Fixed `Modify Levels` option not capping levels at 100
-- Fixed `Modify Levels` crashing when certain keys are not provided in the yaml
+- Fixed template yamls not working/being rejected
 
-## 0.3.99 (pre-release)
+## 0.3.15
 
-- Added `Modify Levels` option
-  - Modes: `Multiply`, `Add`, `Power`
-  - Encounter types: Trainer, Wild
+- Fixed custom and randomized encounter rate modification not working
+- Actually fixed Trial Chamber logic
+- Fixed encounter plando not working without randomized wild encounters
+
+## 0.3.14
+
+- Added `Modify Encounter Rates` option
+- Added support for the Poptracker pack
+- Made reaching Nacrene City a logical requirement for friendship evolutions
+- Added form changes for Deerling, Sawsbuck, Rotom, and Deoxys to logic
+- Tweaked the `Adjust Levels` option for some earlier postgame maps
+
+- Fixed manifest missing the container version fields
+- Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
+- Fixed badge and TM/HM locations not being excludable or prioritizable
+- Fixed the Deerling forms location once again
+- Fixed logic of Trial Chamber (including the static Terrakion)
+- Fixed nondeterministic Dexsanity location creation
+- Fixed generation failures for certain combinations of Encounter Plando and randomization modifiers
+- Fixed small miscalculations with `Prevent rare encounters` in wild pokémon randomization
+- Fixed Sneasel not being able to evolve
+- Fixed rom not being automatically updated when it should
+- Fixed incorrect level adjustments
+- Fixed sage Zinzolin appearing twice in Cold Storage under certain circumstances
+- Fixed potentially not having 115 Unovan pokémon available when randomized
+- Fixed weird text box behavior of PC Master Ball seller
+- Removed different Arceus forms
+  - Also fixes a possible softlock due to Challenger's Rock
 
 ## 0.3.13
 
@@ -95,6 +120,17 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ## 0.3.7
 
 - Fixed UT crashing when updating past 0.3.3
+
+## 0.3.999 (pre-release)
+
+- Fixed `Modify Levels` option not capping levels at 100
+- Fixed `Modify Levels` crashing when certain keys are not provided in the yaml
+
+## 0.3.99 (pre-release)
+
+- Added `Modify Levels` option
+  - Modes: `Multiply`, `Add`, `Power`
+  - Encounter types: Trainer, Wild
 
 ## 0.3.6
 

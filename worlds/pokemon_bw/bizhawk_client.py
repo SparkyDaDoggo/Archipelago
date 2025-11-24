@@ -9,7 +9,7 @@ from worlds._bizhawk.client import BizHawkClient
 from .client.locations import check_flag_locations, check_dex_locations
 from .client.items import receive_items
 from .client.setup import early_setup, late_setup
-from .client.tracker import set_map
+from .client.tracker import set_map, set_dex_caught_seen, set_goal_bitmap
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -43,6 +43,7 @@ class PokemonBWClient(BizHawkClient):
     var_offset = 0x209BC  # 0x23BCCC in vanilla W
     flags_offset = 0x20C38  # 0x23BF48 in vanilla W
     dex_offset = 0x21EC4  # 0x23D1D4 in vanilla W
+    dex_seen_offset = dex_offset + 0x54
     main_items_bag_offset = 0x18cbc  # 0x233FCC in vanilla W
     key_items_bag_offset = 0x19194  # 0x2344A4 in vanilla W
     tm_hm_bag_offset = 0x192e0  # 0x2345F0 in vanilla W
@@ -55,6 +56,9 @@ class PokemonBWClient(BizHawkClient):
         super().__init__()
         self.flags_cache: bytearray = bytearray(self.flag_bytes_amount)
         self.dex_cache: bytearray = bytearray(self.dex_bytes_amount)
+        self.tracker_caught_cache: bytearray = bytearray(self.dex_bytes_amount)
+        self.tracker_seen_cache: bytearray = bytearray(self.dex_bytes_amount)
+        self.goal_bitmap: int = 0
         self.dexsanity_included: bool = True
         self.player_name: str | None = None
         self.missing_flag_loc_ids: list[list[int]] = [[] for _ in range(self.flags_amount)]
@@ -143,14 +147,16 @@ class PokemonBWClient(BizHawkClient):
                 await early_setup(self, ctx)
                 setup_needed = True
 
-            await set_map(self, ctx)
-
             locations_to_check: list[int] = (
                 await check_flag_locations(self, ctx) +
                 await check_dex_locations(self, ctx)
             )
             if len(locations_to_check) != 0:
                 await ctx.send_msgs([{"cmd": "LocationChecks", "locations": list(locations_to_check)}])
+
+            await set_map(self, ctx)
+            await set_dex_caught_seen(self, ctx)
+            await set_goal_bitmap(self, ctx)
 
             await receive_items(self, ctx)
 

@@ -5,6 +5,22 @@ from .. import EncounterEntry, SpeciesChecklist
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from ...data import SpeciesData
+    from .. import EncounterEntry
+
+
+def organize_by_method(world: "PokemonBWWorld") -> dict[str, tuple[list[str], list[int]]]:
+    from ...data.pokemon.species import by_id
+    # {method: ([species names], [dex numbers])}
+    ret: dict[str, tuple[list[str], list[int]]] = {}
+    for slot, data in world.wild_encounter.items():
+        if data.encounter_region not in ret:
+            ret[data.encounter_region] = ([], [])
+        spec = by_id[data.species_id]
+        if spec not in ret[data.encounter_region][0]:
+            ret[data.encounter_region][0].append(spec)
+        if data.species_id[0] not in ret[data.encounter_region][1]:
+            ret[data.encounter_region][1].append(data.species_id[0])
+    return ret
 
 
 def generate_wild_encounters(world: "PokemonBWWorld",
@@ -26,7 +42,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
             name: EncounterEntry(
                 versioned_species(table[name]), table[name].encounter_region, table[name].file_index, False
             )
-            for name in slots_checklist
+            for name, to_copy in slots_checklist.items() if to_copy != "FILLED"
         }
 
     encounter_entries: dict[str, EncounterEntry] = {}
@@ -34,7 +50,9 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     other_slots: list[str] = []
     copy_slots: list[str] = []
     for name, to_copy in slots_checklist.items():
-        if to_copy is not None:
+        if to_copy == "FILLED":
+            continue
+        elif to_copy is not None:
             copy_slots.append(name)
         elif table[name].encounter_region in world.regions:
             logic_slots.append(name)

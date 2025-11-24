@@ -5,7 +5,7 @@ from typing import ClassVar, Mapping, Any, List, TextIO
 
 import settings
 from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
-from Options import Option
+from Options import Option, OptionError
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
@@ -124,6 +124,8 @@ class PokemonBWWorld(World):
         self.static_encounter: dict[str, StaticEncounterEntry] | None = None
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
+        self.encounter_by_method: dict[str, tuple[list[str], list[int]]] = {}
+        self.dexsanity_numbers: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.rules_dict: RulesDict | None = None
         self.master_ball_seller_cost: int = 0
@@ -159,6 +161,16 @@ class PokemonBWWorld(World):
 
         self.random.seed(self.seed)
 
+        # TODO quick bandaid fix, need to fix it in another way later
+        if (
+            # False and
+            self.options.modify_encounter_rates.current_key in ("invasive", "randomized_12") and
+            "Prevent rare encounters" in self.options.randomize_wild_pokemon
+        ):
+            raise OptionError(f"Player {self.player_name}: Modify Encounter Rates choice "
+                              f"\"{self.options.modify_encounter_rates.current_key}\" (currently) not allowed "
+                              f"in combination with \"Prevent rare encounters\" in wild randomization.")
+
         cost_start, cost_end = 999999, -1
         for modifier in self.options.master_ball_seller.value:
             if modifier.casefold().startswith("cost"):
@@ -183,6 +195,7 @@ class PokemonBWWorld(World):
         self.wild_encounter |= wild.generate_wild_encounters(  # only removes species
             self, species_checklist, slots_checklist
         )
+        self.encounter_by_method = wild.organize_by_method(self)
         self.trainer_teams = trainers.generate_trainer_teams(self)
 
     def create_item(self, name: str) -> items.PokemonBWItem:
@@ -262,6 +275,7 @@ class PokemonBWWorld(World):
                 "season_control": self.options.season_control.current_key,
                 "adjust_levels": self.options.adjust_levels.value,
                 "modify_levels": self.options.modify_levels.value,
+                "modify_encounter_rates": self.options.modify_encounter_rates.value,
                 "master_ball_seller": self.options.master_ball_seller.value,
                 "modify_item_pool": self.options.modify_item_pool.value,
                 "modify_logic": self.options.modify_logic.value,
@@ -274,6 +288,9 @@ class PokemonBWWorld(World):
             "ut_compatibility": version.ut(),
             # NOT needed for UT
             "master_ball_seller_cost": self.master_ball_seller_cost,
+            # Needed for PopTracker
+            "encounter_by_method": {method: lists[1] for method, lists in self.encounter_by_method.items()},
+            "dexsanity_pokemon": self.dexsanity_numbers,
         }
 
     @staticmethod

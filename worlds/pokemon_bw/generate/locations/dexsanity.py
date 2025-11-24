@@ -29,12 +29,14 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
 
     r: "Region" = world.regions["Pokédex"]
     catchable_dex: list[str] = []
+    dexsanity_numbers: list[int] = []
     for data in catchable_species_data.values():
         if data.dex_name not in catchable_dex:
             catchable_dex.append(data.dex_name)
 
     def create_location(loc_name: str) -> None:
         data = location_table[loc_name]
+        dexsanity_numbers.append(data.dex_number)
         l: PokemonBWLocation = PokemonBWLocation(world.player, loc_name, world.location_name_to_id[loc_name], r)
         l.progress_type = LocationProgressType.DEFAULT
         if data.special_rule is not None:
@@ -58,3 +60,5 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
         for _ in range(count):
             name = f"Pokédex - {catchable_dex.pop()}"
             create_location(name)
+
+    world.dexsanity_numbers.extend(dexsanity_numbers)

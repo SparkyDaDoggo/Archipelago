@@ -47,6 +47,10 @@
 #   other values in simple mode only relevant in patching process
 #   one test for [] (advanced mode)
 #   one test for list of 5 random calculations (advanced mode)
+# modify_encounter_rates:
+#   default vanilla
+#   one test for each other choice each
+#   one test for custom rates
 # master_ball_seller:
 #   default []
 #   one test for one seller and one standard cost
