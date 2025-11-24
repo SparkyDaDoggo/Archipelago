@@ -18,7 +18,6 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
     #   Burmy: Checking for access to needed maps will become too complex for door shuffling
     #   Giratina: Requires Griseous Orb to be repeatedly obtainable, maybe I'll add that later
     #   Shaymin: Gracidea only works on fateful encounters
-    #   Arceus: Forms will be removed in 0.4.0 entirely
     #   Darmanitan: Requires repeatable access to Darmanitans with hidden ability
     #   Meloetta: Not possible in BW according to PokéWiki
 

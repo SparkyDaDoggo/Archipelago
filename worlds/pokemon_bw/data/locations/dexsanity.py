@@ -541,14 +541,7 @@ location_table: dict[str, DexLocationData] = {
             ("Shaymin", "Shaymin (Sky)"), world.player
         )
     ),
-    "Pokédex - Arceus": DexLocationData(
-        493, lambda state, world: state.has_any(
-            ("Arceus (Normal)", "Arceus (Fire)", "Arceus (Water)", "Arceus (Electric)", "Arceus (Grass)",
-             "Arceus (Ice)", "Arceus (Fighting)", "Arceus (Poison)", "Arceus (Ground)", "Arceus (Flying)",
-             "Arceus (Psychic)", "Arceus (Bug)", "Arceus (Rock)", "Arceus (Ghost)", "Arceus (Dragon)", "Arceus (Dark)",
-             "Arceus (Steel)"), world.player
-        )
-    ),
+    "Pokédex - Arceus": DexLocationData(493),
     "Pokédex - Victini": DexLocationData(494),
     "Pokédex - Snivy": DexLocationData(495),
     "Pokédex - Servine": DexLocationData(496),

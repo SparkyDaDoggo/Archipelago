@@ -23,6 +23,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed sage Zinzolin appearing twice in Cold Storage under certain circumstances
 - Fixed potentially not having 115 Unovan pokémon available when randomized
 - Fixed weird text box behavior of PC Master Ball seller
+- Removed different Arceus forms
+  - Also fixes a possible softlock due to Challenger's Rock
 
 ## 0.3.13
 
