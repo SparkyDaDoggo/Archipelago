@@ -1,6 +1,12 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.15
+
+- Fixed custom and randomized encounter rate modification not working
+- Actually fixed Trial Chamber logic
+- Fixed encounter plando not working without randomized wild encounters
+
 ## 0.3.14
 
 - Added `Modify Encounter Rates` option

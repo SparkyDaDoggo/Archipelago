@@ -41,7 +41,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
             name: EncounterEntry(
                 versioned_species(table[name]), table[name].encounter_region, table[name].file_index, False
             )
-            for name in slots_checklist
+            for name, to_copy in slots_checklist.items() if to_copy != "FILLED"
         }
 
     encounter_entries: dict[str, EncounterEntry] = {}

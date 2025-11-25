@@ -796,10 +796,11 @@ class ModifyEncounterRates(Choice):
     - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate. Expect multiple 1% slot rates.
 
     Alternatively, you can provide a list of custom encounter rates. See the option guides for more information.
+    Due to that however, weighting is not supported.
     """
     display_name = "Modify Encounter Rates"
     value: int | dict[str, list[int]]
-    custom_rates: tuple[list[int], ...] | None = None
+    supports_weighting = False
     option_vanilla = 0
     option_try_normalized = 1
     option_try_normalized_alt = 2
@@ -811,6 +812,7 @@ class ModifyEncounterRates(Choice):
 
     def __init__(self, value: int | dict):
         super().__init__(value)
+        self.custom_rates: tuple[list[int], ...] | None = None
 
     @classmethod
     def from_any(cls, data: typing.Any) -> Choice:
@@ -846,6 +848,13 @@ class ModifyEncounterRates(Choice):
             return "plando"
         else:
             return self.name_lookup[self.value]
+
+    @classmethod
+    def get_option_name(cls, value: int | dict[str, list[int]]) -> str:
+        if not isinstance(value, int):
+            return str(value)
+        else:
+            return super().get_option_name(value)
 
 
 class ExpModifier(Range):

@@ -95,9 +95,28 @@ def track_down_copy_from(copy_from: dict[str, str | None], slot: str) -> str:
 
 def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
     from ...data.locations.encounters.slots import table
+    from ...data.locations.encounters import rates
 
     # {slot: to copy from}
     copy_from: dict[str, str | None] = {slot: None for slot in table}
+    # Important: make copies of lists afterwards
+    if world.options.modify_encounter_rates.current_key == "plando":
+        plando = world.options.modify_encounter_rates.value
+        encounter_rates = (
+            plando["grass"] if "grass" in plando else rates.tables["vanilla"][0],
+            plando["surfing"] if "surfing" in plando else rates.tables["vanilla"][1],
+            plando["fishing"] if "fishing" in plando else rates.tables["vanilla"][2],
+        )
+        world.options.modify_encounter_rates.custom_rates = encounter_rates
+    elif world.options.modify_encounter_rates.current_key == "randomized_12":
+        encounter_rates = (
+            random_percentage_distribution(world, 12),
+            random_percentage_distribution(world, 5),
+            random_percentage_distribution(world, 5),
+        )
+        world.options.modify_encounter_rates.custom_rates = encounter_rates
+    else:
+        encounter_rates = rates.tables[world.options.modify_encounter_rates.current_key]
 
     if "Randomize" not in world.options.randomize_wild_pokemon:
         return copy_from
@@ -135,25 +154,6 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
                     copy_from[slot] = first_slot[area][species]
 
     if prevent_rare_encounters:
-        from ...data.locations.encounters import rates
-        # Important: make copies of lists afterwards
-        if world.options.modify_encounter_rates == "plando":
-            plando = world.options.modify_encounter_rates.value
-            encounter_rates = (
-                plando["grass"] if "grass" in plando else rates.tables["vanilla"][0],
-                plando["surfing"] if "surfing" in plando else rates.tables["vanilla"][1],
-                plando["fishing"] if "fishing" in plando else rates.tables["vanilla"][2],
-            )
-            world.options.modify_encounter_rates.custom_rates = encounter_rates
-        elif world.options.modify_encounter_rates == "randomized_12":
-            encounter_rates = (
-                random_percentage_distribution(world, 12),
-                random_percentage_distribution(world, 5),
-                random_percentage_distribution(world, 5),
-            )
-            world.options.modify_encounter_rates.custom_rates = encounter_rates
-        else:
-            encounter_rates = rates.tables[world.options.modify_encounter_rates.current_key]
         # {region: [slot1 rate, slot2 rate, ...]}
         region_added_rates: dict[str, list[int]] = {}
         for slot in copy_from:
