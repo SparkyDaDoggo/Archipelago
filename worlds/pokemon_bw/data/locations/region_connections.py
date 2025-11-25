@@ -120,7 +120,7 @@ connections: dict[str, RegionConnectionData] = {
     "Jet Badge gate": RegionConnectionData("Badge Gate 6", "Badge Gate 7", has_jet_badge),
     "Freeze Badge gate": RegionConnectionData("Badge Gate 7", "Badge Gate 8", has_freeze_badge),
     "Legend Badge gate": RegionConnectionData("Badge Gate 8", "Victory Road", has_legend_badge),
-    "Victory Road cave behind boulder": RegionConnectionData("Victory Road", "Trial Chamber", None),
+    "Victory Road cave behind boulder": RegionConnectionData("Victory Road", "Trial Chamber", can_encounter_swords_of_justice),
     "Victory Road north": RegionConnectionData("Victory Road", "Pokémon League", None),
     "Pokémon League champion room": RegionConnectionData("Pokémon League", "N's Castle", None),
 }

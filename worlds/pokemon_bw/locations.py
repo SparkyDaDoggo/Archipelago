@@ -103,6 +103,9 @@ def connect_regions(world: "PokemonBWWorld") -> None:
     world.multiworld.register_indirect_condition(
         world.regions["N's Castle"], world.get_entrance("Relic Castle B5F castleside")
     )
+    world.multiworld.register_indirect_condition(
+        world.regions["Mistralton Cave Inner"], world.get_entrance("Victory Road cave behind boulder")
+    )
 
 
 def cleanup_regions(regions: dict[str, Region]) -> None:
