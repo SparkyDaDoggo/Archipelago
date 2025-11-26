@@ -1,6 +1,10 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.16
+
+- Fixed template yamls not working/being rejected
+
 ## 0.3.15
 
 - Fixed custom and randomized encounter rate modification not working

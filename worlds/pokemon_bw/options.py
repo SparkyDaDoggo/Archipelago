@@ -796,11 +796,9 @@ class ModifyEncounterRates(Choice):
     - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate. Expect multiple 1% slot rates.
 
     Alternatively, you can provide a list of custom encounter rates. See the option guides for more information.
-    Due to that however, weighting is not supported.
     """
     display_name = "Modify Encounter Rates"
     value: int | dict[str, list[int]]
-    supports_weighting = False
     option_vanilla = 0
     option_try_normalized = 1
     option_try_normalized_alt = 2
