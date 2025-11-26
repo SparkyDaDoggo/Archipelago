@@ -66,9 +66,9 @@ Pokemon Black and White:
       method: Grass
       species: Blastoise
     - map: Route 8
-      seasons: Summer
+      season: Summer
       method: Surfing
-      slots: 4
+      slot: 4
       species: Liligant
     - map: Twist Mountain (Upper Level)
       seasons:
@@ -89,6 +89,49 @@ Pokemon Black and White:
         - Bidoof
         - None
         - None
+```
+
+# Custom encounter rates guide for Pokémon Black and White
+
+## How does this work?
+
+The base encounter rates for all wild encounter slots are (in %) usually [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1] 
+for (Dark/Rustling) Grass, [60, 30, 5, 4, 1] for Surfing (Rippling), and [40, 40, 15, 4, 1] for Fishing (Rippling).
+Using the `Modify Encounter Rates` option, you can change those rates to either a few preset rates, a random distribution,
+or a custom list.
+
+## How do I use it?
+
+Instead of just writing a single option name like `vanilla` or `try_normalized`, you need to provide key-value pairs **as a choice**.
+"As a choice" means that you'll need to pack it into a list or as a weighted choice, see the examples down below for how to do it.
+To change (Dark/Rustling) Grass rates, use the `Grass` key. Surfing/Fishing (Rippling) rates need the `Surfing`/`Fishing` key respectively.
+Though you are not required to always use all keys; you can leave any of them as vanilla if you want.
+The value has to be a list of positive integers. The `Grass` key needs exactly 12 numbers, while the others need exactly 5 numbers.
+All numbers in a list need to add up to exactly 100 and need to be greater than 0.
+
+## Examples on how using this option could look like
+
+```
+...
+Pokemon Black and White:
+  ...
+  modify_encounter_rates:
+    # The extra "- " is required in order to not break weighting
+    # That however makes picking out a random key-value pair possible (if multiple are provided)
+    - Grass: [30, 10, 4, 2, 2, 2, 25, 10, 5, 4, 4, 2]
+      Surfing: [25, 25, 30, 10, 10]
+      Fishing: [96, 1, 1, 1, 1]
+```
+
+```
+...
+Pokemon Black and White:
+  ...
+  modify_encounter_rates:
+    # Alternative way with different weights
+    # Notice that leaving out the "Surfing" key is valid
+    vanilla: 25
+    {Grass: [30, 10, 4, 2, 2, 2, 25, 10, 5, 4, 4, 2], Fishing: [96, 1, 1, 1, 1]}: 75
 ```
 
 # Text Plando guide for Pokémon Black and White (coming in 0.4.0)
