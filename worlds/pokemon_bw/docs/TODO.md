@@ -1,5 +1,8 @@
 # Important stuff
 
+- aha prizes problematic again
+- driftveil city sequence break, initial script not triggering in postgame?
+- strength required for trial chamber
 
 # 0.4.0
 
