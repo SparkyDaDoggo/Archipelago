@@ -1,7 +1,5 @@
 # Important stuff
 
-- move evos need access to free move relearner
-
 # Not urgent
 
 - dig with seasons patch crashes the game, not fixable?

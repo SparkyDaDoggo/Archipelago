@@ -1,6 +1,13 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.17
+
+- Fixed encounter plando failing with certain randomization modifiers
+- Fixed Trial Chamber logic not accounting for the strength boulder
+- Fixed possible softlocks due to level up + move evolutions not accounting for access to the move reminder
+- Removed the Heart Scale requirement for the move reminder
+
 ## 0.3.16
 
 - Fixed template yamls not working/being rejected

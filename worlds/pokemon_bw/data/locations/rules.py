@@ -153,6 +153,7 @@ can_go_deeper_into_relic_castle: ExtendedRule = lambda state, world: state.can_r
 can_go_to_relic_castle_basement: ExtendedRule = lambda state, world: state.can_reach_region("Relic Castle Tower Lower Floors", world.player)
 can_find_woman_on_village_bridge: ExtendedRule = lambda state, world: state.can_reach_region("Village Bridge", world.player)
 can_go_to_nimbasa_city: ExtendedRule = lambda state, world: state.can_reach_region("Nimbasa City", world.player)
+can_go_to_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton City", world.player)
 
 
 # Encounter requirements
@@ -177,12 +178,10 @@ has_any_tm_hm: ExtendedRule = lambda state, world: (
 )
 
 striaton_hidden_item: ExtendedRule = lambda state, world: state.can_reach_region("Route 3", world.player) or can_use_surf(state, world)
-
 dark_cave: ExtendedRule = lambda state, world: "Require Flash" not in world.options.modify_logic or can_use_flash(state, world)
-
 challengers_cave: ExtendedRule = lambda state, world: has_red_chain(state, world) and dark_cave(state, world)
-
 mistralton_cave: ExtendedRule = lambda state, world: can_use_surf(state, world) and dark_cave(state, world)
+trial_chamber: ExtendedRule = lambda state, world: can_encounter_swords_of_justice(state, world) and can_use_strength(state, world)
 
 extended_rules_list: tuple = (
     can_use_strength, can_use_surf, can_use_cut, can_use_waterfall, can_use_dive, can_use_flash,
@@ -203,11 +202,13 @@ extended_rules_list: tuple = (
 
     can_beat_ghetsis, can_encounter_swords_of_justice, can_cut_dreamyard_tree, can_go_deeper_into_relic_castle,
     can_go_to_relic_castle_basement, can_find_woman_on_village_bridge, can_go_to_nimbasa_city,
+    can_go_to_mistralton_city,
 
     has_forces_of_nature, has_celebi, has_legendary_beasts,
     has_25_species, has_51_species, has_60_species, has_115_species,
 
-    has_fighting_type_species, has_any_tm_hm, striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave,
+    has_fighting_type_species, has_any_tm_hm,
+    striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave, trial_chamber,
 )
 
 

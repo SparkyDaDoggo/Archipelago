@@ -11,6 +11,7 @@ can_reach_magnetic_area: ExtendedRule = lambda state, world: state.can_reach_reg
 can_reach_moss_rock: ExtendedRule = lambda state, world: state.can_reach_region("Pinwheel Forest West", world.player)
 can_reach_ice_rock: ExtendedRule = lambda state, world: state.can_reach_region("Twist Mountain", world.player)
 can_reach_nacrene_city: ExtendedRule = lambda state, world: state.can_reach_region("Nacrene City", world.player)
+can_reach_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton City", world.player)
 
 can_buy_item_castelia: ExtendedRule = lambda state, world: state.can_reach_region("Castelia City", world.player)
 can_get_item_chargestone: ExtendedRule = lambda state, world: state.can_reach_region("Chargestone Cave", world.player)
@@ -93,7 +94,7 @@ methods: dict[str, EvolutionMethodData] = {
     "Trade with item": EvolutionMethodData(0, None),  # Removed
     "Trade Karrablast Shelmet": EvolutionMethodData(0, None),  # Removed
     "Magnetic area": EvolutionMethodData(0, lambda value: can_reach_magnetic_area),
-    "Level up with move": EvolutionMethodData(0, lambda value: always_possible),  # When randomized evolutions, then move id must be taken from level up moveset
+    "Level up with move": EvolutionMethodData(0, lambda value: can_reach_mistralton_city),  # When randomized evolutions, then move id must be taken from level up moveset
     "Level up moss rock": EvolutionMethodData(0, lambda value: can_reach_moss_rock),
     "Level up ice rock": EvolutionMethodData(0, lambda value: can_reach_ice_rock),
     "Level up item day": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Always paired with night

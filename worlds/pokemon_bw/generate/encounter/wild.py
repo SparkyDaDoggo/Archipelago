@@ -49,10 +49,10 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     other_slots: list[str] = []
     copy_slots: list[str] = []
     for name, to_copy in slots_checklist.items():
-        if to_copy is not None:
-            copy_slots.append(name)
-        elif to_copy == "FILLED":
+        if to_copy == "FILLED":
             continue
+        elif to_copy is not None:
+            copy_slots.append(name)
         elif table[name].encounter_region in world.regions:
             logic_slots.append(name)
         else:
