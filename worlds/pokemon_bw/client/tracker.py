@@ -40,7 +40,7 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
         bitmap |= 1
     if client.get_flag(0x1D3):  # Ghetsis
         bitmap |= 2
-    if client.get_flag(0xE4):  # Cynthia
+    if (await client.read_var(ctx, 0xE4)) >= 2:  # Cynthia
         bitmap |= 4
     if client.get_flag(705):  # Sage Giallo
         bitmap |= 8

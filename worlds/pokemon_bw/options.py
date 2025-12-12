@@ -920,11 +920,11 @@ class MasterBallSeller(CasefoldOptionSet):
     Adding no cost modifier defaults to 3000.
 
     - **Ns Castle** - Repurposes an NPC in N's Castle, who can be found in the same room as the grunt giving Ultra Balls to the player, to give/sell Master Balls to the player.
-    - **PC** - Adds an option to every PC in Pokémon Centers to buy/obtain Master Balls.
+    - **PC** - Adds an option to every PC in Pokemon Centers to buy/obtain Master Balls.
     - **Cherens Mom** - Repurposes Cheren's Mom in Nuvema Town to give/sell Master Balls.
     - **Undella Mansion seller** - Adds the Master Ball to the pool of items that you can buy from the evolution items seller in the Undella Mansion for a random price. His offers are not affected by any cost modifier.
     - **Cost Free** - Makes Master Balls (potentially) cost nothing.
-    - **Cost x** - Makes Master Balls (potentially) cost x Pokédollars. x can be any number in range of 0 to 30000.
+    - **Cost x** - Makes Master Balls (potentially) cost x Pokedollars. x can be any number in range of 0 to 30000.
     """
     display_name = "Master Ball Seller"
     valid_keys_casefold = True

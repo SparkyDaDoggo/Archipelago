@@ -1,5 +1,20 @@
 # Important stuff
 
+- Apricorn balls not appearing in-battle
+- post ghetsis location group
+- fix nacrene city waitress giving vanilla item AND AP item
+- optionset descriptions: "You can include as many of the following modifiers as you want."
+- randomization optionsets: add randomize if not empty (port over from main branch)
+- elemental monkeys missing in ensure all obtainable?
+- undella mansion seller always 1000 prize?
+- sage in relic castle b1f invisible if going down before icirrus city events
+- give prevent rare encounters an adjustable modifier and set its default to 8
+- fix prevent rare encounters accepting copying slots (i.e. added rates == 0)
+- port patch file version accepting stuff from main
+- stats evolutions should require repeatable vitamins (shopping mall nine)
+- encounter logic toggles (evolution, statics/gift/legendary, trade, fossils)
+- extended dexsanity hints including pre evos (if evos in logic) and trade requests (if trades in logic)
+
 # Not urgent
 
 - dig with seasons patch crashes the game, not fixable?
