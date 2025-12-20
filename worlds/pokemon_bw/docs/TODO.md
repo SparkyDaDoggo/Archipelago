@@ -1,6 +1,7 @@
 # Important stuff
 
 - make docs easier to read
+- make dexsanity option not support weighting, else plando won't work
 
 # 0.4.0
 
@@ -32,7 +33,6 @@
     - Ignored by Encounter Plando
   - Trainer pokémon
 - reword error messages in rom.py
-- extended location hint for deerlings location and challenge rock
 
 ## Rom
 
@@ -41,13 +41,7 @@
 - make mom stop the player at the door and say funny things for certain reusable tm choices
 - skip musical tutorial, because some players have problems
 - disable dig outside of battle when season patch included, as a temporary bandaid fix
-- desert resort south hidden item not checkable?
-- make item names in custom roadblock dialogues a distinguishable color
 - fix nacrene city sequence break (though is it actually broken?)
-- fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
-- opelucid city fly flag only set after ghetsis scene?
-- make massage lady in castelia repeatable
-- baker on village bridge not repeatable
 
 ## Both
 
