@@ -14,6 +14,21 @@
 - stats evolutions should require repeatable vitamins (shopping mall nine)
 - encounter logic toggles (evolution, statics/gift/legendary, trade, fossils)
 - extended dexsanity hints including pre evos (if evos in logic) and trade requests (if trades in logic)
+- statics and trades to encounter_by_method
+- aha incorrect prize also gives vanilla item
+- merge aha locations because flag flip reports are inconsistent
+- does "train any pokemon by 50 levels" have any additional logic? better require league/ns castle
+- moor of icirrus inaccessible in winter without surf?
+- shopping mall nine evo items seller ends abrupt if canceled
+- ns castle seller very bad
+- extended location hint for deerlings location and challenge rock
+- make item names in custom roadblock dialogues a distinguishable color
+- fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
+- opelucid city fly flag only set after ghetsis scene?
+- make massage lady in castelia repeatable
+- baker on village bridge not repeatable
+- report: lv48 encounter on marvelous bridge and lv25 on route 15, despite adjust_levels
+- make 50 levelups check in Icirrus City also send 25 levelups check
 
 # Not urgent
 

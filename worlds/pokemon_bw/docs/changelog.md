@@ -1,6 +1,10 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.18
+
+- Improved filler item generation performance
+
 ## 0.3.17
 
 - Fixed encounter plando failing with certain randomization modifiers

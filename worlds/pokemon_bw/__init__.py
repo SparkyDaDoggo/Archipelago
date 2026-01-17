@@ -124,6 +124,7 @@ class PokemonBWWorld(World):
         self.regions: dict[str, Region] | None = None
         self.rules_dict: RulesDict | None = None
         self.master_ball_seller_cost: int = 0
+        self.filler_nested: list[str | list] | None = None
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
