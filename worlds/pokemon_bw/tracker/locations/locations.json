@@ -230,6 +230,7 @@
     {
         "name": "Chargestone Cave",
         "sections": [
+{"name": "Route 6 - TM from Clay"},
 {"name": "Chargestone Cave - 1F north east item"},
 {"name": "Chargestone Cave - 1F north hidden item #1"},
 {"name": "Chargestone Cave - 1F north hidden item #2"},
@@ -259,7 +260,37 @@
                 "map": "overworld",
                 "x": 84,
                 "y": 160
-            },
+            }
+        ]
+    },
+    {
+        "name": "Chargestone Cave - Inside",
+        "sections": [
+{"name": "Chargestone Cave - 1F north east item"},
+{"name": "Chargestone Cave - 1F north hidden item #1"},
+{"name": "Chargestone Cave - 1F north hidden item #2"},
+{"name": "Chargestone Cave - 1F north west item #1"},
+{"name": "Chargestone Cave - 1F north west item #2"},
+{"name": "Chargestone Cave - 1F north west item #3"},
+{"name": "Chargestone Cave - 1F south east item #1"},
+{"name": "Chargestone Cave - 1F south east item #2"},
+{"name": "Chargestone Cave - 1F south hidden item"},
+{"name": "Chargestone Cave - B1F center item"},
+{"name": "Chargestone Cave - B1F east hidden item"},
+{"name": "Chargestone Cave - B1F north item"},
+{"name": "Chargestone Cave - B1F west hidden item"},
+{"name": "Chargestone Cave - B2F east hidden item"},
+{"name": "Chargestone Cave - B2F hidden item"},
+{"name": "Chargestone Cave - B2F west hidden item"},
+{"name": "Chargestone Cave - B2F north east item"},
+{"name": "Chargestone Cave - B2F south east item"},
+{"name": "Chargestone Cave - B2F south west item"},
+{"name": "Chargestone Cave - Item from nugget brothers #1"},
+{"name": "Chargestone Cave - Item from nugget brothers #2"},
+{"name": "Chargestone Cave - Item from Professor Juniper"},
+{"name": "Chargestone Cave - TM from sage Bronius"}
+        ],
+        "map_locations": [
             {
                 "map": "chargestonecaveoutside",
                 "x": 184,
@@ -1209,7 +1240,6 @@
 {"name": "Route 6 - Item south of Season Research Lab"},
 {"name": "Route 6 - North east item"},
 {"name": "Route 6 - South item"},
-{"name": "Route 6 - TM from Clay"},
 {"name": "Route 6 - West item"}
         ],
         "map_locations": [
