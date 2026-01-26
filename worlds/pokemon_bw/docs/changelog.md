@@ -4,6 +4,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ## 0.3.18
 
 - Improved filler item generation performance
+- Fixed Johto-exclusive balls not appearing in the in-battle bag
 
 ## 0.3.17
 

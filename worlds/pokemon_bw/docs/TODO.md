@@ -1,6 +1,5 @@
 # Important stuff
 
-- Apricorn balls not appearing in-battle
 - post ghetsis location group
 - fix nacrene city waitress giving vanilla item AND AP item
 - optionset descriptions: "You can include as many of the following modifiers as you want."
@@ -29,6 +28,8 @@
 - baker on village bridge not repeatable
 - report: lv48 encounter on marvelous bridge and lv25 on route 15, despite adjust_levels
 - make 50 levelups check in Icirrus City also send 25 levelups check
+- locked placement stuff might remove wrong Item instances when using list.remove(), leading to some Item instances being placed twice somewhere while other instances are lost
+- any_badge and any_tm_hm ignore other players' local_items and logic(?, look for some way to validate if it can be placed there)
 
 # Not urgent
 
