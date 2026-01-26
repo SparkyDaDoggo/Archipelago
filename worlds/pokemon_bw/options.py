@@ -78,6 +78,7 @@ class Goal(Choice):
 class RandomizeWildPokemon(CasefoldOptionSet):
     """
     Randomizes wild pokemon encounters.
+    You can add as many of the following modifiers as you want.
 
     - **Randomize** - Toggles wild pokemon being randomized. Required for any other modifier below.
     - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving. This is automatically checked if **National pokedex** is chosen as the goal.
@@ -107,6 +108,8 @@ class RandomizeWildPokemon(CasefoldOptionSet):
 class RandomizeTrainerPokemon(CasefoldOptionSet):
     """
     Randomizes trainer pokemon.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles trainer pokemon being randomized. Required for any modifier below.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
     """
@@ -133,6 +136,8 @@ class RandomizeTrainerPokemon(CasefoldOptionSet):
 class RandomizeStarterPokemon(CasefoldOptionSet):
     """
     Randomizes the starter pokemon you receive at the start of the game.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles starter pokemon being randomized. Required for any other modifier.
     - **Any base** - Only use unevolved/baby pokemon.
     - **Base with 2 evolutions** - Only use unevolved/baby pokemon that can evolve twice. Overrides **Any base**.
@@ -154,6 +159,8 @@ class RandomizeStarterPokemon(CasefoldOptionSet):
 class RandomizeStaticPokemon(CasefoldOptionSet):
     """
     Randomizes static encounters you can battle and catch throughout the game, e.g. Volcarona in Relic Castle.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles static pokemon being randomized. Required for any other modifier.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
     - **Only base** - Only use unevolved Pokemon.
@@ -173,6 +180,8 @@ class RandomizeStaticPokemon(CasefoldOptionSet):
 class RandomizeGiftPokemon(CasefoldOptionSet):
     """
     Randomizes gift pokemon that you receive for free, e.g. the Larvesta egg on route 18.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles gift pokemon being randomized. Required for any other modifier.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
     - **No legendaries** - Exclude legendaries from being placed into gift encounters.
@@ -190,6 +199,8 @@ class RandomizeGiftPokemon(CasefoldOptionSet):
 class RandomizeTradePokemon(CasefoldOptionSet):
     """
     Randomizes trade offers from NPCs. Any **Randomize ...** is required for the other modifiers.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize offer** - Toggles offered pokemon being randomized.
     - **Randomize request** - Toggles requested pokemon being randomized.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
@@ -209,6 +220,8 @@ class RandomizeTradePokemon(CasefoldOptionSet):
 class RandomizeLegendaryPokemon(CasefoldOptionSet):
     """
     Randomizes legendary and mythical encounters.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles legendary pokemon being randomized. Required for any other modifier.
     - **Keep legendary** - Randomized pokemon will all still be legendaries or mythicals.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one. Overrides **Keep legendary**.
@@ -428,6 +441,8 @@ class EncounterPlando(Option[list[PlandoEncounter]]):
 class RandomizeBaseStats(CasefoldOptionSet):
     """
     Randomizes the base stats of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles base stats being randomized. Required for any other modifier.
     - **Keep total** - Every species will keep the sum of its base stats.
     - **Follow evolutions** - Evolved species will use their pre-evolution's base stats and add on top of that.
@@ -445,6 +460,8 @@ class RandomizeBaseStats(CasefoldOptionSet):
 class RandomizeEvolutions(CasefoldOptionSet):
     """
     Randomizes the evolutions of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles evolutions being randomized. Required for any other modifier.
     - **Keep method** - Keeps the method (e.g. levelup, evolution stone, ...) of every evolution.
     - **Follow type** - Pre-evolution and evolved pokemon always share at least one type.
@@ -466,6 +483,8 @@ class RandomizeEvolutions(CasefoldOptionSet):
 class RandomizeCatchRates(CasefoldOptionSet):
     """
     Randomizes the catch rate of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
     - **Shuffle** - Gives every species a commonly used catch rate (e.g. 255, 45, 3, ...).
     - **Randomize** - Gives every species a completely random catch rate. Overrides **Shuffle**.
     - **Follow evolutions** - Evolved species will have a catch rate equal to or lower than their pre-evolution(s).
@@ -483,6 +502,8 @@ class RandomizeCatchRates(CasefoldOptionSet):
 class RandomizeLevelUpMovesets(CasefoldOptionSet):
     """
     Randomizes the moves a pokemon species learns by leveling up.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles level up movesets being randomized. Required for any other modifier.
     - **Keep types** - Randomized moves have either a matching or normal type.
     - **Progressive power** - If a move is learned after another one, it will have an equal or higher base power.
@@ -506,6 +527,8 @@ class RandomizeLevelUpMovesets(CasefoldOptionSet):
 class RandomizeTypes(CasefoldOptionSet):
     """
     Randomizes the type(s) of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles types being randomized. Required for any other modifier.
     - **Only secondary type** - Only randomizes the secondary type of every species and thereby keeps the primary type. Includes removing it. Not compatible with **Only primary type**.
     - **Only primary type** - Only randomizes the primary type of every species and thereby keeps the secondary type (which might be none). Not compatible with **Only secondary type**.
@@ -525,6 +548,8 @@ class RandomizeTypes(CasefoldOptionSet):
 class RandomizeAbilities(CasefoldOptionSet):
     """
     Randomizes the abilities of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
     - **Randomize** - Toggles abilities being randomized. Required for any other modifier.
     - **One per pokemon** - Gives every species only one ability.
     - **Follow evolutions** - Evolved pokemon will have the abilities of (one of) their pre-evolution(s)..
@@ -544,6 +569,8 @@ class RandomizeAbilities(CasefoldOptionSet):
 class RandomizeGenderRatio(CasefoldOptionSet):
     """
     Randomizes the gender ratio of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
     - **Shuffle** - Gives every species a commonly used gender ratio (e.g. 50/50, 1 in 8, ...).
     - **Randomize** - Gives every species a completely random gender ratio. Overrides **Shuffle**.
     - **Follow evolutions** - Evolved species will have the same gender ratio as (one of) their pre-evolution(s).
@@ -561,6 +588,8 @@ class RandomizeGenderRatio(CasefoldOptionSet):
 class RandomizeTMHMCompatibility(CasefoldOptionSet):
     """
     Randomizes the TM and HM compatibility of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
     - **Force all TMs** - Forces all TMs to be compatible with every pokemon species.
     - **Force all HMs** - Forces all HMs (and TM70 Flash) to be compatible with every pokemon species.
     - **Randomize** - Toggles TM and HM compatibility being randomized. Required for any other modifier.
@@ -733,6 +762,8 @@ class Seensanity(Range):
 class DoorShuffle(CasefoldOptionSet):
     """
     Shuffles or randomizes door warps.
+    You can add as many of the following modifiers as you want.
+
     - **Gates** - Shuffles city gate entrances, leading to the region having a different layout than normally.
     - **Buildings per map** - Shuffles the building entrances (not gates) within every city or route.
     - **Buildings anywhere** - Shuffles building entrances (not gates) all over Unova.
@@ -771,6 +802,7 @@ class AdjustLevels(CasefoldOptionSet):
     """
     Adjusts the levels of wild and trainer pokemon in areas that are in AP earlier accessible than in vanilla
     to not be significantly higher than in surrounding areas (regardless of randomization).
+    You can add as many of the following modifiers as you want.
 
     - **Wild** - Normalizes wild pokemon levels, including surfing and fishing encounters.
     - **Trainer** - Normalizes trainer pokemon levels, excluding Cynthia.
@@ -895,6 +927,7 @@ class ReplaceEvoMethods(CasefoldOptionSet):
     Replaces certain vanilla evolution methods with other methods that are easier to achieve.
     This also excludes them from randomized evolutions.
     Trade and time based evolutions are always replaced/excluded.
+    You can add as many of the following modifiers as you want.
 
     - **Locations** - Replaces evolutions requiring a magnetic place, the ice rock, or the mossy rock with using a thunder stone, using a leaf stone, and leveling up with a held casteliacone.
     - **Friendship** - Replaces friendship based evolutions with level up evolutions.
@@ -1003,6 +1036,7 @@ class TrapsProbability(Range):
 class ModifyItemPool(CasefoldOptionSet):
     """
     Modifies what items your world puts into the item pool.
+    You can add as many of the following modifiers as you want.
 
     - **Useless key items** - Adds one of each unused key item with filler classification.
     - **Useful filler** - Main bag items that would normally occur only once can be generated multiple times.
@@ -1021,6 +1055,7 @@ class ModifyItemPool(CasefoldOptionSet):
 class ModifyLogic(CasefoldOptionSet):
     """
     Modifies parts of what's logically required for various locations.
+    You can add as many of the following modifiers as you want.
 
     - **Require Dowsing Machine** - Makes the Dowsing Machine a logical requirement to find hidden items.
     - **Prioritize key item locations** - Marks locations, that normally contain key items (which also includes
