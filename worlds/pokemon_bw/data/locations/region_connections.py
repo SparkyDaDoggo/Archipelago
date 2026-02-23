@@ -97,7 +97,7 @@ connections: dict[str, RegionConnectionData] = {
     "Mistralton Cave strength rock": RegionConnectionData("Mistralton Cave Entrance", "Mistralton Cave Inner", can_use_strength),
     "Route 7 tower": RegionConnectionData("Route 7", "Celestial Tower", None),
     "Icirrus City north": RegionConnectionData("Icirrus City", "Dragonspiral Tower", None),
-    "Route 8 north": RegionConnectionData("Route 8", "Moor of Icirrus", None),
+    "Route 8 north": RegionConnectionData("Route 8", "Moor of Icirrus", moor_of_icirrus),
     "Route 9 cave entrance": RegionConnectionData("Route 9", "Challenger's Cave", challengers_cave),
     "Route 13 north east": RegionConnectionData("Route 13", "Giant Chasm Outer", can_use_surf),
     "Giant Chasm outer cave entrance": RegionConnectionData("Giant Chasm Outer", "Giant Chasm Entrance Cave", None),

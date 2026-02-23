@@ -182,6 +182,11 @@ dark_cave: ExtendedRule = lambda state, world: "Require Flash" not in world.opti
 challengers_cave: ExtendedRule = lambda state, world: has_red_chain(state, world) and dark_cave(state, world)
 mistralton_cave: ExtendedRule = lambda state, world: can_use_surf(state, world) and dark_cave(state, world)
 trial_chamber: ExtendedRule = lambda state, world: can_encounter_swords_of_justice(state, world) and can_use_strength(state, world)
+moor_of_icirrus: ExtendedRule = lambda state, world: can_use_surf(state, world) or (
+    state.can_reach_region("Nimbasa City", world.player) and (
+        world.options.season_control == "changeable" or state.has_any(("Spring", "Summer", "Autumn"), world.player)
+    )
+)
 
 extended_rules_list: tuple = (
     can_use_strength, can_use_surf, can_use_cut, can_use_waterfall, can_use_dive, can_use_flash,
@@ -208,7 +213,7 @@ extended_rules_list: tuple = (
     has_25_species, has_51_species, has_60_species, has_115_species,
 
     has_fighting_type_species, has_any_tm_hm,
-    striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave, trial_chamber,
+    striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave, trial_chamber, moor_of_icirrus,
 )
 
 
