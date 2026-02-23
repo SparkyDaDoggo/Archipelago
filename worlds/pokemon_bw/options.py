@@ -15,10 +15,13 @@ if typing.TYPE_CHECKING:
 
 class CasefoldOptionSet(OptionSet):
     valid_keys_casefold = True
+    auto_add_if_any: str | None = None
 
     def __init__(self, value: typing.Iterable[str]):
-        self.value = set(val.casefold() for val in value)
+        self.value: set[str] = set(val.casefold() for val in value)
         super(OptionSet, self).__init__()
+        if self.auto_add_if_any is not None and len(self.value) and self.auto_add_if_any in self:
+            self.value.add(self.auto_add_if_any.casefold())
 
     def __contains__(self, item: str):
         return item.casefold() in self.value
@@ -80,6 +83,18 @@ class RandomizeWildPokemon(CasefoldOptionSet):
     Randomizes wild pokemon encounters.
     You can add as many of the following modifiers as you want.
 
+    The following is an example for how options like this can look like:
+    ```
+    randomize_wild_pokemon:
+        ["Randomize", "Prevent rare encounters"]
+    ```
+    Here is an alternative way to format it:
+    ```
+    randomize_wild_pokemon:
+        - Randomize
+        - Prevent rare encounters
+    ```
+
     - **Randomize** - Toggles wild pokemon being randomized. Required for any other modifier below.
     - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving. This is automatically checked if **National pokedex** is chosen as the goal.
     - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total as the replaced encounter.
@@ -103,6 +118,7 @@ class RandomizeWildPokemon(CasefoldOptionSet):
         "Prevent rare encounters",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeTrainerPokemon(CasefoldOptionSet):
@@ -131,6 +147,7 @@ class RandomizeTrainerPokemon(CasefoldOptionSet):
         # "Randomize unique moves",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeStarterPokemon(CasefoldOptionSet):
@@ -154,6 +171,7 @@ class RandomizeStarterPokemon(CasefoldOptionSet):
         "Type variety",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeStaticPokemon(CasefoldOptionSet):
@@ -175,6 +193,7 @@ class RandomizeStaticPokemon(CasefoldOptionSet):
         "No legendaries",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeGiftPokemon(CasefoldOptionSet):
@@ -194,6 +213,7 @@ class RandomizeGiftPokemon(CasefoldOptionSet):
         "No legendaries",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeTradePokemon(CasefoldOptionSet):
@@ -236,6 +256,7 @@ class RandomizeLegendaryPokemon(CasefoldOptionSet):
         "Same type",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class PokemonRandomizationAdjustments(OptionCounter):
@@ -455,6 +476,7 @@ class RandomizeBaseStats(CasefoldOptionSet):
         "Follow evolutions",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeEvolutions(CasefoldOptionSet):
@@ -478,6 +500,7 @@ class RandomizeEvolutions(CasefoldOptionSet):
         "Allow more or less branches",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeCatchRates(CasefoldOptionSet):
@@ -522,6 +545,7 @@ class RandomizeLevelUpMovesets(CasefoldOptionSet):
         "Follow evolutions",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeTypes(CasefoldOptionSet):
@@ -543,6 +567,7 @@ class RandomizeTypes(CasefoldOptionSet):
         "Follow evolutions",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeAbilities(CasefoldOptionSet):
@@ -564,6 +589,7 @@ class RandomizeAbilities(CasefoldOptionSet):
         "Include hidden abilities",
     ]
     default = []
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeGenderRatio(CasefoldOptionSet):
