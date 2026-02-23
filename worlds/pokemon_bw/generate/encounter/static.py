@@ -20,10 +20,11 @@ def generate_static_encounters(world: "PokemonBWWorld",
     encounters: dict[str, StaticEncounterEntry] = {}
     for table in (static, legendary, fossils, gift):
         for name, data in table.items():
-            encounters[name] = StaticEncounterEntry(
-                versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule
-            )
-            check_species(world, species_checklist, by_id[versioned_species(data)])
+            if data.inclusion_rule(world):
+                encounters[name] = StaticEncounterEntry(
+                    versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule
+                )
+                check_species(world, species_checklist, by_id[versioned_species(data)])
 
     return encounters
 
