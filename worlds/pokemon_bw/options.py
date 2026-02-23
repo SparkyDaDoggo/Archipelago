@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import settings
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, OptionSet, Range, Toggle,
-                     PlandoTexts, OptionError, Option, OptionCounter, StartInventoryPool)
+                     PlandoTexts, OptionError, Option, OptionCounter, StartInventoryPool, OptionDict)
 
 if typing.TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -263,15 +263,31 @@ class PokemonRandomizationAdjustments(OptionCounter):
     """
     Adjust various parameters in various pokemon randomization options (more modifiers are planned).
     Any minimum parameter cannot be higher than its corresponding maximum parameter.
+
     - **Stats leniency** - The minimum difference between base stat totals of vanilla and randomized species (for options with **Similar base stats** activated). Allowed values are integers in range 0 to 1530.
+    - **Rare encounters threshold** - If **Prevent rare encounters** is included, this will become the minimum encounter chance (in percent) for each species. Allowed values are integers in range 1 to 100.
     """
     display_name = "Pokemon Randomization Adjustments"
     valid_keys = [
         "Stats leniency",
+        "Rare encounters threshold",
     ]
     default = {
         "Stats leniency": 10,
+        "Rare encounters threshold": 8,
     }
+
+    @classmethod
+    def from_any(cls, data: typing.Dict[str, typing.Any]) -> OptionDict:
+        if not isinstance(data, dict):
+            raise NotImplementedError(f"Cannot Convert from non-dictionary, got {type(data)}")
+        for key in cls.valid_keys:
+            if key not in data:
+                if key in cls.default:
+                    data[key] = cls.default[key]
+                else:
+                    data[key] = 0
+        return cls(data)
 
     def verify(self, world: typing.Type["World"], player_name: str, plando_options: PlandoOptions) -> None:
         super().verify(world, player_name, plando_options)
@@ -280,8 +296,11 @@ class PokemonRandomizationAdjustments(OptionCounter):
 
         if not 0 <= self.value["Stats leniency"] <= 1530:
             errors.append(f"Stats leniency: {self.value['Stats leniency']} not in range 0 to 1530")
+        if not 1 <= self.value["Rare encounters threshold"] <= 100:
+            errors.append(f"Rare encounters threshold: {self.value['Rare encounters threshold']} "
+                          f"not in range 1 to 100")
 
-        if len(errors) != 0:
+        if len(errors):
             errors = [f"For option {getattr(self, 'display_name', self)} of player {player_name}:"] + errors
             raise OptionError("\n".join(errors))
 
@@ -848,8 +867,8 @@ class ModifyEncounterRates(Choice):
     Modifies the encounter slot rates for wild encounters.
 
     - **Vanilla** - Keeps the vanilla encounter slot rates.
-    - **Try normalized** - Normalizes the rates for the 12 grass method slots to 8-9% each and the rates for surfing and fishing method slots to 20% each. It is recommended to **not** include **Prevent rare encounters** if wild pokemon are randomized.
-    - **Try normalized alternative** - Same as **Try normalized**, but sets 9 slots to 10% each and 3 slots to 3-4% each for grass methods. However, this works well with **Prevent rare encounters**.
+    - **Try normalized** - Normalizes the rates for the 12 grass method slots to 8-9% each and the rates for surfing and fishing method slots to 20% each.
+    - **Try normalized alternative** - Same as **Try normalized**, but sets 9 slots to 10% each and 3 slots to 3-4% each for grass methods.
     - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the remaining slots to 5% or less each for all encounter methods.
     - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate. Expect multiple 1% slot rates.
 

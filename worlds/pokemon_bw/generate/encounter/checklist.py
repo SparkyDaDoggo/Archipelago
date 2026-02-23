@@ -155,6 +155,7 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
 
     if prevent_rare_encounters:
         # {region: [slot1 rate, slot2 rate, ...]}
+        threshold = world.options.pokemon_randomization_adjustments["Rare encounters threshold"]
         region_added_rates: dict[str, list[int]] = {}
         for slot in copy_from:
             region = table[slot].encounter_region
@@ -172,34 +173,35 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
                 region_added_rates[region][method_index] = 0
         for slot in copy_from:  # StrCity - FR 0, 1, ...11
             region = table[slot].encounter_region  # StrCity - FR
+            added_rates = region_added_rates[region]
             method_index = int(slot[-2:])  # 0, 1, ..., 11
             is_grass = region[-2:] in (" G", "DG", "RG")
-            if copy_from[slot] is None and region_added_rates[region][method_index] < 10:
+            if copy_from[slot] is None and added_rates[method_index] < threshold:
                 for next_index_down in range(12 if is_grass else 5):
                     if next_index_down == method_index:
                         continue
                     next_slot = table[slot].encounter_region + f" {next_index_down}"
                     tracked_slot = track_down_copy_from(copy_from, next_slot)
                     tracked_index = int(tracked_slot[-2:])
-                    # if < 15 to distribute them more evenly
+                    # if < (threshold * 2 // 3) to distribute them more evenly
                     if (
                         tracked_slot != slot and
-                        region_added_rates[region][tracked_index] + region_added_rates[region][method_index] < 15
+                        added_rates[tracked_index] + added_rates[method_index] < threshold * 2 // 3
                     ):
                         copy_from[slot] = next_slot
-                        region_added_rates[region][tracked_index] += region_added_rates[region][method_index]
-                        region_added_rates[region][method_index] = 0
+                        added_rates[tracked_index] += added_rates[method_index]
+                        added_rates[method_index] = 0
                         break
                 else:
                     for next_index_down in range(12 if is_grass else 5):
                         if next_index_down == method_index:
                             continue
                         next_slot = table[slot].encounter_region + f" {next_index_down}"
-                        # If all slots in region were to copy this, then this wouldn't have < 10 added rate
+                        # If all slots in region were to copy this, then this wouldn't have <threshold added rate
                         if track_down_copy_from(copy_from, next_slot) != slot:
                             copy_from[slot] = next_slot
-                            region_added_rates[region][next_index_down] += region_added_rates[region][method_index]
-                            region_added_rates[region][method_index] = 0
+                            added_rates[next_index_down] += added_rates[method_index]
+                            added_rates[method_index] = 0
                             break
 
     return copy_from
