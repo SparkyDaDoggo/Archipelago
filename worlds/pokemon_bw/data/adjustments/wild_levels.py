@@ -112,6 +112,8 @@ adjustments: list[WildAdjData] = [
     WildAdjData(adjust(35, 55, 31, 34), 75, 0, "fishing"),
     WildAdjData(adjust(35, 70, 31, 39), 75, 0, "fishing rippling"),
 
+    WildAdjData(adjust(47, 50, 22, 25), 76, 0, "rustling grass"),
+
     WildAdjData(adjust(32, 35, 8, 12), 77, 0, "dark grass"),
     WildAdjData(adjust(5, 15, 8, 11), 77, 0, "surfing"),
     WildAdjData(adjust(5, 20, 10, 13), 77, 0, "surfing rippling"),

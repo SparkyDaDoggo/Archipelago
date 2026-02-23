@@ -261,8 +261,7 @@ class RandomizeLegendaryPokemon(CasefoldOptionSet):
 
 class PokemonRandomizationAdjustments(OptionCounter):
     """
-    Adjust various parameters in various pokemon randomization options (more modifiers are planned).
-    Any minimum parameter cannot be higher than its corresponding maximum parameter.
+    Adjust various parameters in various pokemon randomization options.
 
     - **Stats leniency** - The minimum difference between base stat totals of vanilla and randomized species (for options with **Similar base stats** activated). Allowed values are integers in range 0 to 1530.
     - **Rare encounters threshold** - If **Prevent rare encounters** is included, this will become the minimum encounter chance (in percent) for each species. Allowed values are integers in range 1 to 100.
