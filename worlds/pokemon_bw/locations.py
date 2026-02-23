@@ -126,7 +126,7 @@ def count_to_be_filled_locations(regions: dict[str, Region]) -> int:
     return count
 
 
-def extend_dexsanity_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int, str]]) -> None:
+def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int, str]]) -> None:
     from .data.locations.encounters.region_connections import connection_by_region
     from .data.pokemon.pokedex import by_number
     from .data.pokemon.species import by_name
@@ -170,6 +170,10 @@ def extend_dexsanity_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[in
             if location not in places_for_location:
                 places_for_location[location] = set()
             places_for_location[location].add(f"Evolving {data.dex_name}")
+
+    # Deerlings in Season Research Lab
+    deerlings_npc_location = "Route 6 - Item from scientist for all Deerling forms"
+    places_for_location[deerlings_npc_location] = places_for_location["Pokédex - Deerling"]
 
     # Create hint strings
     # For every existing Dexsanity location
