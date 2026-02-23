@@ -161,9 +161,9 @@ table: dict[str, FlagLocationData] = {
     "Icirrus City - Item from Aha if answer was correct": FlagLocationData(0x1A7, always_default, "Icirrus City", None, None),
     "Icirrus City - Item from Aha if answer was incorrect": FlagLocationData(0x1A6, always_default, "Icirrus City", None, None),
     "Icirrus City - Item from Pokémon Fan Club chairman for gaining 25 levels": FlagLocationData(251, always_default, "Icirrus City", None, None),
-    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels": FlagLocationData(252, always_default, "Icirrus City", None, None),
+    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels": FlagLocationData(252, always_default, "Icirrus City", None, can_beat_ghetsis),
     # This is not only unreasonable, but also has an astronomically low softlock chance if we don't document breeding data and consider it during generation
-    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 99 levels": FlagLocationData(253, always_excluded, "Icirrus City", disabled, None),
+    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 99 levels": FlagLocationData(253, always_excluded, "Icirrus City", disabled, can_beat_ghetsis),
     "Icirrus City - Item from the former Team Rocket member's wife (Winter)": FlagLocationData(134, season_dependant, "Icirrus City", None, can_set_winter),
     "Icirrus Gym - Gym guide item": FlagLocationData(124, always_default, "Icirrus City", None, None),
     "Dragonspiral Tower - Item from Cedric Juniper": FlagLocationData(310, always_default, "Dragonspiral Tower", None, None),
