@@ -46,6 +46,56 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - Modes: `Multiply`, `Add`, `Power`
   - Encounter types: Trainer, Wild
 
+## 0.3.17
+
+- Fixed encounter plando failing with certain randomization modifiers
+- Fixed Trial Chamber logic not accounting for the strength boulder
+- Fixed possible softlocks due to level up + move evolutions not accounting for access to the move reminder
+- Removed the Heart Scale requirement for the move reminder
+
+## 0.3.16
+
+- Fixed template yamls not working/being rejected
+
+## 0.3.15
+
+- Fixed custom and randomized encounter rate modification not working
+- Actually fixed Trial Chamber logic
+- Fixed encounter plando not working without randomized wild encounters
+
+## 0.3.14
+
+- Added `Modify Encounter Rates` option
+- Added support for the Poptracker pack
+- Made reaching Nacrene City a logical requirement for friendship evolutions
+- Added form changes for Deerling, Sawsbuck, Rotom, and Deoxys to logic
+- Tweaked the `Adjust Levels` option for some earlier postgame maps
+
+- Fixed manifest missing the container version fields
+- Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
+- Fixed badge and TM/HM locations not being excludable or prioritizable
+- Fixed the Deerling forms location once again
+- Fixed logic of Trial Chamber (including the static Terrakion)
+- Fixed nondeterministic Dexsanity location creation
+- Fixed generation failures for certain combinations of Encounter Plando and randomization modifiers
+- Fixed small miscalculations with `Prevent rare encounters` in wild pokémon randomization
+- Fixed Sneasel not being able to evolve
+- Fixed rom not being automatically updated when it should
+- Fixed incorrect level adjustments
+- Fixed sage Zinzolin appearing twice in Cold Storage under certain circumstances
+- Fixed potentially not having 115 Unovan pokémon available when randomized
+- Fixed weird text box behavior of PC Master Ball seller
+- Removed different Arceus forms
+  - Also fixes a possible softlock due to Challenger's Rock
+
+## 0.3.13
+
+- Made sure there is always at least one fighting type pokémon obtainable (for the challenge rock)
+- Fixed the sandwich minigame on Village Bridge not being repeatable on the same day
+- Fixed beating Ghetsis again triggering post-Alder stuff
+- (Hopefully) fixed not being able to enter the Pokémon League after beating Ghetsis
+- Added setting for dumping patched files (for debug purposes)
+
 ## 0.3.12
 
 - Fixed the Wingull grams reward location not working
