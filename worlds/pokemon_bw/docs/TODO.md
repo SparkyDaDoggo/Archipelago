@@ -1,35 +1,31 @@
 # Important stuff
 
-- post ghetsis location group
-- fix nacrene city waitress giving vanilla item AND AP item
-- optionset descriptions: "You can include as many of the following modifiers as you want."
-- randomization optionsets: add randomize if not empty (port over from main branch)
-- elemental monkeys missing in ensure all obtainable?
-- undella mansion seller always 1000 prize?
-- sage in relic castle b1f invisible if going down before icirrus city events
-- give prevent rare encounters an adjustable modifier and set its default to 8
+- [ROM] fix nacrene city waitress giving vanilla item AND AP item
+- [ROM] undella mansion seller always 1000 prize?
+- [ROM] sage in relic castle b1f invisible if going down before icirrus city events
 - fix prevent rare encounters accepting copying slots (i.e. added rates == 0)
 - port patch file version accepting stuff from main
 - stats evolutions should require repeatable vitamins (shopping mall nine)
 - encounter logic toggles (evolution, statics/gift/legendary, trade, fossils)
 - extended dexsanity hints including pre evos (if evos in logic) and trade requests (if trades in logic)
-- statics and trades to encounter_by_method
-- aha incorrect prize also gives vanilla item
-- merge aha locations because flag flip reports are inconsistent
-- does "train any pokemon by 50 levels" have any additional logic? better require league/ns castle
-- moor of icirrus inaccessible in winter without surf?
-- shopping mall nine evo items seller ends abrupt if canceled
-- ns castle seller very bad
-- extended location hint for deerlings location and challenge rock
-- make item names in custom roadblock dialogues a distinguishable color
-- fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
-- opelucid city fly flag only set after ghetsis scene?
-- make massage lady in castelia repeatable
-- baker on village bridge not repeatable
-- report: lv48 encounter on marvelous bridge and lv25 on route 15, despite adjust_levels
-- make 50 levelups check in Icirrus City also send 25 levelups check
+- [ROM] aha incorrect prize also gives vanilla item
+- [0.4] merge aha locations because flag flip reports are inconsistent
+- [ROM] shopping mall nine evo items seller ends abrupt if canceled
+- [ROM] ns castle seller very bad
+- [ROM] make item names in custom roadblock dialogues a distinguishable color
+- [ROM] fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
+- [ROM] opelucid city fly flag only set after ghetsis scene?
+- [ROM] make massage lady in castelia repeatable
+- [ROM] baker on village bridge not repeatable
+- [ROM] make 50 levelups check in Icirrus City also send 25 levelups check
 - locked placement stuff might remove wrong Item instances when using list.remove(), leading to some Item instances being placed twice somewhere while other instances are lost
 - any_badge and any_tm_hm ignore other players' local_items and logic(?, look for some way to validate if it can be placed there)
+- port over extended option counter from shapez 2
+- combined goals
+- [ROM] add flags for other statics and trades and put them as a bitfield into datastorage (for poptracker)
+- [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
+- ADD UNIT TESTS AFTER EVERYTHING
+- TEST EVERYTHING AFTERWARDS
 
 # Not urgent
 
@@ -51,6 +47,7 @@
 - Chargestone cave make north to south shortcut open after traversing it for the first time (maybe when battled N)
 - gracidea seems to only work on fateful encounters, assembly needed
 - gym leader scripts control traded obedience level?
+- extended location hint for challenge rock
 
 # Single reports, cannot recreate, need to wait for more reports
 

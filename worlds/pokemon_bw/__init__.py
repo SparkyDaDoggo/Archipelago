@@ -119,7 +119,8 @@ class PokemonBWWorld(World):
         self.static_encounter: dict[str, StaticEncounterEntry] | None = None
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
-        self.encounter_by_method: dict[str, list[int | tuple[int, int]]] = {}
+        self.encounter_by_method: dict[str, list[int]] = {}
+        self.trade_data: dict[str, tuple[int, int]] = {}
         self.dexsanity_numbers: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.rules_dict: RulesDict | None = None
@@ -192,6 +193,7 @@ class PokemonBWWorld(World):
             self, species_checklist, slots_checklist
         )
         self.encounter_by_method = wild.organize_by_method(self)
+        self.trade_data = wild.organize_trades(self)
         self.trainer_teams = trainers.generate_trainer_teams(self)
 
     def create_item(self, name: str) -> items.PokemonBWItem:
@@ -278,6 +280,7 @@ class PokemonBWWorld(World):
             "reusable_tms": self.options.reusable_tms.current_key,
             # Needed for PopTracker
             "encounter_by_method": self.encounter_by_method,
+            "trade_data": self.trade_data,
             "dexsanity_pokemon": self.dexsanity_numbers,
         }
 

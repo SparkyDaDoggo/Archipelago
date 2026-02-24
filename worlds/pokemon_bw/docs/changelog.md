@@ -3,8 +3,27 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.18
 
-- Improved filler item generation performance
-- Fixed Johto-exclusive balls not appearing in the in-battle bag
+- Features:
+  - Added "Post-Ghetsis locations" group
+  - Made `Randomize Wild Pokemon` (and similar options) automatically add `Randomize` if any other modifier is added
+  - Added `Rare encounters threshold` key to `Pokémon Randomization Adjustments`, intended for the `Prevent rare encounters` modifier
+    - Also changed the default to 8, in order to prevent conflicts with the `Modify Encounter Rates` option
+  - Added an extended location hint for `Route 6 - Item from scientist for all Deerling forms`
+
+- Fixes:
+  - Fixed the flag for beating Cynthia not being correctly sent to Poptracker
+  - Fixed Johto-exclusive balls not appearing in the in-battle bag
+  - Fixed multiple Dexsanity checks being rolled when not possible (or vice versa)
+    - This includes Pansage sometimes not having a check even if `Ensure all obtainable` is included
+  - Fixed `Pokémon Randomization Adjustments` crashing when given an empty dictionary
+  - Fixed Marvelous Bridge being forgotten by the `Adjust levels` option
+  - Fixed incorrect entrance logic of Moor of Icirrus
+
+- Other stuff:
+  - Improved filler item generation performance
+  - Tweaked option descriptions to make them friendlier towards new players
+  - Made `Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels` logically require access to Ghetsis
+  - Added static and trade encounters to slot data for Poptracker
 
 ## 0.3.17
 
