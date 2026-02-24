@@ -8,18 +8,26 @@ if TYPE_CHECKING:
     from .. import EncounterEntry
 
 
-def organize_by_method(world: "PokemonBWWorld") -> dict[str, tuple[list[str], list[int]]]:
-    from ...data.pokemon.species import by_id
+def organize_by_method(world: "PokemonBWWorld") -> dict[str, list[int | tuple[int, int]]]:
     # {method: ([species names], [dex numbers])}
-    ret: dict[str, tuple[list[str], list[int]]] = {}
+    ret: dict[str, list[int | tuple[int, int]]] = {}
     for slot, data in world.wild_encounter.items():
         if data.encounter_region not in ret:
-            ret[data.encounter_region] = ([], [])
-        spec = by_id[data.species_id]
-        if spec not in ret[data.encounter_region][0]:
-            ret[data.encounter_region][0].append(spec)
-        if data.species_id[0] not in ret[data.encounter_region][1]:
-            ret[data.encounter_region][1].append(data.species_id[0])
+            ret[data.encounter_region] = []
+        if data.species_id[0] not in ret[data.encounter_region]:
+            ret[data.encounter_region].append(data.species_id[0])
+    for static_slot, entry in world.static_encounter.items():
+        enc_region = static_slot if not static_slot[-1].isnumeric() else static_slot[:static_slot.rfind(" ")]
+        if enc_region not in ret:
+            ret[enc_region] = []
+        if entry.species_id[0] not in ret[enc_region]:
+            ret[enc_region].append(entry.species_id[0])
+    for trade_slot, trade_entry in world.trade_encounter.items():
+        trade_tup = (trade_entry.species_id[0], trade_entry.wanted_dex_number)
+        if trade_slot not in ret:
+            ret[trade_slot] = []
+        if trade_tup not in ret[trade_slot]:
+            ret[trade_slot].append(trade_tup)
     return ret
 
 

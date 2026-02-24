@@ -119,7 +119,7 @@ class PokemonBWWorld(World):
         self.static_encounter: dict[str, StaticEncounterEntry] | None = None
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
-        self.encounter_by_method: dict[str, tuple[list[str], list[int]]] = {}
+        self.encounter_by_method: dict[str, list[int | tuple[int, int]]] = {}
         self.dexsanity_numbers: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.rules_dict: RulesDict | None = None
@@ -277,11 +277,11 @@ class PokemonBWWorld(World):
             "master_ball_seller_cost": self.master_ball_seller_cost,
             "reusable_tms": self.options.reusable_tms.current_key,
             # Needed for PopTracker
-            "encounter_by_method": {method: lists[1] for method, lists in self.encounter_by_method.items()},
+            "encounter_by_method": self.encounter_by_method,
             "dexsanity_pokemon": self.dexsanity_numbers,
         }
 
-    def interpret_slot_data(self, slot_data: dict[str, Any]) -> dict[str, Any]:
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
         """Helper function for Universal Tracker"""
-        _ = self  # Damn PyCharm screaming "meThoD mAy bE stAtiC"
         return slot_data
