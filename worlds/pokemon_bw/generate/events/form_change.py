@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable
 
 from ...locations import PokemonBWLocation
 from BaseClasses import ItemClassification
@@ -6,7 +6,7 @@ from ...items import PokemonBWItem
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...data import SpeciesData
+    from ...data import SpeciesData, AccessRule
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
@@ -23,9 +23,15 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
     #   Darmanitan: Requires repeatable access to Darmanitans with hidden ability
     #   Meloetta: Not possible in BW according to PokéWiki
 
+    def has_any(its: Iterable[str]) -> "AccessRule":
+        return lambda state: state.has_any(its, world.player)
+
+    def has_any_and_has(its: Iterable[str], it: str) -> "AccessRule":
+        return lambda state: state.has_any(its, world.player) and state.has(it, world.player)
+
     seasons = ("Spring", "Summer", "Autumn", "Winter")
     for pokemon in ("Deerling", "Sawsbuck"):
-        forms = [f"{pokemon} ({season})" for season in seasons]
+        forms = tuple(f"{pokemon} ({season})" for season in seasons)
         if (
             any(form in catchable_species_data for form in forms) and
             world.options.season_control != "vanilla"
@@ -36,12 +42,9 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
                 item = PokemonBWItem(f"{pokemon} ({season})", ItemClassification.progression, None, world.player)
                 location.place_locked_item(item)
                 if world.options.season_control == "randomized":
-                    location.access_rule = lambda state: (
-                        state.has_any(forms, world.player) and
-                        state.has(season, world.player)
-                    )
+                    location.access_rule = has_any_and_has(forms, season)
                 else:
-                    location.access_rule = lambda state: state.has_any(forms, world.player)
+                    location.access_rule = has_any(forms)
                 region.locations.append(location)
 
     rotom_machines = ("Heat", "Wash", "Frost", "Fan", "Mow", "Default")
@@ -52,7 +55,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
             location = PokemonBWLocation(world.player, "Change Rotom to "+rotom_machines[form_num], None, region)
             item = PokemonBWItem(rotom_forms[form_num], ItemClassification.progression, None, world.player)
             location.place_locked_item(item)
-            location.access_rule = lambda state: state.has_any(rotom_forms, world.player)
+            location.access_rule = has_any(rotom_forms)
             region.locations.append(location)
 
     deoxys_appends = ("Attack", "Defense", "Speed", "Default")
@@ -63,7 +66,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
             location = PokemonBWLocation(world.player, "Change Deoxys to "+deoxys_appends[form_num], None, region)
             item = PokemonBWItem(deoxys_forms[form_num], ItemClassification.progression, None, world.player)
             location.place_locked_item(item)
-            location.access_rule = lambda state: state.has_any(deoxys_forms, world.player)
+            location.access_rule = has_any(deoxys_forms)
             region.locations.append(location)
 
     # if "Shaymin" in catchable_species_data or "Shaymin (Sky)" in catchable_species_data:
