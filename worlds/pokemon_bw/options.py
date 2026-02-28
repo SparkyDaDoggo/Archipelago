@@ -1103,19 +1103,31 @@ class ModifyLogic(CasefoldOptionSet):
 
     - **Require Dowsing Machine** - Makes the Dowsing Machine a logical requirement to find hidden items.
     - **Prioritize key item locations** - Marks locations, that normally contain key items (which also includes
-                                          badge rewards in gyms), as priority locations, making them mostly contain
-                                          progressive items.
+        badge rewards in gyms), as priority locations, making them mostly contain progressive items.
     - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the basement of Wellspring Cave
-                          logically require TM70 Flash.
+        logically require TM70 Flash.
+    - **Consider <feature X>** - Toggles whether <feature X> is considered in logic to get access to
+        some pokemon species. The available features are **evolutions**, **static pokemon**, **trades**,
+        and **form change**.
     """
     display_name = "Modify Logic"
-    valid_keys_casefold = True
     valid_keys = [
         "Require Dowsing Machine",
         "Prioritize key item locations",
         "Require Flash",
+        "Consider evolutions",
+        "Consider static pokemon",
+        "Consider trades",
+        "Consider form change",
     ]
-    default = ["Require Dowsing Machine", "Prioritize key item locations", "Require Flash"]
+    default = [
+        "Require Dowsing Machine",
+        "Prioritize key item locations",
+        "Require Flash",
+        "Consider evolutions",
+        "Consider static pokemon",
+        "Consider form change",
+    ]
 
 
 class FunnyDialog(Toggle):

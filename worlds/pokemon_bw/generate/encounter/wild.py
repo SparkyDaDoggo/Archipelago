@@ -1,5 +1,7 @@
 import itertools
 from typing import TYPE_CHECKING, Callable
+
+from Options import OptionError
 from .. import EncounterEntry
 
 if TYPE_CHECKING:
@@ -67,15 +69,17 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     world.random.shuffle(copy_slots)
 
     if len(species_checklist[0]) > len(logic_slots):
-        for species in species_checklist[0][:]:
-            species_data = by_name[species]
-            for evolution in species_data.evolutions:
-                if evolution[0] != "Level up with party member":
-                    check_species(world, species_checklist, evolution[2])
+        if "Consider evolutions" in world.options.modify_logic:
+            for species in species_checklist[0][:]:
+                species_data = by_name[species]
+                for evolution in species_data.evolutions:
+                    if evolution[0] != "Level up with party member":
+                        check_species(world, species_checklist, evolution[2])
         if len(species_checklist[0]) > len(logic_slots):
-            raise Exception(
+            raise OptionError(
                 f"More required species for randomized wild encounter than slots they could be placed in "
-                f"for player {world.player_name}: {len(species_checklist[0])} > {len(logic_slots)}"
+                f"for player {world.player_name}: {len(species_checklist[0])} > {len(logic_slots)}.\n"
+                f"Please remove some restrictive options or tweak the \"Modify Logic\" option."
             )
 
     similar_base_stats = "Similar base stats" in world.options.randomize_wild_pokemon

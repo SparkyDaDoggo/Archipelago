@@ -20,16 +20,20 @@ def generate_static_encounters(world: "PokemonBWWorld",
     encounters: dict[str, StaticEncounterEntry] = {}
     for table in (static, legendary, fossils, gift):
         for name, data in table.items():
-            if data.inclusion_rule(world):
-                encounters[name] = StaticEncounterEntry(
-                    versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule
-                )
+            encounters[name] = StaticEncounterEntry(
+                versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule
+            )
+            if (
+                (data.inclusion_rule is None or data.inclusion_rule(world))
+                and "Consider static pokemon" in world.options.modify_logic
+            ):
                 check_species(world, species_checklist, by_id[versioned_species(data)])
 
     return encounters
 
 
-def generate_trade_encounters(world: "PokemonBWWorld", species_checklist: tuple[list[str], set[str]]) -> dict[str, TradeEncounterEntry]:
+def generate_trade_encounters(world: "PokemonBWWorld",
+                              species_checklist: tuple[list[str], set[str]]) -> dict[str, TradeEncounterEntry]:
     from ...data.locations.encounters.static import trade
     from .checklist import check_species, add_species_to_check
     from ...data.pokemon.species import by_id
@@ -53,7 +57,8 @@ def generate_trade_encounters(world: "PokemonBWWorld", species_checklist: tuple[
             versioned_wanted(data),
             data.encounter_region
         )
-        check_species(world, species_checklist, by_id[versioned_species(data)])
-        add_species_to_check(species_checklist, by_id[(versioned_wanted(data), 0)])
+        if "Consider trades" in world.options.modify_logic:
+            check_species(world, species_checklist, by_id[versioned_species(data)])
+            add_species_to_check(species_checklist, by_id[(versioned_wanted(data), 0)])
 
     return encounters

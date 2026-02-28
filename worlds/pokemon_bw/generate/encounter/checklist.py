@@ -58,11 +58,12 @@ def check_species(world: "PokemonBWWorld", checklist: tuple[list[str], set[str]]
     if loop >= 5:
         return
 
-    data = by_name[species]
-    for evolution in data.evolutions:
-        if evolution[0] == "Level up with party member":
-            add_species_to_check(checklist, by_id[(evolution[1], 0)])
-        check_species(world, checklist, evolution[2], loop+1)
+    if "Consider evolutions" in world.options.modify_logic:
+        data = by_name[species]
+        for evolution in data.evolutions:
+            if evolution[0] == "Level up with party member":
+                add_species_to_check(checklist, by_id[(evolution[1], 0)])
+            check_species(world, checklist, evolution[2], loop+1)
 
 
 def add_species_to_check(checklist: tuple[list[str], set[str]], species: str) -> None:

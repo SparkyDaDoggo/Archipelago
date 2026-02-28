@@ -1,16 +1,18 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from ...locations import PokemonBWLocation
-from BaseClasses import ItemClassification, CollectionState
+from BaseClasses import ItemClassification
 from ...items import PokemonBWItem
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from BaseClasses import Region
     from ...data import SpeciesData
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
+
+    if "Consider form change" not in world.options.modify_logic:
+        return
 
     # Only some certain Pokémon because it's complicated and I didn't want to make this
     # Reasons for not doing...
