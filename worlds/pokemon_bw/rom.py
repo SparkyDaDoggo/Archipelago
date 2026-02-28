@@ -145,13 +145,16 @@ class PatchMethods:
             if file not in ["archipelago.json"]:
                 patch.files[file] = opened_zipfile.read(file)
 
-        if tuple(manifest["bw_patch_format"]) > version.patch_file():
-            raise Exception(f"File (BW patch version: {'.'.join(str(i) for i in manifest['bw_patch_format'])}) too new "
-                            f"for this handler (BW patch version: {version.patch_file()}). "
+        found_version: tuple[int, ...] = tuple(manifest["bw_patch_format"])
+        accept = version.patch_accept(found_version)
+
+        if accept == 1:
+            raise Exception(f"File (patch version: {version_str(manifest['bw_patch_format'])}) too new "
+                            f"for this apworld (patch version: {version_str(version.patch_file())}). "
                             f"Please update your apworld.")
-        elif tuple(manifest["bw_patch_format"]) < version.patch_file():
-            raise Exception(f"File (BW patch version: {'.'.join(str(i) for i in manifest['bw_patch_format'])}) too old "
-                            f"for this handler (BW patch version: {version.patch_file()}). "
+        elif accept == -1:
+            raise Exception(f"File (patch version: {version_str(manifest['bw_patch_format'])}) too old "
+                            f"for this apworld (patch version: {version_str(version.patch_file())}). "
                             f"Either re-generate your world or downgrade to an older apworld version.")
 
         return manifest
@@ -175,17 +178,31 @@ patch_procedures: dict[str, Callable[[ndspy_rom.NintendoDSRom, str, PokemonBWPat
 
 
 def get_base_rom_bytes(version: str, file_name: str = "") -> bytes:
-    if not file_name:
-        file_name = get_base_rom_path(version, file_name)
-    with open(file_name, "rb") as file:
-        base_rom_bytes = bytes(file.read())
-    if version == "black" and base_rom_bytes[:18] != b'POKEMON\x20B\0\0\0IRBO01':
-        raise Exception(f"Supplied Base Rom appears to not be an english copy of Pokémon Black Version: "
-                        f"{base_rom_bytes[:18]}")
-    if version == "white" and base_rom_bytes[:18] != b'POKEMON\x20W\0\0\0IRAO01':
-        raise Exception(f"Supplied Base Rom appears to not be an english copy of Pokémon White Version: "
-                        f"{base_rom_bytes[:18]}")
-    return base_rom_bytes
+    while True:
+        if not file_name:
+            file_name = get_base_rom_path(version, file_name)
+        with open(file_name, "rb") as file:
+            base_rom_bytes = bytes(file.read())
+        header_bytes = base_rom_bytes[:18]
+        stuff = ((b'POKEMON\x20B\0\0\0IRBO01', b'IRA', b'IRB', "Black", "White")
+                 if version == "black" else
+                 (b'POKEMON\x20W\0\0\0IRAO01', b'IRB', b'IRA', "White", "Black"))
+        if header_bytes != stuff[0]:
+            if stuff[1] in header_bytes:
+                raise Exception(f"Supplied base ROM appears to be a copy of Pokémon {stuff[4]} Version. However, "
+                                f"this patch file requires an english copy of Pokémon {stuff[3]} Version. Please "
+                                f"delete the Pokemon{stuff[3]}.nds file in your Archipelago installation folder and "
+                                f"run this patch file again.")
+            elif stuff[2] in header_bytes:
+                raise Exception(f"Supplied base ROM appears to be a non-english copy of Pokémon {stuff[3]} Version. "
+                                f"However, this apworld requires an english copy. Please delete the "
+                                f"Pokemon{stuff[3]}.nds file in your Archipelago installation folder and run this "
+                                f"patch file again.")
+            else:
+                raise Exception(f"Supplied base ROM appears to not be an english copy of Pokémon {stuff[3]} Version "
+                                f"({header_bytes}). Please delete the Pokemon{stuff[3]}.nds file in your Archipelago "
+                                f"installation folder and run this patch file again.")
+        return base_rom_bytes
 
 
 def get_base_rom_path(version: str, file_name: str = "") -> str:
@@ -194,3 +211,7 @@ def get_base_rom_path(version: str, file_name: str = "") -> str:
     if not os.path.exists(file_name):
         file_name = Utils.user_path(file_name)
     return file_name
+
+
+def version_str(ver: tuple[int, ...]) -> str:
+    return ".".join(str(i) for i in ver)

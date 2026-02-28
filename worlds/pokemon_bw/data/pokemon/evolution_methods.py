@@ -82,6 +82,12 @@ is_in_appropriate_region: dict[int, ExtendedRule] = {  # Artificial logic so tha
     19: can_challenge_alder,
 }
 
+
+def stats_lvlup(value: int) -> ExtendedRule:
+    return lambda state, world: (is_in_appropriate_region[value//5](state, world)
+                                 and state.can_reach_region("Route 9", world.player))
+
+
 methods: dict[str, EvolutionMethodData] = {
     "Level up": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),
     "Stone": EvolutionMethodData(0, lambda value: can_buy_item[value]),
@@ -99,9 +105,9 @@ methods: dict[str, EvolutionMethodData] = {
     "Level up ice rock": EvolutionMethodData(0, lambda value: can_reach_ice_rock),
     "Level up item day": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Always paired with night
     "Level up item night": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Always paired with day
-    "Level up higher defense": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up higher attack": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up equal physical": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
+    "Level up higher defense": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up higher attack": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up equal physical": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
     "Level up Silcoon": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
     "Level up Cascoon": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
     "Level up Ninjask": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),

@@ -3,37 +3,49 @@ from typing import NamedTuple
 
 class VersionCompatibility(NamedTuple):
     patch_file: tuple[int, int, int]
+    patch_accept: tuple[int, int, int]
     rom: tuple[int, int, int]
     ut: tuple[int, int, int]
     ap_minimum: tuple[int, int, int]
 
 
-version: tuple[int, int, int] = (0, 3, 17)
+version: tuple[int, int, int] = (0, 3, 18)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
-    (0, 3, 17): VersionCompatibility((0, 3, 0), (0, 3, 17), (0, 3, 17), (0, 6, 3)),
-    (0, 3, 16): VersionCompatibility((0, 3, 0), (0, 3, 15), (0, 3, 15), (0, 6, 3)),
-    (0, 3, 15): VersionCompatibility((0, 3, 0), (0, 3, 15), (0, 3, 15), (0, 6, 3)),
-    (0, 3, 14): VersionCompatibility((0, 3, 0), (0, 3, 14), (0, 3, 14), (0, 6, 3)),
-    (0, 3, 13): VersionCompatibility((0, 3, 0), (0, 3, 13), (0, 3, 13), (0, 6, 3)),
-    (0, 3, 12): VersionCompatibility((0, 3, 0), (0, 3, 12), (0, 3, 9), (0, 6, 3)),
-    (0, 3, 11): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9), (0, 6, 3)),
-    (0, 3, 10): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9), (0, 6, 3)),
-    (0, 3, 9): VersionCompatibility((0, 3, 0), (0, 3, 9), (0, 3, 9), (0, 6, 3)),
-    (0, 3, 8): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6), (0, 6, 3)),
-    (0, 3, 7): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6), (0, 6, 3)),
-    (0, 3, 6): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 6), (0, 6, 3)),
-    (0, 3, 5): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 2), (0, 6, 3)),
-    (0, 3, 4): VersionCompatibility((0, 3, 0), (0, 3, 4), (0, 3, 2), (0, 6, 3)),
-    (0, 3, 3): VersionCompatibility((0, 3, 0), (0, 3, 3), (0, 3, 2), (0, 6, 3)),
-    (0, 3, 2): VersionCompatibility((0, 3, 0), (0, 3, 2), (0, 3, 2), (0, 6, 3)),
-    (0, 3, 1): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 6, 3)),
-    (0, 3, 0): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 6, 3)),
+    (0, 3, 18): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 17), (0, 3, 18), (0, 6, 3)),
+    (0, 3, 17): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 17), (0, 3, 17), (0, 6, 3)),
+    (0, 3, 16): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 15), (0, 3, 15), (0, 6, 3)),
+    (0, 3, 15): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 15), (0, 3, 15), (0, 6, 3)),
+    (0, 3, 14): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 14), (0, 3, 14), (0, 6, 3)),
+    (0, 3, 13): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 13), (0, 3, 13), (0, 6, 3)),
+    (0, 3, 12): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 12), (0, 3, 9), (0, 6, 3)),
+    (0, 3, 11): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 9), (0, 3, 9), (0, 6, 3)),
+    (0, 3, 10): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 9), (0, 3, 9), (0, 6, 3)),
+    (0, 3, 9): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 9), (0, 3, 9), (0, 6, 3)),
+    (0, 3, 8): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 4), (0, 3, 6), (0, 6, 3)),
+    (0, 3, 7): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 4), (0, 3, 6), (0, 6, 3)),
+    (0, 3, 6): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 4), (0, 3, 6), (0, 6, 3)),
+    (0, 3, 5): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 4), (0, 3, 2), (0, 6, 3)),
+    (0, 3, 4): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 4), (0, 3, 2), (0, 6, 3)),
+    (0, 3, 3): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 3), (0, 3, 2), (0, 6, 3)),
+    (0, 3, 2): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 2), (0, 3, 2), (0, 6, 3)),
+    (0, 3, 1): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 6, 3)),
+    (0, 3, 0): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 6, 3)),
 }
 
 
 def patch_file() -> tuple[int, int, int]:
     return compatibility[version].patch_file
+
+
+def patch_accept(found: tuple[int, ...]) -> int:
+    """0 = accepted, 1 = too new, -1 = too old"""
+    if found > compatibility[version].patch_file:
+        return 1
+    elif found < compatibility[version].patch_accept:
+        return -1
+    else:
+        return 0
 
 
 def rom() -> tuple[int, int, int]:
