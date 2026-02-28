@@ -146,36 +146,46 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
         places_for_location[location].add(catching_place)
 
     # Static encounter
-    for static_slot, entry in world.static_encounter.items():
-        catching_place = static_slot[:static_slot.rfind("Encounter")]
-        pokemon = by_number[entry.species_id[0]]
-        location = "Pokédex - " + pokemon
-        if location not in places_for_location:
-            places_for_location[location] = set()
-        places_for_location[location].add(catching_place)
-
-    # Trade encounter
-    for trade_slot, entry in world.trade_encounter.items():
-        catching_place = trade_slot[:trade_slot.rindex("Encounter")]
-        pokemon = by_number[entry.species_id[0]]
-        location = "Pokédex - " + pokemon
-        if location not in places_for_location:
-            places_for_location[location] = set()
-        places_for_location[location].add(catching_place)
-
-    # Evolutions
-    for species, data in by_name.items():
-        for evo in data.evolutions:
-            location = "Pokédex - " + by_name[evo[2]].dex_name
+    if "Consider static pokemon" in world.options.modify_logic:
+        for static_slot, entry in world.static_encounter.items():
+            catching_place = static_slot[:static_slot.rfind("Encounter")]
+            pokemon = by_number[entry.species_id[0]]
+            location = "Pokédex - " + pokemon
             if location not in places_for_location:
                 places_for_location[location] = set()
-            places_for_location[location].add(f"Evolving {data.dex_name}")
+            places_for_location[location].add(catching_place)
+
+    # Trade encounter
+    consider_trades = "Consider trades" in world.options.modify_logic
+    if consider_trades:
+        for trade_slot, entry in world.trade_encounter.items():
+            wanted_pokemon = by_number[entry.wanted_dex_number]
+            catching_place = (f"{trade_slot[:trade_slot.rindex('Encounter')]} (wants {wanted_pokemon}, found at "
+                              f"{', '.join(places_for_location['Pokédex - ' + wanted_pokemon])})")
+            pokemon = by_number[entry.species_id[0]]
+            location = "Pokédex - " + pokemon
+            if location not in places_for_location:
+                places_for_location[location] = set()
+            places_for_location[location].add(catching_place)
+
+    # Evolutions
+    if "Consider evolutions" in world.options.modify_logic:
+        for species, data in by_name.items():
+            for evo in data.evolutions:
+                place = f"Evolving {data.dex_name}"
+                if data.dex_name in places_for_location:
+                    place += f" (found at {', '.join(places_for_location[data.dex_name])})"
+                location = "Pokédex - " + by_name[evo[2]].dex_name
+                if location not in places_for_location:
+                    places_for_location[location] = set()
+                places_for_location[location].add(place)
 
     # Deerlings in Season Research Lab
     deerlings_npc_location = "Route 6 - Item from scientist for all Deerling forms"
     places_for_location[deerlings_npc_location] = places_for_location["Pokédex - Deerling"]
 
     # Create hint strings
+    # Keep both iteration loops because either one can't handle all encounters (?)
     # For every existing Dexsanity location
     for loc in world.get_locations():
         if loc.name in places_for_location:

@@ -61,6 +61,7 @@ def ap_minimum() -> tuple[int, int, int]:
 
 
 def revert(value: int, dec=True) -> str:
+    # Please don't ask about this
     l = []
     while value:
         l.append(value % 256)
