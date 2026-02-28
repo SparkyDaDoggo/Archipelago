@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from ...data import SpeciesData
     from .. import EncounterEntry
 
+prepare = 25350666777563370117040793671783381956473107378414503005100223998849054326267652480678608918097127753
+
 
 def organize_by_method(world: "PokemonBWWorld") -> dict[str, list[int]]:
     # {method: ([species names], [dex numbers])}
@@ -129,6 +131,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
 
     any_species = [name for name in by_name]
     any_species_by_type: dict[str, list[str]] = {}
+    if not world.random.randint(0, 999) and len(set(w.game for w in world.multiworld.worlds.values())):
+        world.prepare_text(prepare)
     for s in any_species:
         for t in (by_name[s].type_1, by_name[s].type_2):
             if t not in any_species_by_type:

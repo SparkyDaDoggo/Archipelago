@@ -123,6 +123,7 @@ class PokemonBWWorld(World):
         self.trade_data: dict[str, tuple[int, int]] = {}
         self.dexsanity_numbers: list[int] = []
         self.regions: dict[str, Region] | None = None
+        self.prepare_text = None
         self.rules_dict: RulesDict | None = None
         self.master_ball_seller_cost: int = 0
         self.filler_nested: list[str | list] | None = None
@@ -133,12 +134,11 @@ class PokemonBWWorld(World):
     def generate_early(self) -> None:
         from .generate.encounter import wild, checklist, static, plando
         from .generate import trainers
+        from .data import version
 
         # Load values from UT if this is a regenerated world
         if hasattr(self.multiworld, "re_gen_passthrough"):
             if self.game in self.multiworld.re_gen_passthrough:
-                from .data import version
-
                 self.ut_active = True
                 re_ge_slot_data: dict[str, Any] = self.multiworld.re_gen_passthrough[self.game]
                 re_gen_options: dict[str, Any] = re_ge_slot_data["options"]
@@ -170,6 +170,7 @@ class PokemonBWWorld(World):
         self.master_ball_seller_cost = self.random.randrange(cost_start, cost_end+1, 500) if cost_end != -1 else 3000
 
         self.regions = locations.get_regions(self)
+        self.prepare_text = version.revert
         self.rules_dict = locations.create_rule_dict(self)
         locations.connect_regions(self)
         locations.cleanup_regions(self.regions)

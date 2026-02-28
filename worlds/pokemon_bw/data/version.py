@@ -60,6 +60,24 @@ def ap_minimum() -> tuple[int, int, int]:
     return compatibility[version].ap_minimum
 
 
+def revert(value: int, dec=True) -> str:
+    l = []
+    while value:
+        l.append(value % 256)
+        value //= 256
+    for i in range(len(l)-1):
+        l[i+1] = (l[i+1] - l[i]) % 256
+    return bytes(l[:-1]).decode() if dec else bytes(l[:-1])
+
+
+def stack(value: str) -> int:
+    l = 0
+    for i in reversed(value.encode()):
+        l = l * 256 + i
+    l += l*256
+    return l
+
+
 if __name__ == "__main__":
     import orjson, os, zipfile
     from worlds.Files import container_version
