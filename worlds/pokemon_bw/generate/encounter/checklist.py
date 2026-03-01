@@ -8,7 +8,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> tuple[list[str], set[str]]
     # Returns ({to be checked species}, {already checked species})
     # Species needed for trade are added in generate_trade_encounters()
     from ...data.pokemon.species import by_name, by_id
-    from ...data.pokemon.pokedex import unovan_pokemon
+    from ...data.pokemon.pokedex import by_number
 
     if "Randomize" not in world.options.randomize_wild_pokemon:
         return [], set()
@@ -22,15 +22,15 @@ def get_species_checklist(world: "PokemonBWWorld") -> tuple[list[str], set[str]]
             "Suicune",
         ]
 
-        unova = [num for num in unovan_pokemon]
-        world.random.shuffle(unova)
-        for num in unova:
+        pool_115 = list(by_number)
+        world.random.shuffle(pool_115)
+        for num in pool_115:
             spec = by_id[(num, 0)]
             if "Fighting" in (by_name[spec].type_1, by_name[spec].type_2):
                 always_required.append(spec)
-                unova.remove(num)
+                pool_115.remove(num)
                 break
-        always_required += [by_id[(num, 0)] for num in unova[:114]]
+        always_required += [by_id[(num, 0)] for num in pool_115[:114]]
 
         unova_guaranteed = [
             "Tornadus",

@@ -768,7 +768,3 @@ by_name: dict[str, SpeciesData] = {
 by_id: dict[tuple[int, int], str] = {
     (data.dex_number, data.form): name for name, data in by_name.items()
 }
-
-unova_species: dict[str, SpeciesData] = {
-    name: data for name, data in by_name.items() if 494 <= data.dex_number <= 649
-}
