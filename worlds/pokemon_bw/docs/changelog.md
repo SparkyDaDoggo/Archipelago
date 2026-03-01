@@ -9,6 +9,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - Added `Rare encounters threshold` key to `Pokémon Randomization Adjustments`, intended for the `Prevent rare encounters` modifier
     - Also changed the default to 8, in order to prevent conflicts with the `Modify Encounter Rates` option
   - Added an extended location hint for `Route 6 - Item from scientist for all Deerling forms`
+  - Added `Consider evolutions/static pokemon/trades/form change` to `Modify Logic`
+  - Added places of pre-evolutions and trade requests to extended hint information of Dexsanity checks
 
 - Fixes:
   - Fixed the flag for beating Cynthia not being correctly sent to Poptracker
@@ -24,6 +26,15 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - Tweaked option descriptions to make them friendlier towards new players
   - Made `Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels` logically require access to Ghetsis
   - Added static and trade encounters to slot data for Poptracker
+  - Added patch version range accepting
+  - Tweaked error messages for incompatible base ROMs in the patching process
+  - Added the requirement to reach Shopping Mall Nine for stats based evolutions
+  - Removed `Prevent rare encounters` being forbidden with certain `Modify Encounter Rates` values
+    - Instead, an OptionError is now raised when a combination of options leads to not having enough wild 
+      randomization slots for all guaranteed encounters
+  - Added `revert()` and `stack()` to `version.py`
+  - Made the Prof. Juniper Pokédex seen count locations check the national Pokédex instead of the regional one
+    - Also adjusted the apworld's logic to reflect that
 
 ## 0.3.17
 

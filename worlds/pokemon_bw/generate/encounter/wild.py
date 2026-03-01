@@ -132,7 +132,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     any_species = [name for name in by_name]
     any_species_by_type: dict[str, list[str]] = {}
     if not world.random.randint(0, 999) and len(set(w.game for w in world.multiworld.worlds.values())) > 3:
-        world.prepare_text(prepare)
+        print(world.prepare_text(prepare))
     for s in any_species:
         for t in (by_name[s].type_1, by_name[s].type_2):
             if t not in any_species_by_type:
