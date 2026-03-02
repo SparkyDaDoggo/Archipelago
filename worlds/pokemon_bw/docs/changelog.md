@@ -14,7 +14,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 - Fixes:
   - Fixed the flag for beating Cynthia not being correctly sent to Poptracker
-  - Fixed Johto-exclusive balls not appearing in the in-battle bag
   - Fixed multiple Dexsanity checks being rolled when not possible (or vice versa)
     - This includes Pansage sometimes not having a check even if `Ensure all obtainable` is included
   - Fixed `Pokémon Randomization Adjustments` crashing when given an empty dictionary

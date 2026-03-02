@@ -20,6 +20,7 @@
 - combined goals
 - [ROM] add flags for other statics and trades and put them as a bitfield into datastorage (for poptracker)
 - [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
+- [ROM] Johto exclusive balls still not fixed, maybe there is a boolean map somewhere in the code that allows items to appear in the bag
 - ADD UNIT TESTS AFTER EVERYTHING
 - TEST EVERYTHING AFTERWARDS
 

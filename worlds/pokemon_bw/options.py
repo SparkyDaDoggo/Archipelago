@@ -20,7 +20,7 @@ class CasefoldOptionSet(OptionSet):
     def __init__(self, value: typing.Iterable[str]):
         self.value: set[str] = set(val.casefold() for val in value)
         super(OptionSet, self).__init__()
-        if self.auto_add_if_any is not None and len(self.value) and self.auto_add_if_any in self:
+        if self.auto_add_if_any is not None and len(self.value) and not self.auto_add_if_any in self:
             self.value.add(self.auto_add_if_any.casefold())
 
     def __contains__(self, item: str):

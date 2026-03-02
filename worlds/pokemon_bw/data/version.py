@@ -31,6 +31,18 @@ compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
     (0, 3, 2): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 2), (0, 3, 2), (0, 6, 3)),
     (0, 3, 1): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 6, 3)),
     (0, 3, 0): VersionCompatibility((0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 3, 0), (0, 6, 3)),
+    (0, 2, 3): VersionCompatibility((0, 2, 0), (0, 2, 0), (0, 2, 3), (0, 2, 1), (0, 6, 3)),
+    (0, 2, 2): VersionCompatibility((0, 2, 0), (0, 2, 0), (0, 2, 2), (0, 2, 1), (0, 6, 3)),
+    (0, 2, 1): VersionCompatibility((0, 2, 0), (0, 2, 0), (0, 2, 0), (0, 2, 1), (0, 6, 3)),
+    (0, 2, 0): VersionCompatibility((0, 2, 0), (0, 2, 0), (0, 2, 0), (0, 2, 0), (0, 6, 3)),
+    (0, 1, 7): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 7), (0, 1, 7), (0, 6, 3)),
+    (0, 1, 6): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 6), (0, 1, 6), (0, 6, 3)),
+    (0, 1, 5): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 5), (0, 1, 4), (0, 6, 3)),
+    (0, 1, 4): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 4), (0, 1, 4), (0, 6, 3)),
+    (0, 1, 3): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 3), (0, 1, 2), (0, 6, 3)),
+    (0, 1, 2): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 2), (0, 1, 2), (0, 6, 3)),
+    (0, 1, 1): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 6, 3)),
+    (0, 1, 0): VersionCompatibility((0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 6, 3)),
 }
 
 
