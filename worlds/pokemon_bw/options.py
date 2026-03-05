@@ -6,35 +6,12 @@ from dataclasses import dataclass
 
 import settings
 from BaseClasses import PlandoOptions
-from Options import (Choice, PerGameCommonOptions, OptionSet, Range, Toggle,
-                     PlandoTexts, OptionError, Option, OptionCounter, StartInventoryPool, OptionDict)
+from Options import (Choice, PerGameCommonOptions, Range, Toggle,
+                     PlandoTexts, OptionError, Option, StartInventoryPool)
+from .data.common_options import CasefoldOptionSet, ExtendedOptionCounter
 
 if typing.TYPE_CHECKING:
     from worlds.AutoWorld import World
-
-
-class CasefoldOptionSet(OptionSet):
-    valid_keys_casefold = True
-    auto_add_if_any: str | None = None
-
-    def __init__(self, value: typing.Iterable[str]):
-        self.value: set[str] = set(val.casefold() for val in value)
-        super(OptionSet, self).__init__()
-        if self.auto_add_if_any is not None and len(self.value) and not self.auto_add_if_any in self:
-            self.value.add(self.auto_add_if_any.casefold())
-
-    def __contains__(self, item: str):
-        return item.casefold() in self.value
-
-    def verify_keys(self) -> None:
-        if self.valid_keys:
-            dataset = set(word.casefold() for word in self.value)
-            extra = dataset - set(key.casefold() for key in self._valid_keys)
-            if extra:
-                raise OptionError(
-                    f"Found unexpected key {', '.join(extra)} in {getattr(self, 'display_name', self)}. "
-                    f"Allowed keys: {self._valid_keys}."
-                )
 
 
 class GameVersion(Choice):
@@ -259,14 +236,19 @@ class RandomizeLegendaryPokemon(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class PokemonRandomizationAdjustments(OptionCounter):
+class PokemonRandomizationAdjustments(ExtendedOptionCounter):
     """
-    Adjust various parameters in various pokemon randomization options.
+    Adjust various parameters in various pokemon randomization options (with individual ranges).
+    Every parameter can be specified as unweighted/weighted lists, "random",
+    and "random-range-x-y" like usual range options.
 
-    - **Stats leniency** - The minimum difference between base stat totals of vanilla and randomized species (for options with **Similar base stats** activated). Allowed values are integers in range 0 to 1530.
-    - **Rare encounters threshold** - If **Prevent rare encounters** is included, this will become the minimum encounter chance (in percent) for each species. Allowed values are integers in range 1 to 100.
+    - **Stats leniency** (0-1530) - The minimum difference between base stat totals of vanilla and randomized species
+      (for options with **Similar base stats** activated).
+    - **Rare encounters threshold** (1-100) - If **Prevent rare encounters** is included, this will become the minimum
+      encounter chance (in percent) for each species.
     """
     display_name = "Pokemon Randomization Adjustments"
+    fill_defaults = True
     valid_keys = [
         "Stats leniency",
         "Rare encounters threshold",
@@ -275,33 +257,10 @@ class PokemonRandomizationAdjustments(OptionCounter):
         "Stats leniency": 10,
         "Rare encounters threshold": 8,
     }
-
-    @classmethod
-    def from_any(cls, data: typing.Dict[str, typing.Any]) -> OptionDict:
-        if not isinstance(data, dict):
-            raise NotImplementedError(f"Cannot Convert from non-dictionary, got {type(data)}")
-        for key in cls.valid_keys:
-            if key not in data:
-                if key in cls.default:
-                    data[key] = cls.default[key]
-                else:
-                    data[key] = 0
-        return cls(data)
-
-    def verify(self, world: typing.Type["World"], player_name: str, plando_options: PlandoOptions) -> None:
-        super().verify(world, player_name, plando_options)
-
-        errors = []
-
-        if not 0 <= self.value["Stats leniency"] <= 1530:
-            errors.append(f"Stats leniency: {self.value['Stats leniency']} not in range 0 to 1530")
-        if not 1 <= self.value["Rare encounters threshold"] <= 100:
-            errors.append(f"Rare encounters threshold: {self.value['Rare encounters threshold']} "
-                          f"not in range 1 to 100")
-
-        if len(errors):
-            errors = [f"For option {getattr(self, 'display_name', self)} of player {player_name}:"] + errors
-            raise OptionError("\n".join(errors))
+    individual_min_max = {
+        "Stats leniency": (0, 1530),
+        "Rare encounters threshold": (1, 100),
+    }
 
 
 class PlandoEncounter(typing.NamedTuple):
@@ -654,10 +613,12 @@ class RandomizeTMHMCompatibility(CasefoldOptionSet):
     default = []
 
 
-class StatsRandomizationAdjustments(OptionCounter):
+class StatsRandomizationAdjustments(ExtendedOptionCounter):
     """
     Adjust various parameters in various randomization options (more modifiers are planned).
     Any minimum parameter cannot be higher than its corresponding maximum parameter.
+    Every parameter can be specified as unweighted/weighted lists, "random",
+    and "random-range-x-y" like usual range options.
 
     """
     # **Randomize Base Stats:**
@@ -677,6 +638,7 @@ class StatsRandomizationAdjustments(OptionCounter):
     # - **Gender ratio maximum** - The maximum gender ratio, if randomized.
     #                              A gender ratio of 0 is always female and 255 is always male.
     display_name = "Stats Randomization Adjustments"
+    fill_defaults = True
     valid_keys = [
         # "Stats total minimum",
         # "Stats total maximum",
@@ -693,22 +655,19 @@ class StatsRandomizationAdjustments(OptionCounter):
         # "Gender ratio minimum": 0,
         # "Gender ratio maximum": 255,
     }
-
-    def verify(self, world: typing.Type["World"], player_name: str, plando_options: PlandoOptions) -> None:
-        super().verify(world, player_name, plando_options)
-
-        errors = []
-
-        if not 6 <= self.value["Stats total minimum"] <= 1530:
-            errors.append(f"Stats total minimum: {self.value['Stats total minimum']} not in range 0 to 1530")
-        if not 6 <= self.value["Stats total maximum"] <= 1530:
-            errors.append(f"Stats total maximum: {self.value['Stats total maximum']} not in range 0 to 1530")
-
-        # Need to add other parameters when implemented
-
-        if len(errors) != 0:
-            errors = [f"For option {getattr(self, 'display_name', self)} of player {player_name}:"] + errors
-            raise OptionError("\n".join(errors))
+    individual_min_max = {
+        # "Stats total minimum": (6, 1530),
+        # "Stats total maximum": (6, 1530),
+        # "Catch rates minimum": (3, 255),
+        # "Catch rates maximum": (3, 255),
+        # "Gender ratio minimum": (0, 255),
+        # "Gender ratio maximum": (0, 255),
+    }
+    min_max_pairs = [
+        # ("Stats total minimum", "Stats total maximum"),
+        # ("Catch rates minimum", "Catch rates maximum"),
+        # ("Gender ratio minimum", "Gender ratio maximum"),
+    ]
 
 
 class ShuffleBadgeRewards(Choice):

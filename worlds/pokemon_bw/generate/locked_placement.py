@@ -43,7 +43,7 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                 if is_excluded(world, badge_locations[loc]):
                     continue
                 badge_locations[loc].place_locked_item(badge_items[it])
-                items.remove(badge_items[it])
+                items.remove(badge_items[it])  # list.remove() save here because badges only exist once in local pool
         case "shuffle":
             # Priority locations are ignored here because of no badges being filler
             # Shuffle items because of some locations potentially being skipped
@@ -59,7 +59,7 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             for location in badge_locations:
                 item = badge_items.pop()
                 location.place_locked_item(item)
-                items.remove(item)
+                items.remove(item)  # list.remove() save here because badges only exist once in local pool
         case "any_badge":
             pass
         case "anything":
@@ -84,11 +84,13 @@ def place_badges_fill(world: "PokemonBWWorld",
             # Both already shuffled
             # Items already sorted by classification
             # Sort location by progress type (priority - default - excluded)
-            badge_items: list[tuple[Item, list[Item]]] = [
-                (item, pool)
+            badge_items: list[tuple[int, list[Item]]] = [
+                (index, pool)
                 for pool in (progitempool, usefulitempool, filleritempool)
-                for item in pool
-                if "badge" in item.name.lower()
+                for index, item in enumerate(pool)
+                if ("badge" in pool[index].name.lower()
+                    and (item.player == world.player or
+                         item.name not in world.multiworld.worlds[item.player].options.local_items))
             ]
             badge_locs: list[Location] = [
                 loc
@@ -112,11 +114,11 @@ def place_badges_fill(world: "PokemonBWWorld",
                 loc = badge_locs[filled_from_prio]
                 if loc.progress_type != LocProgType.PRIORITY:
                     break
-                item, pool = badge_items[filled_from_prio]
+                index, pool = badge_items[filled_from_prio]
                 if pool == filleritempool:
                     break
-                loc.place_locked_item(item)
-                pool.remove(item)
+                loc.place_locked_item(pool[index])
+                pool.pop(index)
                 fill_locations.remove(loc)
                 filled_from_prio += 1
             # Now fill excluded locations with only filler
@@ -125,11 +127,11 @@ def place_badges_fill(world: "PokemonBWWorld",
                 loc = badge_locs[-1-taken_from_excluded]
                 if loc.progress_type != LocProgType.EXCLUDED:
                     break
-                item, pool = badge_items[-1-taken_from_excluded]
+                index, pool = badge_items[-1-taken_from_excluded]
                 if pool != filleritempool:
                     break
-                loc.place_locked_item(item)
-                pool.remove(item)
+                loc.place_locked_item(pool[index])
+                pool.pop(index)
                 fill_locations.remove(loc)
                 taken_from_excluded += 1
             # Skip potential remaining excluded locations and let them be filled by main fill
@@ -145,9 +147,9 @@ def place_badges_fill(world: "PokemonBWWorld",
             world.random.shuffle(remaining_locs)
             for i in range(min(len(remaining_items), len(remaining_locs))):
                 loc = remaining_locs[i]
-                item, pool = remaining_items[i]
-                loc.place_locked_item(item)
-                pool.remove(item)
+                index, pool = remaining_items[i]
+                loc.place_locked_item(pool[index])
+                pool.pop(index)
                 fill_locations.remove(loc)
         case "anything":
             pass
@@ -187,7 +189,7 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                     if hm_rule is None or hm_rule(item.name):
                         tm_hm_locs.remove(location)
                         location.place_locked_item(item)
-                        items.remove(item)
+                        items.remove(item)  # list.remove() save here because tms/hms only exist once in local pool
                         break
         case "hm_with_badge":
             tm_items = [item for item in items if item.name in tm_hm.tm and "TM70" not in item.name]
@@ -209,7 +211,7 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             if len(gym_tm_locations) == 8:
                 rand_tm = world.random.choice(tm_items)
                 hm_items.append(rand_tm)
-                tm_items.remove(rand_tm)
+                tm_items.remove(rand_tm)  # list.remove() save here because tms/hms only exist once in local pool
             world.random.shuffle(hm_items)
             world.random.shuffle(other_tm_locations)
             world.random.shuffle(gym_tm_locations)
@@ -217,7 +219,7 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             for loc in gym_tm_locations:
                 item = hm_items.pop()
                 loc.place_locked_item(item)
-                items.remove(item)
+                items.remove(item)  # list.remove() save here because tms/hms only exist once in local pool
             # If more than one gym location was excluded, add remaining HMs to TM list and shuffle that
             tm_items.extend(hm_items)
             world.random.shuffle(tm_items)
@@ -234,7 +236,7 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                     if hm_rule is None or hm_rule(item.name):
                         other_tm_locations.remove(location)
                         location.place_locked_item(item)
-                        items.remove(item)
+                        items.remove(item)  # list.remove() save here because tms/hms only exist once in local pool
                         break
         case "any_tm_hm":
             pass
@@ -260,11 +262,13 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
             # Both already shuffled
             # Items already sorted by classification
             # Sort location by progress type (priority - default - excluded)
-            tm_hm_items: list[tuple[Item, list[Item]]] = [
-                (item, pool)
+            tm_hm_items: list[tuple[int, list[Item]]] = [
+                (index, pool)
                 for pool in (progitempool, usefulitempool, filleritempool)
-                for item in pool
-                if len(item.name) > 2 and item.name[:2].lower() in ("tm", "hm") and item.name[2].isdigit()
+                for index, item in enumerate(pool)
+                if (len(item.name) > 2 and item.name[:2].lower() in ("tm", "hm") and item.name[2].isdigit()
+                    and (item.player == world.player or
+                         item.name not in world.multiworld.worlds[item.player].options.local_items))
             ]
             tm_hm_locs: list[Location] = [
                 loc
@@ -283,29 +287,29 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
             excluded_locs = [loc for loc in tm_hm_locs if loc.progress_type == LocProgType.EXCLUDED]
             # First fill priority locations with prog and useful items until either is exhausted
             for loc in priority_locs:
-                for item, pool in tm_hm_items:
+                for index, pool in tm_hm_items:
                     if pool == filleritempool:
                         default_locs.insert(0, loc)
                         break
                     hm_rule = all_tm_locations[loc.name].hm_rule
-                    if hm_rule is None or hm_rule(item.name):
-                        loc.place_locked_item(item)
-                        tm_hm_items.remove((item, pool))
-                        pool.remove(item)
+                    if hm_rule is None or hm_rule(pool[index].name):
+                        loc.place_locked_item(pool[index])
+                        tm_hm_items.remove((index, pool))
+                        pool.pop(index)
                         fill_locations.remove(loc)
                         break
                 else:
                     default_locs.insert(0, loc)
             # Now fill excluded locations with only filler
             for loc in excluded_locs:
-                for item, pool in reversed(tm_hm_items):
+                for index, pool in reversed(tm_hm_items):
                     if pool != filleritempool:
                         break
                     hm_rule = all_tm_locations[loc.name].hm_rule
-                    if hm_rule is None or hm_rule(item.name):
-                        loc.place_locked_item(item)
-                        tm_hm_items.remove((item, pool))
-                        pool.remove(item)
+                    if hm_rule is None or hm_rule(pool[index].name):
+                        loc.place_locked_item(pool[index])
+                        tm_hm_items.remove((index, pool))
+                        pool.pop(index)
                         fill_locations.remove(loc)
                         break
             # Fill remaining priority and default locations with remaining items
@@ -314,12 +318,12 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
             # and only leaving useful items for other worlds
             world.random.shuffle(tm_hm_items)
             for loc in default_locs:
-                for item, pool in tm_hm_items:
+                for index, pool in tm_hm_items:
                     hm_rule = all_tm_locations[loc.name].hm_rule
-                    if hm_rule is None or hm_rule(item.name):
-                        loc.place_locked_item(item)
-                        tm_hm_items.remove((item, pool))
-                        pool.remove(item)
+                    if hm_rule is None or hm_rule(pool[index].name):
+                        loc.place_locked_item(pool[index])
+                        tm_hm_items.remove((index, pool))
+                        pool.pop(index)
                         fill_locations.remove(loc)
                         break
         case "anything":
