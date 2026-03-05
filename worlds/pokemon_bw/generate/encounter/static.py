@@ -57,7 +57,11 @@ def generate_trade_encounters(world: "PokemonBWWorld",
             versioned_wanted(data),
             data.encounter_region
         )
-        if "Consider trades" in world.options.modify_logic:
+        if (
+            "Consider trades" in world.options.modify_logic and
+            ("Consider static pokemon" in world.options.modify_logic
+             or "Randomized" in world.options.randomize_wild_pokemon)
+        ):
             check_species(world, species_checklist, by_id[versioned_species(data)])
             add_species_to_check(species_checklist, by_id[(versioned_wanted(data), 0)])
 
