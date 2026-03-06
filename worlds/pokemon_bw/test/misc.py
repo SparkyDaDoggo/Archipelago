@@ -140,7 +140,7 @@ class TestShuffleBadgesVanilla(PokemonBWTestBase):
     options = {"shuffle_badges": "vanilla"}
 
 
-class TestShuffleBadgesAnybadge(PokemonBWTestBase):
+class TestShuffleBadgesAnyBadge(PokemonBWTestBase):
     options = {"shuffle_badges": "any_badge"}
 
 

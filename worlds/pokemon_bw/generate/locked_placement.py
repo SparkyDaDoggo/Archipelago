@@ -97,6 +97,7 @@ def place_badges_fill(world: "PokemonBWWorld",
                 for loc in fill_locations
                 if loc.player == world.player and loc.name in special.gym_badges
             ]
+            to_pop: list[tuple[int, list[Item]]] = []
             to_place = 0
             for to_check in range(1, len(badge_locs)):
                 if badge_locs[to_check].progress_type == LocProgType.PRIORITY:
@@ -118,7 +119,7 @@ def place_badges_fill(world: "PokemonBWWorld",
                 if pool == filleritempool:
                     break
                 loc.place_locked_item(pool[index])
-                pool.pop(index)
+                to_pop.append((index, pool))
                 fill_locations.remove(loc)
                 filled_from_prio += 1
             # Now fill excluded locations with only filler
@@ -131,7 +132,7 @@ def place_badges_fill(world: "PokemonBWWorld",
                 if pool != filleritempool:
                     break
                 loc.place_locked_item(pool[index])
-                pool.pop(index)
+                to_pop.append((index, pool))
                 fill_locations.remove(loc)
                 taken_from_excluded += 1
             # Skip potential remaining excluded locations and let them be filled by main fill
@@ -149,8 +150,13 @@ def place_badges_fill(world: "PokemonBWWorld",
                 loc = remaining_locs[i]
                 index, pool = remaining_items[i]
                 loc.place_locked_item(pool[index])
-                pool.pop(index)
+                to_pop.append((index, pool))
                 fill_locations.remove(loc)
+            for pool in (progitempool, usefulitempool, filleritempool):
+                indices = [index for index, _pool in to_pop if _pool == pool]
+                indices.sort(reverse=True)
+                for index in indices:
+                    pool.pop(index)
         case "anything":
             pass
         case _:
@@ -275,6 +281,7 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
                 for loc in fill_locations
                 if loc.player == world.player and loc.name in all_tm_locations
             ]
+            to_pop: list[tuple[int, list[Item]]] = []
             # Sort HMs to front to prevent problems with HM rules
             to_place = 0
             for to_check in range(1, len(tm_hm_locs)):
@@ -295,7 +302,7 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
                     if hm_rule is None or hm_rule(pool[index].name):
                         loc.place_locked_item(pool[index])
                         tm_hm_items.remove((index, pool))
-                        pool.pop(index)
+                        to_pop.append((index, pool))
                         fill_locations.remove(loc)
                         break
                 else:
@@ -309,7 +316,7 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
                     if hm_rule is None or hm_rule(pool[index].name):
                         loc.place_locked_item(pool[index])
                         tm_hm_items.remove((index, pool))
-                        pool.pop(index)
+                        to_pop.append((index, pool))
                         fill_locations.remove(loc)
                         break
             # Fill remaining priority and default locations with remaining items
@@ -323,9 +330,14 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
                     if hm_rule is None or hm_rule(pool[index].name):
                         loc.place_locked_item(pool[index])
                         tm_hm_items.remove((index, pool))
-                        pool.pop(index)
+                        to_pop.append((index, pool))
                         fill_locations.remove(loc)
                         break
+            for pool in (progitempool, usefulitempool, filleritempool):
+                indices = [index for index, _pool in to_pop if _pool == pool]
+                indices.sort(reverse=True)
+                for index in indices:
+                    pool.pop(index)
         case "anything":
             pass
         case _:
