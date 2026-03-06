@@ -90,12 +90,12 @@ class PatchMethods:
         if write_wild:
             procedures.append("write_wild_pokemon")
             write_wild_pokemon.write_patch(patch, opened_zipfile)
-        if "Randomize" in patch.world.options.randomize_trainer_pokemon:
+        if patch.world.options.randomize_trainer_pokemon.is_randomize:
             procedures.append("write_trainer_pokemon")
             write_trainer_pokemon.write_species(patch, opened_zipfile)
-        if "Wild" in patch.world.options.adjust_levels:
+        if patch.world.options.adjust_levels.is_wild:
             procedures.append("adjust_wild_levels")
-        if "Trainer" in patch.world.options.adjust_levels:
+        if patch.world.options.adjust_levels.is_trainer:
             procedures.append("adjust_trainer_levels")
         if patch.world.options.modify_encounter_rates != "vanilla":
             procedures.append("modify_rates")

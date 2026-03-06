@@ -45,7 +45,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         else (lambda d: d.species_black)
     )
 
-    if "Randomize" not in world.options.randomize_wild_pokemon:
+    if not world.options.randomize_wild_pokemon.is_randomize:
         return {
             name: EncounterEntry(
                 versioned_species(table[name]), table[name].encounter_region, table[name].file_index, False
@@ -71,7 +71,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     world.random.shuffle(copy_slots)
 
     if len(species_checklist[0]) > len(logic_slots):
-        if "Consider evolutions" in world.options.modify_logic:
+        if world.options.modify_logic.is_consider_evos:
             for species in species_checklist[0][:]:
                 species_data = by_name[species]
                 for evolution in species_data.evolutions:
@@ -84,8 +84,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 f"Please remove some restrictive options or tweak the \"Modify Logic\" option."
             )
 
-    similar_base_stats = "Similar base stats" in world.options.randomize_wild_pokemon
-    type_themed = "Type themed areas" in world.options.randomize_wild_pokemon
+    similar_base_stats = world.options.randomize_wild_pokemon.is_similar_stats
+    type_themed = world.options.randomize_wild_pokemon.is_type_themed_areas
     area_types: dict[str, str] = {}
     stats_total: Callable[["SpeciesData"], int] = lambda data: (
         data.base_hp + data.base_attack + data.base_defense +

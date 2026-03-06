@@ -2,19 +2,48 @@ import random
 from typing import Iterable, Dict, Any
 
 from BaseClasses import PlandoOptions
-from Options import OptionSet, OptionError, OptionCounter
+from Options import OptionSet, OptionError, OptionCounter, FreezeValidKeys
 from worlds.AutoWorld import World
 
 
-class CasefoldOptionSet(OptionSet):
+class AssembleToggles(FreezeValidKeys):
+
+    def __new__(mcs, name: str, bases: tuple[type, ...], attrs: dict[str, Any]):
+        toggles: list[tuple[str, tuple[bool, str] | bool]] = [(key[3:], value) for key, value in attrs.items()
+                                                              if key.startswith("is_")]
+        for i in range(len(toggles)):
+            if not isinstance(toggles[i][1], tuple):
+                toggles[i] = toggles[i][0], (toggles[i][1], toggles[i][0].replace("_", " ").capitalize())
+        toggles: list[tuple[str, tuple[bool, str]]]
+        attrs["_toggles"] = toggles
+        attrs["valid_keys"] = attrs["valid_keys"] if "valid_keys" in attrs else []
+        attrs["default"] = attrs["default"] if "default" in attrs and isinstance(attrs["default"], list) else []
+        for key, data in toggles:
+            if data[1] not in attrs["valid_keys"]:
+                attrs["valid_keys"].append(data[1])
+            if data[0] and data[1] not in attrs["default"]:
+                attrs["default"].append(data[1])
+        cls = super().__new__(mcs, name, bases, attrs)
+        return cls
+
+
+class ToggleSet(OptionSet, metaclass=AssembleToggles):
     valid_keys_casefold = True
     auto_add_if_any: str | None = None
+    _toggles: list[tuple[str, tuple[bool, str]]]
+    alias_convert: list[tuple[str, str]] = []
 
     def __init__(self, value: Iterable[str]):
         self.value: set[str] = set(val.casefold() for val in value)
-        super(OptionSet, self).__init__()
+        for alias, actual in self.alias_convert:
+            if alias in self.value:
+                self.value.add(actual)
+                self.value.remove(alias)
         if self.auto_add_if_any is not None and len(self.value) and self.auto_add_if_any not in self:
             self.value.add(self.auto_add_if_any.casefold())
+        for key, data in self._toggles:
+            setattr(self, "is_"+key, data[1].casefold() in self.value)
+        super(OptionSet, self).__init__()
 
     def __contains__(self, item: str):
         return item.casefold() in self.value

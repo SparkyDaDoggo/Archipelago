@@ -17,5 +17,5 @@ tm_hm_hunt: ClassificationMethod = lambda world: (
 
 dowsing_machine_logic: ClassificationMethod = lambda world: (
     ItemClassification.progression
-    if "Require Dowsing Machine" in world.options.modify_logic else ItemClassification.useful
+    if world.options.modify_logic.is_require_dowsing else ItemClassification.useful
 )

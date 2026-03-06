@@ -27,7 +27,7 @@ def create(world: "PokemonBWWorld") -> None:
             r: "Region" = world.regions[data.region]
             l: PokemonBWLocation = PokemonBWLocation(world.player, name, world.location_name_to_id[name], r)
             l.progress_type = data.progress_type(world)
-            if "Require Dowsing Machine" in world.options.modify_logic:
+            if world.options.modify_logic.is_require_dowsing:
                 if data.rule is not None:
                     l.access_rule = f(data)
                 else:

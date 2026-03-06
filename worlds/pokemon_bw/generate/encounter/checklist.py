@@ -10,9 +10,9 @@ def get_species_checklist(world: "PokemonBWWorld") -> tuple[list[str], set[str]]
     from ...data.pokemon.species import by_name, by_id
     from ...data.pokemon.pokedex import by_number
 
-    if "Randomize" not in world.options.randomize_wild_pokemon:
+    if not world.options.randomize_wild_pokemon.is_randomize:
         return [], set()
-    elif "Ensure all obtainable" in world.options.randomize_wild_pokemon:
+    elif world.options.randomize_wild_pokemon.is_ensure_all:
         return [species for species in by_name], set()
     else:  # Just "Randomize"
         always_required = [
@@ -58,7 +58,7 @@ def check_species(world: "PokemonBWWorld", checklist: tuple[list[str], set[str]]
     if loop >= 5:
         return
 
-    if "Consider evolutions" in world.options.modify_logic:
+    if world.options.modify_logic.is_consider_evos:
         data = by_name[species]
         for evolution in data.evolutions:
             if evolution[0] == "Level up with party member":
@@ -119,12 +119,12 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
     else:
         encounter_rates = rates.tables[world.options.modify_encounter_rates.current_key]
 
-    if "Randomize" not in world.options.randomize_wild_pokemon:
+    if not world.options.randomize_wild_pokemon.is_randomize:
         return copy_from
 
-    merge_phenomenons = "Merge phenomenons" in world.options.randomize_wild_pokemon
-    area_1_to_1 = "Area 1-to-1" in world.options.randomize_wild_pokemon
-    prevent_rare_encounters = "Prevent rare encounters" in world.options.randomize_wild_pokemon
+    merge_phenomenons = world.options.randomize_wild_pokemon.is_merge_phenomena
+    area_1_to_1 = world.options.randomize_wild_pokemon.is_area_1_to_1
+    prevent_rare_encounters = world.options.randomize_wild_pokemon.is_prevent_rare
     versioned_species = (
         (lambda d: d.species_white)
         if world.options.version == "white"

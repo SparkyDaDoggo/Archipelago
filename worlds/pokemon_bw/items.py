@@ -49,12 +49,12 @@ def generate_filler(world: "PokemonBWWorld") -> str:
         main_nested = [
             main_items.filler,
             main_items.filler,
-            main_items.filler if "Useful filler" not in world.options.modify_item_pool else [
+            main_items.filler if not world.options.modify_item_pool.is_useful_filler else [
                 main_items.filler,
                 main_items.min_once,
                 main_items.min_once,
             ],
-            main_items.filler if "Ban bad filler" in world.options.modify_item_pool else [
+            main_items.filler if world.options.modify_item_pool.is_ban_bad_filler else [
                 main_items.filler,
                 main_items.filler,
                 main_items.filler,

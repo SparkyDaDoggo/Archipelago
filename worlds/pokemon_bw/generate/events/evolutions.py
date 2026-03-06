@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
 
-    if "Consider evolutions" not in world.options.modify_logic:
+    if not world.options.modify_logic.is_consider_evos:
         return
 
     from ...data.pokemon import species, evolution_methods

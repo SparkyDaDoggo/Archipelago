@@ -25,7 +25,7 @@ def generate_static_encounters(world: "PokemonBWWorld",
             )
             if (
                 (data.inclusion_rule is None or data.inclusion_rule(world))
-                and "Consider static pokemon" in world.options.modify_logic
+                and world.options.modify_logic.is_consider_static
             ):
                 check_species(world, species_checklist, by_id[versioned_species(data)])
 
@@ -57,11 +57,8 @@ def generate_trade_encounters(world: "PokemonBWWorld",
             versioned_wanted(data),
             data.encounter_region
         )
-        if (
-            "Consider trades" in world.options.modify_logic and
-            ("Consider static pokemon" in world.options.modify_logic
-             or "Randomized" in world.options.randomize_wild_pokemon)
-        ):
+        if (world.options.modify_logic.is_consider_trades and (world.options.modify_logic.is_consider_static
+                                                               or world.options.randomize_wild_pokemon.is_randomize)):
             check_species(world, species_checklist, by_id[versioned_species(data)])
             add_species_to_check(species_checklist, by_id[(versioned_wanted(data), 0)])
 

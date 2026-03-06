@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
 
-    if "Consider form change" not in world.options.modify_logic:
+    if not world.options.modify_logic.is_consider_form_change:
         return
 
     # Only some certain Pokémon because it's complicated and I didn't want to make this

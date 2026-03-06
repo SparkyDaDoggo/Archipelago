@@ -49,7 +49,7 @@ can_buy_item: dict[int, ExtendedRule] = {
 
 in_vanilla_east: ExtendedRule = lambda state, world: (
     state.can_reach_region("Route 15", world.player)
-    and "Wild" not in world.options.adjust_levels
+    and not world.options.adjust_levels.is_wild
 )
 can_challenge_alder: ExtendedRule = lambda state, world: state.can_reach_region("N's Castle", world.player)
 between_ghetsis_and_alder: ExtendedRule = lambda state, world: (

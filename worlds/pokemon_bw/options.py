@@ -8,7 +8,7 @@ import settings
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle,
                      PlandoTexts, OptionError, Option, StartInventoryPool)
-from .data.common_options import CasefoldOptionSet, ExtendedOptionCounter
+from .data.common_options import ToggleSet, ExtendedOptionCounter
 
 if typing.TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -55,7 +55,7 @@ class Goal(Choice):
     default = 0
 
 
-class RandomizeWildPokemon(CasefoldOptionSet):
+class RandomizeWildPokemon(ToggleSet):
     """
     Randomizes wild pokemon encounters.
     You can add as many of the following modifiers as you want.
@@ -73,32 +73,36 @@ class RandomizeWildPokemon(CasefoldOptionSet):
     ```
 
     - **Randomize** - Toggles wild pokemon being randomized. Required for any other modifier below.
-    - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving. This is automatically checked if **National pokedex** is chosen as the goal.
-    - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total as the replaced encounter.
+    - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving.
+    - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total
+        as the replaced encounter.
     - **Type themed areas** - Tries to make every pokemon in an area have a certain same type.
     - **Area 1-to-1** - Keeps the amount of different encounters and their encounter rate in every area.
-    - **Merge phenomenons** - Makes rustling grass, rippling water spots, dust clouds, and flying shadows in the same area have only one encounter. Takes priority over **Area 1-to-1**.
-    - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance in each area to the same pokemon. Takes priority over **Area 1-to-1**.
+    - **Merge phenomenons** - Makes rustling grass, rippling water spots, dust clouds, and flying shadows
+        in the same area have only one encounter. Takes priority over **Area 1-to-1**.
+    - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance in each area
+        to the same pokemon. Takes priority over **Area 1-to-1**.
 
     It is **highly recommended** to include **Prevent rare encounters** if you want to randomize wild pokemon,
     else you might find yourself searching for two 1% encounters on every route.
     """
     display_name = "Randomize Wild Pokemon"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Randomize",
-        "Ensure all obtainable",
-        "Similar base stats",
-        "Type themed areas",
-        "Area 1-to-1",
-        "Merge phenomenons",
-        "Prevent rare encounters",
-    ]
-    default = []
+    is_randomize = False
+    is_ensure_all = False, "Ensure all obtainable"
+    is_similar_stats = False, "Similar base stats"
+    is_type_themed_areas = False
+    is_area_1_to_1 = False
+    is_merge_phenomena = False
+    is_prevent_rare = False, "Prevent rare encounters"
     auto_add_if_any = "Randomize"
+    alias_convert = [
+        ("Area 1-to-1", "Area 1 to 1"),
+        ("Area 1-1", "Area 1 to 1"),
+        ("Merge phenomenons", "Merge phenomena"),
+    ]
 
 
-class RandomizeTrainerPokemon(CasefoldOptionSet):
+class RandomizeTrainerPokemon(ToggleSet):
     """
     Randomizes trainer pokemon.
     You can add as many of the following modifiers as you want.
@@ -110,24 +114,12 @@ class RandomizeTrainerPokemon(CasefoldOptionSet):
     #                           Gym leaders will always have themed teams, regardless of this modifier.
     # - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned to the gym leader.
     display_name = "Randomize Trainer Pokemon"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Randomize",
-        "Similar base stats",
-        # "Type themed areas",
-        # "Themed gym trainers",
-        # "Randomize abilities",
-        # "Randomize natures",
-        # "Randomize held items",
-        # "Only already with held item",
-        # "Allow no held item",
-        # "Randomize unique moves",
-    ]
-    default = []
+    is_randomize = False
+    is_similar_stats = False, "Similar base stats"
     auto_add_if_any = "Randomize"
 
 
-class RandomizeStarterPokemon(CasefoldOptionSet):
+class RandomizeStarterPokemon(ToggleSet):
     """
     Randomizes the starter pokemon you receive at the start of the game.
     You can add as many of the following modifiers as you want.
@@ -151,7 +143,7 @@ class RandomizeStarterPokemon(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeStaticPokemon(CasefoldOptionSet):
+class RandomizeStaticPokemon(ToggleSet):
     """
     Randomizes static encounters you can battle and catch throughout the game, e.g. Volcarona in Relic Castle.
     You can add as many of the following modifiers as you want.
@@ -173,7 +165,7 @@ class RandomizeStaticPokemon(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeGiftPokemon(CasefoldOptionSet):
+class RandomizeGiftPokemon(ToggleSet):
     """
     Randomizes gift pokemon that you receive for free, e.g. the Larvesta egg on route 18.
     You can add as many of the following modifiers as you want.
@@ -193,7 +185,7 @@ class RandomizeGiftPokemon(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeTradePokemon(CasefoldOptionSet):
+class RandomizeTradePokemon(ToggleSet):
     """
     Randomizes trade offers from NPCs. Any **Randomize ...** is required for the other modifiers.
     You can add as many of the following modifiers as you want.
@@ -214,7 +206,7 @@ class RandomizeTradePokemon(CasefoldOptionSet):
     default = []
 
 
-class RandomizeLegendaryPokemon(CasefoldOptionSet):
+class RandomizeLegendaryPokemon(ToggleSet):
     """
     Randomizes legendary and mythical encounters.
     You can add as many of the following modifiers as you want.
@@ -436,7 +428,7 @@ class EncounterPlando(Option[list[PlandoEncounter]]):
         return len(self.value)
 
 
-class RandomizeBaseStats(CasefoldOptionSet):
+class RandomizeBaseStats(ToggleSet):
     """
     Randomizes the base stats of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -456,7 +448,7 @@ class RandomizeBaseStats(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeEvolutions(CasefoldOptionSet):
+class RandomizeEvolutions(ToggleSet):
     """
     Randomizes the evolutions of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -480,7 +472,7 @@ class RandomizeEvolutions(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeCatchRates(CasefoldOptionSet):
+class RandomizeCatchRates(ToggleSet):
     """
     Randomizes the catch rate of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -499,7 +491,7 @@ class RandomizeCatchRates(CasefoldOptionSet):
     default = []
 
 
-class RandomizeLevelUpMovesets(CasefoldOptionSet):
+class RandomizeLevelUpMovesets(ToggleSet):
     """
     Randomizes the moves a pokemon species learns by leveling up.
     You can add as many of the following modifiers as you want.
@@ -525,7 +517,7 @@ class RandomizeLevelUpMovesets(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeTypes(CasefoldOptionSet):
+class RandomizeTypes(ToggleSet):
     """
     Randomizes the type(s) of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -547,7 +539,7 @@ class RandomizeTypes(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeAbilities(CasefoldOptionSet):
+class RandomizeAbilities(ToggleSet):
     """
     Randomizes the abilities of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -569,7 +561,7 @@ class RandomizeAbilities(CasefoldOptionSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeGenderRatio(CasefoldOptionSet):
+class RandomizeGenderRatio(ToggleSet):
     """
     Randomizes the gender ratio of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -588,7 +580,7 @@ class RandomizeGenderRatio(CasefoldOptionSet):
     default = []
 
 
-class RandomizeTMHMCompatibility(CasefoldOptionSet):
+class RandomizeTMHMCompatibility(ToggleSet):
     """
     Randomizes the TM and HM compatibility of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -762,7 +754,7 @@ class Seensanity(Range):
     range_end = 649
 
 
-class DoorShuffle(CasefoldOptionSet):
+class DoorShuffle(ToggleSet):
     """
     Shuffles or randomizes door warps.
     You can add as many of the following modifiers as you want.
@@ -801,7 +793,7 @@ class SeasonControl(Choice):
     default = 0
 
 
-class AdjustLevels(CasefoldOptionSet):
+class AdjustLevels(ToggleSet):
     """
     Adjusts the levels of wild and trainer pokemon in areas that are in AP earlier accessible than in vanilla
     to not be significantly higher than in surrounding areas (regardless of randomization).
@@ -811,13 +803,8 @@ class AdjustLevels(CasefoldOptionSet):
     - **Trainer** - Normalizes trainer pokemon levels, excluding Cynthia.
     """
     display_name = "Adjust levels"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Wild",
-        "Trainer",
-        # "Static",
-    ]
-    default = ["Wild", "Trainer"]
+    is_wild = True
+    is_trainer = True
 
 
 class ModifyEncounterRates(Choice):
@@ -925,7 +912,7 @@ class AddFairyType(Choice):
     default = 0
 
 
-class ReplaceEvoMethods(CasefoldOptionSet):
+class ReplaceEvoMethods(ToggleSet):
     """
     Replaces certain vanilla evolution methods with other methods that are easier to achieve.
     This also excludes them from randomized evolutions.
@@ -948,7 +935,7 @@ class ReplaceEvoMethods(CasefoldOptionSet):
     default = []
 
 
-class MasterBallSeller(CasefoldOptionSet):
+class MasterBallSeller(ToggleSet):
     """
     Adds the possibility to buy or obtain an unlimited amount of Master Balls.
     You can select multiple sellers.
@@ -963,29 +950,22 @@ class MasterBallSeller(CasefoldOptionSet):
     - **Cost x** - Makes Master Balls (potentially) cost x Pokedollars. x can be any number in range of 0 to 30000.
     """
     display_name = "Master Ball Seller"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Ns Castle",
-        "PC",
-        "Cherens Mom",
-        "Undella Mansion seller",
-        "Cost Free",
-        "Cost 1000",
-        "Cost 3000",
-        "Cost 10000",
+    is_ns_castle = False, "Ns Castle"
+    is_pc = False, "PC"
+    is_cherens_mom = False, "Cherens Mom"
+    is_undella_mansion = False, "Undella Mansion seller"
+    is_cost_free = False, "Cost Free"
+    is_cost_1000 = False
+    is_cost_3000 = False
+    is_cost_10000 = False
+    alias_convert = [
+        ("Cost: Free", "Cost Free"),
+        ("Cost: 1000", "Cost 1000"),
+        ("Cost: 3000", "Cost 3000"),
+        ("Cost: 10000", "Cost 10000"),
+        ("N's Castle", "Ns Castle"),
+        ("Cheren's Mom", "Cherens Mom"),
     ]
-    default = []
-
-    def __init__(self, value: typing.Iterable[str]):
-        compatible = set()
-        for val in value:
-            if val in ("Cost: Free", "Cost: 1000", "Cost: 3000", "Cost: 10000"):
-                compatible.add(val.replace(":", ""))
-            elif val in ("N's Castle", "Cheren's Mom"):
-                compatible.add(val.replace("'", ""))
-            else:
-                compatible.add(val)
-        super().__init__(compatible)
 
     def verify_keys(self) -> None:
         dataset = set(word.casefold() for word in self.value)
@@ -1036,7 +1016,7 @@ class TrapsProbability(Range):
     range_end = 100
 
 
-class ModifyItemPool(CasefoldOptionSet):
+class ModifyItemPool(ToggleSet):
     """
     Modifies what items your world puts into the item pool.
     You can add as many of the following modifiers as you want.
@@ -1046,16 +1026,12 @@ class ModifyItemPool(CasefoldOptionSet):
     - **Ban bad filler** - Bans niche berries and mail from being generated as filler items.
     """
     display_name = "Modify Item Pool"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Useless key items",
-        "Useful filler",
-        "Ban bad filler",
-    ]
-    default = []
+    is_useless_key_items = False
+    is_useful_filler = False
+    is_ban_bad_filler = False
 
 
-class ModifyLogic(CasefoldOptionSet):
+class ModifyLogic(ToggleSet):
     """
     Modifies parts of what's logically required for various locations.
     You can add as many of the following modifiers as you want.
@@ -1067,26 +1043,17 @@ class ModifyLogic(CasefoldOptionSet):
         logically require TM70 Flash.
     - **Consider <feature X>** - Toggles whether <feature X> is considered in logic to get access to
         some pokemon species. The available features are **evolutions**, **static pokemon**, **trades**,
-        and **form change**.
+        and **form change**. However, do note that trades are automatically excluded if evolutions are excluded
+        and wild pokemon are not randomized.
     """
     display_name = "Modify Logic"
-    valid_keys = [
-        "Require Dowsing Machine",
-        "Prioritize key item locations",
-        "Require Flash",
-        "Consider evolutions",
-        "Consider static pokemon",
-        "Consider trades",
-        "Consider form change",
-    ]
-    default = [
-        "Require Dowsing Machine",
-        "Prioritize key item locations",
-        "Require Flash",
-        "Consider evolutions",
-        "Consider static pokemon",
-        "Consider form change",
-    ]
+    is_require_dowsing = True, "Require Dowsing Machine"
+    is_prioritize_key_locs = True, "Prioritize key item locations"
+    is_require_flash = True
+    is_consider_evos = True, "Consider evolutions"
+    is_consider_static = True, "Consider static pokemon"
+    is_consider_trades = False
+    is_consider_form_change = True
 
 
 class FunnyDialog(Toggle):
