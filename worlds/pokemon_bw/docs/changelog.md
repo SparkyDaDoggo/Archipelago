@@ -1,7 +1,18 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
-## 0.3.18
+## 0.3.19
+
+- Added support for unweighted/weighted lists, `random`, and `random-range-x-y` to `Pokemon Randomization Adjustments`
+- Fixed `any_badge` and `any_tm_hm` choices potentially removing incorrect Item instances form the multiworld itempool
+- Fixed `any_badge` and `any_tm_hm` choices ignoring local items of other players
+- Fixed adding `Consider trades` to `Modify Logic` occasionally leading to generation failures
+- Made `Consider trades` require either `Consider evolutions` or wild pokémon being randomized
+- Renamed `CasefoldOptionSet` to `ToggleSet` and added QoL stuff to it on the development side
+- Fixed `Route 6 - Item from scientist for all Deerling forms` not having the extended hint if `Dexsanity` is set to 0
+- Fixed extended hints being inconsistent with evolutions and trades
+
+## 0.3.18: "But I did beat Cynthia..." update
 
 - Features:
   - Added "Post-Ghetsis locations" group

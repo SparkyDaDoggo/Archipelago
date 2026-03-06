@@ -31,11 +31,11 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
     valid_keys_casefold = True
     auto_add_if_any: str | None = None
     _toggles: list[tuple[str, tuple[bool, str]]]
-    alias_convert: list[tuple[str, str]] = []
+    aliases_convert: list[tuple[str, str]] = []
 
     def __init__(self, value: Iterable[str]):
         self.value: set[str] = set(val.casefold() for val in value)
-        for alias, actual in self.alias_convert:
+        for alias, actual in self.aliases_convert:
             if alias in self.value:
                 self.value.add(actual)
                 self.value.remove(alias)

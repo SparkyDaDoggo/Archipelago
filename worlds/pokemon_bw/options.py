@@ -95,7 +95,7 @@ class RandomizeWildPokemon(ToggleSet):
     is_merge_phenomena = False
     is_prevent_rare = False, "Prevent rare encounters"
     auto_add_if_any = "Randomize"
-    alias_convert = [
+    aliases_convert = [
         ("Area 1-to-1", "Area 1 to 1"),
         ("Area 1-1", "Area 1 to 1"),
         ("Merge phenomenons", "Merge phenomena"),
@@ -958,7 +958,7 @@ class MasterBallSeller(ToggleSet):
     is_cost_1000 = False
     is_cost_3000 = False
     is_cost_10000 = False
-    alias_convert = [
+    aliases_convert = [
         ("Cost: Free", "Cost Free"),
         ("Cost: 1000", "Cost 1000"),
         ("Cost: 3000", "Cost 3000"),

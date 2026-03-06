@@ -14,10 +14,8 @@
 - [ROM] make massage lady in castelia repeatable
 - [ROM] baker on village bridge not repeatable
 - [ROM] make 50 levelups check in Icirrus City also send 25 levelups check
-- locked placement stuff might remove wrong Item instances when using list.remove(), leading to some Item instances being placed twice somewhere while other instances are lost
-- any_badge and any_tm_hm ignore other players' local_items and logic(?, look for some way to validate if it can be placed there)
-- port over extended option counter from shapez 2
-- combined goals
+- any_badge and any_tm_hm ignore logic(?, look for some way to validate if it can be placed there)
+- [0.4] combined goals
 - [ROM] add flags for other statics and trades and put them as a bitfield into datastorage (for poptracker)
 - [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
 - [ROM] Johto exclusive balls still not fixed, maybe there is a boolean map somewhere in the code that allows items to appear in the bag
