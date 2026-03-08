@@ -9,7 +9,7 @@ from worlds._bizhawk.client import BizHawkClient
 from .client.locations import check_flag_locations, check_dex_locations
 from .client.items import receive_items
 from .client.setup import early_setup, late_setup
-from .client.tracker import set_map, set_dex_caught_seen, set_goal_bitmap
+from .client.tracker import set_map, set_dex_caught_seen, set_goal_bitmap, set_statics_bitmap, set_trades_bitmap
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -59,6 +59,8 @@ class PokemonBWClient(BizHawkClient):
         self.tracker_caught_cache: bytearray = bytearray(self.dex_bytes_amount)
         self.tracker_seen_cache: bytearray = bytearray(self.dex_bytes_amount)
         self.goal_bitmap: int = 0
+        self.statics_bitmap: int = 0
+        self.trades_bitmap: int = 0
         self.dexsanity_included: bool = True
         self.player_name: str | None = None
         self.missing_flag_loc_ids: list[list[int]] = [[] for _ in range(self.flags_amount)]
@@ -157,6 +159,8 @@ class PokemonBWClient(BizHawkClient):
             await set_map(self, ctx)
             await set_dex_caught_seen(self, ctx)
             await set_goal_bitmap(self, ctx)
+            await set_statics_bitmap(self, ctx)
+            await set_trades_bitmap(self, ctx)
 
             await receive_items(self, ctx)
 

@@ -33,6 +33,93 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
             }])
 
 
+async def set_statics_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
+    # Excludes legendaries and Volcarona since they're already in the goals bitmap
+
+    bitmap = 0
+    if client.get_flag(665):  # Darmanitan left
+        bitmap |= 1
+    if client.get_flag(663):  # Darmanitan middle left
+        bitmap |= 2
+    if client.get_flag(664):  # Darmanitan middle
+        bitmap |= 4
+    if client.get_flag(666):  # Darmanitan middle right
+        bitmap |= 8
+    if client.get_flag(667):  # Darmanitan right
+        bitmap |= 16
+    if client.get_flag(2748):  # Musharna
+        bitmap |= 32
+    if client.get_flag(344):  # Zoroark
+        bitmap |= 64
+    if client.get_flag(768):  # Route 6 Foongus left
+        bitmap |= 128
+    if client.get_flag(767):  # Route 6 Foongus right
+        bitmap |= 256
+    if client.get_flag(772):  # Route 10 Foongus left
+        bitmap |= 512
+    if client.get_flag(771):  # Route 10 Foongus right
+        bitmap |= 1024
+    if client.get_flag(770):  # Route 10 Amoongus left
+        bitmap |= 2048
+    if client.get_flag(769):  # Route 10 Amoongus right
+        bitmap |= 4096
+    if client.get_flag(339):  # Sold Magikarp
+        bitmap |= 8192
+    if client.get_flag(315):  # Larvesta egg
+        bitmap |= 16384
+    if (await client.read_var(ctx, 0xC7)) >= 2:  # Zorua
+        bitmap |= 32768
+    if bitmap != client.goal_bitmap:
+        client.statics_bitmap |= bitmap
+        await ctx.send_msgs([{
+            "cmd": "Set",
+            "key": f"pokemon_bw_static_flags_{ctx.team}_{ctx.slot}",
+            "default": 0,
+            "want_reply": False,
+            "operations": [
+                {
+                    "operation": "default",
+                    "value": 0,
+                }, {
+                    "operation": "or",
+                    "value": bitmap,
+                }
+            ]
+        }])
+
+
+async def set_trades_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
+
+    bitmap = 0
+    if client.get_flag(148):  # Cottonee-Petilil
+        bitmap |= 1
+    if client.get_flag(280):  # Minchino-Basculin
+        bitmap |= 2
+    if client.get_flag(347):  # Boldore-Emolga
+        bitmap |= 4
+    if client.get_flag(360):  # Ditto-Rotom
+        bitmap |= 8
+    if (await client.read_var(ctx, 0xDA)) != 0:  # Cinchino-Munchlax
+        bitmap |= 16
+    if bitmap != client.goal_bitmap:
+        client.trades_bitmap |= bitmap
+        await ctx.send_msgs([{
+            "cmd": "Set",
+            "key": f"pokemon_bw_trade_flags_{ctx.team}_{ctx.slot}",
+            "default": 0,
+            "want_reply": False,
+            "operations": [
+                {
+                    "operation": "default",
+                    "value": 0,
+                }, {
+                    "operation": "or",
+                    "value": bitmap,
+                }
+            ]
+        }])
+
+
 async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
 
     bitmap = 0
