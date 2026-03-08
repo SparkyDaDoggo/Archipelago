@@ -1,24 +1,14 @@
 # Important stuff
 
-- [ROM] fix nacrene city waitress giving vanilla item AND AP item
-- [ROM] undella mansion seller always 1000 prize?
-- [ROM] sage in relic castle b1f invisible if going down before icirrus city events
-- fix prevent rare encounters accepting copying slots (i.e. added rates == 0)
-- [ROM] aha incorrect prize also gives vanilla item
-- [0.4] merge aha locations because flag flip reports are inconsistent
-- [ROM] shopping mall nine evo items seller ends abrupt if canceled
+- fix prevent rare encounters accepting copying slots (i.e. added rates == 0) (?)
 - [ROM] ns castle seller very bad
-- [ROM] make item names in custom roadblock dialogues a distinguishable color
-- [ROM] fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
 - [ROM] opelucid city fly flag only set after ghetsis scene?
-- [ROM] make massage lady in castelia repeatable
 - [ROM] baker on village bridge not repeatable
-- [ROM] make 50 levelups check in Icirrus City also send 25 levelups check
 - any_badge and any_tm_hm ignore logic(?, look for some way to validate if it can be placed there)
 - [0.4] combined goals
-- [ROM] add flags for other statics and trades and put them as a bitfield into datastorage (for poptracker)
 - [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
 - [ROM] Johto exclusive balls still not fixed, maybe there is a boolean map somewhere in the code that allows items to appear in the bag
+- Adding encounter plando on nonexistent methods on a map are still put into world.wild_encounters, leading to an error about having more encounters than encounter slots
 - ADD UNIT TESTS AFTER EVERYTHING
 - TEST EVERYTHING AFTERWARDS
 

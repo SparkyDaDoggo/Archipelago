@@ -3,14 +3,36 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.3.19
 
-- Added support for unweighted/weighted lists, `random`, and `random-range-x-y` to `Pokemon Randomization Adjustments`
-- Fixed `any_badge` and `any_tm_hm` choices potentially removing incorrect Item instances form the multiworld itempool
-- Fixed `any_badge` and `any_tm_hm` choices ignoring local items of other players
-- Fixed adding `Consider trades` to `Modify Logic` occasionally leading to generation failures
-- Made `Consider trades` require either `Consider evolutions` or wild pokémon being randomized
-- Renamed `CasefoldOptionSet` to `ToggleSet` and added QoL stuff to it on the development side
-- Fixed `Route 6 - Item from scientist for all Deerling forms` not having the extended hint if `Dexsanity` is set to 0
-- Fixed extended hints being inconsistent with evolutions and trades
+- Features/QoL:
+  - Added support for unweighted/weighted lists, `random`, and `random-range-x-y` to `Pokemon Randomization Adjustments`
+  - Made the Pokémon Fan Club chairman also give the 25+ levels check if shown a pokémon with 50+ levels growth
+    - Also made the (not modified) 99 levels reward give both the 25+ levels and 50+ levels checks
+  - Maybe Running Shoes being enabled right from the start
+    - This is only temporary, as the Running Shoes will be added as an AP item in a later update
+  - Made some in-game text related to roadblock items more accessible to new players
+    - Also added extra dialog for the Dreamyard traffic cone
+  - Removed the once-per-day limitation of the massage lady in Castelia City
+
+- Fixes:
+  - Fixed `any_badge` and `any_tm_hm` choices potentially removing incorrect Item instances form the multiworld itempool
+  - Fixed `any_badge` and `any_tm_hm` choices ignoring local items of other players
+  - Fixed adding `Consider trades` to `Modify Logic` occasionally leading to generation failures
+  - Fixed `Route 6 - Item from scientist for all Deerling forms` not having the extended hint if `Dexsanity` is set to 0
+  - Fixed extended hints being inconsistent with evolutions and trades
+  - Fixed `Nacrene City - Item from waitress in Café Warehouse` also giving the vanilla item
+  - Fixed the Aha quiz price locations sometimes being swapped and sometimes also giving the vanilla item
+  - Fixed sage Ryoku being invisible in Relic Castle B1F castleside if entered before the events in Dragonspiral Tower
+  - Fixed hidden items (that are normally reappearing) being detected by the Dowsing Machine again immediately
+    - However, they will still reappear after some time, which won't be fixed in the foreseeable future
+  - Fixed the evolution items seller in Shopping Mall Nine ending abruptly after selecting "Cancel"
+
+- Other stuff:
+  - Made `Consider trades` require either `Consider evolutions` or wild pokémon being randomized
+  - Renamed `CasefoldOptionSet` to `ToggleSet` and added QoL stuff to it on the development side
+  - Renamed multiple modifiers of some OptionSet options (do note that old yamls do **not** break)
+  - Raised minimum required AP version to 0.6.4
+  - Added bitmaps of statics and trades for Poptracker
+
 
 ## 0.3.18: "But I did beat Cynthia..." update
 
