@@ -1,19 +1,20 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
-## 0.3.19
+## 0.3.19: DIG. IS. FINALLY. USABLE. update
 
 - Features/QoL:
   - Added support for unweighted/weighted lists, `random`, and `random-range-x-y` to `Pokemon Randomization Adjustments`
   - Made the Pokémon Fan Club chairman also give the 25+ levels check if shown a pokémon with 50+ levels growth
     - Also made the (not modified) 99 levels reward give both the 25+ levels and 50+ levels checks
-  - Maybe Running Shoes being enabled right from the start
+  - Made Running Shoes being enabled right from the start
     - This is only temporary, as the Running Shoes will be added as an AP item in a later update
   - Made some in-game text related to roadblock items more accessible to new players
     - Also added extra dialog for the Dreamyard traffic cone
   - Removed the once-per-day limitation of the massage lady in Castelia City
 
 - Fixes:
+  - Fixed using Dig outside of battles (with `season_control` being set to any other than `vanilla`) crashing the game
   - Fixed `any_badge` and `any_tm_hm` choices potentially removing incorrect Item instances form the multiworld itempool
   - Fixed `any_badge` and `any_tm_hm` choices ignoring local items of other players
   - Fixed adding `Consider trades` to `Modify Logic` occasionally leading to generation failures
@@ -32,7 +33,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - Renamed multiple modifiers of some OptionSet options (do note that old yamls do **not** break)
   - Raised minimum required AP version to 0.6.4
   - Added bitmaps of statics and trades for Poptracker
-
 
 ## 0.3.18: "But I did beat Cynthia..." update
 

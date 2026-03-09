@@ -14,7 +14,6 @@
 
 # Not urgent
 
-- dig with seasons patch crashes the game, not fixable?
 - look through scripts and remove space checking for specific items
 - fill evo method ids
 - more inclusion rules
