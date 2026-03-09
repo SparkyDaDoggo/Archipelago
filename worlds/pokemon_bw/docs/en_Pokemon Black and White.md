@@ -18,14 +18,11 @@ while still using the well-known grid-based movement mechanics and battle UI.
 - [Credits](credits.md)
 - [Features roadmap](roadmap.md)
 - [Various options guides](options%20guides.md)
-  - Currently including `Encounter Plando` and other upcoming features in 0.4.0
+  - Including `Encounter Plando` and upcoming features in 0.4.0
 
 ## Known bugs (might be outdated)
 
-- Game breaking bugs:
-  - Using dig while having season control enabled crashes the game
 - Harmless/visual bugs:
-  - The dowsing machine keeps detecting hidden items that are normally reappearing even after pickup
   - Certain overworld item balls on route 13 don't disappear after pickup
 
 ## FAQ (kinda)
