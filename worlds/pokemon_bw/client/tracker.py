@@ -188,7 +188,8 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
     read = await bizhawk.read(
         ctx.bizhawk_ctx, (
             (client.save_data_address + client.dex_offset, client.dex_bytes_amount, client.ram_read_write_domain),
-            (client.save_data_address + client.dex_seen_offset, client.dex_bytes_amount, client.ram_read_write_domain),
+            *((client.save_data_address + offset, client.dex_bytes_amount, client.ram_read_write_domain)
+              for offset in client.dex_seen_offsets),
         )
     )
     if read[0] != client.tracker_caught_cache:
@@ -210,10 +211,17 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
                 }
             ]
         })
-    if read[1] != client.tracker_seen_cache:
-        seen = [i for i in range(1, 650) if read[1][(i-1)//8] & (2 ** ((i-1) % 8)) > 0]
-        for eight_flags in range(len(read[1])):
-            client.tracker_seen_cache[eight_flags] |= read[1][eight_flags]
+    seen = set()
+    for form_num in range(4):
+        read_num = read[form_num+1]
+        cache = client.tracker_seen_caches[form_num]
+        if read_num != cache:
+            for i in range(1, 650):
+                if read_num[(i-1)//8] & (1 << ((i-1) % 8)):
+                    seen.add(i)
+            for eight_flags in range(len(read_num)):
+                cache[eight_flags] |= read_num[eight_flags]
+    if seen:
         packages.append({
             "cmd": "Set",
             "key": f"pokemon_bw_seen_{ctx.team}_{ctx.slot}",
@@ -225,7 +233,7 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
                     "value": [],
                 }, {
                     "operation": "update",
-                    "value": seen,
+                    "value": list(seen),
                 }
             ]
         })
