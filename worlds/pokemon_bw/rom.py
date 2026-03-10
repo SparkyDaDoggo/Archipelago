@@ -3,8 +3,6 @@ import pathlib
 import zipfile
 from io import BytesIO
 
-from .ndspy import rom as ndspy_rom
-
 import Utils
 from settings import get_settings
 from worlds.Files import APAutoPatchInterface
@@ -113,6 +111,7 @@ class PatchMethods:
     @staticmethod
     def patch(patch: PokemonBWPatch, target: str, version_name: str) -> None:
         from .data import version
+        from .ndspy import rom as ndspy_rom
 
         patch.read()
 
@@ -122,6 +121,16 @@ class PatchMethods:
                 found_rom_version = tuple(header_part[0x9D:0xA0])
                 if version.rom() == found_rom_version:
                     return
+
+        patch_procedures: dict[str, Callable[[ndspy_rom.NintendoDSRom, str, PokemonBWPatch, zipfile.ZipFile], None]] = {
+            "base_patch": base_patch.patch,
+            "season_patch": season_patch.patch,
+            "write_wild_pokemon": write_wild_pokemon.patch,
+            "write_trainer_pokemon": write_trainer_pokemon.patch_species,
+            "adjust_wild_levels": level_adjustments.patch_wild,
+            "adjust_trainer_levels": level_adjustments.patch_trainer,
+            "modify_rates": modify_rates.patch,
+        }
 
         with BytesIO() as bytes_io, zipfile.ZipFile(bytes_io, "w", zipfile.ZIP_DEFLATED, True, 9) as files_dump:
             base_data = get_base_rom_bytes(version_name)
@@ -165,16 +174,6 @@ class PatchMethods:
             patch.read()
         return patch.files[file]
 
-
-patch_procedures: dict[str, Callable[[ndspy_rom.NintendoDSRom, str, PokemonBWPatch, zipfile.ZipFile], None]] = {
-    "base_patch": base_patch.patch,
-    "season_patch": season_patch.patch,
-    "write_wild_pokemon": write_wild_pokemon.patch,
-    "write_trainer_pokemon": write_trainer_pokemon.patch_species,
-    "adjust_wild_levels": level_adjustments.patch_wild,
-    "adjust_trainer_levels": level_adjustments.patch_trainer,
-    "modify_rates": modify_rates.patch,
-}
 
 
 def get_base_rom_bytes(version: str, file_name: str = "") -> bytes:
