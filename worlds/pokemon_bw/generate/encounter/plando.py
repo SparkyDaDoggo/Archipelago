@@ -12,6 +12,7 @@ def generate_wild(world: "PokemonBWWorld",
                   slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
     from ...data.pokemon.species import by_name
     from ...data.plando.encounter_maps import maps, multiple_seasons
+    from ...data.locations.encounters.regions import region_list
     from .checklist import check_species
 
     ret: dict[str, EncounterEntry] = {}
@@ -54,7 +55,7 @@ def generate_wild(world: "PokemonBWWorld",
         species_id = (species_data.dex_number, species_data.form)
         map_abbr = maps[plando.map][0]
         file_index = maps[plando.map][1]
-        if len(plando.seasons) == 0:
+        if not plando.seasons:
             if plando.map in multiple_seasons:
                 seasons = ["(Spring) ", "(Summer) ", "(Autumn) ", "(Winter) "]
             else:
@@ -64,14 +65,15 @@ def generate_wild(world: "PokemonBWWorld",
         for season in seasons:
             season_id = season_index[season]
             region = f"{map_abbr} {season}- {method_abbr[plando.method]}"
-            if len(plando.slots) == 0:
-                slots = (
-                    list(range(12))
-                    if plando.method in ("Grass", "Dark grass", "Rustling grass")
-                    else list(range(5))
-                )
-            else:
-                slots = plando.slots
+            if region not in region_list:
+                logging.warning(f"Player {world.player_name} defined an Encounter Plando on a non-existent slot "
+                                f"({region}).")
+                continue
+            slots = plando.slots or (
+                list(range(12))
+                if plando.method in ("Grass", "Dark grass", "Rustling grass")
+                else list(range(5))
+            )
             for slot in slots:
                 slot_in_file = method_shifting[plando.method] + slot
                 slot_name = f"{region} {slot}"
