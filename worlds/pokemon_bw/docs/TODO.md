@@ -1,14 +1,10 @@
 # Important stuff
 
 - fix prevent rare encounters accepting copying slots (i.e. added rates == 0) (?)
-- [ROM] ns castle seller very bad
 - [ROM] opelucid city fly flag only set after ghetsis scene?
-- [ROM] baker on village bridge not repeatable
 - any_badge and any_tm_hm ignore logic(?, look for some way to validate if it can be placed there)
 - [0.4] combined goals
 - [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
-- [ROM] Johto exclusive balls still not fixed, maybe there is a boolean map somewhere in the code that allows items to appear in the bag
-- [ROM] add flags to trades that are set after talking to the npc for the first time, and put that into the bitmap for the tracker
 - [0.4] allow encounter rate modifier to reduce slot count
 - ask eijeibong about any_badge/tmhm
 - ADD UNIT TESTS AFTER EVERYTHING
@@ -20,14 +16,11 @@
 - fill evo method ids
 - more inclusion rules
 - complete levelup movesets
-- advertise on ds romhacking servers
 - post MonochromeScriptAssembler to ds romhacking servers
 - make simple script compiler, use for starting season, season npc vanish, tmhm hunt npc vanish, and other future stuff
 - change rules dict to being filled on the way
 - organize imports for type hints behind TYPE_CHECKING
 - pitch webhost and template yaml notes, both individual, but template copying from webhost by default
-- Fix locations in pokédex if something written to encounter tables
-- route 18 reappearing and undella bay reappearing items get still detected after pickup
 - make reusable tms option add funny dialog
 - BizHawk 2.11 having issues with modded gen 5 roms
 - Chargestone cave make north to south shortcut open after traversing it for the first time (maybe when battled N)
