@@ -91,15 +91,15 @@ async def set_statics_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientConte
 async def set_trades_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
 
     bitmap = 0
-    if client.get_flag(148):  # Cottonee-Petilil
+    if client.get_flag(0x1D9):  # Cottonee-Petilil
         bitmap |= 1
-    if client.get_flag(280):  # Minchino-Basculin
+    if client.get_flag(0x1DA):  # Minchino-Basculin
         bitmap |= 2
-    if client.get_flag(347):  # Boldore-Emolga
+    if client.get_flag(0x1DB):  # Boldore-Emolga
         bitmap |= 4
-    if client.get_flag(360):  # Ditto-Rotom
+    if client.get_flag(0x1DC):  # Ditto-Rotom
         bitmap |= 8
-    if (await client.read_var(ctx, 0xDA)) != 0:  # Cinchino-Munchlax
+    if client.get_flag(0x1DD):  # Cinchino-Munchlax
         bitmap |= 16
     if bitmap != client.goal_bitmap:
         client.trades_bitmap |= bitmap
