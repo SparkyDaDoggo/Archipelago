@@ -1,6 +1,14 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.20
+
+- Fixed the Pokédex seen count not being sent completely to Poptracker
+- Fixed unit test failures on GitHub due to the `ndspy` library missing
+- Fixed adding an Encounter Plando on a nonexistent slot leading to an error
+- Disabled Johto-exclusive balls from being shuffled into the itempool, as they're unusable ingame
+  - You can still send them via server commands though
+
 ## 0.3.19: DIG. IS. FINALLY. USABLE. update
 
 - Features/QoL:

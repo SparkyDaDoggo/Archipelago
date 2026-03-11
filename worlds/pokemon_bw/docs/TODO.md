@@ -8,7 +8,9 @@
 - [0.4] combined goals
 - [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
 - [ROM] Johto exclusive balls still not fixed, maybe there is a boolean map somewhere in the code that allows items to appear in the bag
-- Adding encounter plando on nonexistent methods on a map are still put into world.wild_encounters, leading to an error about having more encounters than encounter slots
+- [ROM] add flags to trades that are set after talking to the npc for the first time, and put that into the bitmap for the tracker
+- [0.4] allow encounter rate modifier to reduce slot count
+- ask eijeibong about any_badge/tmhm
 - ADD UNIT TESTS AFTER EVERYTHING
 - TEST EVERYTHING AFTERWARDS
 
