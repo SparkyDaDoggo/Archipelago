@@ -75,17 +75,12 @@ class PatchMethods:
 
     @staticmethod
     def write_contents(patch: PokemonBWPatch, opened_zipfile: zipfile.ZipFile) -> None:
-
-        write_wild = False
-        for encounter in patch.world.wild_encounter.values():
-            if encounter.write:
-                write_wild = True
-                break
+        from .patch.procedures import write_wild_pokemon, write_trainer_pokemon, modify_rates
 
         procedures: list[str] = ["base_patch"]
         if patch.world.options.season_control != "vanilla":
             procedures.append("season_patch")
-        if write_wild:
+        if any(encounter.write for encounter in patch.world.wild_encounter.values()):
             procedures.append("write_wild_pokemon")
             write_wild_pokemon.write_patch(patch, opened_zipfile)
         if patch.world.options.randomize_trainer_pokemon.is_randomize:
@@ -111,7 +106,6 @@ class PatchMethods:
     @staticmethod
     def patch(patch: PokemonBWPatch, target: str, version_name: str) -> None:
         from .data import version
-        from .ndspy import rom as ndspy_rom
 
         patch.read()
 
@@ -121,6 +115,10 @@ class PatchMethods:
                 found_rom_version = tuple(header_part[0x9D:0xA0])
                 if version.rom() == found_rom_version:
                     return
+
+        from .ndspy import rom as ndspy_rom
+        from .patch.procedures import base_patch, season_patch, write_wild_pokemon, level_adjustments, \
+            write_trainer_pokemon, modify_rates
 
         patch_procedures: dict[str, Callable[[ndspy_rom.NintendoDSRom, str, PokemonBWPatch, zipfile.ZipFile], None]] = {
             "base_patch": base_patch.patch,
