@@ -70,9 +70,10 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         for season in range(season_count_game):
             for slot in range(56):
                 game_address = (season * (56 * 4 + 8) + 8) + (slot * 4)
-                dex_num = (game_file[game_address] + game_file[game_address] * 256) % 2048
-                for season_2 in (range(4) if season_count_game == 1 else (season_count_game, )):
-                    pokemon_areas[dex_num-1][season_2][map_to_area[file_num]] |= area_flags[slot]
+                dex_num = (game_file[game_address] + game_file[game_address+1] * 256) % 2048
+                if dex_num:
+                    for season_2 in (range(4) if season_count_game == 1 else (season, )):
+                        pokemon_areas[dex_num-1][season_2][map_to_area[file_num]] |= area_flags[slot]
 
         narc.files[file_num] = bytes(game_file)
         files_dump.writestr(f"a126/{file_num}", bytes(game_file))
