@@ -34,6 +34,7 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
     aliases_convert: list[tuple[str, str]] = []
 
     def __init__(self, value: Iterable[str]):
+        super().__init__(value)
         self.value: set[str] = set(val.casefold() for val in value)
         for alias, actual in self.aliases_convert:
             if alias in self.value:
@@ -43,7 +44,6 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
             self.value.add(self.auto_add_if_any.casefold())
         for key, data in self._toggles:
             setattr(self, "is_"+key, data[1].casefold() in self.value)
-        super(OptionSet, self).__init__()
 
     def __contains__(self, item: str):
         return item.casefold() in self.value
