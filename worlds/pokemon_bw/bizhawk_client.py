@@ -44,6 +44,7 @@ class PokemonBWClient(BizHawkClient):
     flags_offset = 0x20C38  # 0x23BF48 in vanilla W
     dex_offset = 0x21EC4  # 0x23D1D4 in vanilla W
     dex_seen_offsets = tuple(0x21EC4 + 0x54 * i for i in range(1, 5))  # directly after dex_offset
+    dex_display_offsets = tuple(0x21EC4 + 0x54 * i for i in range(5, 9))  # directly after dex_seen_offsets
     main_items_bag_offset = 0x18cbc  # 0x233FCC in vanilla W
     key_items_bag_offset = 0x19194  # 0x2344A4 in vanilla W
     tm_hm_bag_offset = 0x192e0  # 0x2345F0 in vanilla W

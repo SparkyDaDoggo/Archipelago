@@ -877,22 +877,20 @@ class ModifyEncounterRates(Choice):
             return super().get_option_name(value)
 
 
-class ExpModifier(Range):
+class ExpMultiplier(Range):
     """
-    Multiplies the experience received from defeating wild and trainer pokemon.
-
-    The value is in percent, meaning 100 is normal, 200 is double, 50 is half, etc.
+    Multiplies the experience points received from defeating wild and trainer pokemon.
     """
-    display_name = "Experience Modifier"
-    default = 100
-    range_start = 10
-    range_end = 1600
+    display_name = "Experience Multiplier"
+    default = 1
+    range_start = 1
+    range_end = 100
 
 
 class AllPokemonSeen(Toggle):
     """
-    Marks all pokemon in the pokedex (that do not have a Seensanity check) as seen
-    (including all forms, except shinies). This could possibly have no effect under certain circumstances.
+    Start will all pokemon seen in your Pokedex.
+    This allows you to see where the pokemon can be encountered in the wild.
     """
     display_name = "All Pokemon Seen"
     default = False
@@ -1164,8 +1162,8 @@ class PokemonBWOptions(PerGameCommonOptions):
     # Miscellaneous
     adjust_levels: AdjustLevels
     modify_encounter_rates: ModifyEncounterRates
-    # exp_modifier: ExpModifier
-    # all_pokemon_seen: AllPokemonSeen
+    exp_multiplier: ExpMultiplier
+    all_pokemon_seen: AllPokemonSeen
     # add_fairy_type: AddFairyType
     # replace_evo_methods: ReplaceEvoMethods
     master_ball_seller: MasterBallSeller

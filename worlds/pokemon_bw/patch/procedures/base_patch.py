@@ -2,6 +2,7 @@ import io
 from typing import NamedTuple, TYPE_CHECKING
 from zipfile import ZipFile
 
+from ...ndspy.code import saveOverlayTable
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.narc import NARC
 import pkgutil
@@ -59,3 +60,16 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             source_narc.files[proc[0]] = otpp.patch(source_narc.files[proc[0]], proc[1])
         # write patched narc to rom
         rom.setFileByName(narc_filename, source_narc.save())
+
+    # Apply Exp multiplier patch
+    exp_code = (b'\x05\x49\x09\x68\x03\x48\x09\x5a\x7e\x43\xa8\x59\x01\x31'
+                b'\x48\x43\xa8\x51\x70\x47\xa4\x0b\x02\x00\x24\x00\x00\x02')
+    overlay_table = rom.loadArm9Overlays()
+    ov93 = overlay_table[93]
+    ov93_data = bytearray(ov93.data)
+    ov93_data[0x1542c:0x1542c+4] = b'\x28\xf0\xea\xfa'
+    ov93_data[0x3da04:0x3da04+len(exp_code)] = exp_code
+    ov93.data = bytes(ov93_data)
+    rom.files[ov93.fileID] = ov93.save(compress=True)
+    files_dump.writestr("ov93", rom.files[ov93.fileID])
+    rom.arm9OverlayTable = saveOverlayTable(overlay_table)

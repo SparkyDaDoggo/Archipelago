@@ -63,3 +63,15 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
         await client.write_set_flag(ctx, 0x1D0)
     else:
         await client.write_unset_flag(ctx, 0x1D0)
+
+    if not client.get_flag(0x1DE):
+        await client.write_var(ctx, 0xF4, ctx.slot_data["options"]["exp_multiplier"]-1)
+        if ctx.slot_data["options"]["all_pokemon_seen"]:
+            await bizhawk.write(
+                ctx.bizhawk_ctx, (
+                    (client.save_data_address + client.dex_seen_offsets[0], b'\xff' * 0x54, "Main RAM"),
+                    (client.save_data_address + client.dex_seen_offsets[1], b'\xff' * 0x54, "Main RAM"),
+                    (client.save_data_address + client.dex_display_offsets[0], b'\xff' * 0x54, "Main RAM"),
+                )
+            )
+        await client.write_set_flag(ctx, 0x1DE)
