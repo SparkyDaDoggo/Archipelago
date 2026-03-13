@@ -127,7 +127,8 @@ class RandomizeStarterPokemon(ToggleSet):
     - **Randomize** - Toggles starter pokemon being randomized. Required for any other modifier.
     - **Any base** - Only use unevolved/baby pokemon.
     - **Base with 2 evolutions** - Only use unevolved/baby pokemon that can evolve twice. Overrides **Any base**.
-    - **Only official starters** - Only use pokemon that have been a starter in any mainline game. Overrides **Any base** and **Base with 2 evolutions**.
+    - **Only official starters** - Only use pokemon that have been a starter in any mainline game.
+        Overrides **Any base** and **Base with 2 evolutions**.
     - **Type variety** - Every starter will have types that are different from the other two.
     """
     display_name = "Randomize Starter Pokemon"
@@ -213,7 +214,8 @@ class RandomizeLegendaryPokemon(ToggleSet):
 
     - **Randomize** - Toggles legendary pokemon being randomized. Required for any other modifier.
     - **Keep legendary** - Randomized pokemon will all still be legendaries or mythicals.
-    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one. Overrides **Keep legendary**.
+    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
+        Overrides **Keep legendary**.
     - **Same type** - Tries to keep at least one type of every encounter.
     """
     display_name = "Randomize Legendary Pokemon"
@@ -235,9 +237,9 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
     and "random-range-x-y" like usual range options.
 
     - **Stats leniency** (0-1530) - The minimum difference between base stat totals of vanilla and randomized species
-      (for options with **Similar base stats** activated).
+        (for options with **Similar base stats** activated).
     - **Rare encounters threshold** (1-100) - If **Prevent rare encounters** is included, this will become the minimum
-      encounter chance (in percent) for each species.
+        encounter chance (in percent) for each species.
     """
     display_name = "Pokemon Randomization Adjustments"
     fill_defaults = True
@@ -501,7 +503,8 @@ class RandomizeLevelUpMovesets(ToggleSet):
     - **Progressive power** - If a move is learned after another one, it will have an equal or higher base power.
     - **Keep amount** - Keeps the amount of moves a species learns normally.
     - **Keep levels** - If the species learned a move at a certain level, it will still learn something at that level.
-    - **Follow evolutions** - Evolved species will have at least 50% of the level up moveset(s) of their pre-evolution(s). Overrides all **Keep ...** modifiers.
+    - **Follow evolutions** - Evolved species will have at least 50% of the level up moveset(s) of their
+        pre-evolution(s). Overrides all **Keep ...** modifiers.
     """
     display_name = "Randomize Level Up Movesets"
     valid_keys_casefold = True
@@ -523,8 +526,10 @@ class RandomizeTypes(ToggleSet):
     You can add as many of the following modifiers as you want.
 
     - **Randomize** - Toggles types being randomized. Required for any other modifier.
-    - **Only secondary type** - Only randomizes the secondary type of every species and thereby keeps the primary type. Includes removing it. Not compatible with **Only primary type**.
-    - **Only primary type** - Only randomizes the primary type of every species and thereby keeps the secondary type (which might be none). Not compatible with **Only secondary type**.
+    - **Only secondary type** - Only randomizes the secondary type of every species and thereby keeps the primary type.
+        Includes removing it. Not compatible with **Only primary type**.
+    - **Only primary type** - Only randomizes the primary type of every species and thereby keeps the secondary type
+        (which might be none). Not compatible with **Only secondary type**.
     - **Follow evolutions** - Evolved species will share at least one type with (one of) their pre-evolutions.
     """
     display_name = "Randomize Types"
@@ -547,7 +552,8 @@ class RandomizeAbilities(ToggleSet):
     - **Randomize** - Toggles abilities being randomized. Required for any other modifier.
     - **One per pokemon** - Gives every species only one ability.
     - **Follow evolutions** - Evolved pokemon will have the abilities of (one of) their pre-evolution(s)..
-    - **Include hidden abilities** - Includes hidden abilities being randomized. Note that only a few select pokemon that originate from these games can have their hidden ability.
+    - **Include hidden abilities** - Includes hidden abilities being randomized. Note that only a few select pokemon
+        that originate from these games can have their hidden ability.
     """
     display_name = "Randomize Abilities"
     valid_keys_casefold = True
@@ -590,7 +596,8 @@ class RandomizeTMHMCompatibility(ToggleSet):
     - **Randomize** - Toggles TM and HM compatibility being randomized. Required for any other modifier.
     - **Keep types** - Randomized moves have either a matching or normal type.
     - **Keep amount** - Keeps the amount of moves a species learns normally.
-    - **Follow evolutions** - Evolved species will have at least 50% of the learnable TMs and HMs of their pre-evolution(s). Overrides all **Keep ...** modifiers.
+    - **Follow evolutions** - Evolved species will have at least 50% of the learnable TMs and HMs of their
+        pre-evolution(s). Overrides all **Keep ...** modifiers.
     """
     display_name = "Randomize TM/HM Compatibility"
     valid_keys_casefold = True
@@ -667,7 +674,8 @@ class ShuffleBadgeRewards(Choice):
     Determines how gym badges are randomized and what items gym badge locations can have.
     - **Vanilla** - Gym badges will stay at their vanilla locations.
     - **Shuffle** - Gym badges are shuffled between the gym leaders.
-    - **Any badge** - Puts the badges into the item pool, while only allowing items that have the word "badge" in their name (which also applies to gym badges of other games/worlds) being placed at gym leaders.
+    - **Any badge** - Puts the badges into the item pool, while only allowing items that have the word "badge" in
+        their name (which also applies to gym badges of other games/worlds) being placed at gym leaders.
     - **Anything** - Gym badges can be anywhere and gym leaders can give any item.
     """
     display_name = "Shuffle Badge Rewards"
@@ -682,8 +690,10 @@ class ShuffleTMRewards(Choice):
     """
     Determines what items NPCs, who would normally give TMs or HMs, can have.
     - **Shuffle** - These NPCs will always give a TM or HM from the same world.
-    - **HM with Badge** - Like "Shuffle", but puts each HM (and TM70 Flash) at a gym leader's badge reward (including the TM from Clay on route 6).
-    - **Any TM/HM** - These NPCs will give any item that starts with "TM" or "HM" followed by any digit (which also applies to TMs and HMs of other games/worlds).
+    - **HM with Badge** - Like "Shuffle", but puts each HM (and TM70 Flash) at a gym leader's badge reward
+        (including the TM from Clay on route 6).
+    - **Any TM/HM** - These NPCs will give any item that starts with "TM" or "HM" followed by any digit
+        (which also applies to TMs and HMs of other games/worlds).
     - **Anything** - No restrictions.
     """
     display_name = "Shuffle TM Rewards"
@@ -782,9 +792,11 @@ class DoorShuffle(ToggleSet):
 class SeasonControl(Choice):
     """
     Determines how seasons are handled by the game.
-    - **Vanilla** - Seasons are not randomized and change based on real time. Locations that depend on the season will only contain filler items.
+    - **Vanilla** - Seasons are not randomized and change based on real time. Locations that depend on the season
+        will only contain filler items.
     - **Changeable** - The current season can be changed by an NPC next to the Pokemon Center in Nimbasa City.
-    - **Randomized** - All seasons are unlockable by items that get shuffled into the item pool. They can as well be changed by an NPC in Nimbasa City, with one season being unlocked from the beginning.
+    - **Randomized** - All seasons are unlockable by items that get shuffled into the item pool. They can as well be
+        changed by an NPC in Nimbasa City, with one season being unlocked from the beginning.
     """
     display_name = "Season Control"
     option_vanilla = 0
@@ -812,10 +824,15 @@ class ModifyEncounterRates(Choice):
     Modifies the encounter slot rates for wild encounters.
 
     - **Vanilla** - Keeps the vanilla encounter slot rates.
-    - **Try normalized** - Normalizes the rates for the 12 grass method slots to 8-9% each and the rates for surfing and fishing method slots to 20% each.
-    - **Try normalized alternative** - Same as **Try normalized**, but sets 9 slots to 10% each and 3 slots to 3-4% each for grass methods.
-    - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the remaining slots to 5% or less each for all encounter methods.
-    - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate. Expect multiple 1% slot rates.
+    - **Try normalized** - Normalizes the rates for the 12 grass method slots to 8-9% each and the rates for
+        surfing and fishing method slots to 20% each.
+    - **Try normalized alternative** - Same as **Try normalized**, but sets 9 slots to 10% each and 3 slots to
+        3-4% each for grass methods.
+    - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the remaining slots to 5% or less each for
+        all encounter methods.
+    - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing
+        methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate.
+        Expect multiple 1% slot rates.
 
     Alternatively, you can provide a list of custom encounter rates. See the option guides for more information.
     """
@@ -917,9 +934,13 @@ class ReplaceEvoMethods(ToggleSet):
     Trade and time based evolutions are always replaced/excluded.
     You can add as many of the following modifiers as you want.
 
-    - **Locations** - Replaces evolutions requiring a magnetic place, the ice rock, or the mossy rock with using a thunder stone, using a leaf stone, and leveling up with a held casteliacone.
+    - **Locations** - Replaces evolutions requiring a magnetic place, the ice rock, or the mossy rock with using a
+        thunder stone, using a leaf stone, and leveling up with a held casteliacone.
     - **Friendship** - Replaces friendship based evolutions with level up evolutions.
-    - **PID** - Replaces personality value based evolutions. Gender dependant evolutions lose their gender dependency, Wurmple's random evolutions will require a Butterfree/Venomoth in your party, and Burmy will also evolve into Mothim while having a Venomoth in your party. Be aware that this can lead to affected pokemon changing their gender when evolved.
+    - **PID** - Replaces personality value based evolutions. Gender dependant evolutions lose their gender dependency,
+        Wurmple's random evolutions will require a Butterfree/Venomoth in your party, and Burmy will also evolve into
+        Mothim while having a Venomoth in your party. Be aware that this can lead to affected pokemon changing their
+        gender when evolved.
     - **Stats** - Replaces Tyrogue's stat based evolutions with level up while holding a protein, iron, or carbos.
     """
     display_name = "Replace Evolution Methods"
@@ -940,10 +961,12 @@ class MasterBallSeller(ToggleSet):
     If multiple cost modifiers are added, a random cost in range between them (snapped to 500-steps) gets selected.
     Adding no cost modifier defaults to 3000.
 
-    - **Ns Castle** - Repurposes an NPC in N's Castle, who can be found in the same room as the grunt giving Ultra Balls to the player, to give/sell Master Balls to the player.
+    - **Ns Castle** - Repurposes an NPC in N's Castle, who can be found in the same room as the grunt giving Ultra
+        Balls to the player, to give/sell Master Balls to the player.
     - **PC** - Adds an option to every PC in Pokemon Centers to buy/obtain Master Balls.
     - **Cherens Mom** - Repurposes Cheren's Mom in Nuvema Town to give/sell Master Balls.
-    - **Undella Mansion seller** - Adds the Master Ball to the pool of items that you can buy from the evolution items seller in the Undella Mansion for a random price. His offers are not affected by any cost modifier.
+    - **Undella Mansion seller** - Adds the Master Ball to the pool of items that you can buy from the evolution items
+        seller in the Undella Mansion for a random price. His offers are not affected by any cost modifier.
     - **Cost Free** - Makes Master Balls (potentially) cost nothing.
     - **Cost x** - Makes Master Balls (potentially) cost x Pokedollars. x can be any number in range of 0 to 30000.
     """
