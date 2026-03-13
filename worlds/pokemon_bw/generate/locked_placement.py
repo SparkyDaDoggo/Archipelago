@@ -73,90 +73,49 @@ def place_badges_fill(world: "PokemonBWWorld",
                       usefulitempool: list[Item],
                       filleritempool: list[Item],
                       fill_locations: list[Location]) -> None:
-    from ..data.locations.ingame_items import special
-
     match world.options.shuffle_badges.current_key:
         case "vanilla":
             pass
         case "shuffle":
             pass
         case "any_badge":
-            # Both already shuffled
-            # Items already sorted by classification
-            # Sort location by progress type (priority - default - excluded)
-            badge_items: list[tuple[int, list[Item]]] = [
-                (index, pool)
-                for pool in (progitempool, usefulitempool, filleritempool)
-                for index, item in enumerate(pool)
-                if ("badge" in pool[index].name.lower()
-                    and (item.player == world.player or
-                         item.name not in world.multiworld.worlds[item.player].options.local_items))
-            ]
+            from Fill import fill_restrictive
+            from ..data.locations.ingame_items import special
+
+            badge_items: list[Item] = []
+            badge_item_indices: list[tuple[int, list[Item]]] = []
+            for pool in (progitempool, usefulitempool, filleritempool):
+                for index, item in enumerate(pool):
+                    if (
+                        "badge" in pool[index].name.lower()
+                        and (item.player == world.player or
+                             item.name not in world.multiworld.worlds[item.player].options.local_items)
+                    ):
+                        badge_items.append(item)
+                        badge_item_indices.append((index, pool))
+            for index, pool in reversed(badge_item_indices):  # reversed because else the pop index shifts
+                pool.pop(index)
+            world.random.shuffle(badge_items)
             badge_locs: list[Location] = [
                 loc
                 for loc in fill_locations
                 if loc.player == world.player and loc.name in special.gym_badges
             ]
-            to_pop: list[tuple[int, list[Item]]] = []
-            to_place = 0
-            for to_check in range(1, len(badge_locs)):
-                if badge_locs[to_check].progress_type == LocProgType.PRIORITY:
-                    badge_locs[to_check], badge_locs[to_place] = badge_locs[to_place], badge_locs[to_check]
-                    to_place += 1
-            to_place = len(badge_locs) - 1
-            for to_check in reversed(range(0, len(badge_locs)-2)):
-                if badge_locs[to_check].progress_type == LocProgType.EXCLUDED:
-                    badge_locs[to_check], badge_locs[to_place] = badge_locs[to_place], badge_locs[to_check]
-                    to_place -= 1
-            # First fill priority locations with prog and useful items until either is exhausted
-            min_of_lens = min(len(badge_items), len(badge_locs))
-            filled_from_prio = 0
-            while filled_from_prio < min_of_lens:
-                loc = badge_locs[filled_from_prio]
-                if loc.progress_type != LocProgType.PRIORITY:
-                    break
-                index, pool = badge_items[filled_from_prio]
-                if pool == filleritempool:
-                    break
-                loc.place_locked_item(pool[index])
-                to_pop.append((index, pool))
-                fill_locations.remove(loc)
-                filled_from_prio += 1
-            # Now fill excluded locations with only filler
-            taken_from_excluded = 0
-            while taken_from_excluded < min_of_lens:
-                loc = badge_locs[-1-taken_from_excluded]
-                if loc.progress_type != LocProgType.EXCLUDED:
-                    break
-                index, pool = badge_items[-1-taken_from_excluded]
-                if pool != filleritempool:
-                    break
-                loc.place_locked_item(pool[index])
-                to_pop.append((index, pool))
-                fill_locations.remove(loc)
-                taken_from_excluded += 1
-            # Skip potential remaining excluded locations and let them be filled by main fill
-            while (
-                taken_from_excluded < min_of_lens and
-                badge_locs[-1-taken_from_excluded].progress_type == LocProgType.EXCLUDED
-            ):
-                taken_from_excluded += 1
-            # Randomly fill remaining items into remaining locations
-            remaining_items = badge_items[filled_from_prio:len(badge_items)-taken_from_excluded]
-            remaining_locs = badge_locs[filled_from_prio:len(badge_locs)-taken_from_excluded]
-            world.random.shuffle(remaining_items)
-            world.random.shuffle(remaining_locs)
-            for i in range(min(len(remaining_items), len(remaining_locs))):
-                loc = remaining_locs[i]
-                index, pool = remaining_items[i]
-                loc.place_locked_item(pool[index])
-                to_pop.append((index, pool))
-                fill_locations.remove(loc)
-            for pool in (progitempool, usefulitempool, filleritempool):
-                indices = [index for index, _pool in to_pop if _pool == pool]
-                indices.sort(reverse=True)
-                for index in indices:
-                    pool.pop(index)
+            for b_loc in badge_locs:
+                fill_locations.remove(b_loc)
+
+            fill_restrictive(world.multiworld, world.multiworld.get_all_state(allow_partial_entrances=True),
+                             badge_locs, badge_items, lock=True, allow_partial=True,
+                             name=f"PokemonBW_{world.player_name}_any_badge")
+
+            for badge_item in badge_items:
+                if badge_item.advancement:
+                    progitempool.append(badge_item)
+                elif badge_item.useful:
+                    usefulitempool.append(badge_item)
+                else:
+                    filleritempool.append(badge_item)
+
         case "anything":
             pass
         case _:
@@ -265,79 +224,42 @@ def place_tm_hm_fill(world: "PokemonBWWorld",
         case "hm_with_badge":
             pass
         case "any_tm_hm":
-            # Both already shuffled
-            # Items already sorted by classification
-            # Sort location by progress type (priority - default - excluded)
-            tm_hm_items: list[tuple[int, list[Item]]] = [
-                (index, pool)
-                for pool in (progitempool, usefulitempool, filleritempool)
-                for index, item in enumerate(pool)
-                if (len(item.name) > 2 and item.name[:2].lower() in ("tm", "hm") and item.name[2].isdigit()
-                    and (item.player == world.player or
-                         item.name not in world.multiworld.worlds[item.player].options.local_items))
-            ]
+            from Fill import fill_restrictive
+
+            tm_hm_items: list[Item] = []
+            tm_hm_item_indices: list[tuple[int, list[Item]]] = []
+            for pool in (progitempool, usefulitempool, filleritempool):
+                for index, item in enumerate(pool):
+                    if (
+                        len(item.name) > 2 and item.name[:2].lower() in ("tm", "hm") and item.name[2].isdigit()
+                        and (item.player == world.player or
+                             item.name not in world.multiworld.worlds[item.player].options.local_items)
+                    ):
+                        tm_hm_items.append(item)
+                        tm_hm_item_indices.append((index, pool))
+            for index, pool in reversed(tm_hm_item_indices):  # reversed because else the pop index shifts
+                pool.pop(index)
+            world.random.shuffle(tm_hm_items)
             tm_hm_locs: list[Location] = [
                 loc
                 for loc in fill_locations
                 if loc.player == world.player and loc.name in all_tm_locations
             ]
-            to_pop: list[tuple[int, list[Item]]] = []
-            # Sort HMs to front to prevent problems with HM rules
-            to_place = 0
-            for to_check in range(1, len(tm_hm_locs)):
-                if all_tm_locations[tm_hm_locs[to_check].name].hm_rule is not None:
-                    tm_hm_locs[to_check], tm_hm_locs[to_place] = tm_hm_locs[to_place], tm_hm_locs[to_check]
-                    to_place += 1
-            # By creating new lists, locations with HM rules should be at the front
-            priority_locs = [loc for loc in tm_hm_locs if loc.progress_type == LocProgType.PRIORITY]
-            default_locs = [loc for loc in tm_hm_locs if loc.progress_type == LocProgType.DEFAULT]
-            excluded_locs = [loc for loc in tm_hm_locs if loc.progress_type == LocProgType.EXCLUDED]
-            # First fill priority locations with prog and useful items until either is exhausted
-            for loc in priority_locs:
-                for index, pool in tm_hm_items:
-                    if pool == filleritempool:
-                        default_locs.insert(0, loc)
-                        break
-                    hm_rule = all_tm_locations[loc.name].hm_rule
-                    if hm_rule is None or hm_rule(pool[index].name):
-                        loc.place_locked_item(pool[index])
-                        tm_hm_items.remove((index, pool))
-                        to_pop.append((index, pool))
-                        fill_locations.remove(loc)
-                        break
+            for b_loc in tm_hm_locs:
+                fill_locations.remove(b_loc)
+
+            fill_restrictive(world.multiworld, world.multiworld.get_all_state(allow_partial_entrances=True),
+                             tm_hm_locs, tm_hm_items, lock=True, allow_partial=True,
+                             name=f"PokemonBW_{world.player_name}_any_badge")
+
+            for tm_hm_item in tm_hm_items:
+                if tm_hm_item.advancement:
+                    progitempool.append(tm_hm_item)
+                elif tm_hm_item.useful:
+                    usefulitempool.append(tm_hm_item)
                 else:
-                    default_locs.insert(0, loc)
-            # Now fill excluded locations with only filler
-            for loc in excluded_locs:
-                for index, pool in reversed(tm_hm_items):
-                    if pool != filleritempool:
-                        break
-                    hm_rule = all_tm_locations[loc.name].hm_rule
-                    if hm_rule is None or hm_rule(pool[index].name):
-                        loc.place_locked_item(pool[index])
-                        tm_hm_items.remove((index, pool))
-                        to_pop.append((index, pool))
-                        fill_locations.remove(loc)
-                        break
-            # Fill remaining priority and default locations with remaining items
-            # Priority locations, which are at the end of the default list, will be filled (with filler) first
-            # Shuffle remaining items again to prevent having one world using up all remaining prog or filler items
-            # and only leaving useful items for other worlds
-            world.random.shuffle(tm_hm_items)
-            for loc in default_locs:
-                for index, pool in tm_hm_items:
-                    hm_rule = all_tm_locations[loc.name].hm_rule
-                    if hm_rule is None or hm_rule(pool[index].name):
-                        loc.place_locked_item(pool[index])
-                        tm_hm_items.remove((index, pool))
-                        to_pop.append((index, pool))
-                        fill_locations.remove(loc)
-                        break
-            for pool in (progitempool, usefulitempool, filleritempool):
-                indices = [index for index, _pool in to_pop if _pool == pool]
-                indices.sort(reverse=True)
-                for index in indices:
-                    pool.pop(index)
+                    filleritempool.append(tm_hm_item)
+
         case "anything":
             pass
         case _:
