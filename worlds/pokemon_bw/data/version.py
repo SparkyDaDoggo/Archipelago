@@ -9,9 +9,10 @@ class VersionCompatibility(NamedTuple):
     ap_minimum: tuple[int, int, int]
 
 
-version: tuple[int, int, int] = (0, 3, 20)
+version: tuple[int, int, int] = (0, 3, 21)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
+    (0, 3, 21): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 21), (0, 3, 21), (0, 6, 4)),
     (0, 3, 20): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 20), (0, 3, 20), (0, 6, 4)),
     (0, 3, 19): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 19), (0, 3, 19), (0, 6, 4)),
     (0, 3, 18): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 18), (0, 3, 18), (0, 6, 3)),

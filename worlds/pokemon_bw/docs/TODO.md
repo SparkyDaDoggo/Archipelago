@@ -2,11 +2,9 @@
 
 - fix prevent rare encounters accepting copying slots (i.e. added rates == 0) (?)
 - [ROM] opelucid city fly flag only set after ghetsis scene?
-- any_badge and any_tm_hm ignore logic(?, look for some way to validate if it can be placed there)
 - [0.4] combined goals
 - [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
 - [0.4] allow encounter rate modifier to reduce slot count
-- ask eijeibong about any_badge/tmhm
 - ADD UNIT TESTS AFTER EVERYTHING
 - TEST EVERYTHING AFTERWARDS
 

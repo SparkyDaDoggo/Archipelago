@@ -1,6 +1,18 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.21: "I'm going to make palex and Radis unemployed" update
+
+- Added `Experience Multiplier` option
+  - Also added a menu to the PC in Pokémon Centers to adjust it ingame
+- Added `All Pokémon Seen` option
+- Fixed compatibility issues with AP 0.6.7 release candidates
+- Fixed player names with too many non-Ascii characters leading to a corrupted rom
+- Tweaked the menu structure of the PC in Pokémon Centers
+- Fixed backwards compatibility issues with old yamls
+- Tweaked option descriptions to make them a bit more Options Creator-friendly
+- Reworked `any_badge` and `any_tm_hm` once again
+
 ## 0.3.20: "The Pokédex is actually a tracker" update
 
 - Fixed the Pokédex seen count not being sent completely to Poptracker
