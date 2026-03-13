@@ -38,8 +38,8 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
         self.value: set[str] = set(val.casefold() for val in value)
         for alias, actual in self.aliases_convert:
             if alias in self.value:
-                self.value.add(actual)
-                self.value.remove(alias)
+                self.value.add(actual.casefold())
+                self.value.remove(alias.casefold())
         if self.auto_add_if_any is not None and len(self.value) and self.auto_add_if_any not in self:
             self.value.add(self.auto_add_if_any.casefold())
         for key, data in self._toggles:

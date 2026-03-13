@@ -40,6 +40,10 @@
 #   default vanilla
 #   one test for each other choice each
 #   one test for custom rates
+# experience_multiplier:
+#   irrelevant for generator
+# all_pokemon_seen:
+#   irrelevant for generator
 # modify_item_pool:
 #   default []
 #   one test for all modifiers combined

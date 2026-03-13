@@ -1156,6 +1156,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     dexsanity: Dexsanity
     # trainersanity: Trainersanity
     # seensanity: Seensanity
+    # shinysanity: Shinysanity
     # door_shuffle: DoorShuffle
     season_control: SeasonControl
 
