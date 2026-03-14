@@ -1,6 +1,10 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.22
+
+- Fixed backwards compatibility issues due to the new options from 0.3.21
+
 ## 0.3.21: "I'm going to make palex and Radis unemployed" update
 
 - Added `Experience Multiplier` option
