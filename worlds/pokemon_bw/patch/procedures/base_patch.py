@@ -73,3 +73,22 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     rom.files[ov93.fileID] = ov93.save(compress=True)
     files_dump.writestr("ov93", rom.files[ov93.fileID])
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
+
+    if version.version == (0, 3, 122):
+        expansion_test(rom, world_package, bw_patch_instance, files_dump)
+
+
+def expansion_test(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch", files_dump: ZipFile):
+
+    overlay_table = rom.loadArm9Overlays()
+    ov93 = overlay_table[93]
+    ov93_data = bytearray(ov93.data)
+    ov93_data[0x1543a:0x1543a+4] = b'\xde\xf1\x51\xfd'
+    ov93.data = bytes(ov93_data)
+    rom.files[ov93.fileID] = ov93.save(compress=True)
+    files_dump.writestr("ov93", rom.files[ov93.fileID])
+    rom.arm9OverlayTable = saveOverlayTable(overlay_table)
+
+    expansion: bytes = pkgutil.get_data(world_package, "patch/expansion_test_arm7.bin")
+    rom.arm7 = rom.arm7 + bytes(0x2a000 - len(rom.arm7)) + expansion
+    files_dump.writestr("arm7", rom.arm7)
