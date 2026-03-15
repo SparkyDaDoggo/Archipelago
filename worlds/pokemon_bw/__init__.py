@@ -5,7 +5,7 @@ from typing import ClassVar, Mapping, Any, List
 
 import settings
 from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
-from Options import Option, OptionError
+from Options import Option
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
@@ -38,11 +38,16 @@ class PokemonBWSettings(settings.Group):
         """If enabled, files inside the rom that are changed as part of the patching process (except for base patches)
         will be dumped into a zip file next to the patched rom (for debug purposes)."""
 
+    class EnableArm7ExpansionTest(settings.Bool):
+        """If enabled, the arm7 code file inside the rom gets expanded with dummy code. This is purely for testing
+        purposes and will be deprecated later."""
+
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
     dump_patched_files: DumpPatchedFiles | bool = False
+    enable_arm7_expansion_test: EnableArm7ExpansionTest | bool = False
 
 
 class PokemonBWWeb(WebWorld):

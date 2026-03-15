@@ -2,6 +2,7 @@ import io
 from typing import NamedTuple, TYPE_CHECKING
 from zipfile import ZipFile
 
+from settings import get_settings
 from ...ndspy.code import saveOverlayTable
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.narc import NARC
@@ -74,11 +75,13 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     files_dump.writestr("ov93", rom.files[ov93.fileID])
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
 
-    if version.version == (0, 3, 122):
+    if get_settings()["pokemon_bw_settings"]["enable_arm7_expansion_test"]:
         expansion_test(rom, world_package, bw_patch_instance, files_dump)
 
 
 def expansion_test(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch", files_dump: ZipFile):
+
+    is_white = rom.name[8:9] == b'W'
 
     overlay_table = rom.loadArm9Overlays()
     ov93 = overlay_table[93]
@@ -89,6 +92,6 @@ def expansion_test(rom: NintendoDSRom, world_package: str, bw_patch_instance: "P
     files_dump.writestr("ov93", rom.files[ov93.fileID])
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
 
-    expansion: bytes = pkgutil.get_data(world_package, "patch/expansion_test_arm7.bin")
-    rom.arm7 = rom.arm7 + bytes(0x2a000 - len(rom.arm7)) + expansion
+    expansion = pkgutil.get_data(world_package, "patch/expansion_test_arm7.bin")
+    rom.arm7 = rom.arm7 + bytes((0x2a000 if is_white else 0x29fe0) - len(rom.arm7)) + expansion
     files_dump.writestr("arm7", rom.arm7)
