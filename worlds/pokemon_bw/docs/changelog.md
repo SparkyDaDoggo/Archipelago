@@ -1,6 +1,12 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.23
+
+- Fixed hidden items (that are recurring in vanilla) not being checked
+- Fixed crashes in the Pokédex due to missing flags for alternate forms
+- Added `enable_arm7_expansion_test` setting
+
 ## 0.3.22
 
 - Fixed backwards compatibility issues due to the new options from 0.3.21

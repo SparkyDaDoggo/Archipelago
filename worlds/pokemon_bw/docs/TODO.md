@@ -5,8 +5,6 @@
 - [0.4] combined goals
 - [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
 - [0.4] allow encounter rate modifier to reduce slot count
-- ADD UNIT TESTS AFTER EVERYTHING
-- TEST EVERYTHING AFTERWARDS
 
 # Not urgent
 
