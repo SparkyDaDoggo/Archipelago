@@ -178,31 +178,24 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
             method_index = int(slot[-2:])  # 0, 1, ..., 11
             is_grass = region[-2:] in (" G", "DG", "RG")
             if copy_from[slot] is None and added_rates[method_index] < threshold:
-                for next_index_down in range(12 if is_grass else 5):
-                    if next_index_down == method_index:
-                        continue
-                    next_slot = table[slot].encounter_region + f" {next_index_down}"
-                    tracked_slot = track_down_copy_from(copy_from, next_slot)
-                    tracked_index = int(tracked_slot[-2:])
-                    # if < (threshold * 2 // 3) to distribute them more evenly
-                    if (
-                        tracked_slot != slot and
-                        added_rates[tracked_index] + added_rates[method_index] < threshold * 2 // 3
-                    ):
-                        copy_from[slot] = next_slot
-                        added_rates[tracked_index] += added_rates[method_index]
-                        added_rates[method_index] = 0
-                        break
-                else:
+                # combined threshold that gradually increases, so that merges are distributed more evenly
+                for combined_threshold in (threshold * step // 2 for step in range(1, 201)):
                     for next_index_down in range(12 if is_grass else 5):
                         if next_index_down == method_index:
                             continue
                         next_slot = table[slot].encounter_region + f" {next_index_down}"
-                        # If all slots in region were to copy this, then this wouldn't have <threshold added rate
-                        if track_down_copy_from(copy_from, next_slot) != slot:
+                        tracked_slot = track_down_copy_from(copy_from, next_slot)
+                        tracked_index = int(tracked_slot[-2:])
+                        if (
+                            tracked_slot != slot and
+                            added_rates[tracked_index] + added_rates[method_index] <= combined_threshold
+                        ):
                             copy_from[slot] = next_slot
-                            added_rates[next_index_down] += added_rates[method_index]
+                            added_rates[tracked_index] += added_rates[method_index]
                             added_rates[method_index] = 0
                             break
+                    else:
+                        continue
+                    break
 
     return copy_from
