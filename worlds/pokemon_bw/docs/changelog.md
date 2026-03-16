@@ -1,6 +1,11 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.24
+
+- Tweaked `Prevent rare encounters` to prevent accidentally merging everything to a single species
+- Fixed the current season (if randomized) always being set to the starting season upon reconnecting
+
 ## 0.3.23
 
 - Fixed hidden items (that are recurring in vanilla) not being checked
