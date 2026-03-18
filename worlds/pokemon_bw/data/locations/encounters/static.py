@@ -9,7 +9,7 @@ legendary: dict[str, StaticEncounterData] = {
     "Giant Chasm Static Encounter": StaticEncounterData((646, 0), (646, 0), "Giant Chasm Inner Cave", None, None),
     "Liberty Garden Static Encounter": StaticEncounterData((494, 0), (494, 0), "Liberty Garden", None, None),
     "Dragonspiral Tower Static Encounter": StaticEncounterData((643, 0), (644, 0), "Dragonspiral Tower", None, can_beat_ghetsis),
-    "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", None, can_beat_ghetsis),
+    "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", None, can_spawn_roamer),
 }
 
 gift: dict[str, StaticEncounterData] = {

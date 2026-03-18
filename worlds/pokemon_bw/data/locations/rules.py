@@ -154,6 +154,7 @@ can_go_to_relic_castle_basement: ExtendedRule = lambda state, world: state.can_r
 can_find_woman_on_village_bridge: ExtendedRule = lambda state, world: state.can_reach_region("Village Bridge", world.player)
 can_go_to_nimbasa_city: ExtendedRule = lambda state, world: state.can_reach_region("Nimbasa City", world.player)
 can_go_to_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton City", world.player)
+can_spawn_roamer: ExtendedRule = lambda state, world: state.can_reach_region("Route 10", world.player)
 
 
 # Encounter requirements
@@ -161,10 +162,10 @@ can_go_to_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_r
 has_forces_of_nature: ExtendedRule = lambda state, world: state.has_all(("Thundurus", "Tornadus"), world.player)
 has_celebi: ExtendedRule = lambda state, world: state.has("Celebi", world.player)
 has_legendary_beasts: ExtendedRule = lambda state, world: state.has_all(("Entei", "Raikou", "Suicune"), world.player)
-has_25_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.by_name, world.player) >= 25
-has_51_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.by_name, world.player) >= 51
-has_60_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.by_name, world.player) >= 60
-has_115_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.by_name, world.player) >= 115
+has_25_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 25
+has_51_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 51
+has_60_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 60
+has_115_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 115
 
 
 # Miscellaneous requirements
@@ -207,7 +208,7 @@ extended_rules_list: tuple = (
 
     can_beat_ghetsis, can_encounter_swords_of_justice, can_cut_dreamyard_tree, can_go_deeper_into_relic_castle,
     can_go_to_relic_castle_basement, can_find_woman_on_village_bridge, can_go_to_nimbasa_city,
-    can_go_to_mistralton_city,
+    can_go_to_mistralton_city, can_spawn_roamer,
 
     has_forces_of_nature, has_celebi, has_legendary_beasts,
     has_25_species, has_51_species, has_60_species, has_115_species,
