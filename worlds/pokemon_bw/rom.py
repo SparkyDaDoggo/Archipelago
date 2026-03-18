@@ -8,8 +8,6 @@ from settings import get_settings
 from worlds.Files import APAutoPatchInterface
 from typing import TYPE_CHECKING, Any, Dict, Callable
 
-from .patch.procedures import base_patch, season_patch, write_wild_pokemon, level_adjustments, write_trainer_pokemon, modify_rates
-
 if TYPE_CHECKING:
     from . import PokemonBWWorld
 
