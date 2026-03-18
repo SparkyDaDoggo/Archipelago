@@ -236,8 +236,8 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
     Every parameter can be specified as unweighted/weighted lists, "random",
     and "random-range-x-y" like usual range options.
 
-    - **Stats leniency** (0-1530) - The minimum difference between base stat totals of vanilla and randomized species
-        (for options with **Similar base stats** activated).
+    - **Stats leniency** (0-1530) - The starting maximum difference between base stat totals of vanilla and
+        randomized species (for options with **Similar base stats** activated).
     - **Rare encounters threshold** (1-100) - If **Prevent rare encounters** is included, this will become the minimum
         encounter chance (in percent) for each species.
     """
