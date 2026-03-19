@@ -39,7 +39,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
 
 
 def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
-          files_dump: zipfile.ZipFile) -> None:
+          files_dump: dict[str, bytes | bytearray]) -> None:
     from ...data.locations.encounters.areas import map_to_area
 
     narc = NARC(rom.getFileByName("a/1/2/6"))
@@ -76,14 +76,14 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                         pokemon_areas[dex_num-1][season_2][map_to_area[file_num]] |= area_flags[slot]
 
         narc.files[file_num] = bytes(game_file)
-        files_dump.writestr(f"a126/{file_num}", bytes(game_file))
+        files_dump[f"a126/{file_num}"] = bytes(game_file)
 
     for file_num in range(649):
         for season_array in pokemon_areas[file_num]:
             if not any(season_array):
                 season_array[0] = 1
         narc_areas.files[file_num] = b'\1' + b''.join(pokemon_areas[file_num])
-        files_dump.writestr(f"a178/{file_num}", narc_areas.files[file_num])
+        files_dump[f"a178/{file_num}"] = narc_areas.files[file_num]
 
     rom.setFileByName("a/1/2/6", narc.save())
     rom.setFileByName("a/1/7/8", narc_areas.save())

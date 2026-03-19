@@ -1,7 +1,6 @@
 import zipfile
 import orjson
 from typing import TYPE_CHECKING
-from zipfile import ZipFile
 
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.code import saveOverlayTable
@@ -54,7 +53,8 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         }))
 
 
-def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch", files_dump: ZipFile) -> None:
+def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
+          files_dump: dict[str, bytes | bytearray]) -> None:
     from ...data.locations.encounters.rates import tables
 
     rates_json: dict[str, str | list[list[int]]] = orjson.loads(bw_patch_instance.get_file("encounter_rates.json"))
@@ -80,5 +80,5 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     data[0x021a9e7b - overlay_offset] = 0xd2  # changing that one bne opcode to bcs
     ov21.data = data
     rom.files[ov21.fileID] = ov21.save(compress=True)
-    files_dump.writestr("ov21", rom.files[ov21.fileID])
+    files_dump[f"ov21"] = rom.files[ov21.fileID]
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
