@@ -1,10 +1,27 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.25
+
+- Fixed incorrect logic for getting access to the roamer
+- Fixed unit test failures on GitHub due to the `ndspy` library missing (next try)
+- Tweaked the option description for the `Stats leniency` parameter
+- Fixed the seen count locations not accounting for the `All Pokémon Seen` option
+- Made HM moves forgettable without the move deleter
+- Tweaked the `dump_patched_files` part of the patching process
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
+
 ## 0.3.24
 
 - Tweaked `Prevent rare encounters` to prevent accidentally merging everything to a single species
 - Fixed the current season (if randomized) always being set to the starting season upon reconnecting
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
 
 ## 0.3.23
 
