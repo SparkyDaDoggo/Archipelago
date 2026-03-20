@@ -12,7 +12,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)
-However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
+However, tracking worlds generated before 0.3.25 might show incorrect Dexsanity logic in UT
 
 ## 0.3.24
 
@@ -21,7 +21,7 @@ However, tracking worlds generated before this version might show incorrect Dexs
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)
-However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
+However, tracking worlds generated before 0.3.24 might show incorrect Dexsanity logic in UT
 
 ## 0.3.23
 
