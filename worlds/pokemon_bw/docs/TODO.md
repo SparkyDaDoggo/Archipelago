@@ -1,14 +1,18 @@
 # Important stuff
 
-- aha prizes problematic again
-- driftveil city sequence break, initial script not triggering in postgame?
-- strength required for trial chamber
+- make docs easier to read
+- make dexsanity option not support weighting, else plando won't work
 
 # 0.4.0
 
 ## APWorld
 
 - More modifiers
+  - Randomize Wild Pokémon
+    - Prevent overpowered pokémon 
+      - Other modifiers take priority, some op species are even required all the time
+      - Base stat total threshold adjustable
+    - Prevent early Wonder Guard and fixed HP attacks
   - Randomize Trainer Pokémon 
     - Prevent overpowered pokémon
       - Base stat total threshold adjustable
@@ -35,6 +39,7 @@
 - rework events NOW because spheres are weird without them
 - account for levels of moves needed for evolving (ancient power, ...)
 - reduce arceus and unown forms in randomization, maybe another flag in speciesdata to signal being used in ensure all obtainable
+- reword error messages in rom.py
 
 ## Rom
 
@@ -43,13 +48,11 @@
 - make mom stop the player at the door and say funny things for certain reusable tm choices
 - skip musical tutorial, because some players have problems
 - disable dig outside of battle when season patch included, as a temporary bandaid fix
-- desert resort south hidden item not checkable?
-- make item names in custom roadblock dialogues a distinguishable color
 - fix nacrene city sequence break (though is it actually broken?)
 - fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
 - opelucid city fly flag only set after ghetsis scene?
 - make massage lady in castelia repeatable
-- Fix locations in pokédex if something written to encounter tables
+- baker on village bridge not repeatable
 
 ## Both
 
@@ -78,6 +81,7 @@
 - change rules dict to being filled on the way
 - organize imports for type hints behind TYPE_CHECKING
 - pitch webhost and template yaml notes, both individual, but template copying from webhost by default
+- Fix locations in pokédex if something written to encounter tables
 - BizHawk 2.11 having issues with modded gen 5 roms
 - rename slot methods to cave/dust cloud/etc everywhere
 - gracidea seems to only work on fateful encounters, assembly needed

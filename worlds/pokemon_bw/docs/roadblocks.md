@@ -13,5 +13,6 @@
 - Clay will get rid of the spider webs in front of Chargestone Cave after obtaining the `Quake Badge` (kinda vanilla)
 - The worker in front of Twist Mountain requires the `Jet Badge` (kinda vanilla)
 - The grunts on route 8 require the `Light Stone` or `Dark Stone`, depending on the version you play (kinda vanilla)
+- The black belt in front of Challengers Cave vanishes when giving him the `Red Chain`
 - The officer in the gate between Opelucid City and route 11 requires `Oak's Letter`
 - Each badge gate requires ***its corresponding badge***
