@@ -1,5 +1,3 @@
-import collections
-import itertools
 from typing import TYPE_CHECKING
 
 from ...locations import PokemonBWLocation

@@ -18,7 +18,6 @@ def create(world: "PokemonBWWorld") -> None:
     from ...data.locations.ingame_items.hidden_items import table, seasonal
 
     dowsing_machine_rule: "AccessRule" = lambda state: state.has_any(("Dowsing Machine", "Out of logic"), world.player)
-    req_dwsn_mchn = "Require Dowsing Machine" in world.options.modify_logic
 
     def f(loc_data: "FlagLocationData") -> "AccessRule":
         return lambda state: loc_data.rule(state, world) and dowsing_machine_rule(state)
@@ -29,7 +28,7 @@ def create(world: "PokemonBWWorld") -> None:
                 r: "Region" = world.regions[data.region]
                 l: PokemonBWLocation = PokemonBWLocation(world.player, name, world.location_name_to_id[name], r)
                 l.progress_type = data.progress_type(world)
-                if req_dwsn_mchn:
+                if world.options.modify_logic.is_require_dowsing:
                     if data.rule is not None:
                         l.access_rule = f(data)
                     else:

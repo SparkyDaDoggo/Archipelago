@@ -51,6 +51,10 @@
 #   default vanilla
 #   one test for each other choice each
 #   one test for custom rates
+# experience_multiplier:
+#   irrelevant for generator
+# all_pokemon_seen:
+#   irrelevant for generator
 # master_ball_seller:
 #   default []
 #   one test for one seller and one standard cost

@@ -11,7 +11,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Modes: `Multiply`, `Add`, `Power`
   - Advanced method (cannot be shown on Webhost, but with more capabilities)
     - Same as simple, but accepts multiple chained calculations
-- Made `Randomize` automatically being included in wild and trainer pokémon randomization if other modifiers are included (@Darvitz)
 - Added a location group for season-dependant item locations
 - Added an item group for fossils and another one for TMs and HMs combined
 - Reworked how wild encounters are listed in the spoiler log
@@ -30,60 +29,140 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ### Bug fixes and technical stuff
 
-- Fixed `Pokémon Randomization Adjustments` crashing when given an empty dictionary
 - Changed some locations' names
 - Added a missing hidden item location in Chargestone Cave B2F
 - Fixed "Striaton City - TM from Fennel" not being able to contain an HM with certain options
 - Reduced frequency of different forms of the same pokémon in randomization
 - Wrote down levelup moveset data
-- Fixed constant unittest failures on GitHub due to the ndspy subfolder not existing
-- Fixed nondeterministic Dexsanity location creation
 - Made the Gracidea a useless key item due to it not working on non-fateful encounters
-- Fixed the static encounter in Trial Chamber incorrectly requiring HM04 Strength
 - Fixed small error with encounter plando
+- Tweaked many option descriptions
 
-## 0.3.16
+### Is this version compatible with older multiworld slots and save files?
+No
 
-- Fixed template yamls not working/being rejected
+## 0.3.25
 
-## 0.3.15
+- Fixed incorrect logic for getting access to the roamer
+- Fixed unit test failures on GitHub due to the `ndspy` library missing (next try)
+- Tweaked the option description for the `Stats leniency` parameter
+- Fixed the seen count locations not accounting for the `All Pokémon Seen` option
+- Made HM moves forgettable without the move deleter
+- Tweaked the `dump_patched_files` part of the patching process
 
-- Fixed custom and randomized encounter rate modification not working
-- Actually fixed Trial Chamber logic
-- Fixed encounter plando not working without randomized wild encounters
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
 
-## 0.3.14
+## 0.3.24
 
-- Added `Modify Encounter Rates` option
-- Added support for the Poptracker pack
-- Made reaching Nacrene City a logical requirement for friendship evolutions
-- Added form changes for Deerling, Sawsbuck, Rotom, and Deoxys to logic
-- Tweaked the `Adjust Levels` option for some earlier postgame maps
+- Tweaked `Prevent rare encounters` to prevent accidentally merging everything to a single species
+- Fixed the current season (if randomized) always being set to the starting season upon reconnecting
 
-- Fixed manifest missing the container version fields
-- Fixed unit test failures due to `Shuffle Badge Rewards` and `Shuffle TM Rewards` shenanigans
-- Fixed badge and TM/HM locations not being excludable or prioritizable
-- Fixed the Deerling forms location once again
-- Fixed logic of Trial Chamber (including the static Terrakion)
-- Fixed nondeterministic Dexsanity location creation
-- Fixed generation failures for certain combinations of Encounter Plando and randomization modifiers
-- Fixed small miscalculations with `Prevent rare encounters` in wild pokémon randomization
-- Fixed Sneasel not being able to evolve
-- Fixed rom not being automatically updated when it should
-- Fixed incorrect level adjustments
-- Fixed sage Zinzolin appearing twice in Cold Storage under certain circumstances
-- Fixed potentially not having 115 Unovan pokémon available when randomized
-- Fixed weird text box behavior of PC Master Ball seller
-- Removed different Arceus forms
-  - Also fixes a possible softlock due to Challenger's Rock
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
 
-## 0.3.13
+## 0.3.23
 
-- Made sure there is always at least one fighting type pokémon obtainable (for the challenge rock)
-- Fixed the sandwich minigame on Village Bridge not being repeatable on the same day
-- Fixed beating Ghetsis again triggering post-Alder stuff
-- (Hopefully) fixed not being able to enter the Pokémon League after beating Ghetsis
-- Added setting for dumping patched files (for debug purposes)
+- Fixed hidden items (that are recurring in vanilla) not being checked
+- Fixed crashes in the Pokédex due to missing flags for alternate forms
+- Added `enable_arm7_expansion_test` setting
+
+## 0.3.22
+
+- Fixed backwards compatibility issues due to the new options from 0.3.21
+
+## 0.3.21: "I'm going to make palex and Radis unemployed" update
+
+- Added `Experience Multiplier` option
+  - Also added a menu to the PC in Pokémon Centers to adjust it ingame
+- Added `All Pokémon Seen` option
+- Fixed compatibility issues with AP 0.6.7 release candidates
+- Fixed player names with too many non-Ascii characters leading to a corrupted rom
+- Tweaked the menu structure of the PC in Pokémon Centers
+- Fixed backwards compatibility issues with old yamls
+- Tweaked option descriptions to make them a bit more Options Creator-friendly
+- Reworked `any_badge` and `any_tm_hm` once again
+
+## 0.3.20: "The Pokédex is actually a tracker" update
+
+- Fixed the Pokédex seen count not being sent completely to Poptracker
+- Fixed unit test failures on GitHub due to the `ndspy` library missing
+- Fixed adding an Encounter Plando on a nonexistent slot leading to an error
+- Disabled Johto-exclusive balls from being shuffled into the itempool, as they're unusable ingame
+  - You can still send them via server commands though
+- Changed the trades bitmap for Poptracker to indicate the first time talking to the NPC instead of a finished trade
+- Actually fixed the sandwich minigame on Village Bridge not being repeatable on the same day
+- Fixed the Pokédex areas keeping the vanilla locations even if wild encounters are randomized or plando'd
+- Fixed the Master Ball seller in N's Castle soft locking the game
+
+## 0.3.19: DIG. IS. FINALLY. USABLE. update
+
+- Features/QoL:
+  - Added support for unweighted/weighted lists, `random`, and `random-range-x-y` to `Pokemon Randomization Adjustments`
+  - Made the Pokémon Fan Club chairman also give the 25+ levels check if shown a pokémon with 50+ levels growth
+    - Also made the (not modified) 99 levels reward give both the 25+ levels and 50+ levels checks
+  - Made Running Shoes being enabled right from the start
+    - This is only temporary, as the Running Shoes will be added as an AP item in a later update
+  - Made some in-game text related to roadblock items more accessible to new players
+    - Also added extra dialog for the Dreamyard traffic cone
+  - Removed the once-per-day limitation of the massage lady in Castelia City
+
+- Fixes:
+  - Fixed using Dig outside of battles (with `season_control` being set to any other than `vanilla`) crashing the game
+  - Fixed `any_badge` and `any_tm_hm` choices potentially removing incorrect Item instances form the multiworld itempool
+  - Fixed `any_badge` and `any_tm_hm` choices ignoring local items of other players
+  - Fixed adding `Consider trades` to `Modify Logic` occasionally leading to generation failures
+  - Fixed `Route 6 - Item from scientist for all Deerling forms` not having the extended hint if `Dexsanity` is set to 0
+  - Fixed extended hints being inconsistent with evolutions and trades
+  - Fixed `Nacrene City - Item from waitress in Café Warehouse` also giving the vanilla item
+  - Fixed the Aha quiz price locations sometimes being swapped and sometimes also giving the vanilla item
+  - Fixed sage Ryoku being invisible in Relic Castle B1F castleside if entered before the events in Dragonspiral Tower
+  - Fixed hidden items (that are normally reappearing) being detected by the Dowsing Machine again immediately
+    - However, they will still reappear after some time, which won't be fixed in the foreseeable future
+  - Fixed the evolution items seller in Shopping Mall Nine ending abruptly after selecting "Cancel"
+
+- Other stuff:
+  - Made `Consider trades` require either `Consider evolutions` or wild pokémon being randomized
+  - Renamed `CasefoldOptionSet` to `ToggleSet` and added QoL stuff to it on the development side
+  - Renamed multiple modifiers of some OptionSet options (do note that old yamls do **not** break)
+  - Raised minimum required AP version to 0.6.4
+  - Added bitmaps of statics and trades for Poptracker
+
+## 0.3.18: "But I did beat Cynthia..." update
+
+- Features:
+  - Added "Post-Ghetsis locations" group
+  - Made `Randomize Wild Pokemon` (and similar options) automatically add `Randomize` if any other modifier is added
+  - Added `Rare encounters threshold` key to `Pokémon Randomization Adjustments`, intended for the `Prevent rare encounters` modifier
+    - Also changed the default to 8, in order to prevent conflicts with the `Modify Encounter Rates` option
+  - Added an extended location hint for `Route 6 - Item from scientist for all Deerling forms`
+  - Added `Consider evolutions/static pokemon/trades/form change` to `Modify Logic`
+  - Added places of pre-evolutions and trade requests to extended hint information of Dexsanity checks
+
+- Fixes:
+  - Fixed the flag for beating Cynthia not being correctly sent to Poptracker
+  - Fixed multiple Dexsanity checks being rolled when not possible (or vice versa)
+    - This includes Pansage sometimes not having a check even if `Ensure all obtainable` is included
+  - Fixed `Pokémon Randomization Adjustments` crashing when given an empty dictionary
+  - Fixed Marvelous Bridge being forgotten by the `Adjust levels` option
+  - Fixed incorrect entrance logic of Moor of Icirrus
+
+- Other stuff:
+  - Improved filler item generation performance
+  - Tweaked option descriptions to make them friendlier towards new players
+  - Made `Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels` logically require access to Ghetsis
+  - Added static and trade encounters to slot data for Poptracker
+  - Added patch version range accepting
+  - Tweaked error messages for incompatible base ROMs in the patching process
+  - Added the requirement to reach Shopping Mall Nine for stats based evolutions
+  - Removed `Prevent rare encounters` being forbidden with certain `Modify Encounter Rates` values
+    - Instead, an OptionError is now raised when a combination of options leads to not having enough wild 
+      randomization slots for all guaranteed encounters
+  - Added `revert()` and `stack()` to `version.py`
+  - Made the Prof. Juniper Pokédex seen count locations check the national Pokédex instead of the regional one
+    - Also adjusted the apworld's logic to reflect that
 
 ## 0.3.17
 

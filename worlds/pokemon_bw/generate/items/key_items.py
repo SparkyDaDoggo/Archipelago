@@ -20,7 +20,7 @@ def generate_default(world: "PokemonBWWorld") -> list[PokemonBWItem]:
         for name, data in med_important.items()
     ]
 
-    if "Useless key items" in world.options.modify_item_pool:
+    if world.options.modify_item_pool.is_useless_key_items:
         items += [
             PokemonBWItem(name, data.classification(world), data.item_id, world.player)
             for name, data in useless.items()

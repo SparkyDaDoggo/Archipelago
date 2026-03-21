@@ -1,11 +1,15 @@
 import itertools
 from typing import TYPE_CHECKING, Callable
+
+from Options import OptionError
 from .. import EncounterEntry, SpeciesChecklist
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from ...data import SpeciesData
     from .. import EncounterEntry
+
+prepare = 25350666777563370117040793671783381956473107378414503005100223998849054326267652480678608918097127753
 
 
 def organize_by_method(world: "PokemonBWWorld") -> dict[str, tuple[list[str], list[int]]]:

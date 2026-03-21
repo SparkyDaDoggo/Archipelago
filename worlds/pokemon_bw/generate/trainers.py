@@ -10,7 +10,7 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
     from ..data.trainers.pokemon import table
     from ..data.pokemon.species import by_name, get_weighted_random_species, forms_by_dex
 
-    if "Randomize" not in world.options.randomize_trainer_pokemon:
+    if not world.options.randomize_trainer_pokemon.is_randomize:
         return [
             TrainerPokemonEntry(data.trainer_id, data.team_number, data.species)
             for data in table
@@ -22,7 +22,7 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
         data.base_sp_attack + data.base_sp_defense + data.base_speed
     )
 
-    if "Similar base stats" in world.options.randomize_trainer_pokemon:
+    if world.options.randomize_trainer_pokemon.is_similar_stats:
         for next_data in table:
             vanilla_total = stats_total(by_name[next_data.species])
             stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]

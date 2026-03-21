@@ -39,7 +39,10 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesData"]:
                 species_data: "SpeciesData" = species_by_name[species_name]
                 catchable_species_data[species_name] = species_data
 
-    f(world.static_encounter)
-    f(world.trade_encounter)
+    if world.options.modify_logic.is_consider_static:
+        f(world.static_encounter)
+    if world.options.modify_logic.is_consider_trades and (world.options.modify_logic.is_consider_static or
+                                                          world.options.randomize_wild_pokemon.is_randomize):
+        f(world.trade_encounter)
 
     return catchable_species_data

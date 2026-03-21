@@ -1,8 +1,5 @@
 # Important stuff
 
-- make docs easier to read
-- make dexsanity option not support weighting, else plando won't work
-
 # 0.4.0
 
 ## APWorld
@@ -32,27 +29,17 @@
     - Will still put every species that is required to be randomized and base stage into at least one slot
     - Ignored by Encounter Plando
   - Trainer pokémon
-- extended location hint for deerlings location and challenge rock
-- add info when wrong language detected in bizhawk_client
-- reword randomization adjustments option description
-- add info when choosing the wrong language in patching
-- rework events NOW because spheres are weird without them
 - account for levels of moves needed for evolving (ancient power, ...)
-- reduce arceus and unown forms in randomization, maybe another flag in speciesdata to signal being used in ensure all obtainable
-- reword error messages in rom.py
+- reduce unown forms in randomization, only include forms 0-5 in ensure all obtainable
+- combined goals
+- allow encounter rate modifier to reduce slot count
 
 ## Rom
 
 - fast travel npc in chargestone cave from south to north if battled N at north exit
-- maybe juniper seen count locations can check for national seen? look at cedric in mistralton city and both other dex seen locations
 - make mom stop the player at the door and say funny things for certain reusable tm choices
 - skip musical tutorial, because some players have problems
-- disable dig outside of battle when season patch included, as a temporary bandaid fix
-- fix nacrene city sequence break (though is it actually broken?)
-- fix reappearing hidden items still getting detected by dowsing machine because of original flags not being checked
 - opelucid city fly flag only set after ghetsis scene?
-- make massage lady in castelia repeatable
-- baker on village bridge not repeatable
 
 ## Both
 
@@ -61,32 +48,28 @@
 - Running shoes as an item, making mom cutscene on route 2 a check
 - maybe [redacted] is actually possible? but definitely with restrictions
 - Dowsing Machine as a hard requirement for hidden items
-- one case of goal not triggering reported in sync
-- master ball seller not showing up again?
 - bgm randomization
 - Early game cutscenes shortening option (skipping entire parts in script)
-- move evos need access to free move relearner
-- after everything else: check docs for up-to-date information, update tests, update location names in ut                             
+- move evos need access to free move relearner                          
+- revamp flags for static encounters so that resetting statics doesn't reset the flag
+- revamp season control to be toggleable between vanilla and changeable ingame
+- AFTER EVERYTHING ELSE: check docs for up-to-date information, update tests, update location names in ut   
 
 # Not urgent
 
-- dig with seasons patch crashes the game, not fixable?
 - look through scripts and remove space checking for specific items
 - fill evo method ids
 - more inclusion rules
-- complete levelup movesets
-- advertise on ds romhacking servers
 - post MonochromeScriptAssembler to ds romhacking servers
 - make simple script compiler, use for starting season, season npc vanish, tmhm hunt npc vanish, and other future stuff
 - change rules dict to being filled on the way
 - organize imports for type hints behind TYPE_CHECKING
-- pitch webhost and template yaml notes, both individual, but template copying from webhost by default
-- Fix locations in pokédex if something written to encounter tables
 - BizHawk 2.11 having issues with modded gen 5 roms
 - rename slot methods to cave/dust cloud/etc everywhere
 - gracidea seems to only work on fateful encounters, assembly needed
 - gym leader scripts control traded obedience level?
 - wingull grams overworld items not disappearing
+- extended location hint for challenge rock
 
 # Single reports, cannot recreate, need to wait for more reports
 
@@ -100,3 +83,5 @@
 - incredibly low catch chances? idk how that could be related to the apworld in any way
 - plando items having issues? plandoing basic badge into abyssal ruins sometimes raises fillerrors about this item not being placeable
 - liberty garden blackscreen
+- one case of goal not triggering reported in sync
+- master ball seller not showing up again?

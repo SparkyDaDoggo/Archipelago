@@ -44,39 +44,37 @@ def get_main_item_pool(world: "PokemonBWWorld") -> list[PokemonBWItem]:
 
 
 def generate_filler(world: "PokemonBWWorld") -> str:
-    from .data.items import berries, main_items, medicine
-
-    main_nested = [
-        main_items.filler,
-        main_items.filler,
-        main_items.filler if "Useful filler" not in world.options.modify_item_pool else [
-            main_items.filler,
-            main_items.min_once,
-            main_items.min_once,
-        ],
-        main_items.filler if "Ban bad filler" in world.options.modify_item_pool else [
+    if world.filler_nested is None:
+        from .data.items import berries, main_items, medicine
+        main_nested = [
             main_items.filler,
             main_items.filler,
-            main_items.filler,
-            main_items.mail,
-        ],
-    ]
-    berries_nested = [
-        berries.standard,
-        berries.standard,
-        berries.standard,
-        berries.niche,
-    ]
-
-    return random_choice_nested(
-        world.random, [
+            main_items.filler if not world.options.modify_item_pool.is_useful_filler else [
+                main_items.filler,
+                main_items.min_once,
+                main_items.min_once,
+            ],
+            main_items.filler if world.options.modify_item_pool.is_ban_bad_filler else [
+                main_items.filler,
+                main_items.filler,
+                main_items.filler,
+                main_items.mail,
+            ],
+        ]
+        berries_nested = [
+            berries.standard,
+            berries.standard,
+            berries.standard,
+            berries.niche,
+        ]
+        world.filler_nested = [
             main_nested,
             main_nested,
             berries_nested,
             medicine.table,
             medicine.table,
         ]
-    )
+    return random_choice_nested(world.random, world.filler_nested)
 
 
 def random_choice_nested(random: Random, nested: list[str | list | dict]) -> Any:
