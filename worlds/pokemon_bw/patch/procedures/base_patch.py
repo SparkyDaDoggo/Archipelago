@@ -77,12 +77,12 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
 
     # Apply forgettable HMs patch
-    arm9 = bytearray(codeCompression.decompress(rom.arm9))
-    arm9[0x1d310] = 0
-    arm9 = bytearray(codeCompression.compress(arm9, True))
-    arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")
-    rom.arm9 = bytes(arm9)
-    files_dump["arm9"] = rom.arm9
+    # arm9 = bytearray(codeCompression.decompress(rom.arm9))
+    # arm9[0x1d310] = 0
+    # arm9 = bytearray(codeCompression.compress(arm9, True))
+    # arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")
+    # rom.arm9 = bytes(arm9)
+    # files_dump["arm9"] = rom.arm9
 
     if get_settings()["pokemon_bw_settings"]["enable_arm7_expansion_test"]:
         expansion_test(rom, world_package, bw_patch_instance, files_dump)
