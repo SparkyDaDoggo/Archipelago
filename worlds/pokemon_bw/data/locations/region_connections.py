@@ -99,7 +99,7 @@ connections: dict[str, RegionConnectionData] = {
     "Mistralton Cave strength rock": RegionConnectionData("Mistralton Cave Entrance", "Mistralton Cave Inner", can_use_strength),
     "Route 7 tower": RegionConnectionData("Route 7", "Celestial Tower", None),
     "Icirrus City north": RegionConnectionData("Icirrus City", "Dragonspiral Tower", None),
-    "Route 8 north": RegionConnectionData("Route 8", "Moor of Icirrus", None),
+    "Route 8 north": RegionConnectionData("Route 8", "Moor of Icirrus", moor_of_icirrus),
     "Route 9 cave entrance": RegionConnectionData("Route 9", "Challenger's Cave", challengers_cave),
     "Route 13 north east": RegionConnectionData("Route 13", "Giant Chasm Outer", can_use_surf),
     "Giant Chasm outer cave entrance": RegionConnectionData("Giant Chasm Outer", "Giant Chasm Entrance Cave", None),
@@ -122,7 +122,7 @@ connections: dict[str, RegionConnectionData] = {
     "Jet Badge gate": RegionConnectionData("Badge Gate 6", "Badge Gate 7", has_jet_badge),
     "Freeze Badge gate": RegionConnectionData("Badge Gate 7", "Badge Gate 8", has_freeze_badge),
     "Legend Badge gate": RegionConnectionData("Badge Gate 8", "Victory Road", has_legend_badge),
-    "Victory Road cave behind boulder": RegionConnectionData("Victory Road", "Trial Chamber", can_encounter_swords_of_justice),
+    "Victory Road cave behind boulder": RegionConnectionData("Victory Road", "Trial Chamber", trial_chamber),
     "Victory Road north": RegionConnectionData("Victory Road", "Pokémon League", None),
     "Pokémon League champion room": RegionConnectionData("Pokémon League", "N's Castle", None),
 }

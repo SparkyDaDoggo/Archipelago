@@ -3,13 +3,13 @@ from ... import StaticEncounterData, TradeEncounterData
 
 legendary: dict[str, StaticEncounterData] = {
     "Guidance Chamber Static Encounter": StaticEncounterData((638, 0), (638, 0), "Mistralton Cave Inner", None, None),
-    "Trial Chamber Static Encounter": StaticEncounterData((639, 0), (639, 0), "Trial Chamber", None, None),
+    "Trial Chamber Static Encounter": StaticEncounterData((639, 0), (639, 0), "Trial Chamber", None, can_use_strength),
     "Rumination Field Static Encounter": StaticEncounterData((640, 0), (640, 0), "Pinwheel Forest East", None, can_encounter_swords_of_justice),
     "Abundant Shrine Static Encounter": StaticEncounterData((645, 0), (645, 0), "Abundant Shrine", randomized_wild, has_forces_of_nature),
     "Giant Chasm Static Encounter": StaticEncounterData((646, 0), (646, 0), "Giant Chasm Inner Cave", None, None),
     "Liberty Garden Static Encounter": StaticEncounterData((494, 0), (494, 0), "Liberty Garden", None, None),
     "Dragonspiral Tower Static Encounter": StaticEncounterData((643, 0), (644, 0), "Dragonspiral Tower", None, can_beat_ghetsis),
-    "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", None, can_beat_ghetsis),
+    "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", None, can_spawn_roamer),
 }
 
 gift: dict[str, StaticEncounterData] = {

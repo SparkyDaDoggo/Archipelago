@@ -1,4 +1,4 @@
-# All (player relevant) base modifications to the roms (as of 0.3.11)
+# All (player relevant) base modifications to the ROMs (as of 0.3.11)
 
 - New and changed roadblocks
   - Man hindering the player from entering route 3 now requires the parcel
@@ -49,6 +49,6 @@
 - Prevented gym events from being disabled when beating the gym leader
 - The grunt at Pokémon League teleporting you to N's castle now stays even after defeating Ghetsis
 - Certain NPCs are now always at their standard locations regardless of story events
-- Fossils can now be revived regardless of story events
 - Changed some key items' descriptions to reflect their purpose in AP
+- Fossils can now always be revived in the Nacrene City museum, regardless of current story events
 - Added a debug menu to the PC help menu

@@ -22,12 +22,17 @@ def generate_static_encounters(world: "PokemonBWWorld",
             encounters[name] = StaticEncounterEntry(
                 versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule
             )
-            species_checklist.check(by_id[versioned_species(data)])
+            if (
+                (data.inclusion_rule is None or data.inclusion_rule(world))
+                and world.options.modify_logic.is_consider_static
+            ):
+                species_checklist.check(by_id[versioned_species(data)])
 
     return encounters
 
 
-def generate_trade_encounters(world: "PokemonBWWorld", species_checklist: SpeciesChecklist) -> dict[str, TradeEncounterEntry]:
+def generate_trade_encounters(world: "PokemonBWWorld",
+                              species_checklist: SpeciesChecklist) -> dict[str, TradeEncounterEntry]:
     from ...data.locations.encounters.static import trade
     from ...data.pokemon.species import by_id
 
@@ -50,7 +55,9 @@ def generate_trade_encounters(world: "PokemonBWWorld", species_checklist: Specie
             versioned_wanted(data),
             data.encounter_region
         )
-        species_checklist.check(by_id[versioned_species(data)])
-        species_checklist.add(by_id[(versioned_wanted(data), 0)])
+        if (world.options.modify_logic.is_consider_trades and (world.options.modify_logic.is_consider_static
+                                                               or world.options.randomize_wild_pokemon.is_randomize)):
+            species_checklist.check(by_id[versioned_species(data)])
+            species_checklist.add(by_id[(versioned_wanted(data), 0)])
 
     return encounters

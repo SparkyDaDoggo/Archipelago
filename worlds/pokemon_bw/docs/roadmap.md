@@ -79,6 +79,7 @@ Version 1.0.0 will happen when certain important features are implemented.
 - Text Plando
   - Text extractor setting in patching process
 - Dowsing Machine as a hard requirement for hidden items
+- An NPC in Accumula Town telling you some information about the world
 
 ### Another update #1: Pokédex stuff
 
@@ -110,7 +111,6 @@ Version 1.0.0 will happen when certain important features are implemented.
   - Also, dynamic Xtransceiver item that automatically adds the correctly gendered version to the game
 - Relic castle room filling with sand unlockable via an item
 - Free fly destination
-- An NPC in Accumula Town telling you some information about the world
 
 ## Big update #1 (Stats update, name WIP, required for core)
 
@@ -148,6 +148,8 @@ Version 1.0.0 will happen when certain important features are implemented.
 - Trainer randomization
 - Trainer plando
 - Trashsanity
+- Boss fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame))
+- Story fight Plando (Cheren, Bianca, N, ...)
 
 ## Big update #4 (Multiworld update, name WIP)
 

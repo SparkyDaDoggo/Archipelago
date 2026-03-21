@@ -53,7 +53,7 @@
 - move evos need access to free move relearner                          
 - revamp flags for static encounters so that resetting statics doesn't reset the flag
 - revamp season control to be toggleable between vanilla and changeable ingame
-- AFTER EVERYTHING ELSE: check docs for up-to-date information, update tests, update location names in ut   
+- AFTER EVERYTHING ELSE: check docs for up-to-date information, update credits, update tests, update location names in ut   
 
 # Not urgent
 

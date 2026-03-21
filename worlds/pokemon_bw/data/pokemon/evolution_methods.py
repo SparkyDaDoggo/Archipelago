@@ -11,6 +11,7 @@ can_reach_magnetic_area: ExtendedRule = lambda state, world: state.can_reach_reg
 can_reach_moss_rock: ExtendedRule = lambda state, world: state.can_reach_region("Pinwheel Forest West", world.player)
 can_reach_ice_rock: ExtendedRule = lambda state, world: state.can_reach_region("Twist Mountain", world.player)
 can_reach_nacrene_city: ExtendedRule = lambda state, world: state.can_reach_region("Nacrene City", world.player)
+can_reach_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton City", world.player)
 
 can_buy_item_castelia: ExtendedRule = lambda state, world: state.can_reach_region("Castelia City", world.player)
 can_get_item_chargestone: ExtendedRule = lambda state, world: state.can_reach_region("Chargestone Cave", world.player)
@@ -48,7 +49,7 @@ can_buy_item: dict[int, ExtendedRule] = {
 
 in_vanilla_east: ExtendedRule = lambda state, world: (
     state.can_reach_region("Route 15", world.player)
-    and "Wild" not in world.options.adjust_levels
+    and not world.options.adjust_levels.is_wild
 )
 can_challenge_alder: ExtendedRule = lambda state, world: state.can_reach_region("N's Castle", world.player)
 between_ghetsis_and_alder: ExtendedRule = lambda state, world: (
@@ -81,6 +82,12 @@ is_in_appropriate_region: dict[int, ExtendedRule] = {  # Artificial logic so tha
     19: can_challenge_alder,
 }
 
+
+def stats_lvlup(value: int) -> ExtendedRule:
+    return lambda state, world: (is_in_appropriate_region[value//5](state, world)
+                                 and state.can_reach_region("Route 9", world.player))
+
+
 methods: dict[str, EvolutionMethodData] = {
     "Level up": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),
     "Stone": EvolutionMethodData(0, lambda value: can_buy_item[value]),
@@ -93,14 +100,14 @@ methods: dict[str, EvolutionMethodData] = {
     "Trade with item": EvolutionMethodData(0, None),  # Removed
     "Trade Karrablast Shelmet": EvolutionMethodData(0, None),  # Removed
     "Magnetic area": EvolutionMethodData(0, lambda value: can_reach_magnetic_area),
-    "Level up with move": EvolutionMethodData(0, lambda value: always_possible),  # When randomized evolutions, then move id must be taken from level up moveset
+    "Level up with move": EvolutionMethodData(0, lambda value: can_reach_mistralton_city),  # When randomized evolutions, then move id must be taken from level up moveset
     "Level up moss rock": EvolutionMethodData(0, lambda value: can_reach_moss_rock),
     "Level up ice rock": EvolutionMethodData(0, lambda value: can_reach_ice_rock),
     "Level up item day": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Always paired with night
     "Level up item night": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Always paired with day
-    "Level up higher defense": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up higher attack": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up equal physical": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
+    "Level up higher defense": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up higher attack": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up equal physical": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
     "Level up Silcoon": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
     "Level up Cascoon": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
     "Level up Ninjask": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),

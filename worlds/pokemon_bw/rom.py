@@ -1,7 +1,6 @@
 import os
 import pathlib
 import zipfile
-from io import BytesIO
 
 import Utils
 from settings import get_settings

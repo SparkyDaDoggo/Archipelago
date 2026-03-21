@@ -32,12 +32,12 @@ vanilla: dict[str, ItemData] = {
     "Pal Pad": ItemData(0x01B5, always_useful),
     "Bicycle": ItemData(0x01C2, always_useful),
     "Vs. Recorder": ItemData(0x01D1, always_useful),
+    "Gracidea": ItemData(0x01D2, always_progression),
     "Dowsing Machine": ItemData(0x01D7, dowsing_machine_logic),
     "Prop Case": ItemData(0x0242, always_useful),
 }
 
 useless: dict[str, ItemData] = {
-    "Gracidea": ItemData(0x01D2, always_filler),  # Only works on fateful encounters
     "Rule Book": ItemData(0x01AE, always_filler),
     "Poké Radar": ItemData(0x01AF, always_filler),
     "Point Card": ItemData(0x01B0, always_filler),

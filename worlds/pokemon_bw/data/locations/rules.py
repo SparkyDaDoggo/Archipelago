@@ -105,18 +105,18 @@ can_set_other_than_winter: ExtendedRule = lambda state, world: (
     )
 )
 
-can_use_strength_and_set_other_than_winter: ExtendedRule = lambda state, world: (
-    can_use_strength(state, world) and can_set_other_than_winter(state, world)
-)
-
 can_catch_all_deerlings: ExtendedRule = lambda state, world: (
     (
-        "Randomize" not in world.options.randomize_wild_pokemon
+        not world.options.randomize_wild_pokemon.is_randomize
         and world.options.season_control == "vanilla"
     )
     or state.has_all((
         "Deerling (Spring)", "Deerling (Summer)", "Deerling (Autumn)", "Deerling (Winter)"
     ), world.player)
+)
+
+can_use_strength_and_set_other_than_winter: ExtendedRule = lambda state, world: (
+    can_use_strength(state, world) and can_set_other_than_winter(state, world)
 )
 
 encounter_can_set_spring: ExtendedRule = lambda state, world: (
@@ -153,6 +153,8 @@ can_go_deeper_into_relic_castle: ExtendedRule = lambda state, world: state.can_r
 can_go_to_relic_castle_basement: ExtendedRule = lambda state, world: state.can_reach_region("Relic Castle Tower Lower Floors", world.player)
 can_find_woman_on_village_bridge: ExtendedRule = lambda state, world: state.can_reach_region("Village Bridge", world.player)
 can_go_to_nimbasa_city: ExtendedRule = lambda state, world: state.can_reach_region("Nimbasa City", world.player)
+can_go_to_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton City", world.player)
+can_spawn_roamer: ExtendedRule = lambda state, world: state.can_reach_region("Route 10", world.player)
 
 
 # Encounter requirements
@@ -160,10 +162,10 @@ can_go_to_nimbasa_city: ExtendedRule = lambda state, world: state.can_reach_regi
 has_forces_of_nature: ExtendedRule = lambda state, world: state.has_all(("Thundurus", "Tornadus"), world.player)
 has_celebi: ExtendedRule = lambda state, world: state.has("Celebi", world.player)
 has_legendary_beasts: ExtendedRule = lambda state, world: state.has_all(("Entei", "Raikou", "Suicune"), world.player)
-has_25_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.unova_species, world.player) >= 25
-has_51_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.unova_species, world.player) >= 51
-has_60_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.unova_species, world.player) >= 60
-has_115_species: ExtendedRule = lambda state, world: state.count_from_list_unique(species.unova_species, world.player) >= 115
+has_25_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 25
+has_51_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 51
+has_60_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 60
+has_115_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 115
 
 
 # Miscellaneous requirements
@@ -177,12 +179,15 @@ has_any_tm_hm: ExtendedRule = lambda state, world: (
 )
 
 striaton_hidden_item: ExtendedRule = lambda state, world: state.can_reach_region("Route 3", world.player) or can_use_surf(state, world)
-
-dark_cave: ExtendedRule = lambda state, world: "Require Flash" not in world.options.modify_logic or state.has("Out of logic", world.player) or can_use_flash(state, world)
-
+dark_cave: ExtendedRule = lambda state, world: not world.options.modify_logic.is_require_flash or state.has("Out of logic", world.player) or can_use_flash(state, world)
 challengers_cave: ExtendedRule = lambda state, world: has_red_chain(state, world) and dark_cave(state, world)
-
 mistralton_cave: ExtendedRule = lambda state, world: can_use_surf(state, world) and dark_cave(state, world)
+trial_chamber: ExtendedRule = lambda state, world: can_encounter_swords_of_justice(state, world) and can_use_strength(state, world)
+moor_of_icirrus: ExtendedRule = lambda state, world: can_use_surf(state, world) or (
+    state.can_reach_region("Nimbasa City", world.player) and (
+        world.options.season_control == "changeable" or state.has_any(("Spring", "Summer", "Autumn"), world.player)
+    )
+)
 
 extended_rules_list: tuple = (
     can_use_strength, can_use_surf, can_use_cut, can_use_waterfall, can_use_dive, can_use_flash,
@@ -203,11 +208,13 @@ extended_rules_list: tuple = (
 
     can_beat_ghetsis, can_encounter_swords_of_justice, can_cut_dreamyard_tree, can_go_deeper_into_relic_castle,
     can_go_to_relic_castle_basement, can_find_woman_on_village_bridge, can_go_to_nimbasa_city,
+    can_go_to_mistralton_city, can_spawn_roamer,
 
     has_forces_of_nature, has_celebi, has_legendary_beasts,
     has_25_species, has_51_species, has_60_species, has_115_species,
 
-    has_fighting_type_species, has_any_tm_hm, striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave,
+    has_fighting_type_species, has_any_tm_hm,
+    striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave, trial_chamber, moor_of_icirrus,
 )
 
 
@@ -215,4 +222,4 @@ extended_rules_list: tuple = (
 
 changeable_seasons: InclusionRule = lambda world: world.options.season_control != "vanilla"
 disabled: InclusionRule = lambda world: False  # Due to missing wild randomization
-randomized_wild: InclusionRule = lambda world: "Randomize" in world.options.randomize_wild_pokemon
+randomized_wild: InclusionRule = lambda world: world.options.randomize_wild_pokemon.is_randomize

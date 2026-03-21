@@ -10,11 +10,11 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
     # Returns ({to be checked species}, {already checked species})
     # Species needed for trade are added in generate_trade_encounters()
     from ...data.pokemon.species import by_name, by_id
-    from ...data.pokemon.pokedex import unovan_pokemon
+    from ...data.pokemon.pokedex import by_number
 
-    if "Randomize" not in world.options.randomize_wild_pokemon:
+    if not world.options.randomize_wild_pokemon.is_randomize:
         return SpeciesChecklist([])
-    elif "Ensure all obtainable" in world.options.randomize_wild_pokemon:
+    elif world.options.randomize_wild_pokemon.is_ensure_all:
         return SpeciesChecklist([species for species in by_name])
     else:  # Just "Randomize"
         always_required = [
@@ -24,15 +24,15 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             "Suicune",
         ]
 
-        unova = [num for num in unovan_pokemon]
-        world.random.shuffle(unova)
-        for num in unova:
+        pool_115 = list(by_number)
+        world.random.shuffle(pool_115)
+        for num in pool_115:
             spec = by_id[(num, 0)]
             if "Fighting" in (by_name[spec].type_1, by_name[spec].type_2):
                 always_required.append(spec)
-                unova.remove(num)
+                pool_115.remove(num)
                 break
-        always_required += [by_id[(num, 0)] for num in unova[:114]]
+        always_required += [by_id[(num, 0)] for num in pool_115[:114]]
 
         unova_guaranteed = [
             "Tornadus",
@@ -103,12 +103,12 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
     else:
         encounter_rates = rates.tables[world.options.modify_encounter_rates.current_key]
 
-    if "Randomize" not in world.options.randomize_wild_pokemon:
+    if not world.options.randomize_wild_pokemon.is_randomize:
         return copy_from
 
-    merge_phenomenons = "Merge phenomenons" in world.options.randomize_wild_pokemon
-    area_1_to_1 = "Area 1-to-1" in world.options.randomize_wild_pokemon
-    prevent_rare_encounters = "Prevent rare encounters" in world.options.randomize_wild_pokemon
+    merge_phenomenons = world.options.randomize_wild_pokemon.is_merge_phenomena
+    area_1_to_1 = world.options.randomize_wild_pokemon.is_area_1_to_1
+    prevent_rare_encounters = world.options.randomize_wild_pokemon.is_prevent_rare
     versioned_species = (
         (lambda d: d.species_white)
         if world.options.version == "white"
@@ -140,6 +140,7 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
 
     if prevent_rare_encounters:
         # {region: [slot1 rate, slot2 rate, ...]}
+        threshold = world.options.pokemon_randomization_adjustments["Rare encounters threshold"]
         region_added_rates: dict[str, list[int]] = {}
         for slot in copy_from:
             region = table[slot].encounter_region
@@ -157,34 +158,28 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
                 region_added_rates[region][method_index] = 0
         for slot in copy_from:  # StrCity - FR 0, 1, ...11
             region = table[slot].encounter_region  # StrCity - FR
+            added_rates = region_added_rates[region]
             method_index = int(slot[-2:])  # 0, 1, ..., 11
             is_grass = region[-2:] in (" G", "DG", "RG")
-            if copy_from[slot] is None and region_added_rates[region][method_index] < 10:
-                for next_index_down in range(12 if is_grass else 5):
-                    if next_index_down == method_index:
-                        continue
-                    next_slot = table[slot].encounter_region + f" {next_index_down}"
-                    tracked_slot = track_down_copy_from(copy_from, next_slot)
-                    tracked_index = int(tracked_slot[-2:])
-                    # if < 15 to distribute them more evenly
-                    if (
-                        tracked_slot != slot and
-                        region_added_rates[region][tracked_index] + region_added_rates[region][method_index] < 15
-                    ):
-                        copy_from[slot] = next_slot
-                        region_added_rates[region][tracked_index] += region_added_rates[region][method_index]
-                        region_added_rates[region][method_index] = 0
-                        break
-                else:
+            if copy_from[slot] is None and added_rates[method_index] < threshold:
+                # combined threshold that gradually increases, so that merges are distributed more evenly
+                for combined_threshold in (threshold * step // 2 for step in range(1, 201)):
                     for next_index_down in range(12 if is_grass else 5):
                         if next_index_down == method_index:
                             continue
                         next_slot = table[slot].encounter_region + f" {next_index_down}"
-                        # If all slots in region were to copy this, then this wouldn't have < 10 added rate
-                        if track_down_copy_from(copy_from, next_slot) != slot:
+                        tracked_slot = track_down_copy_from(copy_from, next_slot)
+                        tracked_index = int(tracked_slot[-2:])
+                        if (
+                            tracked_slot != slot and
+                            added_rates[tracked_index] + added_rates[method_index] <= combined_threshold
+                        ):
                             copy_from[slot] = next_slot
-                            region_added_rates[region][next_index_down] += region_added_rates[region][method_index]
-                            region_added_rates[region][method_index] = 0
+                            added_rates[tracked_index] += added_rates[method_index]
+                            added_rates[method_index] = 0
                             break
+                    else:
+                        continue
+                    break
 
     return copy_from

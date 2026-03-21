@@ -12,19 +12,24 @@ if TYPE_CHECKING:
 prepare = 25350666777563370117040793671783381956473107378414503005100223998849054326267652480678608918097127753
 
 
-def organize_by_method(world: "PokemonBWWorld") -> dict[str, tuple[list[str], list[int]]]:
-    from ...data.pokemon.species import by_id
+def organize_by_method(world: "PokemonBWWorld") -> dict[str, list[int]]:
     # {method: ([species names], [dex numbers])}
-    ret: dict[str, tuple[list[str], list[int]]] = {}
+    ret: dict[str, list[int]] = {}
     for slot, data in world.wild_encounter.items():
         if data.encounter_region not in ret:
-            ret[data.encounter_region] = ([], [])
-        spec = by_id[data.species_id]
-        if spec not in ret[data.encounter_region][0]:
-            ret[data.encounter_region][0].append(spec)
-        if data.species_id[0] not in ret[data.encounter_region][1]:
-            ret[data.encounter_region][1].append(data.species_id[0])
+            ret[data.encounter_region] = []
+        if data.species_id[0] not in ret[data.encounter_region]:
+            ret[data.encounter_region].append(data.species_id[0])
+    for static_slot, entry in world.static_encounter.items():
+        ret[static_slot] = [entry.species_id[0]]
+    for trade_slot, trade_entry in world.trade_encounter.items():
+        ret[trade_slot] = [trade_entry.species_id[0]]
     return ret
+
+
+def organize_trades(world: "PokemonBWWorld") -> dict[str, tuple[int, int]]:
+    return {trade_slot: (trade_entry.species_id[0], trade_entry.wanted_dex_number)
+            for trade_slot, trade_entry in world.trade_encounter.items()}
 
 
 def generate_wild_encounters(world: "PokemonBWWorld",
@@ -41,7 +46,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         else (lambda d: d.species_black)
     )
 
-    if "Randomize" not in world.options.randomize_wild_pokemon:
+    if not world.options.randomize_wild_pokemon.is_randomize:
         return {
             name: EncounterEntry(
                 versioned_species(table[name]), table[name].encounter_region, table[name].file_index, False
@@ -67,21 +72,23 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     world.random.shuffle(copy_slots)
 
     if len(species_checklist) > len(logic_slots):
-        for species in species_checklist.copy_list():
-            species_data = by_name[species]
-            for evolution in species_data.evolutions:
-                if evolution[0] != "Level up with party member":
-                    species_checklist.check(evolution[2])
+        if world.options.modify_logic.is_consider_evos:
+            for species in species_checklist.copy_list():
+                species_data = by_name[species]
+                for evolution in species_data.evolutions:
+                    if evolution[0] != "Level up with party member":
+                        species_checklist.check(evolution[2])
         if len(species_checklist) > len(logic_slots):
-            raise Exception(
+            raise OptionError(
                 f"More required species for randomized wild encounter than slots they could be placed in "
-                f"for player {world.player_name}: {len(species_checklist)} > {len(logic_slots)}"
+                f"for player {world.player_name}: {len(species_checklist)} > {len(logic_slots)}.\n"
+                f"Please remove some restrictive options or tweak the \"Modify Logic\" option."
             )
 
-    similar_base_stats = "Similar base stats" in world.options.randomize_wild_pokemon
-    type_themed = "Type themed areas" in world.options.randomize_wild_pokemon
-    prevent_overpowered = "Prevent overpowered pokemon" in world.options.randomize_wild_pokemon
-    prevent_bad_early = "Prevent bad early pokemon" in world.options.randomize_wild_pokemon
+    similar_base_stats = world.options.randomize_wild_pokemon.is_similar_stats
+    type_themed = world.options.randomize_wild_pokemon.is_type_themed_areas
+    prevent_overpowered = world.options.randomize_wild_pokemon.is_prevent_overpowered
+    prevent_bad_early = world.options.randomize_wild_pokemon.is_prevent_bad_early
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
     area_types: dict[str, str] = {}
     stats_total: Callable[["SpeciesData"], int] = lambda data: (
@@ -175,6 +182,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
             for key, value in forms_by_dex.items()
         }
     any_species_by_type: dict[str, dict[int, list[tuple[str, "SpeciesData"]]]] = {}
+    if not world.random.randint(0, 999) and len(set(w.game for w in world.multiworld.worlds.values())) > 3:
+        print(world.prepare_text(prepare))
     for forms_list in any_species.values():
         for spe, data in forms_list:
             for typ in (data.type_1, data.type_2):
@@ -185,8 +194,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 else:
                     any_species_by_type[typ][data.dex_number].append((spe, data))
     if type_themed and len(any_species_by_type) < 17:
-        raise Exception("At least one type has all its species prevented in wild randomization due to some option. "
-                        "Please remove some restrictions in your yaml.")
+        raise OptionError("At least one type has all its species prevented in wild randomization due to some option. "
+                          "Please remove some restrictions in your yaml.")
     for slot in itertools.chain(logic_slots, other_slots):
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
         region = table[slot].encounter_region

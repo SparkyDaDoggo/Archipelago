@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 import settings
 from BaseClasses import PlandoOptions
-from Options import (Choice, PerGameCommonOptions, OptionSet, Range, Toggle,
+from Options import (Choice, PerGameCommonOptions, Range, Toggle,
                      PlandoTexts, OptionError, Option, OptionCounter, OptionDict, StartInventoryPool)
 from .data.common_options import ToggleSet, ExtendedOptionCounter
 
@@ -895,18 +895,21 @@ class AdjustLevels(ToggleSet):
     is_trainer = True
 
 
-class ModifyLevels(OptionCounter):
+class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much plando
     """
-    Modifies the level of all trainer and/or wild pokemon. You can choose a certain mode for each type of encounter.
-    This is applied **after Adjust Levels**.
+    Modifies the level of all wild and trainer pokemon. You can choose a certain mode for each type of encounter.
+    This is applied AFTER **Adjust Levels**.
     The mode decides how to apply the value to every pokemon. You can write either the name of the mode
     or the corresponding number:
-    - **Multiply** or **0** - Multiply each level with value being seen as a percentage, i.e. 100 means no modifying. Allowed values are in range 1 to 10000.
-    - **Add** or **1** - Add the value directly to each level (with negative values being allowed), i.e. 0 means no modifying. Allowed values are in range -99 to 99.
-    - **Power** or **2** - Raise each level to the power of the value (which is seen as a percentage), i.e. 100 means no modifying. Allowed values are in range 1 to 700.
+    - **Multiply** or **0** - Multiply each level with value being seen as a percentage, i.e. 100 means no modifying.
+        Allowed values are in range 1 to 10000.
+    - **Add** or **1** - Add the value directly to each level (with negative values being allowed), i.e. 0 means
+        no modifying. Allowed values are in range -99 to 99.
+    - **Power** or **2** - Raise each level to the power of the value (which is seen as a percentage), i.e. 100 means
+        no modifying. Allowed values are in range 1 to 700.
 
-    An alternative way with more capabilities is to write this as a list with multiple key names (like most plando options).
-    Every entry must include the keys `type`, `mode`, and `value`.
+    An alternative way with more capabilities is to write this as a list with multiple key names (similar to most
+    plando options). Every entry must include the keys `type`, `mode`, and `value`.
     All entries are individual calculations that are applied one after another. Be aware of rounding errors.
     Here is an example of how an entry can look like:
     ```

@@ -18,7 +18,7 @@ while still using the well-known grid-based movement mechanics and battle UI.
 - [Credits](credits.md)
 - [Features roadmap](roadmap.md)
 - [Various options guides](options%20guides.md)
-  - Including `Encounter Plando` and upcoming features in 0.4.0
+  - Including `Encounter Plando`, `Modify Encounter Rates`, and upcoming features in 0.4.0
 
 ## Known bugs (might be outdated)
 

@@ -97,17 +97,18 @@ Pokemon Black and White:
 
 The base encounter rates for all wild encounter slots are (in %) usually [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1] 
 for (Dark/Rustling) Grass, [60, 30, 5, 4, 1] for Surfing (Rippling), and [40, 40, 15, 4, 1] for Fishing (Rippling).
-Using the `Modify Encounter Rates` option, you can change those rates to either a few preset rates, a random distribution,
-or a custom list.
+Using the `Modify Encounter Rates` option, you can change those rates to either a few preset rates, a random 
+distribution, or a custom list.
 
 ## How do I use it?
 
-Instead of just writing a single option name like `vanilla` or `try_normalized`, you need to provide key-value pairs **as a choice**.
-"As a choice" means that you'll need to pack it into a list or as a weighted choice, see the examples down below for how to do it.
-To change (Dark/Rustling) Grass rates, use the `Grass` key. Surfing/Fishing (Rippling) rates need the `Surfing`/`Fishing` key respectively.
-Though you are not required to always use all keys; you can leave any of them as vanilla if you want.
-The value has to be a list of positive integers. The `Grass` key needs exactly 12 numbers, while the others need exactly 5 numbers.
-All numbers in a list need to add up to exactly 100 and need to be greater than 0.
+Instead of just writing a single option name like `vanilla` or `try_normalized`, you need to provide key-value pairs 
+**as a choice**. "As a choice" means that you'll need to pack it into a list or as a weighted choice, see the examples 
+down below for how to do it. To change (Dark/Rustling) Grass rates, use the `Grass` key. Surfing/Fishing (Rippling) 
+rates need the `Surfing`/`Fishing` key respectively. Though you are not required to always use all keys; you can leave 
+any of them as vanilla if you want. The value has to be a list of positive integers. The `Grass` key needs exactly 12 
+numbers, while the others need exactly 5 numbers. All numbers in a list need to add up to exactly 100 and need to be 
+greater than 0.
 
 ## Examples on how using this option could look like
 
