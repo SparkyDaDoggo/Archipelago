@@ -1189,7 +1189,7 @@ class ExpMultiplier(Range):
 
 class AllPokemonSeen(Toggle):
     """
-    Start will all pokemon seen in your Pokedex.
+    Start with all pokemon seen in your Pokedex.
     This allows you to see where the pokemon can be encountered in the wild.
     """
     display_name = "All Pokemon Seen"

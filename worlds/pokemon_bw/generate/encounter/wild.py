@@ -97,7 +97,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     )
 
     # Devolve overpowered species
-    if prevent_overpowered:
+    if prevent_overpowered and world.options.modify_logic.is_consider_evos:
         for name, spec_data in by_name.items():
             spec_total = stats_total(spec_data)
             for evo_tuple in spec_data.evolutions:

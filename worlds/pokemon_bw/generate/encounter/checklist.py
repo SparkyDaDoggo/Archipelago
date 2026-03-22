@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 from .. import SpeciesChecklist
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
+    from ...data import SpeciesData
 
 
 def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
@@ -22,19 +23,6 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             "Raikou",
             "Entei",
             "Suicune",
-        ]
-
-        pool_115 = list(by_number)
-        world.random.shuffle(pool_115)
-        for num in pool_115:
-            spec = by_id[(num, 0)]
-            if "Fighting" in (by_name[spec].type_1, by_name[spec].type_2):
-                always_required.append(spec)
-                pool_115.remove(num)
-                break
-        always_required += [by_id[(num, 0)] for num in pool_115[:114]]
-
-        unova_guaranteed = [
             "Tornadus",
             "Thundurus",
             "Deerling (Spring)",
@@ -42,9 +30,41 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             "Deerling (Autumn)",
             "Deerling (Winter)",
         ]
-        for species in unova_guaranteed:
-            if species not in always_required:
-                always_required.append(species)
+        both_types: Callable[["SpeciesData"], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
+        # Ensure one fighting type for challenge rock
+        for num in range(len(by_number)):
+            spec = by_id[(num, 0)]
+            if "Fighting" in both_types(by_name[spec]):
+                if spec not in always_required:
+                    always_required.append(spec)
+                break
+
+        if not world.options.all_pokemon_seen:
+            # Get list of ALL pokémon
+            pool_115 = list((spec, data) for spec, data in by_name.items() if not data.form)
+            # Removes what's already ensured
+            for spec in always_required:
+                spec_tup = (spec, by_name[spec])
+                if spec_tup in pool_115:
+                    pool_115.remove(spec_tup)
+            # Random picking begins here
+            world.random.shuffle(pool_115)
+            # Remove overpowered stuff and save it in case of not enough non-overpowered
+            underpowered, overpowered = [], []
+            if world.options.randomize_wild_pokemon.is_prevent_overpowered:
+                stats_total: Callable[["SpeciesData"], int] = lambda data: (
+                    data.base_hp + data.base_attack + data.base_defense +
+                    data.base_sp_attack + data.base_sp_defense + data.base_speed
+                )
+                threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
+                for spec_tup in pool_115:
+                    (underpowered if stats_total(spec_tup[1]) <= threshold else overpowered).append(spec_tup)
+                pool_115 = underpowered
+            # Fill with random to get 115 total
+            always_required += (pool_115[i] for i in range(min(115-len(always_required), len(pool_115))))
+            # Add overpowered stuff in case of not enough non-overpowered
+            if len(always_required) < 115:
+                always_required += (overpowered[i] for i in range(115-len(always_required)))
 
         if isinstance(world.options.dexsanity.value, list):
             for dex_num in world.options.dexsanity.value:
