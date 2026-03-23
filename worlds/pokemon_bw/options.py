@@ -132,6 +132,11 @@ class RandomizeTrainerPokemon(ToggleSet):
 
     - **Randomize** - Toggles trainer pokemon being randomized. Automatically added if any other modifier is added.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
+    - **Prevent overpowered pokemon** - Prevents trainers from having pokemon with a base stats total above an
+        adjustable threshold. Takes priority over most other modifiers.
+    - **Evolve when possible** - Tries to evolve pokemon if they are able to (based on their level). Pokémon that
+        evolve through other methods are evolved at level 25.
+    - **Force fully evolved** - Always fully evolves pokemon above an adjustable level threshold.
     """
     # - **Type themed** - All pokemon of a trainer have to share at least one randomly chosen type.
     #                           Gym leaders will always have themed teams, regardless of this modifier.
@@ -139,6 +144,9 @@ class RandomizeTrainerPokemon(ToggleSet):
     display_name = "Randomize Trainer Pokemon"
     is_randomize = False
     is_similar_stats = False, "Similar base stats"
+    is_prevent_overpowered = False, "Prevent overpowered pokemon"
+    is_evolve_possible = False, "Evolve when possible"
+    is_force_evolved = False, "Force fully evolved"
     # is_type_themed = False
     # is_themed_gym_trainers = False
     # Not sure whether I really want to implement these:
@@ -277,11 +285,12 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
 
     - **Stats leniency** (0-1530) - The starting maximum difference between base stat totals of vanilla and
         randomized species (for options with **Similar base stats** activated).
-        Allowed values are integers in range 0 to 1530.
-    - **Rare encounters threshold** (1-100) - If **Prevent rare encounters** is included, this will become the minimum
+    - **Rare encounters threshold** (1-100) - If **Prevent rare encounters** is included, this will be the minimum
         encounter chance (in percent) for each species.
-    - **Overpowered threshold** - The maximum base stat total (for options with **Prevent overpowered pokemon**
-        activated). Allowed values are integers in range 200 to 1530.
+    - **Overpowered threshold** (200, 1530) - The maximum base stat total (for options with **Prevent overpowered
+        pokemon** activated).
+    - **Force evolutions threshold** (1, 100) - The minimum level at which trainer pokemon are forced to be fully
+        evolved (if **Force fully evolved** is included).
     """
     display_name = "Pokemon Randomization Adjustments"
     fill_defaults = True
@@ -289,16 +298,19 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
         "Stats leniency",
         "Rare encounters threshold",
         "Overpowered threshold",
+        "Force evolutions threshold",
     ]
     default = {
         "Stats leniency": 10,
         "Rare encounters threshold": 8,
         "Overpowered threshold": 500,
+        "Force evolutions threshold": 40,
     }
     individual_min_max = {
         "Stats leniency": (0, 1530),
         "Rare encounters threshold": (1, 100),
         "Overpowered threshold": (200, 1530),
+        "Force evolutions threshold": (1, 100),
     }
 
 

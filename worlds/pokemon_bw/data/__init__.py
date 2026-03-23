@@ -102,6 +102,8 @@ class TrainerData(NamedTuple):
     pokemon_entry_length: int
     # region: str
     # gym: str | None  # City name without the "City"
+    # rival: int  # 0 no rival, 1 Bianca, 2 Cheren, 3 N
+    # nearby_maps: tuple[int, ...]
 
 
 class TrainerPokemonData(NamedTuple):
@@ -180,6 +182,7 @@ class TMHMData(NamedTuple):
 
 class EvolutionMethodData(NamedTuple):
     id: int
+    has_level_value: bool
     # Takes value from evolution data and returns the access rule for that evolution
     rule: Callable[[int], ExtendedRule] | None
 

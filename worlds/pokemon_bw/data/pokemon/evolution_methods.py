@@ -89,31 +89,31 @@ def stats_lvlup(value: int) -> ExtendedRule:
 
 
 methods: dict[str, EvolutionMethodData] = {
-    "Level up": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),
-    "Stone": EvolutionMethodData(0, lambda value: can_buy_item[value]),
-    "Stone male": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
-    "Stone female": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
-    "Friendship": EvolutionMethodData(0, lambda value: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
-    "Friendship (Day)": EvolutionMethodData(0, None),  # Removed
-    "Friendship (Night)": EvolutionMethodData(0, None),  # Removed
-    "Trade": EvolutionMethodData(0, None),  # Removed
-    "Trade with item": EvolutionMethodData(0, None),  # Removed
-    "Trade Karrablast Shelmet": EvolutionMethodData(0, None),  # Removed
-    "Magnetic area": EvolutionMethodData(0, lambda value: can_reach_magnetic_area),
-    "Level up with move": EvolutionMethodData(0, lambda value: can_reach_mistralton_city),  # When randomized evolutions, then move id must be taken from level up moveset
-    "Level up moss rock": EvolutionMethodData(0, lambda value: can_reach_moss_rock),
-    "Level up ice rock": EvolutionMethodData(0, lambda value: can_reach_ice_rock),
-    "Level up item day": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Always paired with night
-    "Level up item night": EvolutionMethodData(0, lambda value: can_buy_item[value]),  # Always paired with day
-    "Level up higher defense": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up higher attack": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up equal physical": EvolutionMethodData(0, stats_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up Silcoon": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up Cascoon": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up Ninjask": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),
-    "Level up Shedinja": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),
-    "Level up high beauty": EvolutionMethodData(0, None),  # Removed
-    "Level up (female)": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up (male)": EvolutionMethodData(0, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up with party member": EvolutionMethodData(0, lambda value: has_species(species.by_id[value, 0])),
+    "Level up": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),
+    "Stone": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),
+    "Stone male": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
+    "Stone female": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
+    "Friendship": EvolutionMethodData(0, False, lambda value: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
+    "Friendship (Day)": EvolutionMethodData(0, False, None),  # Removed
+    "Friendship (Night)": EvolutionMethodData(0, False, None),  # Removed
+    "Trade": EvolutionMethodData(0, False, None),  # Removed
+    "Trade with item": EvolutionMethodData(0, False, None),  # Removed
+    "Trade Karrablast Shelmet": EvolutionMethodData(0, False, None),  # Removed
+    "Magnetic area": EvolutionMethodData(0, False, lambda value: can_reach_magnetic_area),
+    "Level up with move": EvolutionMethodData(0, False, lambda value: can_reach_mistralton_city),  # When randomized evolutions, then move id must be taken from level up moveset
+    "Level up moss rock": EvolutionMethodData(0, False, lambda value: can_reach_moss_rock),
+    "Level up ice rock": EvolutionMethodData(0, False, lambda value: can_reach_ice_rock),
+    "Level up item day": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Always paired with night
+    "Level up item night": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Always paired with day
+    "Level up higher defense": EvolutionMethodData(0, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up higher attack": EvolutionMethodData(0, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up equal physical": EvolutionMethodData(0, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up Silcoon": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
+    "Level up Cascoon": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
+    "Level up Ninjask": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),
+    "Level up Shedinja": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),
+    "Level up high beauty": EvolutionMethodData(0, False, None),  # Removed
+    "Level up (female)": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
+    "Level up (male)": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
+    "Level up with party member": EvolutionMethodData(0, False, lambda value: has_species(species.by_id[value, 0])),
 }
