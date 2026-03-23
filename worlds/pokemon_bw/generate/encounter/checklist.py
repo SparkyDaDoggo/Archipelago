@@ -16,7 +16,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
     if not world.options.randomize_wild_pokemon.is_randomize:
         return SpeciesChecklist([])
     elif world.options.randomize_wild_pokemon.is_ensure_all:
-        return SpeciesChecklist([species for species in by_name])
+        return SpeciesChecklist([species for species, data in by_name.items() if data.form < 6])
     else:  # Just "Randomize"
         always_required = [
             "Celebi",
