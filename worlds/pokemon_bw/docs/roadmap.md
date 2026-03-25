@@ -56,6 +56,7 @@ Version 1.0.0 will happen when certain important features are implemented.
     - Cost: 1000
     - Cost: 3000
     - Cost: 10000
+  - All pokémon seen
 - UT auto-tabbing (added in later patch)
 
 ### 0.4.0
@@ -86,7 +87,6 @@ Version 1.0.0 will happen when certain important features are implemented.
 - Options
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Seensanity (Only consider wild pokémon)
-  - All pokémon seen
 
 ### Another update #2: Trainer stuff
 

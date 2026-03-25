@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Callable
 
+from Options import OptionError
 from .. import SpeciesChecklist
 
 if TYPE_CHECKING:
@@ -11,7 +12,6 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
     # Returns ({to be checked species}, {already checked species})
     # Species needed for trade are added in generate_trade_encounters()
     from ...data.pokemon.species import by_name, by_id
-    from ...data.pokemon.pokedex import by_number
 
     if not world.options.randomize_wild_pokemon.is_randomize:
         return SpeciesChecklist([])
@@ -30,23 +30,34 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             "Deerling (Autumn)",
             "Deerling (Winter)",
         ]
-        both_types: Callable[["SpeciesData"], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
+        blacklist = world.options.wild_randomization_blacklist.value
+
+        if isinstance(world.options.dexsanity.value, list):
+            for dex_num in world.options.dexsanity.value:
+                spec = by_id[(dex_num, 0)]
+                if spec not in always_required:
+                    always_required.append(spec)
+
         # Ensure one fighting type for challenge rock
-        for num in range(len(by_number)):
-            spec = by_id[(num, 0)]
-            if "Fighting" in both_types(by_name[spec]):
+        both_types: Callable[["SpeciesData"], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
+        for spec, data in by_name.items():
+            if "Fighting" in both_types(data) and spec not in blacklist:
                 if spec not in always_required:
                     always_required.append(spec)
                 break
 
         if not world.options.all_pokemon_seen:
             # Get list of ALL pokémon
-            pool_115 = list((spec, data) for spec, data in by_name.items() if not data.form)
+            pool_115 = list((spec, data) for spec, data in by_name.items() if not data.form and spec not in blacklist)
             # Removes what's already ensured
             for spec in always_required:
                 spec_tup = (spec, by_name[spec])
                 if spec_tup in pool_115:
                     pool_115.remove(spec_tup)
+            # Assert that there are actually 115 pokemon available
+            if len(always_required) + len(pool_115) < 115:
+                raise OptionError(f"Player {world.player_name}: Less than 115 pokémon available. Please either reduce "
+                                  f"the amount of blacklisted pokémon or add **Ensure all obtainable**.")
             # Random picking begins here
             world.random.shuffle(pool_115)
             # Remove overpowered stuff and save it in case of not enough non-overpowered
@@ -65,12 +76,6 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             # Add overpowered stuff in case of not enough non-overpowered
             if len(always_required) < 115:
                 always_required += (overpowered[i] for i in range(115-len(always_required)))
-
-        if isinstance(world.options.dexsanity.value, list):
-            for dex_num in world.options.dexsanity.value:
-                spec = by_id[(dex_num, 0)]
-                if spec not in always_required:
-                    always_required.append(spec)
 
         return SpeciesChecklist(always_required)
 

@@ -69,7 +69,6 @@ def generate_wild_encounters(world: "PokemonBWWorld",
             other_slots.append(name)
     world.random.shuffle(logic_slots)
     world.random.shuffle(other_slots)
-    world.random.shuffle(copy_slots)
 
     if len(species_checklist) > len(logic_slots):
         if world.options.modify_logic.is_consider_evos:
@@ -90,6 +89,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     prevent_overpowered = world.options.randomize_wild_pokemon.is_prevent_overpowered
     prevent_bad_early = world.options.randomize_wild_pokemon.is_prevent_bad_early
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
+    blacklist = world.options.wild_randomization_blacklist.value
     area_types: dict[str, str] = {}
     stats_total: Callable[["SpeciesData"], int] = lambda data: (
         data.base_hp + data.base_attack + data.base_defense +
@@ -99,8 +99,12 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     # Devolve overpowered species
     if prevent_overpowered and world.options.modify_logic.is_consider_evos:
         for name, spec_data in by_name.items():
+            if name in blacklist:
+                continue
             spec_total = stats_total(spec_data)
             for evo_tuple in spec_data.evolutions:
+                if evo_tuple[2] not in species_checklist.to_check:
+                    continue
                 if evo_tuple[0] == "Level up with party member":
                     # This frickin' evolution method is too complicated once more
                     continue
@@ -110,8 +114,6 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                     continue
                 if spec_total >= evo_total:
                     # Devolving to an even stronger pre-evolution doesn't make sense
-                    continue
-                if evo_tuple[2] not in species_checklist.to_check:
                     continue
                 species_checklist.check(evo_tuple[2])
                 species_checklist.add(name)
@@ -171,16 +173,16 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 continue
             break
 
-    any_species: dict[int, list[tuple[str, "SpeciesData"]]] = forms_by_dex
-    if prevent_overpowered:
-        any_species = {
-            key: [
-                (name, data)
-                for name, data in value
-                if stats_total(data) <= stats_threshold
-            ]
-            for key, value in forms_by_dex.items()
-        }
+    any_species = forms_by_dex if not (prevent_overpowered or blacklist) else {
+        key: [
+            (name, data)
+            for name, data in value
+            if stats_total(data) <= stats_threshold and name not in blacklist
+        ]
+        for key, value in forms_by_dex.items()
+    }
+    if any(not len(value) for value in any_species.values()):
+        any_species = {key: value for key, value in any_species.items() if value}
     any_species_by_type: dict[str, dict[int, list[tuple[str, "SpeciesData"]]]] = {}
     if not world.random.randint(0, 999) and len(set(w.game for w in world.multiworld.worlds.values())) > 3:
         print(world.prepare_text(prepare))

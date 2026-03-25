@@ -7,8 +7,9 @@ from dataclasses import dataclass
 import settings
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle,
-                     PlandoTexts, OptionError, Option, OptionCounter, OptionDict, StartInventoryPool)
+                     PlandoTexts, OptionError, Option, OptionCounter, OptionDict, StartInventoryPool, OptionSet)
 from .data.common_options import ToggleSet, ExtendedOptionCounter
+from .data.pokemon import species
 
 if typing.TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -135,19 +136,25 @@ class RandomizeTrainerPokemon(ToggleSet):
     - **Prevent overpowered pokemon** - Prevents trainers from having pokemon with a base stats total above an
         adjustable threshold. Takes priority over most other modifiers.
     - **Evolve when possible** - Tries to evolve pokemon if they are able to (based on their level). Pokémon that
-        evolve through other methods are evolved at level 25.
-    - **Force fully evolved** - Always fully evolves pokemon above an adjustable level threshold.
+        evolve independently of their level are evolved at level 25.
+    - **Force fully evolved** - Always fully evolves pokemon above a certain (adjustable) level.
+    - **Type themed** - All pokemon of a trainer will share at least one randomly chosen type.
+    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned to their gym leader.
+    - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader and elite 4 member instead
+        of using their vanilla type. Do note that they always have type themed teams.
+    - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon in common, which will always evolve
+        when possible.
     """
-    # - **Type themed** - All pokemon of a trainer have to share at least one randomly chosen type.
-    #                           Gym leaders will always have themed teams, regardless of this modifier.
-    # - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned to the gym leader.
     display_name = "Randomize Trainer Pokemon"
     is_randomize = False
     is_similar_stats = False, "Similar base stats"
     is_prevent_overpowered = False, "Prevent overpowered pokemon"
     is_evolve_possible = False, "Evolve when possible"
     is_force_evolved = False, "Force fully evolved"
-    # is_type_themed = False
+    is_type_themed = False
+    is_themed_gym_trainers = False
+    is_shuffle_gym_types = False, "Shuffle gym leader types"
+    is_rivals_keep_starter = False
     # is_themed_gym_trainers = False
     # Not sure whether I really want to implement these:
     # is_randomize_abilities = False
@@ -485,6 +492,24 @@ class EncounterPlando(Option[list[PlandoEncounter]]):
 
     def __len__(self) -> int:
         return len(self.value)
+
+
+class WildRandomizationBlacklist(OptionSet):
+    """
+    Excludes a list of pokemon from being used in wild randomization.
+    Do note that certain pokemon still have to be encountered somewhere, especially with **Ensure all obtainable**
+    enabled. Also, a big list can lead to generation failures.
+    """
+    display_name = "Wild Randomization Blacklist"
+    valid_keys = list(species.by_name)
+
+
+class TrainerRandomizationBlacklist(OptionSet):
+    """
+    Excludes a list of pokemon from being used in trainer randomization.
+    """
+    display_name = "Wild Randomization Blacklist"
+    valid_keys = WildRandomizationBlacklist.valid_keys
 
 
 class RandomizeBaseStats(ToggleSet):
@@ -1500,6 +1525,8 @@ class PokemonBWOptions(PerGameCommonOptions):
     # randomize_legendary_pokemon: RandomizeLegendaryPokemon
     pokemon_randomization_adjustments: PokemonRandomizationAdjustments
     encounter_plando: EncounterPlando
+    wild_randomization_blacklist: WildRandomizationBlacklist
+    trainer_randomization_blacklist: TrainerRandomizationBlacklist
 
     # Pokemon stats
     # randomize_base_stats: RandomizeBaseStats

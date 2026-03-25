@@ -100,9 +100,10 @@ class TrainerData(NamedTuple):
     held_items: bool
     unique_moves: bool
     pokemon_entry_length: int
+    gym: tuple[str, str, bool] | None  # (City name (without the "City") or League, vanilla type, is leader)
+    rival: int  # 0 no rival, 1 Bianca, 2 Cheren, 3 N
+    # early: bool
     # region: str
-    # gym: str | None  # City name without the "City"
-    # rival: int  # 0 no rival, 1 Bianca, 2 Cheren, 3 N
     # nearby_maps: tuple[int, ...]
 
 

@@ -23,9 +23,25 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added more modifiers for `Randomize Wild Pokémon`:
   - `Prevent overpowered pokemon`
     - Other modifiers take priority over this, except `Similar base stats`
-    - Adjustable threshold
+    - Adjustable threshold (`Overpowered threshold` in `Pokémon Randomization Adjustments`)
   - `Prevent bad early pokemon`
     - Prevents Wonder Guard and fixed HP attacks before Castelia City
+- Added more modifiers for `Randomize Trainer Pokémon`:
+  - `Prevent overpowered pokemon`
+    - Takes priority over most other modifiers, except `Rivals take from box`
+    - Adjustable threshold (`Overpowered threshold` in `Pokémon Randomization Adjustments`)
+  - `Evolve when possible`
+  - `Force fully evolved`
+    - Adjustable threshold (`Force evolutions threshold` in `Pokémon Randomization Adjustments`)
+  - `Type themed`
+  - `Themed gym trainers`
+  - `Shuffle gym leader types`
+    - Gym leaders now always have vanilla-type themed teams by default
+  - `Rivals keep starter`
+    - They also always evolve when possible
+- Added `Wild Randomization Blacklist` and `Wild Randomization Blacklist` options
+  - The wild blacklist might not prevent some pokémon for various reasons (including other options)
+  - Ignored by `Encounter Plando`
 
 ### Bug fixes and technical stuff
 
@@ -37,9 +53,18 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Made the Gracidea a useless key item due to it not working on non-fateful encounters
 - Fixed small error with encounter plando
 - Tweaked many option descriptions
+- Made wild randomization not having to ensure 115 different obtainable pokémon if `All Pokémon Seen` is enabled
 
 ### Is this version compatible with older multiworld slots and save files?
 No
+
+## 0.3.26
+
+- Removed HMs being forgettable due to game breaking bugs resulting from it
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before 0.3.25 might show incorrect Dexsanity logic in UT
 
 ## 0.3.25
 
@@ -52,7 +77,7 @@ No
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)
-However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
+However, tracking worlds generated before 0.3.25 might show incorrect Dexsanity logic in UT
 
 ## 0.3.24
 
@@ -61,7 +86,7 @@ However, tracking worlds generated before this version might show incorrect Dexs
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)
-However, tracking worlds generated before this version might show incorrect Dexsanity logic in UT
+However, tracking worlds generated before 0.3.24 might show incorrect Dexsanity logic in UT
 
 ## 0.3.23
 
