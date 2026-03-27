@@ -31,7 +31,8 @@
 - bgm randomization
 - Early game cutscenes shortening option (skipping entire parts in script)
 - revamp flags for static encounters so that resetting statics doesn't reset the flag
-- revamp season control to be toggleable between vanilla and changeable ingame
+- [arm7 expansion] revamp season control to be toggleable between vanilla and changeable ingame
+- fill more funny dialog
 - AFTER EVERYTHING ELSE: check docs for up-to-date information, update credits, update tests, update location names in ut   
 
 # Not urgent
