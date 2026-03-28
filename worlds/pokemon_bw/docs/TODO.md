@@ -1,11 +1,5 @@
 # Important stuff
 
-- fix prevent rare encounters accepting copying slots (i.e. added rates == 0) (?)
-- [ROM] opelucid city fly flag only set after ghetsis scene?
-- [0.4] combined goals
-- [0.4] revamp flags for static encounters so that resetting statics doesn't reset the flag
-- [0.4] allow encounter rate modifier to reduce slot count
-- [0.4] revamp season control to be toggleable between vanilla and changeable ingame
 
 # Not urgent
 

@@ -219,8 +219,7 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
             for i in range(1, 650):
                 if read_num[(i-1)//8] & (1 << ((i-1) % 8)):
                     seen.add(i)
-            for eight_flags in range(len(read_num)):
-                cache[eight_flags] |= read_num[eight_flags]
+            client.tracker_seen_caches[form_num] = read_num
     if seen:
         packages.append({
             "cmd": "Set",

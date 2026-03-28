@@ -1,6 +1,20 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.27
+
+- Fixed `Experience Multiplier` not automatically being set to the value specified in the yaml
+- Fixed `All Pokémon Seen` not being applied to the save file
+- Tried fixing a rare bug regarding the PopTracker pack and data storage
+- Removed `any_badge`/`any_tm_hm` from `Shuffle Badge Rewards`/`Shuffle TM Rewards`
+  - Old yamls with these choices will instead interpret them as `shuffled`
+- Removed `Prioritize key item locations` from `Modify Logic`
+  - Old yamls with this modifier will just ignore it
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before 0.3.27 might show incorrect Dexsanity logic in UT
+
 ## 0.3.26
 
 - Removed HMs being forgettable due to game breaking bugs resulting from it
