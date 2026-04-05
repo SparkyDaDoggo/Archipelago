@@ -1,7 +1,7 @@
 import datetime
 import logging
 import os
-from typing import ClassVar, Mapping, Any, List
+from typing import ClassVar, Mapping, Any, List, Union
 
 import settings
 from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
@@ -10,8 +10,14 @@ from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
 from .data import RulesDict
+from settings import FilePath
 
 bizhawk_client.register_client()
+
+
+class UTPackPath(FilePath):
+    required = False
+    ut_dialog_name = "Select PopTracker pack"
 
 
 class PokemonBWSettings(settings.Group):
@@ -44,6 +50,7 @@ class PokemonBWSettings(settings.Group):
 
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
+    ut_pack_path: Union[UTPackPath, str] = UTPackPath()
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
     dump_patched_files: DumpPatchedFiles | bool = False
@@ -89,14 +96,15 @@ class PokemonBWWorld(World):
     ut_can_gen_without_yaml = True
     tracker_world = {
         "map_page_folder": "tracker",
+        "external_pack_key": "ut_pack_path",
         "map_page_maps": "maps/maps.json",
-        "map_page_locations": {
+        "map_page_locations": [
             "locations/locations.json",
             "locations/submaps_cities.json",
             "locations/submaps_dungeons.json",
             "locations/submaps_routes.json",
             "locations/old_compat.json",
-        },
+        ],
         "map_page_index": tracker.map_page_index,
         "map_page_setting_key": "pokemon_bw_map_{team}_{player}",
     }
