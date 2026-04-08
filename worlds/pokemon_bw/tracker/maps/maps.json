@@ -1,10 +1,5 @@
 [
-    {
-        "name": "overworld",
-        "img": "maps/overworld512.png",
-        "location_size": 14,
-        "location_border_thickness": 2
-    },
+{"name": "overworld", "img": "images/maps/overworld512.png", "location_size": 14, "location_border_thickness": 2},
 {"name": "route1", "img": "images/maps/route1.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "route2", "img": "images/maps/route2.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "route3", "img": "images/maps/route3.png", "location_size": 16, "location_border_thickness": 2},
@@ -76,7 +71,6 @@
 {"name": "guidancechamber", "img": "images/maps/guidancechamber.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "libertygarden", "img": "images/maps/libertygarden.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "libertygardenlighthouse", "img": "images/maps/libertygardenlighthouse.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "libertygardenlighthousebasement", "img": "images/maps/libertygardenlighthouse.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "lostlornforest", "img": "images/maps/lostlornforest.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "marvelousbridge", "img": "images/maps/marvelousbridge.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "mistraltoncave1f", "img": "images/maps/mistraltoncave1f.png", "location_size": 16, "location_border_thickness": 2},
@@ -117,17 +111,10 @@
 {"name": "twistmountainoutside", "img": "images/maps/twistmountainoutside.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "twistmountainupperlevel", "img": "images/maps/twistmountainupperlevel.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "undellabay", "img": "images/maps/undellabay.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad1fleftmostroom", "img": "images/maps/victoryroad1fleftmostroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad1fmiddleroom", "img": "images/maps/victoryroad1fmiddleroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad1frightmostroom", "img": "images/maps/victoryroad1frightmostroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad2fleftroom", "img": "images/maps/victoryroad2fleftroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad2frightroom", "img": "images/maps/victoryroad2frightroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad3fleftmostroom", "img": "images/maps/victoryroad3fleftmostroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad3fmiddleroom", "img": "images/maps/victoryroad3fmiddleroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad3frightmostroom", "img": "images/maps/victoryroad3frightmostroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad4fleftmostroom", "img": "images/maps/victoryroad4fleftmostroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad4fmiddleroom", "img": "images/maps/victoryroad4fmiddleroom.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "victoryroad4frightmostroom", "img": "images/maps/victoryroad4frightmostroom.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "victoryroad1f", "img": "images/maps/victoryroad1f.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "victoryroad2f", "img": "images/maps/victoryroad2f.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "victoryroad3f", "img": "images/maps/victoryroad3f.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "victoryroad4f", "img": "images/maps/victoryroad4f.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "victoryroad5f", "img": "images/maps/victoryroad5f.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "victoryroad6f", "img": "images/maps/victoryroad6f.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "victoryroad7f", "img": "images/maps/victoryroad7f.png", "location_size": 16, "location_border_thickness": 2},
@@ -136,5 +123,7 @@
 {"name": "villagebridge", "img": "images/maps/villagebridge.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "wellspringcave1f", "img": "images/maps/wellspringcave1f.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "wellspringcaveb1f", "img": "images/maps/wellspringcaveb1f.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "routes_17_18_p2lab", "img": "images/maps/routes_17_18_p2lab.png", "location_size": 16, "location_border_thickness": 2}
+{"name": "routes_17_18_p2lab", "img": "images/maps/routes_17_18_p2lab.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "pokemonleague", "location_size": 16, "location_border_thickness": 2, "img": "images/maps/pokemonleague.png"},
+{"name": "pokemonleaguechampionsroom", "location_size": 16, "location_border_thickness": 2, "img": "images/maps/pokemonleaguechampionsroom.png"}
 ]
