@@ -81,7 +81,7 @@
 {"name": "nscastle3f", "img": "images/maps/nscastle3f.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "nscastle4f", "img": "images/maps/nscastle4f.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "nscastle5f", "img": "images/maps/nscastle5f.png", "location_size": 16, "location_border_thickness": 2},
-{"name": "nscastlethroneroom", "img": "images/maps/nscastlethroneroom.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "nscastlethroneroom", "img": "images/maps/nscastlethroneroom_b.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "pinwheelforest", "img": "images/maps/pinwheelforest.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "pinwheelforestoutside", "img": "images/maps/pinwheelforestoutside.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "reliccastle1f", "img": "images/maps/reliccastle1f.png", "location_size": 16, "location_border_thickness": 2},
