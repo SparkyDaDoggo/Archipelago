@@ -17,7 +17,7 @@ bizhawk_client.register_client()
 
 class UTPackPath(FilePath):
     required = False
-    ut_dialog_name = "Select your Pokemon BW PopTracker Pack zip file"
+    ut_dialog_name = "Select Pokemon BW PopTracker Pack Zip File"
 
 
 class PokemonBWSettings(settings.Group):
