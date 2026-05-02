@@ -2,11 +2,13 @@
 
 The "barely working" version will still be playable to goal, so it will start with 0.1.0.
 
-Every feature will increase the version by +0.1.
-However, do not confuse that with semantic version naming: `major.minor.build`
-Versions before 1.0.0 though can have small feature additions in +0.0.1 updates.
+Most bigger features will increase the version by +0.1.
+<br>However, do not confuse that with semantic version naming: `major.minor.build`
+<br>Versions before 1.0.0 though can have small feature additions in +0.0.1 updates.
 
 Version 1.0.0 will happen when certain important features are implemented.
+
+The content of future updates used to be predetermined, but various circumstances resulted in that not really being followed, so it was changed to "whatever I wanna do next".
 
 ## Road to 1.0.0 (Required for core)
 
@@ -56,63 +58,63 @@ Version 1.0.0 will happen when certain important features are implemented.
     - Cost: 1000
     - Cost: 3000
     - Cost: 10000
-  - All pokémon seen
-- UT auto-tabbing (added in later patch)
+  - All pokémon seen (added in patch)
+  - Modify Encounter Rates (added in patch)
+  - Experience Multiplier (added in patch)
+- UT auto-tabbing (added in patch)
 
 ### 0.4.0
 
-- More modifiers
-  - Randomize Wild Pokémon
-    - Prevent overpowered pokémon
-  - Randomize Trainer Pokémon 
-    - Prevent overpowered pokémon
-    - Force fully evolved
-- Randomization Blacklist
-  - Wild pokémon
-  - Trainer pokémon
 - Modify Levels option
   - Simple method, shown on Webhost
   - Advanced method, more capabilities
-- Running shoes as an item, making mom cutscene on route 2 a check
 - Funny dialogue
   - Funny mode, including actually funny things
   - Efficient mode, making a lot of text shorter
 - Text Plando
   - Text extractor setting in patching process
-- Dowsing Machine as a hard requirement for hidden items
+- Dexsanity plando (custom behavior of the Dexsanity option)
+- More modifiers
+  - Randomize Wild Pokémon
+    - Prevent overpowered pokémon
+    - Prevent bad early pokemon
+  - Randomize Trainer Pokémon 
+    - Prevent overpowered pokémon
+    - Evolve when possible
+    - Force fully evolved
+    - Type themed
+    - Themed gym trainers
+    - Shuffle gym leader types
+    - Rivals keep starter
+    - Prevent bad early pokemon
+    - Rivals take from box
+    - N uses pokemon from nearby
+- Randomization Blacklist
+  - Wild pokémon
+  - Trainer pokémon
+- Running shoes as an item, making mom cutscene on route 2 a check
+- Dowsing Machine as a hard requirement for hidden items (with option)
 - An NPC in Accumula Town telling you some information about the world
 
-### Another update #1: Pokédex stuff
+### Other stuff required for 1.0.0
 
 - Options
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
-  - Seensanity (Only consider wild pokémon)
-
-### Another update #2: Trainer stuff
-
-- Options
+  - Seensanity (Only accounting for wild pokémon at first, trainer teams later; has impact on All Pokémon Seen)
   - Trainersanity
-  - Seensanity (Also consider trainer pokémon)
   - Decrease trainer eyesight
-  - Trainer rebattling
-  - Trainer teams in spoiler
-
-### Another update #3: Script editing stuff
-
-- Options
-  - Additional roadblocks
+  - Customize roadblocks
   - Starter/Static/Gift/Trade/Legendary pokémon randomization
-  - Legendary hunt modifiers:
-    - Catching required
-    - Amount of to-be-hunted legendaries
-    - Whitelist
   - Seen count checks modifier
+  - Free fly destination
+- Trainer rebattling
+- Trainer teams in spoiler
 - Xtransceiver being required to see certain story sequences (with some of them giving items)
   - Also, dynamic Xtransceiver item that automatically adds the correctly gendered version to the game
 - Relic castle room filling with sand unlockable via an item
-- Free fly destination
+- Make HMs forgettable
 
-## Big update #1 (Stats update, name WIP, required for core)
+## Post-1.0.0 stuff
 
 - Options
   - Stats randomization
@@ -129,32 +131,22 @@ Version 1.0.0 will happen when certain important features are implemented.
   - Evo methods replacing
   - Experience modifier (using base exp of every species)
   - Levelup curve modifier
-- Make HMs forgettable
-
-## Big update #2 (Text and rom update, name WIP, required for core)
-
+  - Dynamic version
+  - Door shuffle
+  - Shuffle roadblock requirements
+  - Original content
+  - Trainer randomization (i.e. what trainer you're actually battling against)
+    - With plando capabilities
+  - Trashsanity
+  - Boss fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame))
+  - Story fight Plando (Cheren, Bianca, N, ...)
+  - DeathLink
+  - Wonder trade
+  - Multiworld gift Pokémon
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
   - Redirect NPC items to other script file
 - Display other players and item names ingame
-- Dynamic version
 - Universal language support
-
-## Big update #3 (Overworld update, name WIP)
-
-- Door shuffle
-- Optional/Shuffling roadblock requirements
-- Original content
-- Trainer randomization
-- Trainer plando
-- Trashsanity
-- Boss fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame))
-- Story fight Plando (Cheren, Bianca, N, ...)
-
-## Big update #4 (Multiworld update, name WIP)
-
-- DeathLink
-- Wonder trade
 - Traps
-- Multiworld gift Pokémon
 - Collected field items removal setting

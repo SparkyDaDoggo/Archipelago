@@ -39,7 +39,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Gym leaders now always have vanilla-type themed teams by default
   - `Rivals keep starter`
     - They also always evolve when possible
-- Added `Wild Randomization Blacklist` and `Wild Randomization Blacklist` options
+- Added `Wild Randomization Blacklist` and `Trainer Randomization Blacklist` options
   - The wild blacklist might not prevent some pokémon for various reasons (including other options)
   - Ignored by `Encounter Plando`
 - Added more choices to `Modify Encounter Rates`:
@@ -66,7 +66,7 @@ No
 - Removed HMs being forgettable due to game breaking bugs resulting from it
 
 ### Is this version compatible with older multiworld slots and save files?
-Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+Yes, back to 0.3.0, except the pre-release 0.3.99(9).
 However, tracking worlds generated before 0.3.25 might show incorrect Dexsanity logic in UT
 
 ## 0.3.25
@@ -79,7 +79,7 @@ However, tracking worlds generated before 0.3.25 might show incorrect Dexsanity 
 - Tweaked the `dump_patched_files` part of the patching process
 
 ### Is this version compatible with older multiworld slots and save files?
-Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+Yes, back to 0.3.0, except the pre-release 0.3.99(9).
 However, tracking worlds generated before 0.3.25 might show incorrect Dexsanity logic in UT
 
 ## 0.3.24
@@ -88,7 +88,7 @@ However, tracking worlds generated before 0.3.25 might show incorrect Dexsanity 
 - Fixed the current season (if randomized) always being set to the starting season upon reconnecting
 
 ### Is this version compatible with older multiworld slots and save files?
-Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+Yes, back to 0.3.0, except the pre-release 0.3.99(9).
 However, tracking worlds generated before 0.3.24 might show incorrect Dexsanity logic in UT
 
 ## 0.3.23

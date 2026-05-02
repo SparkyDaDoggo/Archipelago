@@ -40,6 +40,10 @@ while still using the well-known grid-based movement mechanics and battle UI.
 - ***Can I use UPR to randomize other parts of the rom?***
   <br>No. It will mess up logic due to the randomizer not knowing in what way the rom was modified 
       and might break the game before even getting to choose your starter.
+- ***Is this compatible with romhack XYZ?***
+  <br>Maybe. You can kinda put everything as the base ROM into the AP install folder (except non-english ROMs, those
+      will receive support in the future), but it's usually not guaranteed that it works. Romhacks that will most
+      likely break are those that edit ingame scripts or text, else there is a good chance it does work.
 - ***Can I use PKHex to edit my save file?***
   <br>Yes! No changes have been made to the save file structure that would break compatibility.
   <br>However, trying to edit items will result in automatically deleting key items that are not obtainable in vanilla. 
