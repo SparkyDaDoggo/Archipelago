@@ -1150,6 +1150,9 @@ class ModifyEncounterRates(Choice):
         3-4% each for grass methods.
     - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the remaining slots to 5% or less each for
         all encounter methods.
+    - **One per method** - Sets all slots (except one) to 1%.
+    - **Dexsanity friendly** - Sets two slots to 33-34%, one slot to 24%, and the remaining slots to 1% for grass
+        method. For surfing and fishing methods, all slots (except one) are set to 1%.
     - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing
         methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate.
         Expect multiple 1% slot rates.
@@ -1161,10 +1164,13 @@ class ModifyEncounterRates(Choice):
     option_vanilla = 0
     option_try_normalized = 1
     option_try_normalized_alt = 2
-    # option_force_normalized = 3
-    option_invasive = 4
-    option_randomized_12 = 5
-    # option_randomized_10 = 6
+    # option_force_normalized_10 = 3
+    # option_force_normalized_5 = 4
+    option_invasive = 10
+    option_one_per_method = 11
+    option_dexsanity_friendly = 12
+    option_randomized_12 = 20
+    # option_randomized_10 = 21
     default = 0
 
     def __init__(self, value: int | dict):

@@ -42,6 +42,9 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added `Wild Randomization Blacklist` and `Wild Randomization Blacklist` options
   - The wild blacklist might not prevent some pokémon for various reasons (including other options)
   - Ignored by `Encounter Plando`
+- Added more choices to `Modify Encounter Rates`:
+  - `One per method`
+  - `Dexsanity friendly`
 
 ### Bug fixes and technical stuff
 
