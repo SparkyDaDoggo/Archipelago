@@ -1,11 +1,14 @@
 import os
 import pathlib
-import zipfile
+import sys
+import logging
+from types import ModuleType
+from zipfile import ZipFile, ZIP_DEFLATED
 
 import Utils
 from settings import get_settings
 from worlds.Files import APAutoPatchInterface
-from typing import TYPE_CHECKING, Any, Dict, Callable
+from typing import TYPE_CHECKING, Any, Dict, Callable, Protocol
 
 if TYPE_CHECKING:
     from . import PokemonBWWorld
@@ -21,7 +24,7 @@ class PokemonBlackPatch(APAutoPatchInterface):
         self.files: dict[str, bytes] = {}
         super().__init__(path, player, player_name, "")
 
-    def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
+    def write_contents(self, opened_zipfile: ZipFile) -> None:
         super().write_contents(opened_zipfile)
         PatchMethods.write_contents(self, opened_zipfile)
 
@@ -31,7 +34,7 @@ class PokemonBlackPatch(APAutoPatchInterface):
     def patch(self, target: str) -> None:
         PatchMethods.patch(self, target, "black")
 
-    def read_contents(self, opened_zipfile: zipfile.ZipFile) -> Dict[str, Any]:
+    def read_contents(self, opened_zipfile: ZipFile) -> Dict[str, Any]:
         return PatchMethods.read_contents(self, opened_zipfile, super().read_contents(opened_zipfile))
 
     def get_file(self, file: str) -> bytes:
@@ -48,7 +51,7 @@ class PokemonWhitePatch(APAutoPatchInterface):
         self.files: dict[str, bytes] = {}
         super().__init__(path, player, player_name, "")
 
-    def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
+    def write_contents(self, opened_zipfile: ZipFile) -> None:
         super().write_contents(opened_zipfile)
         PatchMethods.write_contents(self, opened_zipfile)
 
@@ -58,7 +61,7 @@ class PokemonWhitePatch(APAutoPatchInterface):
     def patch(self, target: str) -> None:
         PatchMethods.patch(self, target, "white")
 
-    def read_contents(self, opened_zipfile: zipfile.ZipFile) -> Dict[str, Any]:
+    def read_contents(self, opened_zipfile: ZipFile) -> Dict[str, Any]:
         return PatchMethods.read_contents(self, opened_zipfile, super().read_contents(opened_zipfile))
 
     def get_file(self, file: str) -> bytes:
@@ -71,7 +74,7 @@ PokemonBWPatch = PokemonBlackPatch | PokemonWhitePatch
 class PatchMethods:
 
     @staticmethod
-    def write_contents(patch: PokemonBWPatch, opened_zipfile: zipfile.ZipFile) -> None:
+    def write_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile) -> None:
         from .patch.procedures import write_wild_pokemon, write_trainer_pokemon, modify_rates
 
         procedures: list[str] = ["base_patch"]
@@ -134,15 +137,49 @@ class PatchMethods:
         procedures: list[str] = str(patch.get_file("procedures.txt"), "utf-8").splitlines()
         for prod in procedures:
             patch_procedures[prod](rom, __name__, patch, files_dump)
+
+        class BWPatchPlugin(Protocol):
+            name: str
+            patch: Callable[[ndspy_rom.NintendoDSRom, PokemonBWPatch,
+                             dict[str, bytes | bytearray], list[ModuleType]], None]
+
+        plugins = []
+        plugin_errors = []
+        for module_name, module_type in sys.modules.items():
+            if module_name.startswith("worlds.pokemon_bw_"):
+                plugins.append((module_name, module_type))
+        for module_name, module_type in plugins:
+            try:
+                if not hasattr(module_type, "Plugin"):
+                    logging.warning(f"{module_name[7:]} has the patch plugin naming scheme, "
+                                    f"but doesn't contain a class named 'Plugin' in __init__.py")
+                    continue
+                if not isinstance(module_type.Plugin, type):
+                    raise Exception(f"{module_name[7:]}.Plugin is not a class")
+                plugin: BWPatchPlugin = getattr(module_type, "Plugin")
+                if not hasattr(plugin, "patch") or not isinstance(plugin.patch, Callable):
+                    raise Exception(f"{module_name[7:]}.Plugin doesn't have a method called 'patch'")
+                plugin.patch(rom, patch, files_dump, plugins)
+            except Exception as e:
+                for arg in e.args:
+                    plugin_errors.append(f"[{module_name[7:]}] {arg}")
+        if plugin_errors:
+            import ctypes
+            message = f"Following error{'s' if len(plugin_errors) > 1 else ''} appeared during patch plugin loading:\n"
+            message += "".join(("\n" + error) for error in plugin_errors)
+            message += "\n\nThe affected plugins might have only partially been applied.\nClick OK to continue."
+            ctypes.windll.user32.MessageBoxW(0, message, "Warning", 0)
+            logging.warning(message)
+
         with open(target, 'wb') as f:
             f.write(rom.save(updateDeviceCapacity=True))
         if get_settings()["pokemon_bw_settings"]["dump_patched_files"]:
-            with zipfile.ZipFile(target.replace(".nds", "_files_dump.zip"), "w", zipfile.ZIP_DEFLATED, True, 9) as dump:
+            with ZipFile(target.replace(".nds", "_files_dump.zip"), "w", ZIP_DEFLATED, True, 9) as dump:
                 for path, data in files_dump.items():
                     dump.writestr(path, data)
 
     @staticmethod
-    def read_contents(patch: PokemonBWPatch, opened_zipfile: zipfile.ZipFile,
+    def read_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile,
                       manifest: Dict[str, Any]) -> Dict[str, Any]:
         from .data import version
 
@@ -169,7 +206,6 @@ class PatchMethods:
         if file not in patch.files:
             patch.read()
         return patch.files[file]
-
 
 
 def get_base_rom_bytes(version: str, file_name: str = "") -> bytes:
