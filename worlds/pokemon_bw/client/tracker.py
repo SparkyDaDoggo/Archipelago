@@ -33,6 +33,49 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
             }])
 
 
+async def set_wild_ids(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
+
+    opp1, opp2, is_wild = 0, 0, False
+
+    battle_ptr = await bizhawk.read(ctx.bizhawk_ctx, ((client.save_data_address + client.battle_ptr_offset, 4,
+                                                       client.ram_read_write_domain), ))
+    if battle_ptr[0][3] == 2 or battle_ptr[0][2] < 0x40:
+        main_mod_ptr = await bizhawk.read(ctx.bizhawk_ctx, ((int.from_bytes(battle_ptr[0][:3], "little"), 4,
+                                                             client.ram_read_write_domain), ))
+        if main_mod_ptr[0][3] == 2 or main_mod_ptr[0][2] < 0x40:
+            setup_ptr = await bizhawk.read(ctx.bizhawk_ctx, ((int.from_bytes(main_mod_ptr[0][:3], "little"), 4,
+                                                              client.ram_read_write_domain), ))
+            if setup_ptr[0][3] == 2 or setup_ptr[0][2] < 0x40:
+                battle_type = await bizhawk.read(ctx.bizhawk_ctx, ((int.from_bytes(setup_ptr[0][:3], "little"), 1,
+                                                                    client.ram_read_write_domain), ))
+                is_wild = battle_type[0][0] == 0
+
+    if is_wild:
+        opp_ptrs = await bizhawk.read(ctx.bizhawk_ctx, ((int.from_bytes(battle_ptr[0][:3], "little") + 0x19c, 8,
+                                                         client.ram_read_write_domain), ))
+        if opp_ptrs[0][3] == 2 and opp_ptrs[0][2] < 0x40:
+            opp1_id = await bizhawk.read(ctx.bizhawk_ctx, ((int.from_bytes(opp_ptrs[0][:3], "little") + 0xc, 2,
+                                                            client.ram_read_write_domain),))
+            opp1 = int.from_bytes(opp1_id[0], "little")
+        if opp_ptrs[0][7] == 2 and opp_ptrs[0][6] < 0x40:
+            opp2_id = await bizhawk.read(ctx.bizhawk_ctx, ((int.from_bytes(opp_ptrs[0][4:7], "little") + 0xc, 2,
+                                                            client.ram_read_write_domain),))
+            opp2 = int.from_bytes(opp2_id[0], "little")
+
+    if (opp1, opp2) != client.current_wild_ids:
+        client.current_wild_ids = (opp1, opp2)
+        await ctx.send_msgs([{
+            "cmd": "Set",
+            "key": f"pokemon_bw_wild_ids_{ctx.team}_{ctx.slot}",
+            "default": 0,
+            "want_reply": False,
+            "operations": [{
+                "operation": "replace",
+                "value": [opp1, opp2],
+            }],
+        }])
+
+
 async def set_statics_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
     # Excludes legendaries and Volcarona since they're already in the goals bitmap
 
@@ -175,7 +218,7 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
                     "operation": "default",
                     "value": 0,
                 }, {
-                    "operation": "or",
+                    "operation": "replace",  # TODO bandaid fix until flags rework in 0.4
                     "value": bitmap,
                 }
             ]
