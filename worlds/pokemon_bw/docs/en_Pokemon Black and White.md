@@ -59,6 +59,8 @@ while still using the well-known grid-based movement mechanics and battle UI.
 - ***I want to contribute to development, how can I do that?***
   <br>First of all, propose your ideas/changes/... in the game's channel, so we can talk about things beforehand.
   <br>The fork of this implementation is found at https://github.com/SparkyDaDoggo/Archipelago/tree/main.
+  <br>IMPORTANT: Ping me (`@blastslimey`) on Discord whenever you open a PR, since I don't get any notification
+      from GitHub for this repository.
 - ***This game info page looks quite different compared to those of other games...***
   <br>This game has not been merged into main yet, and people tend to get confused by "not working" option
       pages (which will only work once merged into main).
