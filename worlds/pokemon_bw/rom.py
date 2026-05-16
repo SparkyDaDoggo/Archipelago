@@ -167,8 +167,10 @@ class PatchMethods:
             import ctypes
             message = f"Following error{'s' if len(plugin_errors) > 1 else ''} appeared during patch plugin loading:\n"
             message += "".join(("\n" + error) for error in plugin_errors)
-            message += "\n\nThe affected plugins might have only partially been applied.\nClick OK to continue."
-            ctypes.windll.user32.MessageBoxW(0, message, "Warning", 0)
+            message += ("\n\nThe affected plugins might have only partially been applied.\n"
+                        "Click OK to continue or CANCEL to abort patching.")
+            if ctypes.windll.user32.MessageBoxW(0, message, "Warning", 1) == 2:
+                raise Exception("Patching was aborted by the user after a plugin threw an error")
             logging.warning(message)
 
         with open(target, 'wb') as f:
