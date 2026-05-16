@@ -1,7 +1,7 @@
 import datetime
 import logging
 import os
-from typing import ClassVar, Mapping, Any, List, Union
+from typing import ClassVar, Mapping, Any, List
 
 import settings
 from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
@@ -10,14 +10,8 @@ from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
 from .data import RulesDict
-from settings import FilePath
 
 bizhawk_client.register_client()
-
-
-class UTPackPath(FilePath):
-    required = False
-    ut_dialog_name = "Select Pokemon BW PopTracker Pack Zip File"
 
 
 class PokemonBWSettings(settings.Group):
@@ -31,6 +25,11 @@ class PokemonBWSettings(settings.Group):
         """File name of your Pokémon White Version ROM"""
         description = "Pokemon White Version ROM"
         copy_to = "PokemonWhite.nds"
+
+    class UTPackPath(settings.FilePath):
+        """Path to the user's Pokémon Black and White Poptracker Pack."""
+        required = False
+        ut_dialog_name = "Select Pokemon BW PopTracker Pack Zip File"
 
     class RemoveCollectedFieldItems(settings.Bool):
         """Toggles whether overworld and hidden items should be automatically removed
@@ -50,7 +49,7 @@ class PokemonBWSettings(settings.Group):
 
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
-    ut_pack_path: Union[UTPackPath, str] = UTPackPath()
+    ut_pack_path: UTPackPath | str = UTPackPath()
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
     dump_patched_files: DumpPatchedFiles | bool = False
