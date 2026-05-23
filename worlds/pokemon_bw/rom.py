@@ -5,6 +5,8 @@ import logging
 from types import ModuleType
 from zipfile import ZipFile, ZIP_DEFLATED
 
+import orjson
+
 import Utils
 from settings import get_settings
 from worlds.Files import APAutoPatchInterface
@@ -95,6 +97,7 @@ class PatchMethods:
             modify_rates.write_patch(patch, opened_zipfile)
 
         opened_zipfile.writestr("procedures.txt", "\n".join(procedures))
+        opened_zipfile.writestr("plugin_options.json", orjson.dumps(patch.world.options.plugin_options.value))
 
     @staticmethod
     def get_manifest(patch: PokemonBWPatch, manifest: dict[str, Any]) -> Dict[str, Any]:
