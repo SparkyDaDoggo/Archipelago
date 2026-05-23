@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import settings
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle,
-                     PlandoTexts, OptionError, Option, StartInventoryPool)
+                     PlandoTexts, OptionError, Option, StartInventoryPool, T)
 from .data.common_options import ToggleSet, ExtendedOptionCounter
 
 if typing.TYPE_CHECKING:
@@ -1150,6 +1150,17 @@ class PokemonBWTextPlando(PlandoTexts):
             )
 
 
+class PluginOptions(Option):
+    """This can be used to define certain options that are used by patching plugins.
+    The main apworld will ignore this option entirely."""
+
+    @classmethod
+    def from_any(cls, data: typing.Any):
+        opt = cls()
+        opt.value = data
+        return opt
+
+
 class ReusableTMs(Choice):
     """
     Enables reusable TMs, allowing for the reuse of TMs. 
@@ -1219,4 +1230,5 @@ class PokemonBWOptions(PerGameCommonOptions):
     modify_logic: ModifyLogic
     # funny_dialogue: FunnyDialog
     # text_plando: TextPlando
+    plugin_options: PluginOptions
     reusable_tms: ReusableTMs
