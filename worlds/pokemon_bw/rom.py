@@ -97,7 +97,7 @@ class PatchMethods:
             modify_rates.write_patch(patch, opened_zipfile)
 
         opened_zipfile.writestr("procedures.txt", "\n".join(procedures))
-        opened_zipfile.writestr("plugin_options.json", orjson.dumps(patch.world.options.plugin_options.value))
+        opened_zipfile.writestr("slot_data.json", orjson.dumps(patch.world.fill_slot_data()))
 
     @staticmethod
     def get_manifest(patch: PokemonBWPatch, manifest: dict[str, Any]) -> Dict[str, Any]:
