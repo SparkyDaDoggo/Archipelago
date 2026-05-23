@@ -1,6 +1,19 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.30
+
+- Added a button to abort patching if any patching plugin failed
+- Added support for the "Show dexsanity on wild encounters" feature of the Poptracker pack
+- Made the client uncheck legendary pokémon in the Poptracker pack if reset by defeating Ghetsis/Alder
+- Changed the UT map integration to using the (external) Poptracker pack instead (@Radis7Noir)
+  - This removes the need for the apworld with maps
+- Added the `plugin_options` option
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before 0.3.27 might show incorrect Dexsanity logic in UT
+
 ## 0.3.29
 
 - Added the patching plugin system
