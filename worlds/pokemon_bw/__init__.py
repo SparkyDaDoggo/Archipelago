@@ -139,7 +139,7 @@ class PokemonBWWorld(World):
         self.rules_dict: RulesDict | None = None
         self.master_ball_seller_cost: int = 0
         self.filler_nested: list[str | list] | None = None
-        self.slot_data_cache: Mapping[str, Any] | None = None
+        self.slot_data_cache: dict[str, Any] | None = None
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
@@ -254,9 +254,7 @@ class PokemonBWWorld(World):
                 ), world=self, player=self.player, player_name=self.player_name
             ).write()
 
-    def fill_slot_data(self) -> Mapping[str, Any]:
-        from .data import version
-
+    def part_slot_data(self) -> dict[str, Any]:
         if self.slot_data_cache is None:
             self.slot_data_cache = {
                 "options": {
@@ -279,18 +277,23 @@ class PokemonBWWorld(World):
                     "modify_logic": self.options.modify_logic.value,
                     "plugin_options": self.options.plugin_options.value,
                 },
-                # Needed for UT
                 "seed": self.seed,
-                "ut_compatibility": version.ut(),
-                # NOT needed for UT
                 "master_ball_seller_cost": self.master_ball_seller_cost,
                 "reusable_tms": self.options.reusable_tms.current_key,
-                # Needed for PopTracker
-                "encounter_by_method": self.encounter_by_method,
-                "trade_data": self.trade_data,
-                "dexsanity_pokemon": self.dexsanity_numbers,
             }
         return self.slot_data_cache
+
+    def fill_slot_data(self) -> Mapping[str, Any]:
+        from .data import version
+
+        return self.part_slot_data() | {
+            # Needed for UT
+            "ut_compatibility": version.ut(),
+            # Needed for PopTracker
+            "encounter_by_method": self.encounter_by_method,
+            "trade_data": self.trade_data,
+            "dexsanity_pokemon": self.dexsanity_numbers,
+        }
 
     @staticmethod
     def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:

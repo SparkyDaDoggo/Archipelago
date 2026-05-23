@@ -9,6 +9,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Changed the UT map integration to using the (external) Poptracker pack instead (@Radis7Noir)
   - This removes the need for the apworld with maps
 - Added the `plugin_options` option
+- Put slot data (partially) into the patch file
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)

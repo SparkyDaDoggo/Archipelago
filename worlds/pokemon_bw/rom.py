@@ -8,6 +8,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import orjson
 
 import Utils
+import NetUtils
 from settings import get_settings
 from worlds.Files import APAutoPatchInterface
 from typing import TYPE_CHECKING, Any, Dict, Callable, Protocol
@@ -97,7 +98,8 @@ class PatchMethods:
             modify_rates.write_patch(patch, opened_zipfile)
 
         opened_zipfile.writestr("procedures.txt", "\n".join(procedures))
-        opened_zipfile.writestr("slot_data.json", orjson.dumps(patch.world.fill_slot_data()))
+        opened_zipfile.writestr("slot_data.json",
+                                orjson.dumps(NetUtils.convert_to_base_types(patch.world.part_slot_data())))
 
     @staticmethod
     def get_manifest(patch: PokemonBWPatch, manifest: dict[str, Any]) -> Dict[str, Any]:
