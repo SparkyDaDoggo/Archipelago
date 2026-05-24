@@ -32,6 +32,7 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
     auto_add_if_any: str | None = None
     _toggles: list[tuple[str, tuple[bool, str]]]
     aliases_convert: list[tuple[str, str]] = []
+    ignore_deprecated: list[str] = []
 
     def __init__(self, value: Iterable[str]):
         super().__init__(value)
@@ -40,6 +41,9 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
             if alias.casefold() in self.value:
                 self.value.add(actual.casefold())
                 self.value.remove(alias.casefold())
+        for to_ignore in self.ignore_deprecated:
+            if to_ignore.casefold() in self.value:
+                self.value.remove(to_ignore.casefold())
         if self.auto_add_if_any is not None and len(self.value) and self.auto_add_if_any.casefold() not in self:
             self.value.add(self.auto_add_if_any.casefold())
         for key, data in self._toggles:

@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 import settings
 from BaseClasses import PlandoOptions
-from Options import (Choice, PerGameCommonOptions, Range, Toggle,
-                     PlandoTexts, OptionError, Option, OptionCounter, OptionDict, StartInventoryPool, OptionSet)
+from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError, Option,
+                     OptionCounter, StartInventoryPool, OptionSet, OptionDict)
 from .data.common_options import ToggleSet, ExtendedOptionCounter
 from .data.pokemon import species
 
@@ -754,40 +754,52 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
 class ShuffleBadgeRewards(Choice):
     """
     Determines how gym badges are randomized and what items gym badge locations can have.
-    This option might not be entirely strict (depending on other options and worlds).
-
     - **Vanilla** - Gym badges will stay at their vanilla locations.
     - **Shuffle** - Gym badges are shuffled between the gym leaders.
-    - **Any badge** - Puts the badges into the item pool, while only allowing items that have the word "badge" in
-        their name (which also applies to gym badges of other games/worlds) being placed at gym leaders.
     - **Anything** - Gym badges can be anywhere and gym leaders can give any item.
     """
+    # - **Any badge** - Puts the badges into the item pool, while only allowing items that have the word "badge" in
+    #     their name (which also applies to gym badges of other games/worlds) being placed at gym leaders.
     display_name = "Shuffle Badge Rewards"
     option_vanilla = 0
     option_shuffle = 1
-    option_any_badge = 2
+    # option_any_badge = 2
     option_anything = 3
     default = 1
+
+    @classmethod
+    def from_any(cls, data: typing.Any):
+        if data == 2:
+            return super().from_any(1)
+        if data == "any_badge":
+            return super().from_any("shuffle")
+        return super().from_any(data)
 
 
 class ShuffleTMRewards(Choice):
     """
     Determines what items NPCs, who would normally give TMs or HMs, can have.
-    This option might not be entirely strict (depending on other options and worlds).
-
     - **Shuffle** - These NPCs will always give a TM or HM from the same world.
     - **HM with Badge** - Like "Shuffle", but puts each HM (and TM70 Flash) at a gym leader's badge reward
         (including the TM from Clay on route 6).
-    - **Any TM/HM** - These NPCs will give any item that starts with "TM" or "HM" followed by any digit
-        (which also applies to TMs and HMs of other games/worlds).
     - **Anything** - No restrictions.
     """
+    # - **Any TM/HM** - These NPCs will give any item that starts with "TM" or "HM" followed by any digit
+    #     (which also applies to TMs and HMs of other games/worlds).
     display_name = "Shuffle TM Rewards"
     option_shuffle = 0
     option_hm_with_badge = 1
-    option_any_tm_hm = 2
+    # option_any_tm_hm = 2
     option_anything = 3
     default = 0
+
+    @classmethod
+    def from_any(cls, data: typing.Any):
+        if data == 2:
+            return super().from_any(0)
+        if data == "any_tm_hm":
+            return super().from_any("shuffle")
+        return super().from_any(data)
 
 
 class ShuffleRoadblockReqs(Toggle):
@@ -1384,8 +1396,6 @@ class ModifyLogic(ToggleSet):
     You can add as many of the following modifiers as you want.
 
     - **Require Dowsing Machine** - Makes the Dowsing Machine a logical requirement to find hidden items.
-    - **Prioritize key item locations** - Marks locations, that normally contain key items (which also includes
-        badge rewards in gyms), as priority locations, making them mostly contain progressive items.
     - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the basement of Wellspring Cave
         logically require TM70 Flash.
     - **Consider <feature X>** - Toggles whether <feature X> is considered in logic to get access to
@@ -1393,14 +1403,19 @@ class ModifyLogic(ToggleSet):
         and **form change**. However, do note that trades are automatically excluded if evolutions are excluded
         and wild pokemon are not randomized.
     """
+    # - **Prioritize key item locations** - Marks locations, that normally contain key items (which also includes
+    #     badge rewards in gyms), as priority locations, making them mostly contain progressive items.
     display_name = "Modify Logic"
     is_require_dowsing = True, "Require Dowsing Machine"
-    is_prioritize_key_locs = True, "Prioritize key item locations"
+    # is_prioritize_key_locs = True, "Prioritize key item locations"
     is_require_flash = True
     is_consider_evos = True, "Consider evolutions"
     is_consider_static = True, "Consider static pokemon"
     is_consider_trades = False
     is_consider_form_change = True
+    ignore_deprecated = [
+        "Prioritize key item locations",
+    ]
 
 
 class FunnyDialog(Toggle):
@@ -1490,6 +1505,12 @@ class PokemonBWTextPlando(PlandoTexts):
         ]
 
 
+class PluginOptions(OptionDict):
+    """This can be used to define certain options that are used by patching plugins.
+    The main apworld will ignore this option entirely."""
+    display_name = "Plugin Options"
+
+
 class ReusableTMs(Choice):
     """
     Enables reusable TMs, allowing for the reuse of TMs. 
@@ -1575,4 +1596,5 @@ class PokemonBWOptions(PerGameCommonOptions):
     modify_logic: ModifyLogic
     funny_dialog: FunnyDialog
     text_plando: PokemonBWTextPlando
+    plugin_options: PluginOptions
     reusable_tms: ReusableTMs

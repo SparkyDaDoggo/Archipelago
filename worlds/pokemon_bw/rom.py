@@ -1,11 +1,17 @@
 import os
 import pathlib
-import zipfile
+import sys
+import logging
+from types import ModuleType
+from zipfile import ZipFile, ZIP_DEFLATED
+
+import orjson
 
 import Utils
+import NetUtils
 from settings import get_settings
 from worlds.Files import APAutoPatchInterface
-from typing import TYPE_CHECKING, Any, Dict, Callable
+from typing import TYPE_CHECKING, Any, Dict, Callable, Protocol
 
 if TYPE_CHECKING:
     from . import PokemonBWWorld
@@ -21,7 +27,7 @@ class PokemonBlackPatch(APAutoPatchInterface):
         self.files: dict[str, bytes] = {}
         super().__init__(path, player, player_name, "")
 
-    def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
+    def write_contents(self, opened_zipfile: ZipFile) -> None:
         super().write_contents(opened_zipfile)
         PatchMethods.write_contents(self, opened_zipfile)
 
@@ -31,7 +37,7 @@ class PokemonBlackPatch(APAutoPatchInterface):
     def patch(self, target: str) -> None:
         PatchMethods.patch(self, target, "black")
 
-    def read_contents(self, opened_zipfile: zipfile.ZipFile) -> Dict[str, Any]:
+    def read_contents(self, opened_zipfile: ZipFile) -> Dict[str, Any]:
         return PatchMethods.read_contents(self, opened_zipfile, super().read_contents(opened_zipfile))
 
     def get_file(self, file: str) -> bytes:
@@ -48,7 +54,7 @@ class PokemonWhitePatch(APAutoPatchInterface):
         self.files: dict[str, bytes] = {}
         super().__init__(path, player, player_name, "")
 
-    def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
+    def write_contents(self, opened_zipfile: ZipFile) -> None:
         super().write_contents(opened_zipfile)
         PatchMethods.write_contents(self, opened_zipfile)
 
@@ -58,7 +64,7 @@ class PokemonWhitePatch(APAutoPatchInterface):
     def patch(self, target: str) -> None:
         PatchMethods.patch(self, target, "white")
 
-    def read_contents(self, opened_zipfile: zipfile.ZipFile) -> Dict[str, Any]:
+    def read_contents(self, opened_zipfile: ZipFile) -> Dict[str, Any]:
         return PatchMethods.read_contents(self, opened_zipfile, super().read_contents(opened_zipfile))
 
     def get_file(self, file: str) -> bytes:
@@ -71,7 +77,7 @@ PokemonBWPatch = PokemonBlackPatch | PokemonWhitePatch
 class PatchMethods:
 
     @staticmethod
-    def write_contents(patch: PokemonBWPatch, opened_zipfile: zipfile.ZipFile) -> None:
+    def write_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile) -> None:
         from patch.procedures import (write_text, write_wild_pokemon, write_trainer_pokemon, level_adjustments,
                                       modify_rates)
 
@@ -100,6 +106,8 @@ class PatchMethods:
             modify_rates.write_patch(patch, opened_zipfile)
 
         opened_zipfile.writestr("procedures.txt", "\n".join(procedures))
+        opened_zipfile.writestr("slot_data.json",
+                                orjson.dumps(NetUtils.convert_to_base_types(patch.world.part_slot_data())))
 
     @staticmethod
     def get_manifest(patch: PokemonBWPatch, manifest: dict[str, Any]) -> Dict[str, Any]:
@@ -148,15 +156,51 @@ class PatchMethods:
         if get_settings()["pokemon_bw_settings"]["extract_text"]:
             from .patch import text_extractor
             text_extractor.extract(rom, target)
+
+        class BWPatchPlugin(Protocol):
+            name: str
+            patch: Callable[[NintendoDSRom, PokemonBWPatch,
+                             dict[str, bytes | bytearray], list[ModuleType]], None]
+
+        plugins = []
+        plugin_errors = []
+        for module_name, module_type in sys.modules.items():
+            if module_name.startswith("worlds.pokemon_bw_"):
+                plugins.append((module_name, module_type))
+        for module_name, module_type in plugins:
+            try:
+                if not hasattr(module_type, "Plugin"):
+                    logging.warning(f"{module_name[7:]} has the patch plugin naming scheme, "
+                                    f"but doesn't contain a class named 'Plugin' in __init__.py")
+                    continue
+                if not isinstance(module_type.Plugin, type):
+                    raise Exception(f"{module_name[7:]}.Plugin is not a class")
+                plugin: BWPatchPlugin = getattr(module_type, "Plugin")
+                if not hasattr(plugin, "patch") or not isinstance(plugin.patch, Callable):
+                    raise Exception(f"{module_name[7:]}.Plugin doesn't have a method called 'patch'")
+                plugin.patch(rom, patch, files_dump, plugins)
+            except Exception as e:
+                for arg in e.args:
+                    plugin_errors.append(f"[{module_name[7:]}] {arg}")
+        if plugin_errors:
+            import ctypes
+            message = f"Following error{'s' if len(plugin_errors) > 1 else ''} appeared during patch plugin loading:\n"
+            message += "".join(("\n" + error) for error in plugin_errors)
+            message += ("\n\nThe affected plugins might have only partially been applied.\n"
+                        "Click OK to continue or CANCEL to abort patching.")
+            if ctypes.windll.user32.MessageBoxW(0, message, "Warning", 1) == 2:
+                raise Exception("Patching was aborted by the user after a plugin threw an error")
+            logging.warning(message)
+
         with open(target, 'wb') as f:
             f.write(rom.save(updateDeviceCapacity=True))
         if get_settings()["pokemon_bw_settings"]["dump_patched_files"]:
-            with zipfile.ZipFile(target.replace(".nds", "_files_dump.zip"), "w", zipfile.ZIP_DEFLATED, True, 9) as dump:
+            with ZipFile(target.replace(".nds", "_files_dump.zip"), "w", ZIP_DEFLATED, True, 9) as dump:
                 for path, data in files_dump.items():
                     dump.writestr(path, data)
 
     @staticmethod
-    def read_contents(patch: PokemonBWPatch, opened_zipfile: zipfile.ZipFile,
+    def read_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile,
                       manifest: Dict[str, Any]) -> Dict[str, Any]:
         from .data import version
 

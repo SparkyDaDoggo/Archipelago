@@ -58,7 +58,8 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     if not client.get_flag(0x1DE):
 
         # Initial exp multiplier
-        await client.write_var(ctx, 0xF4, getattr(ctx.slot_data["options"], "exp_multiplier", 1)-1)
+        await client.write_var(ctx, 0xF4, (ctx.slot_data["options"]["exp_multiplier"]
+                                           if "exp_multiplier" in ctx.slot_data["options"] else 1)-1)
 
         # Initial season and npc vanish
         if ctx.slot_data["options"]["season_control"] == "vanilla":
@@ -74,7 +75,7 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
 
         # all pokemon seen: male seen, female seen, male shown, forms seen, forms shown
         # shown flags always the later ones, so setting them to male won't change it if a different form was set ingame
-        if getattr(ctx.slot_data["options"], "all_pokemon_seen", False):
+        if "all_pokemon_seen" in ctx.slot_data["options"] and ctx.slot_data["options"]["all_pokemon_seen"]:
             await bizhawk.write(
                 ctx.bizhawk_ctx, (
                     (client.save_data_address + client.dex_seen_offsets[0], b'\xff' * 0x54, "Main RAM"),

@@ -21,7 +21,5 @@ deerling_dependant: ProgressTypeMethod = lambda world: (
 )
 
 key_item_location: ProgressTypeMethod = lambda world: (
-    LocationProgressType.PRIORITY
-    if world.options.modify_logic.is_prioritize_key_locs
-    else LocationProgressType.DEFAULT
+    LocationProgressType.DEFAULT
 )

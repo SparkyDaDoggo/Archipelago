@@ -26,6 +26,11 @@ class PokemonBWSettings(settings.Group):
         description = "Pokemon White Version ROM"
         copy_to = "PokemonWhite.nds"
 
+    class UTPackPath(settings.FilePath):
+        """Path to the user's Pokémon Black and White Poptracker Pack."""
+        required = False
+        ut_dialog_name = "Select Pokemon BW PopTracker Pack Zip File"
+
     class RemoveCollectedFieldItems(settings.Bool):
         """Toggles whether overworld and hidden items should be automatically removed
         if collected by another player."""
@@ -48,6 +53,7 @@ class PokemonBWSettings(settings.Group):
 
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
+    ut_pack_path: UTPackPath | str = UTPackPath()
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
     dump_patched_files: DumpPatchedFiles | bool = False
@@ -95,14 +101,15 @@ class PokemonBWWorld(World):
     glitches_item_name = "Out of logic"
     tracker_world = {
         "map_page_folder": "tracker",
+        "external_pack_key": "ut_pack_path",
         "map_page_maps": "maps/maps.json",
-        "map_page_locations": {
+        "map_page_locations": [
             "locations/locations.json",
             "locations/submaps_cities.json",
             "locations/submaps_dungeons.json",
             "locations/submaps_routes.json",
             "locations/old_compat.json",
-        },
+        ],
         "map_page_index": tracker.map_page_index,
         "map_page_setting_key": "pokemon_bw_map_{team}_{player}",
     }
@@ -138,6 +145,7 @@ class PokemonBWWorld(World):
         self.rules_dict: RulesDict | None = None
         self.master_ball_seller_cost: int = 0
         self.filler_nested: list[str | list] | None = None
+        self.slot_data_cache: dict[str, Any] | None = None
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
@@ -257,39 +265,41 @@ class PokemonBWWorld(World):
                 ), world=self, player=self.player, player_name=self.player_name
             ).write()
 
+    def part_slot_data(self) -> dict[str, Any]:
+        if self.slot_data_cache is None:
+            self.slot_data_cache = {
+                "options": {
+                    "version": self.options.version.current_key,
+                    "goal": self.options.goal.current_key,
+                    "randomize_wild_pokemon": self.options.randomize_wild_pokemon.value,
+                    "randomize_trainer_pokemon": self.options.randomize_trainer_pokemon.value,
+                    "pokemon_randomization_adjustments": self.options.pokemon_randomization_adjustments.value,
+                    "encounter_plando": self.options.encounter_plando.to_slot_data(),
+                    "shuffle_badges": self.options.shuffle_badges.current_key,
+                    "shuffle_tm_hm": self.options.shuffle_tm_hm.current_key,
+                    "dexsanity": self.options.dexsanity.value,
+                    "season_control": self.options.season_control.current_key,
+                    "adjust_levels": self.options.adjust_levels.value,
+                    "modify_encounter_rates": self.options.modify_encounter_rates.value,  # value property because of plando
+                    "exp_multiplier": self.options.exp_multiplier.value,
+                    "all_pokemon_seen": self.options.all_pokemon_seen.value,
+                    "master_ball_seller": self.options.master_ball_seller.value,
+                    "modify_item_pool": self.options.modify_item_pool.value,
+                    "modify_logic": self.options.modify_logic.value,
+                    "plugin_options": self.options.plugin_options.value,
+                },
+                "seed": self.seed,
+                "master_ball_seller_cost": self.master_ball_seller_cost,
+                "reusable_tms": self.options.reusable_tms.current_key,
+            }
+        return self.slot_data_cache
+
     def fill_slot_data(self) -> Mapping[str, Any]:
         from .data import version
 
-        # Some options and data are included for UT
-        return {
-            "options": {
-                "version": self.options.version.current_key,
-                "goal": self.options.goal.current_key,
-                "randomize_wild_pokemon": self.options.randomize_wild_pokemon.value,
-                "randomize_trainer_pokemon": self.options.randomize_trainer_pokemon.value,
-                "pokemon_randomization_adjustments": self.options.pokemon_randomization_adjustments.value,
-                "encounter_plando": self.options.encounter_plando.to_slot_data(),
-                "shuffle_badges": self.options.shuffle_badges.current_key,
-                "shuffle_tm_hm": self.options.shuffle_tm_hm.current_key,
-                "dexsanity": self.options.dexsanity.value,
-                "season_control": self.options.season_control.current_key,
-                "adjust_levels": self.options.adjust_levels.value,
-                "modify_levels": self.options.modify_levels.value,
-                "modify_encounter_rates": self.options.modify_encounter_rates.value,  # value property because of plando
-                "exp_multiplier": self.options.exp_multiplier.value,
-                "all_pokemon_seen": self.options.all_pokemon_seen.value,
-                "master_ball_seller": self.options.master_ball_seller.value,
-                "modify_item_pool": self.options.modify_item_pool.value,
-                "modify_logic": self.options.modify_logic.value,
-                "funny_dialog": self.options.funny_dialog.current_key,
-                "text_plando": self.options.text_plando.to_slot_data(),
-                "reusable_tms": self.options.reusable_tms.current_key,
-            },
+        return self.part_slot_data() | {
             # Needed for UT
-            "seed": self.seed,
             "ut_compatibility": version.ut(),
-            # NOT needed for UT
-            "master_ball_seller_cost": self.master_ball_seller_cost,
             # Needed for PopTracker
             "encounter_by_method": self.encounter_by_method,
             "trade_data": self.trade_data,

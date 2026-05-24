@@ -13,7 +13,11 @@ class VersionCompatibility(NamedTuple):
 version: tuple[int, int, int] = (0, 4, 0)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
-    (0, 4, 0): VersionCompatibility((0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 6, 3)),
+    (0, 4, 0): VersionCompatibility((0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 6, 4)),
+    (0, 3, 30): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
+    (0, 3, 29): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
+    (0, 3, 28): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
+    (0, 3, 27): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
     (0, 3, 26): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 25), (0, 6, 4)),
     (0, 3, 25): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 25), (0, 3, 25), (0, 6, 4)),
     (0, 3, 24): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 23), (0, 3, 24), (0, 6, 4)),
@@ -112,8 +116,7 @@ if __name__ == "__main__":
     apworld = "pokemon_bw"
     dev_dir = "D:/Games/Archipelago/custom_worlds/dev/"
 
-    with (zipfile.ZipFile(dev_dir + apworld + "_without_maps.apworld", "w", zipfile.ZIP_DEFLATED, True, 9) as zipf,
-          zipfile.ZipFile(dev_dir + apworld + ".apworld", 'w', zipfile.ZIP_DEFLATED, True, 9) as zipf2):
+    with zipfile.ZipFile(dev_dir + apworld + ".apworld", 'w', zipfile.ZIP_DEFLATED, True, 9) as zipf2:
         metadata = {
             "game": "Pokemon Black and White",
             "minimum_ap_version": ".".join(str(i) for i in ap_minimum()),
@@ -122,7 +125,6 @@ if __name__ == "__main__":
             "version": container_version,
             "compatible_version": 7,
         }
-        zipf.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
         zipf2.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
         for root, dirs, files in os.walk("../"):
             if "__pycache__" in root:
@@ -131,9 +133,3 @@ if __name__ == "__main__":
                 zipf2.write(os.path.join(root, file),
                             os.path.relpath(os.path.join(root, file),
                                             "../../"))
-            if "images" in root and not root.endswith("images"):
-                continue
-            for file in files:
-                zipf.write(os.path.join(root, file),
-                           os.path.relpath(os.path.join(root, file),
-                                           "../../"))

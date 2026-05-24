@@ -9,7 +9,8 @@ from worlds._bizhawk.client import BizHawkClient
 from .client.locations import check_flag_locations, check_dex_locations
 from .client.items import receive_items
 from .client.setup import early_setup, late_setup
-from .client.tracker import set_map, set_dex_caught_seen, set_goal_bitmap, set_statics_bitmap, set_trades_bitmap
+from .client.tracker import (set_map, set_dex_caught_seen, set_goal_bitmap, set_statics_bitmap, set_trades_bitmap,
+                             set_wild_ids)
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -53,13 +54,14 @@ class PokemonBWClient(BizHawkClient):
     berry_bag_offset = 0x19554  # 0x234864 in vanilla W
     badges_offset = 0x21ac0  # 0x23CDD0 in vanilla W
     map_id_offset = 0x3461c  # 0x24f92c in vanilla W
+    battle_ptr_offset = -0x24f54  # 0x1f63bc in vanilla W
 
     def __init__(self):
         super().__init__()
         self.flags_cache: bytearray = bytearray(self.flag_bytes_amount)
         self.dex_cache: bytearray = bytearray(self.dex_bytes_amount)
         self.tracker_caught_cache: bytearray = bytearray(self.dex_bytes_amount)
-        self.tracker_seen_caches: tuple[bytearray, ...] = tuple(bytearray(self.dex_bytes_amount) for _ in range(4))
+        self.tracker_seen_caches: list[bytes] = list(bytes() for _ in range(4))
         self.goal_bitmap: int = 0
         self.statics_bitmap: int = 0
         self.trades_bitmap: int = 0
@@ -74,6 +76,7 @@ class PokemonBWClient(BizHawkClient):
                                             Coroutine[Any, Any, bool]] | None = None
         self.logger = logging.getLogger("Client")
         self.debug_halt = False
+        self.current_wild_ids: tuple[int, int] = (0, 0)
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         """Should return whether the currently loaded ROM should be handled by this client. You might read the game name
@@ -163,6 +166,7 @@ class PokemonBWClient(BizHawkClient):
             await set_goal_bitmap(self, ctx)
             await set_statics_bitmap(self, ctx)
             await set_trades_bitmap(self, ctx)
+            await set_wild_ids(self, ctx)
 
             await receive_items(self, ctx)
 
