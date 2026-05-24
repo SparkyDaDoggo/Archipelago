@@ -1162,9 +1162,10 @@ class ModifyEncounterRates(Choice):
         3-4% each for grass methods.
     - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the remaining slots to 5% or less each for
         all encounter methods.
-    - **One per method** - Sets all slots (except one) to 1%.
+    - **One per method** - Sets all slots (except one) to 1%. Best in combination with **Prevent rare encounters**.
     - **Dexsanity friendly** - Sets two slots to 33-34%, one slot to 24%, and the remaining slots to 1% for grass
-        method. For surfing and fishing methods, all slots (except one) are set to 1%.
+        method. For surfing and fishing methods, all slots (except one) are set to 1%. Best in combination with
+        **Prevent rare encounters**.
     - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass methods slots, 5 surfing
         methods slots, and 5 fishing methods slots. All slots will still have at least a 1% rate.
         Expect multiple 1% slot rates.
