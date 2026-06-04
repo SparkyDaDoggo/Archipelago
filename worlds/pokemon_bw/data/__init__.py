@@ -149,7 +149,7 @@ class SpeciesData(NamedTuple):
     base_speed: int
     catch_rate: int
     gender_ratio: int
-    # starts with 0 for base evolutions
+    # starts with 1 for base evolutions
     evolution_stage: int
     # (primary, secondary, hidden)
     abilities: tuple[str, str, str]
@@ -185,7 +185,7 @@ class EvolutionMethodData(NamedTuple):
     id: int
     has_level_value: bool
     # Takes value from evolution data and returns the access rule for that evolution
-    rule: Callable[[int], ExtendedRule] | None
+    rule: Callable[[int, str], ExtendedRule] | None
 
 
 class TypeData(NamedTuple):

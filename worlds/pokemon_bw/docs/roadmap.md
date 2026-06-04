@@ -143,6 +143,7 @@ The content of future updates used to be predetermined, but various circumstance
   - DeathLink
   - Wonder trade
   - Multiworld gift Pokémon
+  - Phenomena activation (vanilla, any badge, Striaton Gym, always)
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
   - Redirect NPC items to other script file

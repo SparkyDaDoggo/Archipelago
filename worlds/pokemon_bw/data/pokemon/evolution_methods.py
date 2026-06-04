@@ -1,8 +1,10 @@
+from typing import Callable
+
 from .. import EvolutionMethodData, ExtendedRule
-from . import species
+from . import movesets_level_up, movesets_tm_hm, moves as move_tables, species
 
 
-def has_species(name: str) -> ExtendedRule:
+def has_item(name: str) -> ExtendedRule:
     return lambda state, world: state.has(name, world.player)
 
 
@@ -21,6 +23,9 @@ can_get_item_r10: ExtendedRule = lambda state, world: state.can_reach_region("Ro
 can_buy_item_undella: ExtendedRule = lambda state, world: state.can_reach_region("Undella Town", world.player)
 can_get_item_chasm: ExtendedRule = lambda state, world: state.can_reach_region("Giant Chasm Entrance Cave", world.player)
 can_buy_item: dict[int, ExtendedRule] = {
+    0x002E: can_buy_item_mall,  # Protein
+    0x002F: can_buy_item_mall,  # Iron
+    0x0030: can_buy_item_mall,  # Carbos
     80: can_buy_item_twist,  # Sun Stone
     81: can_buy_item_twist,  # Moon Stone
     82: can_buy_item_castelia,  # Fire Stone
@@ -46,6 +51,9 @@ can_buy_item: dict[int, ExtendedRule] = {
     327: can_get_item_chasm,  # Razor Fang
     537: can_buy_item_undella,  # Prism Scale
 }
+
+stone_items = (80, 81, 82, 83, 84, 85, 107, 108, 109)
+hold_items = (0x002E, 0x002F, 0x0030, 110, 221, 226, 227, 233, 235, 252, 321, 322, 323, 324, 325, 326, 327, 537)
 
 in_vanilla_east: ExtendedRule = lambda state, world: (
     state.can_reach_region("Route 15", world.player)
@@ -80,40 +88,64 @@ is_in_appropriate_region: dict[int, ExtendedRule] = {  # Artificial logic so tha
     17: can_challenge_alder,
     18: can_challenge_alder,
     19: can_challenge_alder,
+    20: can_challenge_alder,
 }
 
 
-def stats_lvlup(value: int) -> ExtendedRule:
+def stats_lvlup(value: int, species: str) -> ExtendedRule:
     return lambda state, world: (is_in_appropriate_region[value//5](state, world)
-                                 and state.can_reach_region("Route 9", world.player))
+                                 and can_buy_item_mall(state, world))
 
+
+def move_lvlup(value: int, species: str) -> ExtendedRule:
+    for lvl_move in movesets_level_up.table[species].level_up_moves:
+        if move_tables.by_name[lvl_move[1]] == value:
+            return lambda state, world: (is_in_appropriate_region[lvl_move[0]//5](state, world)
+                                         and can_reach_mistralton_city(state, world))
+    for tm_move in movesets_tm_hm.table[species].tm_hm_moves:
+        if move_tables.by_name[move_tables.tm_hm[tm_move]] == value:
+            return has_item(tm_move)
+    return can_reach_mistralton_city
+
+
+appropriate_region: Callable[[int, str], ExtendedRule] = lambda value, species: is_in_appropriate_region[value//5]
+item_evo: Callable[[int, str], ExtendedRule] = lambda value, species: can_buy_item[value]
 
 methods: dict[str, EvolutionMethodData] = {
-    "Level up": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),
-    "Stone": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),
-    "Stone male": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
-    "Stone female": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Repeatable encounters, including static, are ensured
-    "Friendship": EvolutionMethodData(0, False, lambda value: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
-    "Friendship (Day)": EvolutionMethodData(0, False, None),  # Removed
-    "Friendship (Night)": EvolutionMethodData(0, False, None),  # Removed
-    "Trade": EvolutionMethodData(0, False, None),  # Removed
-    "Trade with item": EvolutionMethodData(0, False, None),  # Removed
-    "Trade Karrablast Shelmet": EvolutionMethodData(0, False, None),  # Removed
-    "Magnetic area": EvolutionMethodData(0, False, lambda value: can_reach_magnetic_area),
-    "Level up with move": EvolutionMethodData(0, False, lambda value: can_reach_mistralton_city),  # When randomized evolutions, then move id must be taken from level up moveset
-    "Level up moss rock": EvolutionMethodData(0, False, lambda value: can_reach_moss_rock),
-    "Level up ice rock": EvolutionMethodData(0, False, lambda value: can_reach_ice_rock),
-    "Level up item day": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Always paired with night
-    "Level up item night": EvolutionMethodData(0, False, lambda value: can_buy_item[value]),  # Always paired with day
-    "Level up higher defense": EvolutionMethodData(0, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up higher attack": EvolutionMethodData(0, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up equal physical": EvolutionMethodData(0, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up Silcoon": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up Cascoon": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up Ninjask": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),
-    "Level up Shedinja": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),
-    "Level up high beauty": EvolutionMethodData(0, False, None),  # Removed
-    "Level up (female)": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up (male)": EvolutionMethodData(0, True, lambda value: is_in_appropriate_region[value//5]),  # Repeatable encounters, including static, are ensured
-    "Level up with party member": EvolutionMethodData(0, False, lambda value: has_species(species.by_id[value, 0])),
+    "Level up": EvolutionMethodData(4, True, appropriate_region),
+    "Stone": EvolutionMethodData(8, False, item_evo),
+    "Stone male": EvolutionMethodData(17, False, item_evo),  # Repeatable encounters, including static, are ensured
+    "Stone female": EvolutionMethodData(18, False, item_evo),  # Repeatable encounters, including static, are ensured
+    "Friendship": EvolutionMethodData(1, False, lambda value, species: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
+    "Friendship (Day)": EvolutionMethodData(2, False, lambda value, species: can_reach_nacrene_city),  # Only in plando
+    "Friendship (Night)": EvolutionMethodData(3, False, lambda value, species: can_reach_nacrene_city),  # Only in plando
+    "Trade": EvolutionMethodData(5, False, lambda value, species: always_possible),  # Only in plando
+    "Trade with item": EvolutionMethodData(6, False, item_evo),  # Only in plando
+    "Trade Karrablast Shelmet": EvolutionMethodData(7, False, lambda value, species: always_possible),  # Only in plando
+    "Magnetic area": EvolutionMethodData(28, False, lambda value, species: can_reach_magnetic_area),
+    "Unused area": EvolutionMethodData(25, False, lambda value, species: can_reach_magnetic_area),  # Only in plando, unless used for custom area
+    "Level up with move": EvolutionMethodData(21, False, move_lvlup),
+    "Level up moss rock": EvolutionMethodData(26, False, lambda value, species: can_reach_moss_rock),
+    "Level up ice rock": EvolutionMethodData(27, False, lambda value, species: can_reach_ice_rock),
+    "Level up item day": EvolutionMethodData(19, False, item_evo),  # Always paired with night
+    "Level up item night": EvolutionMethodData(20, False, item_evo),  # Always paired with day
+    "Level up higher defense": EvolutionMethodData(11, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up higher attack": EvolutionMethodData(9, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up equal physical": EvolutionMethodData(10, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up Silcoon": EvolutionMethodData(12, True, appropriate_region),  # Repeatable encounters, including static, are ensured
+    "Level up Cascoon": EvolutionMethodData(13, True, appropriate_region),  # Repeatable encounters, including static, are ensured
+    "Level up Ninjask": EvolutionMethodData(14, True, appropriate_region),
+    "Level up Shedinja": EvolutionMethodData(15, True, appropriate_region),
+    "Level up high beauty": EvolutionMethodData(16, False, lambda value, species: always_possible),  # Only in plando
+    "Level up (female)": EvolutionMethodData(23, True, appropriate_region),  # Repeatable encounters, including static, are ensured
+    "Level up (male)": EvolutionMethodData(24, True, appropriate_region),  # Repeatable encounters, including static, are ensured
+    "Level up with party member": EvolutionMethodData(22, False, lambda value, spec: has_item(species.by_id[value, 0])),
+}
+
+
+paired_method_slots = {
+    "_Level up item": 2,
+    "_Level up split": 2,
+    "_Level up PID": 2,
+    "_Level up stats": 3,
 }

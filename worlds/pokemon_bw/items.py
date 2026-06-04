@@ -1,5 +1,5 @@
 from random import Random
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Iterable
 from collections import ChainMap
 
 from BaseClasses import Item
@@ -77,11 +77,11 @@ def generate_filler(world: "PokemonBWWorld") -> str:
     return random_choice_nested(world.random, world.filler_nested)
 
 
-def random_choice_nested(random: Random, nested: list[str | list | dict]) -> Any:
+def random_choice_nested(random: Random, nested: Iterable[str | list | tuple | dict]) -> Any:
     """Helper function for getting a random element from a nested list."""
-    current: str | list | dict = nested
-    while isinstance(current, list | dict):
-        if isinstance(current, list):
+    current: str | Iterable = nested
+    while isinstance(current, list | tuple | dict):
+        if isinstance(current, list | tuple):
             current = random.choice(current)
         else:
             current = random.choice(tuple(current.keys()))
