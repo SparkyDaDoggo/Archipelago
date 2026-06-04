@@ -155,6 +155,8 @@ class SpeciesData(NamedTuple):
     abilities: tuple[str, str, str]
     # tuple(method, parameter, evolve into)
     evolutions: list[tuple[str, int, str]]
+    # forms that cave custom stats
+    is_custom_form: bool = False
 
 
 class LevelUpMovesetData(NamedTuple):

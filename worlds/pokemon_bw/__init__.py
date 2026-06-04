@@ -8,7 +8,7 @@ from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
 from Options import Option
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
-from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
+from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry, SpeciesEntry
 from .data import RulesDict
 
 bizhawk_client.register_client()
@@ -39,6 +39,10 @@ class PokemonBWSettings(settings.Group):
         """Toggles whether Encounter Plando is enabled for players in generation.
         If disabled, yamls that use Encounter Plando do not raise OptionErrors, but display a warning."""
 
+    class EnableStatsPlando(settings.Bool):
+        """Toggles whether Stats Plando is enabled for players in generation.
+        If disabled, yamls that use Stats Plando do not raise OptionErrors, but display a warning."""
+
     class DumpPatchedFiles(settings.Bool):
         """If enabled, files inside the rom that are changed as part of the patching process (except for base patches)
         will be dumped into a zip file next to the patched rom (for debug purposes)."""
@@ -56,6 +60,7 @@ class PokemonBWSettings(settings.Group):
     ut_pack_path: UTPackPath | str = UTPackPath()
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
+    enable_stats_plando: EnableStatsPlando | bool = True
     dump_patched_files: DumpPatchedFiles | bool = False
     enable_arm7_expansion_test: EnableArm7ExpansionTest | bool = False
     extract_text: ExtractText | bool = False
@@ -146,12 +151,14 @@ class PokemonBWWorld(World):
         self.master_ball_seller_cost: int = 0
         self.filler_nested: list[str | list] | None = None
         self.slot_data_cache: dict[str, Any] | None = None
+        self.species_entries: dict[str, SpeciesEntry] | None = None
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
 
     def generate_early(self) -> None:
         from .generate.encounter import wild, checklist, static, plando
+        from .generate.pokemon import species
         from .generate import trainers
         from .data import version
 
@@ -193,6 +200,7 @@ class PokemonBWWorld(World):
         self.rules_dict = locations.create_rule_dict(self)
         locations.connect_regions(self)
         locations.cleanup_regions(self.regions)
+        self.species_entries = species.generate_species_data(self)
         species_checklist = checklist.get_species_checklist(self)
         slots_checklist = checklist.get_slots_checklist(self)
         # Static and trade encounter generation also remove and add species from/to checklist

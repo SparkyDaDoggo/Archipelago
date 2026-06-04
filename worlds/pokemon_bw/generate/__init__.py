@@ -1,12 +1,33 @@
-from typing import NamedTuple, TYPE_CHECKING
+from typing import NamedTuple, Self
 
-from ..data import InclusionRule, ExtendedRule
-
-if TYPE_CHECKING:
-    from ..data import SpeciesData
+from ..data import InclusionRule, ExtendedRule, SpeciesData, LevelUpMovesetData, TMHMMovesetData
+from ..data.pokemon import movesets_level_up, movesets_tm_hm
 
 
-class SpeciesEntry(NamedTuple):
+class EvoLine:
+    type: str
+    members: set[int] | Self  # ONLY LOOKUP
+
+    def search(self) -> Self:
+        curr = self
+        while isinstance(curr.members, EvoLine):
+            curr = curr.members
+        return curr
+
+    def __contains__(self, item):
+        return item in self.search().members
+
+    def merge(self, other: Self):
+        this, other = self.search(), other.search()
+        new_line = EvoLine()
+        new_line.type, new_line.members = self.type, this.members | other.members
+        this.members, other.members = new_line, new_line
+
+
+class SpeciesEntry:
+    dex_name: str
+    dex_number: int
+    form: int
     type_1: str
     type_2: str
     base_hp: int
@@ -22,11 +43,38 @@ class SpeciesEntry(NamedTuple):
     # (primary, secondary, hidden)
     abilities: tuple[str, str, str]
     # tuple(method, parameter, evolve into)
-    evolutions: list[tuple[str, int, str]]
+    evolutions: list[tuple[str, int, int]]
     # tuple(level, move name)
-    level_up_moves: list[tuple[int, str]]
+    level_up_moves: LevelUpMovesetData
     # TM number (internal order is TM1-95 HM1-6)
-    tm_hm_moves: set[str]
+    tm_hm_moves: TMHMMovesetData
+    is_custom_form: bool
+    # bitflag, b0 = evolutions, b1 = plando evo override
+    write: int = 0
+    evo_line: EvoLine | None = None
+
+    def __init__(self, name: str, data: SpeciesData):
+        from ..data.pokemon.species import by_name
+
+        self.dex_name = data.dex_name
+        self.dex_number = data.dex_number
+        self.form = data.form
+        self.type_1 = data.type_1
+        self.type_2 = data.type_2
+        self.base_hp = data.base_hp
+        self.base_attack = data.base_attack
+        self.base_defense = data.base_defense
+        self.base_sp_attack = data.base_sp_attack
+        self.base_sp_defense = data.base_sp_defense
+        self.base_speed = data.base_speed
+        self.catch_rate = data.catch_rate
+        self.gender_ratio = data.gender_ratio
+        self.evolution_stage = data.evolution_stage
+        self.abilities = data.abilities
+        self.evolutions = [(evo_tup[0], evo_tup[1], by_name[evo_tup[2]].dex_number) for evo_tup in data.evolutions]
+        self.level_up_moves = movesets_level_up.table[name]
+        self.tm_hm_moves = movesets_tm_hm.table[name]
+        self.is_custom_form = data.is_custom_form
 
 
 class EncounterEntry(NamedTuple):

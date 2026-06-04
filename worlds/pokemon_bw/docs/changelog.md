@@ -45,6 +45,27 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added more choices to `Modify Encounter Rates`:
   - `One per method`
   - `Dexsanity friendly`
+- Added `Randomize Evolutions` option, currently containing the following modifiers:
+  - `Randomize`
+  - `Random methods`
+  - `Common type`
+  - `Follow type`
+  - `Multiple pre-evolutions`
+  - `More or less branches`
+  - `Looping evolution lines`
+  - `Every level`
+  - `Pair stats`
+  - `Pair 50 50`
+  - `Increasing stats`
+- Added `Stats Randomization Adjustments` option, currently only containing `Level up evo weight`
+- Added `Stats Plando` option, currently containing the following keys for every species:
+  - `evolutions`, a list of evolutions to add to/override the (randomized) evolutions of a species
+  - `override_evolutions`, a toggle to determine whether to add evolutions or override them
+- Added `Replace Evolution Methods` option, currently containing the following modifiers:
+  - `Locations`
+  - `Friendship`
+  - `PID`
+  - `Stats`
 
 ### Bug fixes and technical stuff
 
@@ -53,10 +74,13 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed "Striaton City - TM from Fennel" not being able to contain an HM with certain options
 - Reduced frequency of different forms of the same pokémon in randomization
 - Wrote down levelup moveset data
-- Made the Gracidea a useless key item due to it not working on non-fateful encounters
 - Fixed small error with encounter plando
 - Tweaked many option descriptions
 - Made wild randomization not having to ensure 115 different obtainable pokémon if `All Pokémon Seen` is enabled
+- Made the Gracidea also accept non-event Shaymins
+- Removed Shelmet and Karrablast accepting each other's evolved form to be able to evolve from logic
+  - They are still doable ingame, unless evolutions are randomized
+- Fixed logic of move evolutions
 
 ### Is this version compatible with older multiworld slots and save files?
 No

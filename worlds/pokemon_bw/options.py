@@ -180,7 +180,6 @@ class RandomizeStarterPokemon(ToggleSet):
     - **Type variety** - Every starter will have types that are different from the other two.
     """
     display_name = "Randomize Starter Pokemon"
-    valid_keys_casefold = True
     valid_keys = [
         "Randomize",
         "Any base",
@@ -201,14 +200,15 @@ class RandomizeStaticPokemon(ToggleSet):
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
     - **Only base** - Only use unevolved Pokemon.
     - **No legendaries** - Exclude legendaries from being placed into static encounters.
+    - **Split statues** - Splits the statues in Desert Resort into 5 different species.
     """
     display_name = "Randomize Static Pokemon"
-    valid_keys_casefold = True
     valid_keys = [
         "Randomize",
         "Similar base stats",
         "Only base",
         "No legendaries",
+        "Split statues",
     ]
     default = []
     auto_add_if_any = "Randomize"
@@ -222,13 +222,15 @@ class RandomizeGiftPokemon(ToggleSet):
     - **Randomize** - Toggles gift pokemon being randomized. Automatically added if any other modifier is added.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
     - **No legendaries** - Exclude legendaries from being placed into gift encounters.
+    - **Split monkeys** - Makes the gift encounter in Dreamyard depend on which starter you picked (like in vanilla),
+        else it will always give you the same species.
     """
     display_name = "Randomize Gift Pokemon"
-    valid_keys_casefold = True
     valid_keys = [
         "Randomize",
         "Similar base stats",
         "No legendaries",
+        "Split monkeys",
     ]
     default = []
     auto_add_if_any = "Randomize"
@@ -246,7 +248,6 @@ class RandomizeTradePokemon(ToggleSet):
     - **No legendaries** - Exclude legendaries from being placed into trades.
     """
     display_name = "Randomize Trade Pokemon"
-    valid_keys_casefold = True
     valid_keys = [
         "Randomize offer",
         "Randomize request",
@@ -272,7 +273,6 @@ class RandomizeLegendaryPokemon(ToggleSet):
     Including **Keep legendary** AND **No legendaries** will instead only put pseudo legendaries into these encounters.
     """
     display_name = "Randomize Legendary Pokemon"
-    valid_keys_casefold = True
     valid_keys = [
         "Randomize",
         "Keep legendary",
@@ -319,6 +319,16 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
         "Overpowered threshold": (200, 1530),
         "Force evolutions threshold": (1, 100),
     }
+
+
+def plando_to_slotdata(value) -> typing.Any:
+    if isinstance(value, dict):
+        return {v: plando_to_slotdata(vv) for v, vv in value.items()}
+    if isinstance(value, typing.NamedTuple):
+        return {v: plando_to_slotdata(vv) for v, vv in value._asdict()}
+    if not isinstance(value, str) and isinstance(value, typing.Iterable):
+        return tuple(plando_to_slotdata(v) for v in value)
+    return value
 
 
 class PlandoEncounter(typing.NamedTuple):
@@ -462,20 +472,11 @@ class EncounterPlando(Option[list[PlandoEncounter]]):
             raise OptionError(
                 f"Invalid Encounter Plando placement(s):\n" +
                 "\n".join(invalid) +
-                "\nRefer to the Text Plando guide of this game for further information."
+                "\nRefer to the Encounter Plando guide of this game for further information."
             )
 
     def to_slot_data(self) -> list[dict[str, str | list[str] | list[int]]]:
-        return [
-            {
-                "map": plando.map,
-                "seasons": plando.seasons,
-                "method": plando.method,
-                "slots": plando.slots,
-                "species": plando.species,
-            }
-            for plando in self
-        ]
+        return plando_to_slotdata(self.value)
 
     @classmethod
     def get_option_name(cls, value: list[PlandoEncounter]) -> str:
@@ -537,22 +538,33 @@ class RandomizeEvolutions(ToggleSet):
     Randomizes the evolutions of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles evolutions being randomized. Required for any other modifier.
-    - **Keep method** - Keeps the method (e.g. levelup, evolution stone, ...) of every evolution.
-    - **Follow type** - Pre-evolution and evolved pokemon always share at least one type.
-    - **Allow multiple pre-evolutions** - Multiple pokemon species can evolve into the same species.
-    - **Allow more or less branches** - Allows all species to be able to evolve into more or less species than before.
+    - **Randomize** - Toggles evolutions being randomized. Automatically added if any other modifier is added.
+    - **Random methods** - Allows the method (e.g. levelup, evolution stone, ...) of every evolution to be randomized as well.
+    - **Common type** - Pre-evolution and evolved pokemon always share at least one type.
+    - **Follow type** - Whole evolution lines will share at least one type.
+    - **Multiple pre-evolutions** - Different pokemon species can evolve into the same species.
+    - **More or less branches** - Allows all species to be able to evolve into more or less different species than before.
+    - **Looping evolution lines** - Allows all species to evolve into one of their pre-evolutions.
+    - **Every level** - Makes all species only have a levelup evolution that triggers on any levelup.
+        Including **More or less branches** will only ensure at least one method is levelup. This potentially ignores
+        **Multiple pre-evolutions**, **Looping evolution lines**, and **Follow type** being
+        excluded and **Random methods** being included.
+    - **Pair stats** - Always makes the stats-dependent methods of Tyrogue be randomized together.
+    - **Pair 50 50** - Always makes the PID-dependent methods of Wurmple be randomized together.
+    - **Increasing stats** - Evolved pokemon will always have an equal or higher base stat total than their pre-evolutions.
     """
     display_name = "Randomize Evolutions"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Randomize",
-        "Keep method",
-        "Follow type",
-        "Allow multiple pre-evolutions",
-        "Allow more or less branches",
-    ]
-    default = []
+    is_randomize = False
+    is_random_methods = False
+    is_common_type = False
+    is_follow_type = False
+    is_multiple_pre = False, "Multiple pre-evolutions"
+    is_more_less_branches = False, "More or less branches"
+    is_looping_lines = False, "Looping evolution lines"
+    is_every_level = False
+    is_pair_stats = False
+    is_pair_50_50 = False
+    is_increasing_stats = False
     auto_add_if_any = "Randomize"
 
 
@@ -701,6 +713,10 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
     Every parameter can be specified as unweighted/weighted lists, "random",
     and "random-range-x-y" like usual range options.
 
+    - **Levelup evo weight** - If evolutions are randomized and **Random methods** is included, this will determine
+        how likely it is to roll the levelup method. The lower this value, the more likely it is to get
+        special methods (like using a stone, high friendship, ...).
+
     """
     # **Randomize Base Stats:**
     # - **Stats total minimum/maximum** - The minimum/maximum base stats total, if randomized.
@@ -721,6 +737,7 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
     display_name = "Stats Randomization Adjustments"
     fill_defaults = True
     valid_keys = [
+        "Level up evo weight",
         # "Stats total minimum",
         # "Stats total maximum",
         # "Catch rates minimum",
@@ -729,6 +746,7 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         # "Gender ratio maximum",
     ]
     default = {
+        "Level up evo weight": 10,
         # "Stats total minimum": 6,
         # "Stats total maximum": 1530,
         # "Catch rates minimum": 3,
@@ -737,6 +755,7 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         # "Gender ratio maximum": 255,
     }
     individual_min_max = {
+        "Level up evo weight": (0, 99),
         # "Stats total minimum": (6, 1530),
         # "Stats total maximum": (6, 1530),
         # "Catch rates minimum": (3, 255),
@@ -749,6 +768,170 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         # ("Catch rates minimum", "Catch rates maximum"),
         # ("Gender ratio minimum", "Gender ratio maximum"),
     ]
+
+
+class PlandoEvolution(typing.NamedTuple):
+    species: str
+    method: str = "Level up"
+    level: int = 20
+    stone: str = "Shiny Stone"
+    held: str = "King's Rock"
+    move: str = "Toxic"
+    partner: str = "Remoraid"
+
+
+class PlandoStat(typing.NamedTuple):
+    evolutions: list[PlandoEvolution] | bool = False
+    override_evolutions: bool = True
+
+
+class StatsPlando(Option[dict[str, PlandoStat]]):
+    """
+    Here you can change certain stats of a pokemon species to your liking. More stats are planned to be changeable.
+
+    Here's an example of how to format :
+    ```
+    stats_plando:
+      Bulbasaur:
+        evolutions:
+          - species: Squirtle
+            method: Stone
+            stone: Water Stone
+          - species: Eevee
+            method: Level up
+            level: 30
+        override_evolutions: False
+    ```
+    Stats Plando requires the corresponding host setting to be enabled, else it will be ignored for all players.
+    Be aware that this can lead to generation failures when combined with other restrictive options or potential
+    softlocks. Refer to the Stats Plando guide of this game for further information.
+    """
+    display_name = "Stats Plando"
+    supports_weighting = False
+    default = {}
+
+    def __init__(self, value: dict[str, PlandoStat]) -> None:
+        self.value = deepcopy(value)
+        super().__init__()
+
+    @classmethod
+    def from_any(cls, data: dict) -> typing.Self:
+
+        plando_stat_keys = ("evolutions", "override_evolutions")
+        plando_evo_keys = ("species", "method", "level", "stone", "held", "move", "partner")
+
+        if not isinstance(data, dict):
+            raise OptionError(f"Expected dictionary for Stats Plando, got {type(data)}")
+        plandos: dict[str, PlandoStat] = {}
+        for spec, plando in data.items():
+            if not isinstance(spec, str):
+                raise OptionError(f"Species name in Stats Plando expected to be a string, got {type(plando)}")
+            if not isinstance(plando, dict):
+                raise OptionError(f"Expected dictionary as Stats Plando entry {spec}, got {type(plando)}")
+            plando_evolutions = []
+            for plando_key, value in plando.items():
+                if plando_key not in plando_stat_keys:
+                    raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
+                if plando_key == "evolutions":
+                    if not (isinstance(value, list) or value is False):
+                        raise OptionError(f"Expected value of evolutions key to be a list or 'false', got {type(value)}")
+                    for evo_entry in value:
+                        if not isinstance(evo_entry, dict):
+                            raise OptionError(f"Expected evolution entry to be a dictionary, got {type(evo_entry)}")
+                        if "species" not in evo_entry:
+                            raise OptionError(f"An evolution entry for species {spec} is missing the 'species' key")
+                        for evo_entry_key, evo_entry_value in evo_entry.items():
+                            if not isinstance(evo_entry_key, str):
+                                raise OptionError(
+                                    f"Evolution entry key expected to be a string, got {type(evo_entry_key)}")
+                            if evo_entry_key not in plando_evo_keys:
+                                raise OptionError(f"Unknown evolution entry key: {plando_key}")
+                        plando_evolutions.append(PlandoEvolution(**evo_entry))
+            plando["evolutions"] = plando_evolutions
+            plandos[spec] = PlandoStat(**plando)
+        return cls(plandos)
+
+    def verify(self, world: typing.Type["World"], player_name: str, plando_options: "PlandoOptions") -> None:
+        if not settings.get_settings()["pokemon_bw_settings"]["enable_stats_plando"]:
+            self.value = []
+            logging.warning(
+                f"The stats plando setting is turned off, so plandos for {player_name} will be ignored."
+            )
+            return
+        try:
+            self.verify_keys()
+        except OptionError as validation_error:
+            raise OptionError(f"Player {player_name} has invalid option keys:\n{validation_error}")
+
+    def verify_keys(self) -> None:
+        from .data.pokemon.species import by_name as species_by_name
+        from .data.pokemon.pokedex import by_name as dex_by_name
+        from .data.pokemon.evolution_methods import methods as methods_table, paired_method_slots as paired_table, stone_items, hold_items
+        from .data.items import all_items_dict_view
+        from .data.pokemon.moves import by_name as move_by_name
+
+        invalid: list[str] = []
+        for plando in self:
+            reasons = []
+            if plando[0] in species_by_name:
+                spec_data = species_by_name[plando[0]]
+                if spec_data.form and not spec_data.is_custom_form:
+                    reasons.append(f"Species name is a form that cannot be edited")
+            elif plando[0] not in dex_by_name:
+                reasons.append(f"Unknown species name")
+            plando_stat: PlandoStat = plando[1]
+            if not isinstance(plando_stat.override_evolutions, int):
+                reasons.append((f"override_evolutions value \"{plando_stat.override_evolutions}\" is neither "
+                                f"a boolean nor an integer"))
+            evo_sum = 0
+            for plando_evo in plando_stat.evolutions:
+                if plando_evo.species not in species_by_name and plando_evo.species not in dex_by_name:
+                    reasons.append(f"Unknown species name: {plando_evo.species}")
+                if plando_evo.partner not in species_by_name and plando_evo.partner not in dex_by_name:
+                    reasons.append(f"Unknown partner pokémon name: {plando_evo.partner}")
+                if plando_evo.method not in methods_table and plando_evo.method not in paired_table:
+                    reasons.append(f"Unknown evolution method: {plando_evo.method}")
+                evo_sum += paired_table.get(plando_evo.method, 1)
+                if not isinstance(plando_evo.level, int):
+                    reasons.append(f"Evolution level is not an integer: {plando_evo.level}")
+                if not 2 <= plando_evo.level <= 100:
+                    reasons.append(f"Evolution level {plando_evo.level} out of range, allowed are values in range 2-100")
+                if plando_evo.stone not in all_items_dict_view:
+                    reasons.append(f"Unknown evolution stone item: {plando_evo.stone}")
+                if all_items_dict_view[plando_evo.stone].item_id not in stone_items:
+                    reasons.append(f"Item {plando_evo.stone} is not an evolution stone")
+                if plando_evo.held not in all_items_dict_view:
+                    reasons.append(f"Unknown evolution held item: {plando_evo.held}")
+                if all_items_dict_view[plando_evo.held].item_id not in hold_items:
+                    reasons.append(f"Item {plando_evo.held} is not an evolution item")
+                if plando_evo.move not in move_by_name:
+                    reasons.append(f"Unknown move: {plando_evo.move}")
+            if evo_sum > 7:
+                reasons.append(f"Too many evolution entries")
+            if reasons:
+                invalid.append(f"{plando[0]}: " + ", ".join(reasons))
+        if invalid:
+            raise OptionError(
+                f"Invalid Stats Plando placement(s):\n" +
+                "\n".join(invalid) +
+                "\nRefer to the Stats Plando guide of this game for further information."
+            )
+
+    def to_slot_data(self) -> list[dict[str, str | list[str] | list[int]]]:
+        return plando_to_slotdata(self.value)
+
+    @classmethod
+    def get_option_name(cls, value: dict[str, PlandoStat]) -> str:
+        return str(plando_to_slotdata(value))
+
+    def __iter__(self) -> typing.Iterator[tuple[str, PlandoStat]]:
+        yield from self.value.items()
+
+    def __getitem__(self, index) -> PlandoStat:
+        return self.value[index]
+
+    def __len__(self) -> int:
+        return len(self.value)
 
 
 class ShuffleBadgeRewards(Choice):
@@ -1273,8 +1456,8 @@ class ReplaceEvoMethods(ToggleSet):
     Trade and time based evolutions are always replaced/excluded.
     You can add as many of the following modifiers as you want.
 
-    - **Locations** - Replaces evolutions requiring a magnetic place, the ice rock, or the mossy rock with using a
-        thunder stone, using a leaf stone, and leveling up with a held casteliacone.
+    - **Locations** - Replaces evolutions requiring a magnetic place, the mossy rock, or the ice rock with using a
+        thunder stone, leaf stone, and shiny stone (respectively).
     - **Friendship** - Replaces friendship based evolutions with level up evolutions.
     - **PID** - Replaces personality value based evolutions. Gender dependant evolutions lose their gender dependency,
         Wurmple's random evolutions will require a Butterfree/Venomoth in your party, and Burmy will also evolve into
@@ -1283,14 +1466,10 @@ class ReplaceEvoMethods(ToggleSet):
     - **Stats** - Replaces Tyrogue's stat based evolutions with level up while holding a protein, iron, or carbos.
     """
     display_name = "Replace Evolution Methods"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Locations",
-        "Friendship",
-        "PID",
-        "Stats",
-    ]
-    default = []
+    is_locations = False
+    is_friendship = False
+    is_pid = False, "PID"
+    is_stats = False
 
 
 class MasterBallSeller(ToggleSet):
@@ -1558,14 +1737,15 @@ class PokemonBWOptions(PerGameCommonOptions):
 
     # Pokemon stats
     # randomize_base_stats: RandomizeBaseStats
-    # randomize_evolutions: RandomizeEvolutions
+    randomize_evolutions: RandomizeEvolutions
     # randomize_level_up_movesets: RandomizeLevelUpMovesets
     # randomize_tm_hm_compatibility: RandomizeTMHMCompatibility
     # randomize_types: RandomizeTypes
     # randomize_abilities: RandomizeAbilities
     # randomize_catch_rates: RandomizeCatchRates
     # randomize_gender_ratio: RandomizeGenderRatio
-    # stats_randomization_adjustments: StatsRandomizationAdjustments
+    stats_randomization_adjustments: StatsRandomizationAdjustments
+    stats_plando: StatsPlando
 
     # Items, locations, and progression
     shuffle_badges: ShuffleBadgeRewards
@@ -1575,6 +1755,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     dexsanity: Dexsanity
     # trainersanity: Trainersanity
     # seensanity: Seensanity
+    # formsanity: Formsanity
     # shinysanity: Shinysanity
     # door_shuffle: DoorShuffle
     season_control: SeasonControl
@@ -1586,7 +1767,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     exp_multiplier: ExpMultiplier
     all_pokemon_seen: AllPokemonSeen
     # add_fairy_type: AddFairyType
-    # replace_evo_methods: ReplaceEvoMethods
+    replace_evo_methods: ReplaceEvoMethods
     master_ball_seller: MasterBallSeller
     # deathlink: DeathLink  # Needs to be imported from base options
     # wonder_trade: WonderTrade
