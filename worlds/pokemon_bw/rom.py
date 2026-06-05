@@ -79,7 +79,7 @@ class PatchMethods:
     @staticmethod
     def write_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile) -> None:
         from patch.procedures import (write_text, write_wild_pokemon, write_trainer_pokemon, level_adjustments,
-                                      modify_rates, write_evolutions)
+                                      modify_rates, write_evolutions, write_stats)
 
         procedures: list[str] = ["base_patch", "write_text"]
         write_text.write_plando(patch, opened_zipfile)
@@ -104,9 +104,15 @@ class PatchMethods:
         if patch.world.options.modify_encounter_rates != "vanilla":
             procedures.append("modify_rates")
             modify_rates.write_patch(patch, opened_zipfile)
-        if any(species_data.write & 1 for species_data in patch.world.species_entries.values()):
+        w_stats = 0
+        for species_data in patch.world.species_entries.values():
+            w_stats |= species_data.write
+        if w_stats & 0b1:
             procedures.append("write_evolutions")
             write_evolutions.write_patch(patch, opened_zipfile)
+        if w_stats & 0b101:
+            procedures.append("write_stats")
+            write_stats.write_patch(patch, opened_zipfile)
 
         opened_zipfile.writestr("procedures.txt", "\n".join(procedures))
         opened_zipfile.writestr("slot_data.json",
@@ -134,7 +140,7 @@ class PatchMethods:
 
         from .ndspy.rom import NintendoDSRom
         from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
-                                       level_adjustments, write_text, modify_rates, write_evolutions)
+                                       level_adjustments, write_text, modify_rates, write_evolutions, write_stats)
 
         patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch,
                                               dict[str, bytes | bytearray]], None]] = {
@@ -149,6 +155,7 @@ class PatchMethods:
             "modify_trainer_levels": level_adjustments.modify_trainers,
             "write_text": write_text.patch,
             "write_evolutions": write_evolutions.patch,
+            "write_stats": write_stats.patch,
         }
 
         files_dump: dict[str, bytes | bytearray] = {}

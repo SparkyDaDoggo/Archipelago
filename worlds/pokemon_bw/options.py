@@ -518,18 +518,18 @@ class RandomizeBaseStats(ToggleSet):
     Randomizes the base stats of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles base stats being randomized. Required for any other modifier.
-    - **Keep total** - Every species will keep the sum of its base stats.
+    - **Randomize** - Toggles base stats being randomized. Automatically added if any other modifier is added.
+    - **Random total** - Allows the base stats of a species to be entirely random. Otherwise, the species will be
+        roughly as strong as before.
     - **Follow evolutions** - Evolved species will use their pre-evolution's base stats and add on top of that.
+
+    If evolutions are randomized and **Follow evolutions** is included, then not including **Random total** might
+    not be followed consistently.
     """
     display_name = "Randomize Base Stats"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Randomize",
-        "Keep total",
-        "Follow evolutions",
-    ]
-    default = []
+    is_randomize = False
+    is_random_total = False
+    is_follow_evolutions = False
     auto_add_if_any = "Randomize"
 
 
@@ -713,58 +713,54 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
     Every parameter can be specified as unweighted/weighted lists, "random",
     and "random-range-x-y" like usual range options.
 
+    - **Stats total minimum/maximum** - The minimum/maximum base stats total, if randomized.
+        Allowed values are integers in range 6 to 1530.
     - **Levelup evo weight** - If evolutions are randomized and **Random methods** is included, this will determine
         how likely it is to roll the levelup method. The lower this value, the more likely it is to get
-        special methods (like using a stone, high friendship, ...).
+        special methods (like using a stone, high friendship, ...). Setting this to -1 disables other methods.
+        Otherwise, allowed values are integers in range 0 to 99.
+    - **Maximum evo level** - The maximum level at which levelup evolutions can occur. Allowed values are
+        integers in range 10 to 100.
 
     """
-    # **Randomize Base Stats:**
-    # - **Stats total minimum/maximum** - The minimum/maximum base stats total, if randomized.
-    #                                     Allowed values are integers in range 6 to 1530.
-
-    # **Randomize Catch Rates:**
-    # - **Catch rates minimum** - The minimum catch rates, if randomized.
-    #                             Allowed values are integers in range 3 to 255.
-    # - **Catch rates maximum** - The maximum catch rates, if randomized.
-    #                             Allowed values are integers in range 3 to 255.
-
-    # **Randomize Gender Ratio:**
-    # - **Gender ratio minimum** - The minimum gender ratio, if randomized.
-    #                              Allowed values are integers in range 0 to 255.
-    #                              A gender ratio of 0 is always female and 255 is always male.
-    # - **Gender ratio maximum** - The maximum gender ratio, if randomized.
-    #                              A gender ratio of 0 is always female and 255 is always male.
+    # - **Catch rates minimum/maximum** - The minimum/maximum catch rates, if randomized. Allowed values are integers
+    #     in range 3 to 255.
+    # - **Gender ratio minimum/maximum** - The minimum gender ratio, if randomized. Allowed values are integers
+    #     in range 0 to 255. A gender ratio of 0 is always female and 255 is always male.
     display_name = "Stats Randomization Adjustments"
     fill_defaults = True
     valid_keys = [
+        "Stats total minimum",
+        "Stats total maximum",
         "Level up evo weight",
-        # "Stats total minimum",
-        # "Stats total maximum",
+        "Maximum evo level",
         # "Catch rates minimum",
         # "Catch rates maximum",
         # "Gender ratio minimum",
         # "Gender ratio maximum",
     ]
     default = {
+        "Stats total minimum": 200,
+        "Stats total maximum": 800,
         "Level up evo weight": 10,
-        # "Stats total minimum": 6,
-        # "Stats total maximum": 1530,
+        "Maximum evo level": 100,
         # "Catch rates minimum": 3,
         # "Catch rates maximum": 255,
         # "Gender ratio minimum": 0,
         # "Gender ratio maximum": 255,
     }
     individual_min_max = {
-        "Level up evo weight": (0, 99),
-        # "Stats total minimum": (6, 1530),
-        # "Stats total maximum": (6, 1530),
+        "Stats total minimum": (6, 1530),
+        "Stats total maximum": (6, 1530),
+        "Level up evo weight": (-1, 99),
+        "Maximum evo level": (10, 100),
         # "Catch rates minimum": (3, 255),
         # "Catch rates maximum": (3, 255),
         # "Gender ratio minimum": (0, 255),
         # "Gender ratio maximum": (0, 255),
     }
     min_max_pairs = [
-        # ("Stats total minimum", "Stats total maximum"),
+        ("Stats total minimum", "Stats total maximum"),
         # ("Catch rates minimum", "Catch rates maximum"),
         # ("Gender ratio minimum", "Gender ratio maximum"),
     ]
@@ -781,6 +777,12 @@ class PlandoEvolution(typing.NamedTuple):
 
 
 class PlandoStat(typing.NamedTuple):
+    base_hp: int = 0
+    base_attack: int = 0
+    base_defense: int = 0
+    base_sp_attack: int = 0
+    base_sp_defense: int = 0
+    base_speed: int = 0
     evolutions: list[PlandoEvolution] | bool = False
     override_evolutions: bool = True
 
@@ -789,10 +791,13 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
     """
     Here you can change certain stats of a pokemon species to your liking. More stats are planned to be changeable.
 
-    Here's an example of how to format :
+    Here's an example of how this would look like:
     ```
     stats_plando:
       Bulbasaur:
+        base_hp: 5
+        base_attack: 5
+        base_sp_attack: 255
         evolutions:
           - species: Squirtle
             method: Stone
@@ -802,6 +807,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             level: 30
         override_evolutions: False
     ```
+
     Stats Plando requires the corresponding host setting to be enabled, else it will be ignored for all players.
     Be aware that this can lead to generation failures when combined with other restrictive options or potential
     softlocks. Refer to the Stats Plando guide of this game for further information.
@@ -816,10 +822,6 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
 
     @classmethod
     def from_any(cls, data: dict) -> typing.Self:
-
-        plando_stat_keys = ("evolutions", "override_evolutions")
-        plando_evo_keys = ("species", "method", "level", "stone", "held", "move", "partner")
-
         if not isinstance(data, dict):
             raise OptionError(f"Expected dictionary for Stats Plando, got {type(data)}")
         plandos: dict[str, PlandoStat] = {}
@@ -830,7 +832,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 raise OptionError(f"Expected dictionary as Stats Plando entry {spec}, got {type(plando)}")
             plando_evolutions = []
             for plando_key, value in plando.items():
-                if plando_key not in plando_stat_keys:
+                if plando_key not in PlandoStat._fields:
                     raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
                 if plando_key == "evolutions":
                     if not (isinstance(value, list) or value is False):
@@ -844,7 +846,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                             if not isinstance(evo_entry_key, str):
                                 raise OptionError(
                                     f"Evolution entry key expected to be a string, got {type(evo_entry_key)}")
-                            if evo_entry_key not in plando_evo_keys:
+                            if evo_entry_key not in PlandoEvolution._fields:
                                 raise OptionError(f"Unknown evolution entry key: {plando_key}")
                         plando_evolutions.append(PlandoEvolution(**evo_entry))
             plando["evolutions"] = plando_evolutions
@@ -883,6 +885,18 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             if not isinstance(plando_stat.override_evolutions, int):
                 reasons.append((f"override_evolutions value \"{plando_stat.override_evolutions}\" is neither "
                                 f"a boolean nor an integer"))
+            if not (isinstance(plando_stat.base_hp, int) and 0 <= plando_stat.base_hp <= 255):
+                reasons.append(f"Base HP {plando_stat.base_hp} is not an integer in range 0-255")
+            if not (isinstance(plando_stat.base_attack, int) and 0 <= plando_stat.base_attack <= 255):
+                reasons.append(f"Base attack {plando_stat.base_attack} is not an integer in range 0-255")
+            if not (isinstance(plando_stat.base_defense, int) and 0 <= plando_stat.base_defense <= 255):
+                reasons.append(f"Base defense {plando_stat.base_defense} is not an integer in range 0-255")
+            if not (isinstance(plando_stat.base_sp_attack, int) and 0 <= plando_stat.base_sp_attack <= 255):
+                reasons.append(f"Base special attack {plando_stat.base_sp_attack} is not an integer in range 0-255")
+            if not (isinstance(plando_stat.base_sp_defense, int) and 0 <= plando_stat.base_sp_defense <= 255):
+                reasons.append(f"Base special defense {plando_stat.base_sp_defense} is not an integer in range 0-255")
+            if not (isinstance(plando_stat.base_speed, int) and 0 <= plando_stat.base_speed <= 255):
+                reasons.append(f"Base speed {plando_stat.base_speed} is not an integer in range 0-255")
             evo_sum = 0
             for plando_evo in plando_stat.evolutions:
                 if plando_evo.species not in species_by_name and plando_evo.species not in dex_by_name:
@@ -1736,7 +1750,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     trainer_randomization_blacklist: TrainerRandomizationBlacklist
 
     # Pokemon stats
-    # randomize_base_stats: RandomizeBaseStats
+    randomize_base_stats: RandomizeBaseStats
     randomize_evolutions: RandomizeEvolutions
     # randomize_level_up_movesets: RandomizeLevelUpMovesets
     # randomize_tm_hm_compatibility: RandomizeTMHMCompatibility

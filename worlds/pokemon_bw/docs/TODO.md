@@ -14,6 +14,8 @@
 - Adjust trainer teams (weaker pokémon used in postgame area battles for similar base stats)
 - combined goals
 - allow encounter rate modifier to reduce slot count
+- stats and better evos in spoiler log when randomized
+- stats plando guide
 
 ## Rom
 

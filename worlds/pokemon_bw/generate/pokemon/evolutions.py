@@ -140,8 +140,10 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
         else:
             return _met
 
-    if mods.is_random_methods:
-        random_method = ("Level up", ) * world.options.stats_randomization_adjustments["Level up evo weight"] + ((
+    levelup_weight = world.options.stats_randomization_adjustments["Level up evo weight"]
+    max_level = world.options.stats_randomization_adjustments["Maximum evo level"]
+    if mods.is_random_methods and levelup_weight != -1:
+        random_method = ("Level up", ) * levelup_weight + ((
             "Stone" if replace.is_pid else ("Stone", ) * 38 + ("Stone male", "Stone female"),
             "_Level up item",
             ("_Level up split", "_Level up item", "Stone"),
@@ -255,8 +257,8 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
                 case c if c in ("Level up", "Level up higher defense", "Level up higher attack",
                                 "Level up equal physical", "Level up Silcoon", "Level up Cascoon",
                                 "Level up (female)", "Level up (male)"):
-                    lvl = value if value != -1 else int(world.random.triangular(
-                        curr_max_lvl+1, 100.9, curr_max_lvl + (100 - curr_max_lvl + 1) // 4))
+                    lvl = min(value if value != -1 else int(world.random.triangular(
+                        curr_max_lvl+1, max_level + 0.9, curr_max_lvl + (max_level - curr_max_lvl + 1) // 4)), max_level)
                     curr_max_lvl = lvl
                     data.evolutions.insert(0, (method, lvl, target_data.dex_number))
                 case c if c in ("Stone", "Stone male", "Stone female"):
@@ -278,8 +280,8 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
                     target2_name, target2_data = _get_random_target(curr_evo_targets, name, data)
                     if target2_name is None:
                         target2_name, target2_data = target_name, target_data
-                    lvl = value if value != -1 else int(world.random.triangular(
-                        curr_max_lvl+1, 100.9, curr_max_lvl + (100 - curr_max_lvl + 1) // 4))
+                    lvl = min(value if value != -1 else int(world.random.triangular(
+                        curr_max_lvl+1, max_level + 0.9, curr_max_lvl + (max_level - curr_max_lvl + 1) // 4)), max_level)
                     curr_max_lvl = lvl
                     data.evolutions.insert(0, ("Level up Shedinja", lvl, target_data.dex_number))
                     data.evolutions.insert(0, ("Level up Ninjask", lvl, target2_data.dex_number))
@@ -288,8 +290,8 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
                     target2_name, target2_data = _get_random_target(curr_evo_targets, name, data)
                     if target2_name is None:
                         target2_name, target2_data = target_name, target_data
-                    lvl = value if value != -1 else int(world.random.triangular(
-                        curr_max_lvl+1, 100.9, curr_max_lvl + (100 - curr_max_lvl + 1) // 4))
+                    lvl = min(value if value != -1 else int(world.random.triangular(
+                        curr_max_lvl+1, max_level + 0.9, curr_max_lvl + (max_level - curr_max_lvl + 1) // 4)), max_level)
                     curr_max_lvl = lvl
                     data.evolutions.insert(0, ("Level up Cascoon", lvl, target_data.dex_number))
                     data.evolutions.insert(0, ("Level up Silcoon", lvl, target2_data.dex_number))
@@ -301,8 +303,8 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
                     target3_name, target3_data = _get_random_target(curr_evo_targets, name, data)
                     if target3_name is None:
                         target3_name, target3_data = target_name, target_data
-                    lvl = value if value != -1 else int(world.random.triangular(
-                        curr_max_lvl+1, 100.9, curr_max_lvl + (100 - curr_max_lvl + 1) // 4))
+                    lvl = min(value if value != -1 else int(world.random.triangular(
+                        curr_max_lvl+1, max_level + 0.9, curr_max_lvl + (max_level - curr_max_lvl + 1) // 4)), max_level)
                     curr_max_lvl = lvl
                     data.evolutions.insert(0, ("Level up equal physical", lvl, target3_data.dex_number))
                     data.evolutions.insert(0, ("Level up higher attack", lvl, target2_data.dex_number))

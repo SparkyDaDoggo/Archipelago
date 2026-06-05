@@ -45,7 +45,11 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added more choices to `Modify Encounter Rates`:
   - `One per method`
   - `Dexsanity friendly`
-- Added `Randomize Evolutions` option, currently containing the following modifiers:
+- Added `Randomize Base Stats` option with the following modifiers:
+  - `Randomize`
+  - `Random total`
+  - `Follow evolutions`
+- Added `Randomize Evolutions` option with the following modifiers:
   - `Randomize`
   - `Random methods`
   - `Common type`
@@ -57,11 +61,21 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Pair stats`
   - `Pair 50 50`
   - `Increasing stats`
-- Added `Stats Randomization Adjustments` option, currently only containing `Level up evo weight`
-- Added `Stats Plando` option, currently containing the following keys for every species:
-  - `evolutions`, a list of evolutions to add to/override the (randomized) evolutions of a species
-  - `override_evolutions`, a toggle to determine whether to add evolutions or override them
-- Added `Replace Evolution Methods` option, currently containing the following modifiers:
+- Added `Stats Randomization Adjustments` option, currently with the following parameters:
+  - `Stats total minimum`
+  - `Stats total maximum`
+  - `Level up evo weight`
+  - `Maximum evo level`
+- Added `Stats Plando` option, currently with the following keys for every species:
+  - `base_hp`
+  - `base_attack`
+  - `base_defense`
+  - `base_sp_attack`
+  - `base_sp_defense`
+  - `base_speed`
+  - `evolutions`
+  - `override_evolutions`
+- Added `Replace Evolution Methods` option with the following modifiers:
   - `Locations`
   - `Friendship`
   - `PID`
