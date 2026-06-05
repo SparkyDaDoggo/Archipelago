@@ -52,6 +52,7 @@ class SpeciesEntry:
     # TM number (internal order is TM1-95 HM1-6)
     tm_hm_moves: TMHMMovesetData
     is_custom_form: bool
+    custom_form_file: int
     # bitflag, b0 = evolutions, b1 = plando evo override
     write: int = 0
     evo_line: EvoLine | None = None
@@ -78,6 +79,7 @@ class SpeciesEntry:
         self.level_up_moves = movesets_level_up.table[name]
         self.tm_hm_moves = movesets_tm_hm.table[name]
         self.is_custom_form = data.is_custom_form
+        self.custom_form_file = data.custom_form_file
 
 
 class EncounterEntry(NamedTuple):

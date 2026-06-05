@@ -157,6 +157,7 @@ class SpeciesData(NamedTuple):
     evolutions: list[tuple[str, int, str]]
     # forms that cave custom stats
     is_custom_form: bool = False
+    custom_form_file: int = 0
 
 
 class LevelUpMovesetData(NamedTuple):
