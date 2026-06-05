@@ -6,10 +6,11 @@ from ...items import PokemonBWItem
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...data import SpeciesData, AccessRule
+    from ...data import AccessRule
+    from .. import SpeciesEntry
 
 
-def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
+def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
 
     if not world.options.modify_logic.is_consider_form_change:
         return

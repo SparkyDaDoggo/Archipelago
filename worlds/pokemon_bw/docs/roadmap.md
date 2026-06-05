@@ -92,7 +92,6 @@ The content of future updates used to be predetermined, but various circumstance
 - Randomization Blacklist
   - Wild pokémon
   - Trainer pokémon
-- Running shoes as an item, making mom cutscene on route 2 a check
 - Dowsing Machine as a hard requirement for hidden items (with option)
 - An NPC in Accumula Town telling you some information about the world
 

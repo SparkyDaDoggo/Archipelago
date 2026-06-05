@@ -6,7 +6,7 @@ from .. import EncounterEntry, SpeciesChecklist
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...data import SpeciesData
+    from .. import SpeciesEntry
     from .. import EncounterEntry
 
 prepare = 25350666777563370117040793671783381956473107378414503005100223998849054326267652480678608918097127753
@@ -35,7 +35,7 @@ def organize_trades(world: "PokemonBWWorld") -> dict[str, tuple[int, int]]:
 def generate_wild_encounters(world: "PokemonBWWorld",
                              species_checklist: SpeciesChecklist,
                              slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
-    from ...data.pokemon.species import by_name, by_id, forms_by_dex, get_weighted_random_species
+    from ...data.pokemon.species import by_id, forms_by_dex, get_weighted_random_species
     from ...data.locations.encounters.slots import table
     from ...data.locations.encounters.regions import bad_early_areas
     from ...data.pokemon.movesets_level_up import table as moveset_table
@@ -73,10 +73,10 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     if len(species_checklist) > len(logic_slots):
         if world.options.modify_logic.is_consider_evos:
             for species in species_checklist.copy_list():
-                species_data = by_name[species]
+                species_data = world.species_entries[species]
                 for evolution in species_data.evolutions:
                     if evolution[0] != "Level up with party member":
-                        species_checklist.check(evolution[2])
+                        species_checklist.check(by_id[(evolution[2], species_data.form)])
         if len(species_checklist) > len(logic_slots):
             raise OptionError(
                 f"More required species for randomized wild encounter than slots they could be placed in "
@@ -91,36 +91,37 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
     blacklist = world.options.wild_randomization_blacklist.value
     area_types: dict[str, str] = {}
-    stats_total: Callable[["SpeciesData"], int] = lambda data: (
+    stats_total: Callable[["SpeciesEntry"], int] = lambda data: (
         data.base_hp + data.base_attack + data.base_defense +
         data.base_sp_attack + data.base_sp_defense + data.base_speed
     )
 
     # Devolve overpowered species
     if prevent_overpowered and world.options.modify_logic.is_consider_evos:
-        for name, spec_data in by_name.items():
+        for name, spec_data in world.species_entries.items():
             if name in blacklist:
                 continue
             spec_total = stats_total(spec_data)
             for evo_tuple in spec_data.evolutions:
-                if evo_tuple[2] not in species_checklist.to_check:
+                evolved_name = by_id[evo_tuple[2], spec_data.form]
+                if evolved_name not in species_checklist.to_check:
                     continue
                 if evo_tuple[0] == "Level up with party member":
                     # This frickin' evolution method is too complicated once more
                     continue
-                evolved_data = by_name[evo_tuple[2]]
+                evolved_data = world.species_entries[evolved_name]
                 evo_total = stats_total(evolved_data)
                 if evo_total <= stats_threshold:
                     continue
                 if spec_total >= evo_total:
                     # Devolving to an even stronger pre-evolution doesn't make sense
                     continue
-                species_checklist.check(evo_tuple[2])
+                species_checklist.check(evolved_name)
                 species_checklist.add(name)
 
     while len(species_checklist) > 0:
         random_species = world.random.choice(species_checklist.to_check)
-        species_data = by_name[random_species]
+        species_data = world.species_entries[random_species]
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
         skip_type = skip_bad = False
         while True:
@@ -147,7 +148,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                             continue
                 if similar_base_stats:  # stats last because it's more lenient than others
                     random_stats = stats_total(species_data)
-                    vanilla_stats = stats_total(by_name[by_id[versioned_species(table[slot])]])
+                    vanilla_stats = stats_total(world.species_entries[by_id[versioned_species(table[slot])]])
                     if random_stats not in range(vanilla_stats - stat_tolerance, vanilla_stats + stat_tolerance + 1):
                         skipped_stat = True
                         continue
@@ -183,18 +184,19 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     }
     if any(not len(value) for value in any_species.values()):
         any_species = {key: value for key, value in any_species.items() if value}
-    any_species_by_type: dict[str, dict[int, list[tuple[str, "SpeciesData"]]]] = {}
+    any_species_by_type: dict[str, dict[int, list[str]]] = {}
     if not world.random.randint(0, 999) and len(set(w.game for w in world.multiworld.worlds.values())) > 3:
         print(world.prepare_text(prepare))
     for forms_list in any_species.values():
-        for spe, data in forms_list:
+        for spe in forms_list:
+            data = world.species_entries[spe]
             for typ in (data.type_1, data.type_2):
                 if typ not in any_species_by_type:
-                    any_species_by_type[typ] = {data.dex_number: [(spe, data)]}
+                    any_species_by_type[typ] = {data.dex_number: [spe]}
                 elif data.dex_number not in any_species_by_type[typ]:
-                    any_species_by_type[typ][data.dex_number] = [(spe, data)]
+                    any_species_by_type[typ][data.dex_number] = [spe]
                 else:
-                    any_species_by_type[typ][data.dex_number].append((spe, data))
+                    any_species_by_type[typ][data.dex_number].append(spe)
     if type_themed and len(any_species_by_type) < 17:
         raise OptionError("At least one type has all its species prevented in wild randomization due to some option. "
                           "Please remove some restrictions in your yaml.")
@@ -203,12 +205,14 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         region = table[slot].encounter_region
         area = region[:region.index(" - ")]
         while True:
-            random_species, species_data = get_weighted_random_species(world.random, any_species)[1]
+            random_species = get_weighted_random_species(world.random, any_species)
+            species_data = world.species_entries[random_species]
             if type_themed:
                 if area not in area_types:
                     area_types[area] = world.random.choice((species_data.type_1, species_data.type_2))
                 elif area_types[area] not in (species_data.type_1, species_data.type_2):
-                    species_data = get_weighted_random_species(world.random, any_species_by_type[area_types[area]])[1]
+                    random_species = get_weighted_random_species(world.random, any_species_by_type[area_types[area]])
+                    species_data = world.species_entries[random_species]
             if prevent_bad_early:
                 if area in bad_early_areas:
                     if "Wonder Guard" in species_data.abilities:
@@ -218,7 +222,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                         continue
             if similar_base_stats:
                 random_stats = stats_total(species_data)
-                vanilla_stats = stats_total(by_name[by_id[versioned_species(table[slot])]])
+                vanilla_stats = stats_total(world.species_entries[by_id[versioned_species(table[slot])]])
                 if random_stats not in range(vanilla_stats - stat_tolerance, vanilla_stats + stat_tolerance + 1):
                     stat_tolerance += 10
                     continue

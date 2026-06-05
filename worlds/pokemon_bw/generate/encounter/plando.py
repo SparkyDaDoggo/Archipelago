@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 def generate_wild(world: "PokemonBWWorld",
                   species_checklist: "SpeciesChecklist",
                   slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
-    from ...data.pokemon.species import by_name
     from ...data.plando.encounter_maps import maps, multiple_seasons
     from ...data.locations.encounters.regions import region_list
 
@@ -51,7 +50,7 @@ def generate_wild(world: "PokemonBWWorld",
             species = world.random.choice(plando.species)
         if species.casefold() == "none":
             continue
-        species_data = by_name[species]
+        species_data = world.species_entries[species]
         species_id = (species_data.dex_number, species_data.form)
         map_abbr = maps[plando.map][0]
         file_index = maps[plando.map][1]

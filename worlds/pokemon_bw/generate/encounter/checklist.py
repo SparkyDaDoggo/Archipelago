@@ -5,18 +5,18 @@ from .. import SpeciesChecklist
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...data import SpeciesData
+    from .. import SpeciesEntry
 
 
 def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
     # Returns ({to be checked species}, {already checked species})
     # Species needed for trade are added in generate_trade_encounters()
-    from ...data.pokemon.species import by_name, by_id
+    from ...data.pokemon.species import by_id
 
     if not world.options.randomize_wild_pokemon.is_randomize:
         return SpeciesChecklist([])
     elif world.options.randomize_wild_pokemon.is_ensure_all:
-        return SpeciesChecklist([species for species, data in by_name.items() if data.form < 6])
+        return SpeciesChecklist([species for species, data in world.species_entries.items() if data.form < 6])
     else:  # Just "Randomize"
         always_required = [
             "Celebi",
@@ -39,8 +39,8 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                     always_required.append(spec)
 
         # Ensure one fighting type for challenge rock
-        both_types: Callable[["SpeciesData"], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
-        for spec, data in by_name.items():
+        both_types: Callable[["SpeciesEntry"], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
+        for spec, data in world.species_entries.items():
             if "Fighting" in both_types(data) and spec not in blacklist:
                 if spec not in always_required:
                     always_required.append(spec)
@@ -48,10 +48,10 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
 
         if not world.options.all_pokemon_seen:
             # Get list of ALL pokémon
-            pool_115 = list((spec, data) for spec, data in by_name.items() if not data.form and spec not in blacklist)
+            pool_115 = list((spec, data) for spec, data in world.species_entries.items() if not data.form and spec not in blacklist)
             # Removes what's already ensured
             for spec in always_required:
-                spec_tup = (spec, by_name[spec])
+                spec_tup = (spec, world.species_entries[spec])
                 if spec_tup in pool_115:
                     pool_115.remove(spec_tup)
             # Assert that there are actually 115 pokemon available
@@ -63,7 +63,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             # Remove overpowered stuff and save it in case of not enough non-overpowered
             underpowered, overpowered = [], []
             if world.options.randomize_wild_pokemon.is_prevent_overpowered:
-                stats_total: Callable[["SpeciesData"], int] = lambda data: (
+                stats_total: Callable[["SpeciesEntry"], int] = lambda data: (
                     data.base_hp + data.base_attack + data.base_defense +
                     data.base_sp_attack + data.base_sp_defense + data.base_speed
                 )
@@ -72,10 +72,10 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                     (underpowered if stats_total(spec_tup[1]) <= threshold else overpowered).append(spec_tup)
                 pool_115 = underpowered
             # Fill with random to get 115 total
-            always_required += (pool_115[i] for i in range(min(115-len(always_required), len(pool_115))))
+            always_required += (pool_115[i][0] for i in range(min(115-len(always_required), len(pool_115))))
             # Add overpowered stuff in case of not enough non-overpowered
             if len(always_required) < 115:
-                always_required += (overpowered[i] for i in range(115-len(always_required)))
+                always_required += (overpowered[i][0] for i in range(115-len(always_required)))
 
         return SpeciesChecklist(always_required)
 

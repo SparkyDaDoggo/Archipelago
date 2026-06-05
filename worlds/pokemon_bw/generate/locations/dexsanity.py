@@ -7,7 +7,7 @@ from ...locations import PokemonBWLocation
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from BaseClasses import Region
-    from ...data import SpeciesData
+    from .. import SpeciesEntry
 
 
 def lookup(domain: int) -> dict[str, int]:
@@ -16,7 +16,7 @@ def lookup(domain: int) -> dict[str, int]:
     return {name: data.dex_number + domain for name, data in location_table.items()}
 
 
-def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
+def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
     from ...data.locations.dexsanity import location_table
     from ...data.pokemon.pokedex import by_number
 

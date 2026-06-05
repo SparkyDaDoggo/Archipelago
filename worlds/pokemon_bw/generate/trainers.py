@@ -3,13 +3,13 @@ from . import TrainerPokemonEntry
 
 if TYPE_CHECKING:
     from .. import PokemonBWWorld
-    from ..data import SpeciesData
+    from . import SpeciesEntry
 
 
 def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]:
     from ..data.trainers.pokemon import table
     from ..data.trainers.data import table as trainer_table
-    from ..data.pokemon.species import by_name, get_weighted_random_species, forms_by_dex
+    from ..data.pokemon.species import get_weighted_random_species, forms_by_dex, by_id
     from ..data.pokemon.evolution_methods import methods
 
     if not world.options.randomize_trainer_pokemon.is_randomize:
@@ -26,7 +26,7 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
     force_threshold: int = world.options.pokemon_randomization_adjustments["Force evolutions threshold"]
     blacklist = world.options.trainer_randomization_blacklist.value
-    stats_total: Callable[["SpeciesData"], int] = lambda data: (
+    stats_total: Callable[["SpeciesEntry"], int] = lambda data: (
         data.base_hp + data.base_attack + data.base_defense +
         data.base_sp_attack + data.base_sp_defense + data.base_speed
     )
@@ -44,17 +44,17 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
             and next_data.team_number == trainer.pokemon_count - 1
         ):
             species_name = rivals_starter[trainer.rival - 1]
-            species_data = by_name[species_name]
+            species_data = world.species_entries[species_name]
             loop = 0
             while species_data.evolutions and loop < 5:
                 loop += 1
                 evo_tup = species_data.evolutions[rivals_starter[trainer.rival + 1] % len(species_data.evolutions)]
                 if next_data.level < (evo_tup[1] if methods[evo_tup[0]].has_level_value else 25):
                     break
-                evo_name = evo_tup[2]
+                evo_name = by_id[(evo_tup[2], species_data.form)]
                 if evo_name == species_name:
                     break
-                evo_data = by_name[species_name]
+                evo_data = world.species_entries[species_name]
                 evo_total = stats_total(evo_data)
                 if opt.is_prevent_overpowered and evo_total > stats_threshold:
                     break
@@ -62,11 +62,12 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
             ret.append(TrainerPokemonEntry(next_data.trainer_id, next_data.team_number, species_name))
             continue
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
-        vanilla_total = stats_total(by_name[next_data.species])
+        vanilla_total = stats_total(world.species_entries[next_data.species])
         overpowered_count = 0
         themed_count = 0
         while True:
-            species_name, species_data = get_weighted_random_species(world.random, allowed_forms_by_dex)
+            species_name = get_weighted_random_species(world.random, allowed_forms_by_dex)
+            species_data = world.species_entries[species_name]
             random_total = stats_total(species_data)
             if opt.is_prevent_overpowered and random_total > stats_threshold:
                 overpowered_count += 1
@@ -100,10 +101,10 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
                     evo_tups = species_data.evolutions.copy()
                     world.random.shuffle(evo_tups)
                     for evo_tup in evo_tups:
-                        evo_name = evo_tup[2]
+                        evo_name = by_id[(evo_tup[2], species_data.form)]
                         if evo_name == species_name:
                             continue
-                        evo_data = by_name[species_name]
+                        evo_data = world.species_entries[species_name]
                         evo_total = stats_total(evo_data)
                         if opt.is_prevent_overpowered and evo_total > stats_threshold:
                             continue
@@ -120,10 +121,10 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
                     for evo_tup in evo_tups:
                         if next_data.level < (evo_tup[1] if methods[evo_tup[0]].has_level_value else 25):
                             continue
-                        evo_name = evo_tup[2]
+                        evo_name = by_id[(evo_tup[2], species_data.form)]
                         if evo_name == species_name:
                             continue
-                        evo_data = by_name[species_name]
+                        evo_data = world.species_entries[species_name]
                         evo_total = stats_total(evo_data)
                         if opt.is_prevent_overpowered and evo_total > stats_threshold:
                             continue

@@ -771,17 +771,12 @@ by_id: dict[tuple[int, int], str] = {
     (data.dex_number, data.form): name for name, data in by_name.items()
 }
 
-unova_species: dict[str, SpeciesData] = {
-    name: data for name, data in by_name.items() if 494 <= data.dex_number <= 649
-}
-
-forms_by_dex: dict[int, list[tuple[str, SpeciesData]]] = {i: [] for i in range(1, 650)}
+forms_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}
 for spe, data in by_name.items():
-    forms_by_dex[data.dex_number].append((spe, data))
+    forms_by_dex[data.dex_number].append(spe)
 
 
-def get_weighted_random_species(random: Random,
-                                fbd: dict[int, list[tuple[str, SpeciesData]]]) -> tuple[str, SpeciesData]:
+def get_weighted_random_species(random: Random, fbd: dict[int, list[str]]) -> str:
     forms = fbd[random.choice([i for i in fbd])]
     if len(forms) == 1:
         return forms[0]

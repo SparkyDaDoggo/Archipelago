@@ -1,7 +1,10 @@
-from typing import NamedTuple, Self
+from typing import NamedTuple, Self, TYPE_CHECKING
 
 from ..data import InclusionRule, ExtendedRule, SpeciesData, LevelUpMovesetData, TMHMMovesetData
 from ..data.pokemon import movesets_level_up, movesets_tm_hm
+
+if TYPE_CHECKING:
+    from .. import PokemonBWWorld
 
 
 class EvoLine:
@@ -110,15 +113,15 @@ class TrainerPokemonEntry(NamedTuple):
 class SpeciesChecklist:
     to_check: list[str]
     already_checked: set[str]
-    by_name: dict[str, "SpeciesData"]
+    by_name: dict[str, SpeciesEntry]
     by_id: dict[tuple[int, int], str]
 
-    def __init__(self, initial: list[str]):
-        from ..data.pokemon.species import by_name, by_id
+    def __init__(self, initial: list[str], world: "PokemonBWWorld"):
+        from ..data.pokemon.species import by_id
 
         self.to_check = list({entry: 0 for entry in initial})
         self.already_checked = set()
-        self.by_name = by_name
+        self.by_name = world.species_entries
         self.by_id = by_id
 
     def __iter__(self):
@@ -148,4 +151,4 @@ class SpeciesChecklist:
         for evolution in data.evolutions:
             if evolution[0] == "Level up with party member":
                 self.add(self.by_id[(evolution[1], 0)])
-            self.check(evolution[2], loop+1)
+            self.check(self.by_id[(evolution[2], data.form)], loop+1)

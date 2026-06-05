@@ -5,10 +5,11 @@ from BaseClasses import ItemClassification, CollectionState
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from BaseClasses import Region
-    from ...data import EvolutionMethodData, ExtendedRule, SpeciesData
+    from ...data import EvolutionMethodData, ExtendedRule
+    from .. import SpeciesEntry
 
 
-def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
+def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
 
     if not world.options.modify_logic.is_consider_evos:
         return
@@ -31,7 +32,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
 
     region: "Region" = world.regions["Evolutions"]
 
-    def get_rule(f_evodata: tuple[str, int, str], f_base_species: str) -> Callable[[CollectionState], bool]:
+    def get_rule(f_evodata: tuple[str, int, int], f_base_species: str) -> Callable[[CollectionState], bool]:
         # helper function to prevent lambdas in for loops
         method: "EvolutionMethodData" = evolution_methods.methods[f_evodata[0]]
         ext_rule: "ExtendedRule" = method.rule(f_evodata[1], f_base_species)
@@ -54,7 +55,8 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
         check_next = False
         # Iterate through all currently to-be-checked evoids
         for current_evoid in current_evoid_set:
-            current_evodata = species.by_name[current_evoid[0]].evolutions[current_evoid[1]]
+            current_base_data = world.species_entries[current_evoid[0]]
+            current_evodata = current_base_data.evolutions[current_evoid[1]]
             # Level up item night is always paired with Level up item day
             # and always has the same evolved species and item, so skip if it's that method
             if current_evodata[0] == "Level up item night":
@@ -71,20 +73,21 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesDa
                     # If required team member not found, add this evoid to next iteration and skip adding event
                     next_evoid_set[current_evoid] = None
                     continue
+            current_evoname = species.by_id[(current_evodata[2], current_base_data.form)]
             # Creating event
             location_name = f"Evolving {current_evoid[0]} #{current_evoid[1]+1}"
             location = PokemonBWLocation(world.player, location_name, None, region)
-            item = PokemonBWItem(current_evodata[2], ItemClassification.progression, None, world.player)
+            item = PokemonBWItem(current_evoname, ItemClassification.progression, None, world.player)
             location.place_locked_item(item)
             location.access_rule = get_rule(current_evodata, current_evoid[0])
             region.locations.append(location)
             # Add the evolution to catchable
-            evo_speciesdata = species.by_name[current_evodata[2]]
-            catchable_species_data[current_evodata[2]] = evo_speciesdata
+            evo_speciesdata = world.species_entries[current_evoname]
+            catchable_species_data[current_evoname] = evo_speciesdata
             # Add evo's evodatas to noted and next evodatas
             check_next = True
             for evo_evodata_index in range(len(evo_speciesdata.evolutions)):
-                evo_evoid = (current_evodata[2], evo_evodata_index)
+                evo_evoid = (current_evoname, evo_evodata_index)
                 if evo_evoid not in noted_evoid_set:
                     noted_evoid_set[evo_evoid] = None
                     next_evoid_set[evo_evoid] = None

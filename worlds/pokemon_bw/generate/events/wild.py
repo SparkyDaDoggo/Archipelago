@@ -7,13 +7,13 @@ from ...items import PokemonBWItem
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from BaseClasses import Region
-    from ...data import SpeciesData
+    from .. import SpeciesEntry
 
 
-def create(world: "PokemonBWWorld") -> dict[str, "SpeciesData"]:
-    from ...data.pokemon.species import by_id as species_by_id, by_name as species_by_name
+def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
+    from ...data.pokemon.species import by_id as species_by_id
 
-    catchable_species_data: dict[str, "SpeciesData"] = {}
+    catchable_species_data: dict[str, "SpeciesEntry"] = {}
     # To remove duplicates
     available_in_region: dict[str, set[str]] = {}
 
@@ -32,7 +32,7 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesData"]:
             l.show_in_spoiler = False
             r.locations.append(l)
 
-            species_data: "SpeciesData" = species_by_name[species_name]
+            species_data: "SpeciesEntry" = world.species_entries[species_name]
             catchable_species_data[species_name] = species_data
             available_in_region[data.encounter_region].add(species_name)
 

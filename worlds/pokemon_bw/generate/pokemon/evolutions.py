@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Callable
 from .. import SpeciesEntry, EvoLine
-from ...data import SpeciesData
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -93,7 +92,7 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
 
     mods = world.options.randomize_evolutions
     replace = world.options.replace_evo_methods
-    stats_total: Callable[["SpeciesData"], int] = lambda _d: (
+    stats_total: Callable[[SpeciesEntry], int] = lambda _d: (
         _d.base_hp + _d.base_attack + _d.base_defense +
         _d.base_sp_attack + _d.base_sp_defense + _d.base_speed
     )

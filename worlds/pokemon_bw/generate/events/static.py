@@ -7,14 +7,14 @@ from ...items import PokemonBWItem
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from BaseClasses import Region
-    from ...data import SpeciesData
+    from .. import SpeciesEntry
 
 
-def create(world: "PokemonBWWorld") -> dict[str, "SpeciesData"]:
-    from ...data.pokemon.species import by_id as species_by_id, by_name as species_by_name
+def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
+    from ...data.pokemon.species import by_id as species_by_id
     from ...generate import TradeEncounterEntry, StaticEncounterEntry
 
-    catchable_species_data: dict[str, "SpeciesData"] = {}
+    catchable_species_data: dict[str, "SpeciesEntry"] = {}
 
     def get_trade_rule(x: str) -> Callable[[CollectionState], bool]:
         return lambda state: state.has(x, world.player)
@@ -36,7 +36,7 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesData"]:
                     l.access_rule = get_trade_rule(species_by_id[(data.wanted_dex_number, 0)])
                 r.locations.append(l)
 
-                species_data: "SpeciesData" = species_by_name[species_name]
+                species_data: "SpeciesEntry" = world.species_entries[species_name]
                 catchable_species_data[species_name] = species_data
 
     if world.options.modify_logic.is_consider_static:

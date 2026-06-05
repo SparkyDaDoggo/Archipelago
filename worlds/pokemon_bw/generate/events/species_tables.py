@@ -2,10 +2,10 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...data import SpeciesData
+    from .. import SpeciesEntry
 
 
-def populate(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
+def populate(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
     from ...data.pokemon import movesets_tm_hm
 
     for species_name, data in catchable_species_data.items():

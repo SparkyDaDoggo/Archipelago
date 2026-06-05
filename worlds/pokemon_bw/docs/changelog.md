@@ -78,9 +78,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Tweaked many option descriptions
 - Made wild randomization not having to ensure 115 different obtainable pokémon if `All Pokémon Seen` is enabled
 - Made the Gracidea also accept non-event Shaymins
-- Removed Shelmet and Karrablast accepting each other's evolved form to be able to evolve from logic
-  - They are still doable ingame, unless evolutions are randomized
 - Fixed logic of move evolutions
+- Wrote down move IDs
 
 ### Is this version compatible with older multiworld slots and save files?
 No

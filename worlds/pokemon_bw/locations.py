@@ -5,7 +5,7 @@ from BaseClasses import Location, Region, CollectionState
 if TYPE_CHECKING:
     from . import PokemonBWWorld
     from .data import RulesDict, ExtendedRule, AccessRule
-    from .data import SpeciesData
+    from .generate import SpeciesEntry
 
 
 class PokemonBWLocation(Location):
@@ -47,11 +47,11 @@ def create_rule_dict(world: "PokemonBWWorld") -> "RulesDict":
     return {rule: f(rule) for rule in extended_rules_list} | {None: None}
 
 
-def create_and_place_event_locations(world: "PokemonBWWorld") -> dict[str, "SpeciesData"]:
+def create_and_place_event_locations(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
     """Returns a dict of species that are actually catchable in this world."""
     from .generate.events import wild, static, evolutions, goal, species_tables, form_change
 
-    catchable_species_data: dict[str, "SpeciesData"] = wild.create(world) | static.create(world)
+    catchable_species_data: dict[str, "SpeciesEntry"] = wild.create(world) | static.create(world)
     evolutions.create(world, catchable_species_data)
     form_change.create(world, catchable_species_data)
     species_tables.populate(world, catchable_species_data)
@@ -59,7 +59,7 @@ def create_and_place_event_locations(world: "PokemonBWWorld") -> dict[str, "Spec
     return catchable_species_data
 
 
-def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesData"]) -> None:
+def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
     from .generate.locations import overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity
 
     overworld_items.create(world)
@@ -136,7 +136,6 @@ class StrVar:
 def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int, str]]) -> None:
     from .data.locations.encounters.region_connections import connection_by_region
     from .data.pokemon.pokedex import by_number
-    from .data.pokemon.species import by_name
 
     # {dex: ({wild/static places}, [(trade, wanted dex), ...], [pre-evo dex])}
     places_for_location: dict[int, tuple[set[str], list[tuple[str, int]], list[int], StrVar]] = {}
@@ -171,13 +170,12 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
 
     # Evolutions
     if world.options.modify_logic.is_consider_evos:
-        for species, data in by_name.items():
+        for species, data in world.species_entries.items():
             for evo in data.evolutions:
-                dex = by_name[evo[2]].dex_number
                 pre_evo_dex = data.dex_number
-                if dex not in places_for_location:
-                    places_for_location[dex] = set(), [], [], StrVar()
-                places_for_location[dex][2].append(pre_evo_dex)
+                if evo[2] not in places_for_location:
+                    places_for_location[evo[2]] = set(), [], [], StrVar()
+                places_for_location[evo[2]][2].append(pre_evo_dex)
 
     def build_string(_dex: int, _depth=0) -> str:
         if places_for_location[_dex][3].value:
