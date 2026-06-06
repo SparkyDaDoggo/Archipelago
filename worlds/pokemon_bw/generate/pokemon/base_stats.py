@@ -7,13 +7,16 @@ if TYPE_CHECKING:
 
 
 def plando_stats(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]) -> list[str]:
+    from ...data.pokemon.pokedex import by_name as dex_by_name
+    from ...data.pokemon.species import by_id
 
     all_plandod = []
 
     for species, plando_stat in world.options.stats_plando:
         if any((plando_stat.base_hp, plando_stat.base_attack, plando_stat.base_defense,
                 plando_stat.base_sp_attack, plando_stat.base_sp_defense, plando_stat.base_speed)):
-            data = all_species[species]
+            actual_spec = by_id[(dex_by_name[species], 0)] if species not in all_species else species
+            data = all_species[actual_spec]
             data.write |= 0b100
             data.base_hp = plando_stat.base_hp or data.base_hp
             data.base_attack = plando_stat.base_attack or data.base_attack
@@ -21,7 +24,7 @@ def plando_stats(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]) 
             data.base_sp_attack = plando_stat.base_sp_attack or data.base_sp_attack
             data.base_sp_defense = plando_stat.base_sp_defense or data.base_sp_defense
             data.base_speed = plando_stat.base_speed or data.base_speed
-            all_plandod.append(species)
+            all_plandod.append(actual_spec)
 
     return all_plandod
 
@@ -174,7 +177,7 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
         dat = all_species[spec]
         do_evos(dat, (dat.base_hp, dat.base_attack, dat.base_defense, dat.base_sp_attack, dat.base_sp_defense, dat.base_speed))
     for spec, dat in all_species.items():
-        if not dat.base_hp:
+        if not dat.base_hp and (not dat.form or dat.is_custom_form):
             roll(spec, dat, (0, 0, 0, 0, 0, 0))
     for spec, dat in all_species.items():
         if dat.form and not dat.is_custom_form:

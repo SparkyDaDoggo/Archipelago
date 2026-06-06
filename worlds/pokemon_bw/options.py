@@ -573,18 +573,18 @@ class RandomizeCatchRates(ToggleSet):
     Randomizes the catch rate of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Shuffle** - Gives every species a commonly used catch rate (e.g. 255, 45, 3, ...).
-    - **Randomize** - Gives every species a completely random catch rate. Overrides **Shuffle**.
+    - **Shuffle** - Gives every species a commonly used catch rate (e.g. 255, 45, 3, ...). Automatically added
+        if any other modifier is added.
+    - **Randomize** - Gives every species a completely random catch rate in range 3-255. Supersedes **Shuffle**.
     - **Follow evolutions** - Evolved species will have a catch rate equal to or lower than their pre-evolution(s).
+    - **Correlate with base stats** - Species with a higher base stat total are more likely to have a lower catch rate.
     """
     display_name = "Randomize Catch Rates"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Shuffle",
-        "Randomize",
-        "Follow evolutions",
-    ]
-    default = []
+    is_shuffle = False
+    is_randomize = False
+    is_follow_evolutions = False
+    is_correlate_with_base_stats = False
+    auto_add_if_any = "Shuffle"
 
 
 class RandomizeLevelUpMovesets(ToggleSet):
@@ -734,8 +734,8 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Stats total maximum",
         "Level up evo weight",
         "Maximum evo level",
-        # "Catch rates minimum",
-        # "Catch rates maximum",
+        "Catch rates minimum",
+        "Catch rates maximum",
         # "Gender ratio minimum",
         # "Gender ratio maximum",
     ]
@@ -744,8 +744,8 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Stats total maximum": 800,
         "Level up evo weight": 10,
         "Maximum evo level": 100,
-        # "Catch rates minimum": 3,
-        # "Catch rates maximum": 255,
+        "Catch rates minimum": 3,
+        "Catch rates maximum": 255,
         # "Gender ratio minimum": 0,
         # "Gender ratio maximum": 255,
     }
@@ -754,14 +754,14 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Stats total maximum": (6, 1530),
         "Level up evo weight": (-1, 99),
         "Maximum evo level": (10, 100),
-        # "Catch rates minimum": (3, 255),
-        # "Catch rates maximum": (3, 255),
+        "Catch rates minimum": (3, 255),
+        "Catch rates maximum": (3, 255),
         # "Gender ratio minimum": (0, 255),
         # "Gender ratio maximum": (0, 255),
     }
     min_max_pairs = [
         ("Stats total minimum", "Stats total maximum"),
-        # ("Catch rates minimum", "Catch rates maximum"),
+        ("Catch rates minimum", "Catch rates maximum"),
         # ("Gender ratio minimum", "Gender ratio maximum"),
     ]
 
@@ -785,6 +785,7 @@ class PlandoStat(typing.NamedTuple):
     base_sp_attack: int = 0
     base_sp_defense: int = 0
     base_speed: int = 0
+    catch_rate: int = 0
     evolutions: list[PlandoEvolution] | bool = False
     override_evolutions: bool = True
 
@@ -800,6 +801,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         base_hp: 5
         base_attack: 5
         base_sp_attack: 255
+        catch_rate: 190
         evolutions:
           - species: Squirtle
             method: Stone
@@ -899,6 +901,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 reasons.append(f"Base special defense {plando_stat.base_sp_defense} is not an integer in range 0-255")
             if not (isinstance(plando_stat.base_speed, int) and 0 <= plando_stat.base_speed <= 255):
                 reasons.append(f"Base speed {plando_stat.base_speed} is not an integer in range 0-255")
+            if not (isinstance(plando_stat.catch_rate, int) and (not plando_stat.catch_rate or
+                                                                 3 <= plando_stat.catch_rate <= 255)):
+                reasons.append(f"Catch rate {plando_stat.catch_rate} is neither 0 nor an integer in range 3-255")
             evo_sum = 0
             for plando_evo in plando_stat.evolutions:
                 if plando_evo.species not in species_by_name and plando_evo.species not in dex_by_name:
@@ -1758,11 +1763,11 @@ class PokemonBWOptions(PerGameCommonOptions):
     # Pokemon stats
     randomize_base_stats: RandomizeBaseStats
     randomize_evolutions: RandomizeEvolutions
+    randomize_catch_rates: RandomizeCatchRates
     # randomize_level_up_movesets: RandomizeLevelUpMovesets
     # randomize_tm_hm_compatibility: RandomizeTMHMCompatibility
     # randomize_types: RandomizeTypes
     # randomize_abilities: RandomizeAbilities
-    # randomize_catch_rates: RandomizeCatchRates
     # randomize_gender_ratio: RandomizeGenderRatio
     stats_randomization_adjustments: StatsRandomizationAdjustments
     stats_plando: StatsPlando

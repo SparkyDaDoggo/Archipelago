@@ -53,7 +53,7 @@ class SpeciesEntry:
     tm_hm_moves: TMHMMovesetData
     is_custom_form: bool
     custom_form_file: int
-    # bitflag, b0 = evolutions, b1 = plando evo override, b2 = base stats
+    # bitflag, b0 = evolutions, b1 = plando evo override, b2 = base stats, b3 = catch rate
     write: int = 0
     evo_line: EvoLine | None = None
 

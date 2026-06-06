@@ -291,6 +291,8 @@ Every entry (currently) consists of the following keys (with all of them being o
   corresponding base stat. Allowed values are in range 1-255. Setting them to 0 will use the vanilla stat instead.
   Omitting any of these keys will default them to 0. Setting any of them to a non-zero value will exclude 
   that pokémon from having its base stats randomized.
+- `catch_rate` sets the catch rate. The higher the catch rate of a pokémon species is, the easier it is to catch.
+  Allowed values are in range 3-255. Setting this to 0 or omitting it will not plando the species' catch rate.
 - `evolutions` will override that pokémon's evolutions (or append to them). It is an optional list of evolution entries 
   with each of those having the following format (putting in an empty list will accordingly remove all evolutions 
   (or append none)):

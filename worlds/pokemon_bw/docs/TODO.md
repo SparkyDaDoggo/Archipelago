@@ -15,7 +15,6 @@
 - combined goals
 - allow encounter rate modifier to reduce slot count
 - stats and better evos in spoiler log when randomized
-- stats plando guide
 
 ## Rom
 

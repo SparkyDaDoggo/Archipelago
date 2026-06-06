@@ -61,11 +61,18 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Pair stats`
   - `Pair 50 50`
   - `Increasing stats`
+- Added `Randomize Catch Rates` option with the following modifiers:
+  - `Shuffle`
+  - `Randomize`
+  - `Follow evolutions`
+  - `Correlate with base stats`
 - Added `Stats Randomization Adjustments` option, currently with the following parameters:
   - `Stats total minimum`
   - `Stats total maximum`
   - `Level up evo weight`
   - `Maximum evo level`
+  - `Catch rates minimum`
+  - `Catch rates maximum`
 - Added `Stats Plando` option, currently with the following keys for every species:
   - `base_hp`
   - `base_attack`
@@ -73,6 +80,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `base_sp_attack`
   - `base_sp_defense`
   - `base_speed`
+  - `catch_rates`
   - `evolutions`
   - `override_evolutions`
 - Added `Replace Evolution Methods` option with the following modifiers:
