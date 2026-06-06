@@ -29,7 +29,7 @@ can_buy_item: dict[int, ExtendedRule] = {
     80: can_buy_item_twist,  # Sun Stone
     81: can_buy_item_twist,  # Moon Stone
     82: can_buy_item_castelia,  # Fire Stone
-    83: can_get_item_chargestone,  # Thunderstone
+    83: can_get_item_chargestone,  # Thunder Stone
     84: can_buy_item_castelia,  # Water Stone
     85: can_buy_item_castelia,  # Leaf Stone
     107: can_get_item_r10,  # Shiny Stone

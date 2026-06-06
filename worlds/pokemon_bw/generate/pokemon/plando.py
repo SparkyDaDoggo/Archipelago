@@ -40,15 +40,23 @@ def generate_plando_evolutions(plando_evos: list["PlandoEvolution"], all_species
                 new_evos.append(("Level up item day", item_id, spec_num))
                 new_evos.append(("Level up item night", item_id, spec_num))
             case "_Level up split":
+                spec_2_num = all_species[plando_evo.species_2].dex_number \
+                    if plando_evo.species_2 in all_species else dex_by_name[plando_evo.species_2]
                 new_evos.append(("Level up Ninjask", plando_evo.level, spec_num))
-                new_evos.append(("Level up Shedinja", plando_evo.level, spec_num))
+                new_evos.append(("Level up Shedinja", plando_evo.level, spec_2_num))
             case "_Level up PID":
+                spec_2_num = all_species[plando_evo.species_2].dex_number \
+                    if plando_evo.species_2 in all_species else dex_by_name[plando_evo.species_2]
                 new_evos.append(("Level up Silcoon", plando_evo.level, spec_num))
-                new_evos.append(("Level up Cascoon", plando_evo.level, spec_num))
+                new_evos.append(("Level up Cascoon", plando_evo.level, spec_2_num))
             case "_Level up stats":
+                spec_2_num = all_species[plando_evo.species_2].dex_number \
+                    if plando_evo.species_2 in all_species else dex_by_name[plando_evo.species_2]
+                spec_3_num = all_species[plando_evo.species_3].dex_number \
+                    if plando_evo.species_3 in all_species else dex_by_name[plando_evo.species_3]
                 new_evos.append(("Level up higher defense", plando_evo.level, spec_num))
-                new_evos.append(("Level up higher attack", plando_evo.level, spec_num))
-                new_evos.append(("Level up equal physical", plando_evo.level, spec_num))
+                new_evos.append(("Level up higher attack", plando_evo.level, spec_2_num))
+                new_evos.append(("Level up equal physical", plando_evo.level, spec_3_num))
             case _:
                 new_evos.append((plando_evo.method, 0, spec_num))
     return new_evos

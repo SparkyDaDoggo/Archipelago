@@ -774,6 +774,8 @@ class PlandoEvolution(typing.NamedTuple):
     held: str = "King's Rock"
     move: str = "Toxic"
     partner: str = "Remoraid"
+    species_2: str = "Shedinja"
+    species_3: str = "Hitmontop"
 
 
 class PlandoStat(typing.NamedTuple):
@@ -920,6 +922,10 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                     reasons.append(f"Item {plando_evo.held} is not an evolution item")
                 if plando_evo.move not in move_by_name:
                     reasons.append(f"Unknown move: {plando_evo.move}")
+                if plando_evo.species_2 not in species_by_name and plando_evo.species_2 not in dex_by_name:
+                    reasons.append(f"Unknown species name for key 'species_2': {plando_evo.species_2}")
+                if plando_evo.species_3 not in species_by_name and plando_evo.species_3 not in dex_by_name:
+                    reasons.append(f"Unknown species name for key 'species_3': {plando_evo.species_3}")
             if evo_sum > 7:
                 reasons.append(f"Too many evolution entries")
             if reasons:
