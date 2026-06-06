@@ -1,4 +1,4 @@
-# Various lists for Encounter Plando
+# Various lists for various Plando options
 
 ## All map names
 
@@ -132,7 +132,7 @@ These names are ordered by internal file number (0-111).
 - Route 8
 - Moor of Icirrus
 
-## Slot values
+## Encounter slot values
 
 Like already said on the main guide, the slot argument can either be omitted (equal to inputting all slots),
 be a single number, or a list of numbers.
@@ -871,3 +871,115 @@ The exceptions at the end of this list originate from these forms having their o
 - Basculin (Blue-Striped)
 - Darmanitan (Zen)
 - Meloetta (Pirouette)
+
+## Evolution methods list
+
+- `Level up`: Standard levelup evolution, uses the `level` key in the evolution entry
+- `Stone`: Standard stone evolution, uses the `stone` key in the evolution entry
+- `Stone male`: Stone evolution that is only usable on male pokémon, uses the `stone` key in the evolution entry
+- `Stone female`: Stone evolution that is only usable on female pokémon, uses the `stone` key in the evolution entry
+- `Friendship`: Standard friendship evolution, doesn't use any other key in the evolution entry
+- `Friendship (Day)`: Friendship evolution that requires day time, never shows up in standard randomization 
+  and is thereby only available through plando, doesn't use any other key in the evolution entry
+- `Friendship (Night)`: Friendship evolution that requires night time, never shows up in standard randomization 
+  and is thereby only available through plando, doesn't use any other key in the evolution entry
+- `Trade`: Standard trade evolution, never shows up in standard randomization 
+  and is thereby only available through plando, doesn't use any other key in the evolution entry
+- `Trade with item`: Trade evolution that requires holding an item, never shows up in standard randomization 
+  and is thereby only available through plando, uses the `held` key in the evolution entry, logic correctly requires 
+  you to have repeatable access to the item
+- `Trade Karrablast Shelmet`: Trade evolution that is used by Karrablast and Shelmet to evolve only when traded 
+  with each other, use it at your own risk as the effects of using it outside of the vanilla trade evolution 
+  are unknown, never shows up in standard randomization and is thereby only available through plando, doesn't use 
+  any other key in the evolution entry
+- `Magnetic area`: Levelup evolution that only happens when the player is in Chargestone Cave, doesn't use any other 
+  key in the evolution entry
+- `Unused area`: A leftover method from DPPt used for evolving when in Mt. Coronet, uses the same map IDs as 
+  `Magnetic area` and is thereby functionally the same, never shows up in standard randomization and is thereby 
+  only available through plando but reserved to potential later use, doesn't use any other key in the evolution entry
+- `Level up with move`: Levelup evolution that requires the pokémon to know a certain move, uses the `move` key in 
+  the evolution entry, logic correctly requires you to have access to an appropriate area for levelup or having the 
+  corresponding TM/HM if the move can be learned those ways, otherwise it will be assumed always accessible so 
+  use moves that are not learnable those ways at your own risk
+- `Level up moss rock`: Levelup evolution that only happens when the player is in Pinwheel Forest, doesn't use any 
+  other key in the evolution entry
+- `Level up ice rock`: Levelup evolution that only happens when the player is in the lowest floor of Twist Mountain, 
+  doesn't use any other key in the evolution entry
+- `Level up item day`: Levelup evolution that triggers when holding a certain item at day time, uses the `held` key 
+  in the evolution entry, only appears in conjunction with `Level up item night` method in randomization and is 
+  thereby on its own only available through plando, it's recommended to use `_Level up item` instead of writing 
+  both methods individually
+- `Level up item night`: Levelup evolution that triggers when holding a certain item at night time, uses the `held` key 
+  in the evolution entry, only appears in conjunction with `Level up item day` method in randomization and is 
+  thereby on its own only available through plando, it's recommended to use `_Level up item` instead of writing 
+  both methods individually
+- `Level up higher defense`: Levelup evolution that happens at a certain level only when the defense stat of the 
+  pokémon is higher than its attacking stat, uses the `level` key in the evolution entry
+- `Level up higher attack`: Levelup evolution that happens at a certain level only when the attacking stat of the 
+  pokémon is higher than its defense stat, uses the `level` key in the evolution entry
+- `Level up equal physical`: Levelup evolution that happens at a certain level only when the attacking stat of the 
+  pokémon is equal to its defense stat, uses the `level` key in the evolution entry
+- `Level up Silcoon`: Levelup method that only happens to 50% of all pokémon and is the exact opposite of 
+  `Level up Cascoon`, uses the `level` key in the evolution entry
+- `Level up Cascoon`: Levelup method that only happens to 50% of all pokémon and is the exact opposite of 
+  `Level up Silcoon`, uses the `level` key in the evolution entry
+- `Level up Ninjask`: Special levelup method that is only used in conjunction with (and before) `Level up Shedinja`, 
+  uses the `level` key in the evolution entry, it's **highly recommended** to use `_Level up split` instead as the 
+  effects of using it in a different way than expected are unknown
+- `Level up Shedinja`: Special levelup method that is only used in conjunction with (and after) `Level up Ninjask`, 
+  uses the `level` key in the evolution entry, it's **highly recommended** to use `_Level up split` instead as the 
+  effects of using it in a different way than expected are unknown
+- `Level up high beauty`: Levelup method that requires a high beauty contest stat, use it at your own risk as there 
+  is no known way to increase that stat without save file editing software, never shows up in standard randomization 
+  and is thereby only available through plando, doesn't use any other key in the evolution entry
+- `Level up (female)`: Levelup method that is only triggered for female pokémon, never shows up in standard 
+  randomization and is thereby only available through plando, uses the `level` key in the evolution entry
+- `Level up (male)`: Levelup method that is only triggered for male pokémon, never shows up in standard 
+  randomization and is thereby only available through plando, uses the `level` key in the evolution entry
+- `Level up with party member`: Levelup method that requires the player to have a certain pokémon species in their 
+  party at that moment, uses the `partner` key in the evolution entry
+- `_Level up item`: Macro method that is resolved into an entry for `Level up item day` and `Level up item night` each 
+  with the same target species and required item
+- `_Level up split`: Macro method that is resolved into an entry for `Level up Ninjask` and `Level up Shedinja` each 
+  with the same required level while using the `species` key for the `Level up Ninjask` target and the `species_2` key 
+  for the `Level up Shedinja` target, **highly recommended** to be used instead of writing both methods individually
+- `_Level up PID`: Macro method that is resolved into an entry for `Level up Silcoon` and `Level up Cascoon` each 
+  with the same required level while using the `species` key for the `Level up Silcoon` target and the `species_2` key 
+  for the `Level up Cascoon` target
+- `_Level up stats`: Macro method that is resolved into an entry for `Level up higher defense`, 
+  `Level up higher attack`, and `Level up equal physical` each with the same required level while using the `species` 
+  key for the `Level up higher defense` target, the `species_2` key for the `Level up higher attack` target, and
+  the `species_3` key for the `Level up equal physical` target
+
+## Evolution items list
+
+Stone evolution items:
+- Sun Stone
+- Moon Stone
+- Fire Stone
+- Thunder Stone
+- Water Stone
+- Leaf Stone
+- Shiny Stone
+- Dusk Stone
+- Dawn Stone
+
+Held evolution items:
+- Protein
+- Iron
+- Carbos
+- Oval Stone
+- King's Rock
+- Deep Sea Tooth
+- Deep Sea Scale
+- Metal Coat
+- Dragon Scale
+- Up-Grade
+- Protector
+- Electirizer
+- Magamrizer
+- Dubious Disc
+- Reaper Cloth
+- Razor Claw
+- Razor Fang
+- Prism Scale

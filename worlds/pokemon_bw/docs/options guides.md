@@ -1,4 +1,4 @@
-# Encounter Plando guide for Pokémon Black and White
+# Encounter Plando guide
 
 ## How does this work?
 
@@ -17,18 +17,18 @@ Encounter Plando can lead to generation failures that might not look like coming
 The Pokémon Black and White host.yaml settings have a toggle to enable or disable this option, 
 which is by default set to true. 
 If disabled, yamls with Encounter Plando entries will ignore them and just print a warning to the console 
-without stopping multiworld genration.
+without stopping multiworld generation.
 
 ## How do I use it?
 
 Every entry consists of 3 to 5 arguments:
 - `map` determines which map (i.e. which encounter table) this entry should be placed into. 
-  You can find a list of all map names [here](encounter%20plando%20lists.md#all-map-names).
+  You can find a list of all map names [here](plando%20lists.md#all-map-names).
   The map names must match the names on that site exactly (except for casing).
 - `seasons`/`season` is an optional argument that determines which season(s) this entry should be placed into. 
   However, not all maps support different encounters for different seasons. 
   You can find a list of all maps supporting different seasons 
-  [here](encounter%20plando%20lists.md#maps-that-support-having-different-seasons).
+  [here](plando%20lists.md#maps-that-support-having-different-seasons).
   If the map does not support different seasons, you **have to omit** this argument.
   Else, you can either write a single season or a list of seasons.
 - `method` determines which encounter method this entry should be placed into. 
@@ -39,14 +39,14 @@ Every entry consists of 3 to 5 arguments:
 - `slots`/`slot` is an optional argument that determines the exact slot(s) of the entry in the specified method.
   You can either put in a single number, a list of numbers, or omit this argument.
   If omitted, this entry will be placed into all slots of the specified method.
-  See [here](encounter%20plando%20lists.md#slot-values) for further information on allowed values.
+  See [here](plando%20lists.md#encounter-slot-values) for further information on allowed values.
 - `species` determines which species should be placed into the specified slot(s).
   You can either put in a single species name or a list of species names.
   `None` can be used (preferably in lists) to make the generator not plando any species into the specified slot(s).
   If multiple species are provided, a random one out of them is chosen.
   Writing the same species multiple times is allowed and can increase its chance of being chosen over 
   the other species in the list.
-  See [here](encounter%20plando%20lists.md#all-species-names) for a list of all species names.
+  See [here](plando%20lists.md#all-species-names) for a list of all species names.
   Note that different forms have different names, e.g. Unown (A)/(B)/...
 
 Specifying a slot that does not exist in the game (e.g. `Grass` slots in Striaton City) will not have any effect
@@ -91,7 +91,7 @@ Pokemon Black and White:
         - None
 ```
 
-# Custom encounter rates guide for Pokémon Black and White
+# Custom encounter rates guide
 
 ## How does this work?
 
@@ -135,7 +135,7 @@ Pokemon Black and White:
     {Grass: [30, 10, 4, 2, 2, 2, 25, 10, 5, 4, 4, 2], Fishing: [96, 1, 1, 1, 1]}: 75
 ```
 
-# Text Plando guide for Pokémon Black and White (coming in 0.4.0)
+# Text Plando guide (coming in 0.4.0)
 
 ## How does this work?
 
@@ -199,7 +199,7 @@ Pokemon Black and White:
       at: "system 235 0 202"
 ```
 
-# Modify Levels (advanced mode) guide for Pokémon Black and White (coming in 0.4.0)
+# Modify Levels (advanced mode) guide (coming in 0.4.0)
 
 ## How does this work?
 
@@ -261,4 +261,95 @@ Pokemon Black and White:
     - type: Wild
       mode: Multiply
       value: 20
+```
+
+# Stats Plando guide (coming in 0.4.0)
+
+## How does this work?
+
+Stats Plando lets you force set certain stats of a pokémon like base stats or evolutions, regardless of 
+whether those stats where randomized or not. 
+Every entry applies to a specific pokémon and takes priority over regular randomization, while also influencing that.
+This option might be expanded in its functionalities once new randomization options get implemented.
+
+## Important notes for multiworld hosts
+
+Stats Plando can lead to generation failures that might not look like coming from this option. 
+The Pokémon Black and White host.yaml settings have a toggle to enable or disable this option, 
+which is by default set to true. 
+If disabled, Stats Plando entries will be ignored and only print a warning to the console 
+without stopping multiworld generation.
+
+## How do I use it?
+
+Every entry belongs to a specific pokémon species and contains multiple keys for editing a certain stat each. 
+The specified species can either be the standard pokémon name (i.e. without any form suffix) or the form's name 
+found in the [species names list](plando%20lists.md#all-species-names). However, non-base forms that are not at the 
+bottom of that list don't have separate data in the game's files and are thereby not allowed in this context. 
+Every entry (currently) consists of the following keys (with all of them being optional):
+- `base_hp`, `base_attack`, `base_defense`, `base_sp_attack`, `base_sp_defense`, and `base_speed` set the 
+  corresponding base stat. Allowed values are in range 1-255. Setting them to 0 will use the vanilla stat instead.
+  Omitting any of these keys will default them to 0. Setting any of them to a non-zero value will exclude 
+  that pokémon from having its base stats randomized.
+- `evolutions` will override that pokémon's evolutions (or append to them). It is an optional list of evolution entries 
+  with each of those having the following format (putting in an empty list will accordingly remove all evolutions 
+  (or append none)):
+  - `species` (required) is the pokémon that should be evolved into. Standard pokémon names as well as form names 
+    found in the [species names list](plando%20lists.md#all-species-names) are allowed.
+  - `method` (optional) is the way the evolution should be triggered. See the 
+    [methods list](plando%20lists.md#evolution-methods-list) for allowed values. Omitting this will default it 
+    to `Level up`.
+  - `level` (optional) is the level at which certain levelup methods should be triggered. Allowed values are
+    in range 2-100. Omitting this will default it to 20.
+  - `stone` (optional) is the item that triggers the stone-based methods. See the [evolution items]() list for 
+    allowed values. Omitting this will default it to the `Shiny Stone`.
+  - `held` (optional) is the item that triggers the held item-based methods. See the [evolution items]() list for 
+    allowed values. Omitting this will default it to the `King's Rock`.
+  - `move` (optional) is the name of the move that triggers the `Level up with move` method. Any move in the game 
+    is allowed to be used. Omitting this will default it to the `Toxic`.
+  - `partner` (optional) is the species that triggers the `Level up with party member` method when present 
+    in your party. Standard pokémon names as well as form names found in the 
+    [species names list](plando%20lists.md#all-species-names) are allowed. Omitting this will default it to `Remoraid`.
+  - `species_2` (optional) is the species that is used by the `_Level up split`, `_Level up PID`, and `_Level up stats` 
+    macros. Standard pokémon names as well as form names found in the 
+    [species names list](plando%20lists.md#all-species-names) are allowed. Omitting this will default it to `Shedinja`.
+  - `species_3` (optional) is the species that is used by the `_Level up stats` macro. Standard pokémon names as well 
+    as form names found in the [species names list](plando%20lists.md#all-species-names) are allowed. 
+    Omitting this will default it to `Hitmontop`.
+- `override_evolutions` determines whether the supplied list of evolutions should override the existing evolutions 
+  (thereby excluding that pokémon from evolution randomization) or append to the existing (potentially randomized) 
+  evolutions. it is optional and defaults to `true` if omitted.
+
+## An example on how using this option could look like
+
+```
+...
+
+Pokemon Black and White:
+  ...
+  
+  stats_plando:
+    Bulbasaur:
+      base_hp: 5
+      base_attack: 5
+      base_sp_attack: 255
+    Eevee:
+      evolutions:
+      - species: Giratina
+        method: Level up
+        level: 95
+      - species: Vaporeon
+        method: Friendship
+      - species: Eevee
+        method: Stone
+        stone: Shiny Stone
+      override_evolutions: true
+    Shelmet:
+      base_defense: 200
+      base_sp_defense: 200
+      evolutions:
+      - species: Karrablast
+        method: _Level up split
+        level: 15
+      override_evolutions: false
 ```
