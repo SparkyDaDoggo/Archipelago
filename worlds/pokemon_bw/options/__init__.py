@@ -3,7 +3,6 @@ import typing
 from copy import deepcopy
 from dataclasses import dataclass
 
-import settings
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError,
                      OptionCounter, StartInventoryPool, OptionDict)
@@ -14,7 +13,7 @@ from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTra
 from .stats import (RandomizeLevelUpMovesets, RandomizeEvolutions, RandomizeTypes, RandomizeAbilities,
                     RandomizeBaseStats, RandomizeCatchRates, RandomizeGenderRatio, RandomizeTMHMCompatibility,
                     StatsRandomizationAdjustments, StatsPlando)
-from ..data.common_options import ToggleSet, ExtendedOptionCounter
+from ..data.common_options import ToggleSet
 
 if typing.TYPE_CHECKING:
     from worlds.AutoWorld import World
