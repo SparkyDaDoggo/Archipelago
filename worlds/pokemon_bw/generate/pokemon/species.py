@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 def generate_species_data(world: "PokemonBWWorld") -> dict[str, SpeciesEntry]:
     from ...data.pokemon import species
     from .evolutions import randomize_evolutions, replace_evolutions
-    from .plando import plando_evolutions_override, plando_evolutions_append
+    from .evo_plando import plando_evolutions_override, plando_evolutions_append
     from .base_stats import randomize_stats_post_evo, randomize_stats_pre_evo
     from .catch_rates import randomize_catch_rates
 
@@ -16,8 +16,9 @@ def generate_species_data(world: "PokemonBWWorld") -> dict[str, SpeciesEntry]:
 
     # Dependencies:
     # Base stats - Evolutions
-    # Evolutions - Types, base stats
+    # Evolutions - Types, base stats, gender ratio
     # Catch rates - Evolutions, base stats
+    # Gender ratio - Evolutions
 
     randomize_stats_pre_evo(world, all_species)
     replace_evolutions(world, all_species)

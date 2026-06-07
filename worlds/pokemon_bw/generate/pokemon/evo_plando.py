@@ -1,23 +1,36 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from Options import OptionError
 from .. import SpeciesEntry, EvoLine
-from ...data import SpeciesData
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from ...options import PlandoEvolution
 
 
-def generate_plando_evolutions(plando_evos: list["PlandoEvolution"], all_species: dict[str, SpeciesEntry]):
+def generate_plando_evolutions(world: "PokemonBWWorld", plando_evos: list["PlandoEvolution"], all_species: dict[str, SpeciesEntry]):
     from ...data.pokemon.pokedex import by_name as dex_by_name
     from ...data.items import all_items_dict_view
     from ...data.pokemon.moves import by_name as move_by_name
+    from ...data.pokemon.species import by_id
 
     new_evos = []
     for plando_evo in plando_evos:
-        spec_num = all_species[plando_evo.species].dex_number \
-            if plando_evo.species in all_species else dex_by_name[plando_evo.species]
+        if plando_evo.species in all_species:
+            spec_data = all_species[plando_evo.species]
+        else:
+            spec_data = all_species[by_id[(dex_by_name[plando_evo.species], 0)]]
+        spec_num = spec_data.dex_number
+        gender_ratio_rando = False  # TODO
+        if not gender_ratio_rando:
+            if spec_data.gender_ratio in (0, 255) and plando_evo.method in ("Level up (female)", "Stone female"):
+                raise OptionError(f"{world.player_name}: Plandoing a female-only evolution method "
+                                  f"({plando_evo.method}) into a male-only or genderless species "
+                                  f"({plando_evo.species}) is not allowed as it leads to impossible evolutions")
+            if spec_data.gender_ratio in (254, 255) and plando_evo.method in ("Level up (male)", "Stone male"):
+                raise OptionError(f"{world.player_name}: Plandoing a male-only evolution method "
+                                  f"({plando_evo.method}) into a female-only or genderless species "
+                                  f"({plando_evo.species}) is not allowed as it leads to impossible evolutions")
         match plando_evo.method:
             case c if c in ("Level up", "Level up with move",
                             "Level up higher defense", "Level up higher attack", "Level up equal physical",
@@ -98,7 +111,7 @@ def plando_evolutions_override(world: "PokemonBWWorld", all_species: dict[str, S
             continue
         spec_name = poke if poke in all_species else by_id[(dex_by_name[poke], 0)]
         data = all_species[spec_name]
-        new_evos = generate_plando_evolutions(plando_stat.evolutions, all_species)
+        new_evos = generate_plando_evolutions(world, plando_stat.evolutions, all_species)
         for evo_tup in new_evos:
             for form in range(6):
                 evo_data = all_species[by_id[(evo_tup[2], form)]]
@@ -126,7 +139,7 @@ def plando_evolutions_append(world: "PokemonBWWorld", all_species: dict[str, Spe
         if plando_stat.override_evolutions or plando_stat.evolutions is False:
             continue
         data = all_species[poke if poke in all_species else by_id[(dex_by_name[poke], 0)]]
-        new_evos = generate_plando_evolutions(plando_stat.evolutions, all_species)
+        new_evos = generate_plando_evolutions(world, plando_stat.evolutions, all_species)
         if len(data.evolutions) + len(new_evos) > 7:
             raise OptionError(f"{world.player_name}: Evolution plando tries to add {len(new_evos)} new evolutions to "
                               f"{poke}, which already has {len(data.evolutions)} evolutions, thereby exceeding the "

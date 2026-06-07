@@ -587,6 +587,25 @@ class RandomizeCatchRates(ToggleSet):
     auto_add_if_any = "Shuffle"
 
 
+class RandomizeGenderRatio(ToggleSet):
+    """
+    Randomizes the gender ratio of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
+    - **Shuffle** - Gives every species a commonly used gender ratio (e.g. 50/50, 1 in 8, ...).
+    - **Randomize** - Gives every species a completely random gender ratio. Overrides **Shuffle**.
+    - **Follow evolutions** - Evolved species will have the same gender ratio as (one of) their pre-evolution(s).
+    """
+    display_name = "Randomize Gender Ratio"
+    valid_keys_casefold = True
+    valid_keys = [
+        "Shuffle",
+        "Randomize",
+        "Follow evolutions",
+    ]
+    default = []
+
+
 class RandomizeLevelUpMovesets(ToggleSet):
     """
     Randomizes the moves a pokemon species learns by leveling up.
@@ -659,25 +678,6 @@ class RandomizeAbilities(ToggleSet):
     ]
     default = []
     auto_add_if_any = "Randomize"
-
-
-class RandomizeGenderRatio(ToggleSet):
-    """
-    Randomizes the gender ratio of every pokemon species.
-    You can add as many of the following modifiers as you want.
-
-    - **Shuffle** - Gives every species a commonly used gender ratio (e.g. 50/50, 1 in 8, ...).
-    - **Randomize** - Gives every species a completely random gender ratio. Overrides **Shuffle**.
-    - **Follow evolutions** - Evolved species will have the same gender ratio as (one of) their pre-evolution(s).
-    """
-    display_name = "Randomize Gender Ratio"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Shuffle",
-        "Randomize",
-        "Follow evolutions",
-    ]
-    default = []
 
 
 class RandomizeTMHMCompatibility(ToggleSet):

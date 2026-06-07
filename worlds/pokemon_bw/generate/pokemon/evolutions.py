@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Iterable
 from .. import SpeciesEntry, EvoLine
 
 if TYPE_CHECKING:
@@ -223,6 +223,15 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
         else:
             restricted_methods = random_method
 
+        if data.gender_ratio in (0, 254, 255):
+            bad = (() + (("Level up (male)", "Stone male") if data.gender_ratio in (254, 255) else ())
+                   + (("Level up (female)", "Stone female") if data.gender_ratio in (0, 255) else ()))
+
+            def cop(obj: Iterable) -> Iterable:
+                return tuple((o if isinstance(o, str) else cop(o)) for o in obj if o and (o not in bad))
+
+            restricted_methods = cop(restricted_methods) or ("Level up", )
+
         if mods.is_every_level:
             method_list.append(("Level up", 2))
             method_slots += 1
@@ -241,6 +250,10 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
                 if evo[0] in ("Level up item night", "Level up Shedinja") or (
                     mods.is_pair_stats and evo[0] in ("Level up higher attack", "Level up equal physical")
                 ) or (mods.is_pair_50_50 and evo[0] == "Level up Cascoon"):
+                    continue
+                if data.gender_ratio in (0, 255) and evo[0] in ("Level up (female)", "Stone female"):
+                    continue
+                if data.gender_ratio in (254, 255) and evo[0] in ("Level up (male)", "Stone male"):
                     continue
                 method = resolve_paired(evo[0]) if not mods.is_random_methods else random_choice_nested(world.random, restricted_methods)
                 method_list.insert(0, (method, evo[1]))
