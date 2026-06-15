@@ -103,7 +103,7 @@ distribution, or a custom list.
 ## How do I use it?
 
 Instead of just writing a single option name like `vanilla` or `try_normalized`, you need to provide key-value pairs 
-**as a choice**. "As a choice" means that you'll need to pack it into a list or as a weighted choice, see the examples 
+**as a choice**. "As a choice" means that you'll need to pack it into a list, see the examples 
 down below for how to do it. To change (Dark/Rustling) Grass rates, use the `Grass` key. Surfing/Fishing (Rippling) 
 rates need the `Surfing`/`Fishing` key respectively. Though you are not required to always use all keys; you can leave 
 any of them as vanilla if you want. The value has to be a list of positive integers. The `Grass` key needs exactly 12 
@@ -122,17 +122,9 @@ Pokemon Black and White:
     - Grass: [30, 10, 4, 2, 2, 2, 25, 10, 5, 4, 4, 2]
       Surfing: [25, 25, 30, 10, 10]
       Fishing: [96, 1, 1, 1, 1]
-```
-
-```
-...
-Pokemon Black and White:
-  ...
-  modify_encounter_rates:
-    # Alternative way with different weights
-    # Notice that leaving out the "Surfing" key is valid
-    vanilla: 25
-    {Grass: [30, 10, 4, 2, 2, 2, 25, 10, 5, 4, 4, 2], Fishing: [96, 1, 1, 1, 1]}: 75
+    - vanilla
+    # Alternative way, notice that leaving out the "Surfing" key is valid
+    - {Grass: [30, 10, 4, 2, 2, 2, 25, 10, 5, 4, 4, 2], Fishing: [96, 1, 1, 1, 1]}
 ```
 
 # Text Plando guide (coming in 0.4.0)
