@@ -10,6 +10,7 @@ from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry
 from .data import RulesDict
+from .plugins import Plugin
 
 bizhawk_client.register_client()
 
@@ -47,6 +48,10 @@ class PokemonBWSettings(settings.Group):
         """If enabled, the arm7 code file inside the rom gets expanded with dummy code. This is purely for testing
         purposes and will be deprecated later."""
 
+    class PluginSettings(dict[str, Any]):
+        """This can be used to define certain settings that are used by plugins.
+        The main apworld will ignore this setting entirely."""
+
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
     ut_pack_path: UTPackPath | str = UTPackPath()
@@ -54,6 +59,7 @@ class PokemonBWSettings(settings.Group):
     enable_encounter_plando: EnableEncounterPlando | bool = True
     dump_patched_files: DumpPatchedFiles | bool = False
     enable_arm7_expansion_test: EnableArm7ExpansionTest | bool = False
+    plugin_settings: PluginSettings = {}
 
 
 class PokemonBWWeb(WebWorld):
@@ -140,6 +146,7 @@ class PokemonBWWorld(World):
         self.master_ball_seller_cost: int = 0
         self.filler_nested: list[str | list] | None = None
         self.slot_data_cache: dict[str, Any] | None = None
+        self.plugins: list[Plugin] | None = None
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
@@ -148,6 +155,8 @@ class PokemonBWWorld(World):
         from .generate.encounter import wild, checklist, static, plando
         from .generate import trainers
         from .data import version
+        from .plugins import load_plugins
+        from .plugins.generate import plugins_generate_early, plugins_generate_encounters
 
         # Load values from UT if this is a regenerated world
         if hasattr(self.multiworld, "re_gen_passthrough"):
@@ -170,6 +179,9 @@ class PokemonBWWorld(World):
             self.seed = self.random.getrandbits(64)
 
         self.random.seed(self.seed)
+
+        self.plugins = load_plugins(world=self)
+        plugins_generate_early(self)
 
         cost_start, cost_end = 999999, -1
         for modifier in self.options.master_ball_seller.value:
@@ -196,6 +208,7 @@ class PokemonBWWorld(World):
         self.wild_encounter |= wild.generate_wild_encounters(  # only removes species
             self, species_checklist, slots_checklist
         )
+        plugins_generate_encounters(self)
         self.encounter_by_method = wild.organize_by_method(self)
         self.trade_data = wild.organize_trades(self)
         self.trainer_teams = trainers.generate_trainer_teams(self)
@@ -207,12 +220,17 @@ class PokemonBWWorld(World):
         return items.generate_filler(self)
 
     def create_regions(self) -> None:
+        from .plugins.generate import plugins_create_regions
+
         catchable_species_data = locations.create_and_place_event_locations(self)
         locations.create_and_place_locations(self, catchable_species_data)
         self.to_be_filled_locations = locations.count_to_be_filled_locations(self.regions)
+        plugins_create_regions(self, catchable_species_data)
         self.multiworld.regions.extend(self.regions.values())
 
     def create_items(self) -> None:
+        from .plugins.generate import plugins_create_items
+
         item_pool = items.get_main_item_pool(self)
         items.populate_starting_inventory(self, item_pool)
         if len(item_pool) > self.to_be_filled_locations:
@@ -222,6 +240,7 @@ class PokemonBWWorld(World):
         for _ in range(self.to_be_filled_locations-len(item_pool)):
             item_pool.append(self.create_item(self.get_filler_item_name()))
         items.place_locked_items(self, item_pool)
+        plugins_create_items(self, item_pool)
         self.multiworld.itempool.extend(item_pool)
 
     def fill_hook(self,
