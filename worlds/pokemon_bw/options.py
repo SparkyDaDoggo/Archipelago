@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import settings
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle,
-                     PlandoTexts, OptionError, Option, StartInventoryPool, T, OptionDict)
+                     PlandoTexts, OptionError, Option, StartInventoryPool, OptionDict)
 from .data.common_options import ToggleSet, ExtendedOptionCounter
 
 if typing.TYPE_CHECKING:
@@ -1162,10 +1162,16 @@ class ReusableTMs(Choice):
     """
     display_name = "Reusable TMs"
     option_on = 0
-    option_yes = 1
+    option_yes_please = 1
     option_of_course = 2
     option_im_not_a_masochist = 3
     default = 0
+
+    @classmethod
+    def from_any(cls, data: typing.Any):
+        if data == "yes":
+            return super().from_any("yes_please")
+        return super().from_any(data)
 
 
 @dataclass
