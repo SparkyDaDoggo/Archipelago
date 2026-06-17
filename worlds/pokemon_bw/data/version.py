@@ -9,9 +9,10 @@ class VersionCompatibility(NamedTuple):
     ap_minimum: tuple[int, int, int]
 
 
-version: tuple[int, int, int] = (0, 3, 30)
+version: tuple[int, int, int] = (0, 3, 31)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
+    (0, 3, 31): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
     (0, 3, 30): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
     (0, 3, 29): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
     (0, 3, 28): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 26), (0, 3, 27), (0, 6, 4)),
@@ -126,6 +127,8 @@ if __name__ == "__main__":
             if "__pycache__" in root:
                 continue
             for file in files:
+                if "_dev.py" in file:
+                    continue
                 zipf2.write(os.path.join(root, file),
                             os.path.relpath(os.path.join(root, file),
                                             "../../"))

@@ -1,6 +1,19 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.3.31
+
+- Reworked plugins system and added capabilities to modify world generation
+  - Adding the hooks `generate_early`, `generate_encounters`, `create_regions`, `create_items`, `write_patch`
+  - However, this breaks old plugins
+- Slightly changed the `Reusable TMs` choice `yes` to `yes_please`
+  - Old yamls will still work and quietly fix the name change
+- Added an lz11 decompress algorithm
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before 0.3.27 might show incorrect Dexsanity logic in UT
+
 ## 0.3.30
 
 - Added a button to abort patching if any patching plugin failed
