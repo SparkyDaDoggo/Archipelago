@@ -9,6 +9,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Slightly changed the `Reusable TMs` choice `yes` to `yes_please`
   - Old yamls will still work and quietly fix the name change
 - Added an lz11 decompress algorithm
+- Fixed the Master Ball seller in N's Castle
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)
