@@ -1,5 +1,6 @@
 import logging
 import sys
+from random import Random
 from typing import Any, TYPE_CHECKING, ClassVar, Callable
 from zipfile import ZipFile
 from types import FunctionType
@@ -22,6 +23,16 @@ if TYPE_CHECKING:
 
 
 class PluginProtocol:
+    # Relevant to the plugin creator
+    slot_data: ClassVar[dict[str, Any]] = {}
+    general_options: ClassVar[dict[str, Any]] = {}
+    all_plugin_options: ClassVar[dict[str, Any]] = {}
+    all_plugin_settings: ClassVar[dict[str, Any]] = {}
+    patch_instance: "PokemonBWPatch"
+    world: "PokemonBWWorld"
+    all_plugins: list
+    random: Random
+
     # Hide from the plugin creator
     _initialized: bool
     _ov_table: dict[int, Overlay]
@@ -33,15 +44,6 @@ class PluginProtocol:
     _settings: dict[str, Any]
     _arm9: bytearray | None
     _arm7: bytearray | None
-
-    # Relevant to the plugin creator
-    slot_data: ClassVar[dict[str, Any]] = {}
-    general_options: ClassVar[dict[str, Any]] = {}
-    all_plugin_options: ClassVar[dict[str, Any]] = {}
-    all_plugin_settings: ClassVar[dict[str, Any]] = {}
-    patch_instance: "PokemonBWPatch"
-    world: "PokemonBWWorld"
-    all_plugins: list
 
     # Needs to be set by the plugin creator
     name: str
@@ -79,6 +81,7 @@ class OverrideProtocol(PluginProtocol):
         self.all_plugins = plugins
         self.patch_instance = patch_instance
         self.world = world
+        self.random = Random(PluginProtocol.slot_data["seed"])
 
     def patching_prepare(self, rom: NintendoDSRom, files_dump: dict[str, bytes | bytearray]):
         self._rom = rom
@@ -106,16 +109,30 @@ class OverrideProtocol(PluginProtocol):
     def otpp_patch_array(array: bytearray, otp: bytes | bytearray):
         array[:] = otpp.patch(array, otp)
 
-    def get_option(self, name: str, default=None, typ: type = object) -> Any:
+    def get_option(self, name: str, default=None, typ: type = object, support_weighting=True) -> Any:
         ret = self._options.get(name, default)
         if not isinstance(ret, typ):
             return default
+        if support_weighting and isinstance(ret, dict) and typ.__hash__ is not None:
+            ret2 = {r: rr for r, rr in ret.items() if isinstance(rr, int) and isinstance(r, typ)}
+            if not len(ret2):
+                return default
+            return self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+        if support_weighting and isinstance(ret, list) and typ.__hash__ is not None:
+            return self.random.choice([r for r in ret if isinstance(r, typ)])
         return ret
 
-    def get_setting(self, name: str, default=None, typ: type = object) -> Any:
+    def get_setting(self, name: str, default=None, typ: type = object, support_weighting=True) -> Any:
         ret = self._settings.get(name, default)
         if not isinstance(ret, typ):
             return default
+        if support_weighting and typ.__hash__ is not None and isinstance(ret, dict):
+            ret2 = {r: rr for r, rr in ret.items() if isinstance(rr, int) and isinstance(r, typ)}
+            if not len(ret2):
+                return default
+            return self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+        if support_weighting and typ.__hash__ is not None and isinstance(ret, list):
+            return self.random.choice([r for r in ret if isinstance(r, typ)])
         return ret
 
     def get_from_narc(self, path: str, file_num: int) -> bytearray:
