@@ -222,10 +222,10 @@ def load_plugins(patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld
                     if not isinstance(value, Callable) or hasattr(module_type.Plugin, key):
                         continue
                     setattr(module_type.Plugin, key, value)
-                for key, value in PluginProtocol.__annotations__:
+                for key, value in PluginProtocol.__annotations__.items():
                     if key not in PluginProtocol.__dict__:
                         continue
-                    setattr(module_type.Plugin, key, value)
+                    setattr(module_type.Plugin, key, PluginProtocol.__dict__[key])
                 plugins.append(module_type.Plugin(plugins, patch_instance, world))
         elif "." not in module_name[7:]:
             logging.warning(f"{module_name[7:]} has the patch plugin naming scheme, "
