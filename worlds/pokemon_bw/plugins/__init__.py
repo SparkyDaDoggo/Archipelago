@@ -92,7 +92,7 @@ class OverrideProtocol(PluginProtocol):
     def patching_done(self):
         for path, narc in self._narcs.items():
             self._rom.setFileByName(path, narc.save())
-        for ov_num, ov_data in self._ov_arrays:
+        for ov_num, ov_data in self._ov_arrays.items():
             ov = self._ov_table[ov_num]
             ov.data = bytes(ov_data)
             self._rom.files[ov.fileID] = ov.save(compress=ov.compressed)
