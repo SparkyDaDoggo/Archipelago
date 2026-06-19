@@ -21,14 +21,21 @@ def popup(errors: list[str], step: str):
 
 
 def plugins_patch(patch_instance: "PokemonBWPatch", rom: "NintendoDSRom", files_dump: dict[str, bytes | bytearray]):
-    from . import load_plugins
+    from . import load_plugins, patching_done
+    from ..ndspy.code import codeCompression
 
     plugins = load_plugins(patch_instance=patch_instance)
+    narcs, ov_arrays = {}, {}
+    ov_table = rom.loadArm9Overlays()
+    arm7 = bytearray(rom.arm7)
+    arm9 = bytearray(codeCompression.decompress(rom.arm9))
+    files_dump["arm7"] = arm7
+    files_dump["arm9"] = arm9
 
     plugin_errors = []
     for plugin in plugins:
         try:
-            plugin.patching_prepare(rom, files_dump)
+            plugin.patching_prepare(rom, files_dump, narcs, ov_table, ov_arrays, arm7, arm9)
         except Exception as e:
             for arg in e.args:
                 plugin_errors.append(f"[{plugin.name}] {arg}")
@@ -46,11 +53,10 @@ def plugins_patch(patch_instance: "PokemonBWPatch", rom: "NintendoDSRom", files_
         popup(plugin_errors, "patch plugin processing")
 
     plugin_errors = []
-    for plugin in plugins:
-        try:
-            plugin.patching_done()
-        except Exception as e:
-            for arg in e.args:
-                plugin_errors.append(f"[{plugin.name}] {arg}")
+    try:
+        patching_done(rom, narcs, ov_table, ov_arrays, arm7, arm9)
+    except Exception as e:
+        for arg in e.args:
+            plugin_errors.append(str(arg))
     if plugin_errors:
         popup(plugin_errors, "patch plugin finalization")
