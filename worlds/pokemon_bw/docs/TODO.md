@@ -15,6 +15,7 @@
 - allow encounter rate modifier to reduce slot count
 - stats and better evos in spoiler log when randomized
 - tweak text system to make "[Terminate]" deprecated
+- put new options into slot data
 
 ## Rom
 
