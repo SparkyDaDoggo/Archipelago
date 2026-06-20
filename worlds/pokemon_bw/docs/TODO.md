@@ -1,5 +1,10 @@
 # Important stuff
 
+- fast travel npc in chargestone cave from south to north if battled N at north exit
+- skip musical tutorial, because some players have problems
+- N fight in Nacrene City can be missed if Pinwheel Forest events are cleared before entering Nacrene Museum
+- Chargestone Cave grunts missing if entered in reverse
+- make mom stop the player at the door and say funny things for certain reusable tm choices
 
 # Not urgent
 

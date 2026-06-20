@@ -295,10 +295,10 @@ class PokemonBWWorld(World):
                     "modify_item_pool": self.options.modify_item_pool.value,
                     "modify_logic": self.options.modify_logic.value,
                     "plugin_options": self.options.plugin_options.value,
+                    "reusable_tms": self.options.reusable_tms.current_key,
                 },
                 "seed": self.seed,
                 "master_ball_seller_cost": self.master_ball_seller_cost,
-                "reusable_tms": self.options.reusable_tms.current_key,
             }
         return self.slot_data_cache
 
