@@ -5,7 +5,7 @@ from .. import SpeciesEntry, EvoLine
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...options import PlandoEvolution
+    from ...options.stats import PlandoEvolution
 
 
 def generate_plando_evolutions(world: "PokemonBWWorld", plando_evos: list["PlandoEvolution"], all_species: dict[str, SpeciesEntry]):
@@ -43,7 +43,7 @@ def generate_plando_evolutions(world: "PokemonBWWorld", plando_evos: list["Pland
             case c if c in ("Trade with item", "Level up item day", "Level up item night", "_Level up item"):
                 new_evos.append((plando_evo.method, all_items_dict_view[plando_evo.held].item_id, spec_num))
             case "Level up with move":
-                new_evos.append((plando_evo.method, move_by_name[plando_evo.move], spec_num))
+                new_evos.append((plando_evo.method, move_by_name[plando_evo.move].id, spec_num))
             case "Level up with party member":
                 partner_num = all_species[plando_evo.partner].dex_number \
                     if plando_evo.partner in all_species else dex_by_name[plando_evo.partner]

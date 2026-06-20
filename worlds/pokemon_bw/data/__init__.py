@@ -171,12 +171,14 @@ class TMHMMovesetData(NamedTuple):
 
 
 class MoveData(NamedTuple):
+    id: int
     type: str
     category: Literal["Physical", "Special", "Status"]
     power: int
-    # (Number of positive effects) - (Number of negative effects)
-    effects_difference: int
+    accuracy: int
     pp: int
+    # (Number of positive effects) - (Number of negative effects)
+    # effects_difference: int
 
 
 class TMHMData(NamedTuple):

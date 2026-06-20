@@ -92,18 +92,18 @@ is_in_appropriate_region: dict[int, ExtendedRule] = {  # Artificial logic so tha
 }
 
 
-def stats_lvlup(value: int, species: str) -> ExtendedRule:
+def stats_lvlup(value: int, spec: str) -> ExtendedRule:
     return lambda state, world: (is_in_appropriate_region[value//5](state, world)
                                  and can_buy_item_mall(state, world))
 
 
-def move_lvlup(value: int, species: str) -> ExtendedRule:
-    for lvl_move in movesets_level_up.table[species].level_up_moves:
-        if move_tables.by_name[lvl_move[1]] == value:
+def move_lvlup(value: int, spec: str) -> ExtendedRule:
+    for lvl_move in movesets_level_up.table[spec].level_up_moves:
+        if move_tables.by_name[lvl_move[1]].id == value:
             return lambda state, world: (is_in_appropriate_region[lvl_move[0]//5](state, world)
                                          and can_reach_mistralton_city(state, world))
-    for tm_move in movesets_tm_hm.table[species].tm_hm_moves:
-        if move_tables.by_name[move_tables.tm_hm[tm_move]] == value:
+    for tm_move in movesets_tm_hm.table[spec].tm_hm_moves:
+        if move_tables.by_name[move_tables.tm_hm[tm_move]].id == value:
             return has_item(tm_move)
     return can_reach_mistralton_city
 

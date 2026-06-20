@@ -117,6 +117,7 @@ class RandomizeGenderRatio(ToggleSet):
     - **Shuffle** - Gives every species a commonly used gender ratio (e.g. 50/50, 1 in 8, ...).
     - **Randomize** - Gives every species a completely random gender ratio. Overrides **Shuffle**.
     - **Follow evolutions** - Evolved species will have the same gender ratio as (one of) their pre-evolution(s).
+        Not including this can lead to some pokémon changing their gender when evolved.
     """
     display_name = "Randomize Gender Ratio"
     is_shuffle = False
@@ -130,25 +131,28 @@ class RandomizeLevelUpMovesets(ToggleSet):
     Randomizes the moves a pokemon species learns by leveling up.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles level up movesets being randomized. Required for any other modifier.
+    - **Randomize** - Toggles level up movesets being randomized. Automatically added
+        if any other modifier is added.
     - **Keep types** - Randomized moves have either a matching or normal type.
-    - **Progressive power** - If a move is learned after another one, it will have an equal or higher base power.
+    - **Progressive power** - If a move is learned after another one (and it's not a
+        status move), it will have an equal or higher base power.
     - **Keep amount** - Keeps the amount of moves a species learns normally.
-    - **Keep levels** - If the species learned a move at a certain level, it will still learn something at that level.
-    - **Follow evolutions** - Evolved species will have at least 50% of the level up moveset(s) of their
-        pre-evolution(s). Overrides all **Keep ...** modifiers.
+    - **Keep levels** - If the species learned a move at a certain level, it will still
+        learn something at that level.
+    - **Follow evolutions** - Evolved species will try to have a large portion of the
+        levelup moveset(s) of their pre-evolution(s). Has priority over some **Keep ...**
+        modifiers. Might not be applied to all species if plando is used.
+    - **Start with 4** - Ensures that each species learns at least 4 moves at level 1.
+        Has priority over all **Keep ...** modifiers.
     """
     display_name = "Randomize Level Up Movesets"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Randomize",
-        "Keep types",
-        "Progressive power",
-        "Keep amount",
-        "Keep levels",
-        "Follow evolutions",
-    ]
-    default = []
+    is_randomize = False
+    is_keep_types = False
+    is_progressive_power = False
+    is_keep_amount = False
+    is_keep_levels = False
+    is_follow_evolutions = False
+    is_start_with_4 = False
     auto_add_if_any = "Randomize"
 
 
@@ -201,6 +205,26 @@ class RandomizeAbilities(ToggleSet):
     auto_add_if_any = "Randomize"
 
 
+class RandomizeHeldItems(ToggleSet):
+    """
+    """
+    display_name = "Randomize Held Items"
+    is_randomize = False
+    is_follow_evolutions = False
+    auto_add_if_any = "Randomize"
+
+
+class RandomizeEggGroups(ToggleSet):
+    """
+    """
+    display_name = "Randomize Egg Groups"
+    is_randomize = False
+    is_keep_amount = False
+    is_type_themed = False
+    is_follow_evolutions = False
+    auto_add_if_any = "Randomize"
+
+
 class StatsRandomizationAdjustments(ExtendedOptionCounter):
     """
     Adjust various parameters in various randomization options (more modifiers are planned).
@@ -233,6 +257,10 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Catch rates maximum",
         # "Gender ratio minimum",
         # "Gender ratio maximum",
+        "Levelup moves amount minimum",
+        "Levelup moves amount maximum",
+        # "No held item chance",
+        # "Single egg group chance",
     ]
     default = {
         "Stats total minimum": 200,
@@ -243,6 +271,10 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Catch rates maximum": 255,
         # "Gender ratio minimum": 0,
         # "Gender ratio maximum": 255,
+        "Levelup moves amount minimum": 10,
+        "Levelup moves amount maximum": 20,
+        # "No held item chance": 90,
+        # "Single egg group chance": 75,
     }
     individual_min_max = {
         "Stats total minimum": (6, 1530),
@@ -253,11 +285,16 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Catch rates maximum": (3, 255),
         # "Gender ratio minimum": (0, 255),
         # "Gender ratio maximum": (0, 255),
+        "Levelup moves amount minimum": (1, 100),
+        "Levelup moves amount maximum": (1, 100),
+        # "No held item chance": (0, 100),
+        # "Single egg group chance": (0, 100),
     }
     min_max_pairs = [
         ("Stats total minimum", "Stats total maximum"),
         ("Catch rates minimum", "Catch rates maximum"),
         # ("Gender ratio minimum", "Gender ratio maximum"),
+        ("Levelup moves amount minimum", "Levelup moves amount maximum"),
     ]
 
 
@@ -283,6 +320,11 @@ class PlandoEvolution(typing.NamedTuple):
     species_3: str = "Hitmontop"
 
 
+class PlandoLevelupMove(typing.NamedTuple):
+    move: str
+    level: int
+
+
 class PlandoStat(typing.NamedTuple):
     base_hp: int = 0
     base_attack: int = 0
@@ -293,6 +335,8 @@ class PlandoStat(typing.NamedTuple):
     catch_rate: int = 0
     evolutions: list[PlandoEvolution] | bool = False
     override_evolutions: bool = True
+    levelup_moveset: list[PlandoLevelupMove] | bool = False
+    override_levelup_moveset: bool = True
 
 
 class StatsPlando(Option[dict[str, PlandoStat]]):
@@ -314,7 +358,13 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
           - species: Eevee
             method: Level up
             level: 30
-        override_evolutions: False
+        override_evolutions: false
+        levelup_moveset:
+          - move: Earthquake
+            level: 1
+          - move: Pound
+            level: 100
+        override_levelup_moveset: false
     ```
 
     Stats Plando requires the corresponding host setting to be enabled, else it will be ignored for all players.
@@ -339,7 +389,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 raise OptionError(f"Species name in Stats Plando expected to be a string, got {type(plando)}")
             if not isinstance(plando, dict):
                 raise OptionError(f"Expected dictionary as Stats Plando entry {spec}, got {type(plando)}")
-            plando_evolutions = []
+            plando_evolutions, plando_levelup_moves = [], []
             for plando_key, value in plando.items():
                 if plando_key not in PlandoStat._fields:
                     raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
@@ -351,14 +401,31 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                             raise OptionError(f"Expected evolution entry to be a dictionary, got {type(evo_entry)}")
                         if "species" not in evo_entry:
                             raise OptionError(f"An evolution entry for species {spec} is missing the 'species' key")
-                        for evo_entry_key, evo_entry_value in evo_entry.items():
+                        for evo_entry_key in evo_entry:
                             if not isinstance(evo_entry_key, str):
                                 raise OptionError(
                                     f"Evolution entry key expected to be a string, got {type(evo_entry_key)}")
                             if evo_entry_key not in PlandoEvolution._fields:
-                                raise OptionError(f"Unknown evolution entry key: {plando_key}")
+                                raise OptionError(f"Unknown evolution entry key: {evo_entry_key}")
                         plando_evolutions.append(PlandoEvolution(**evo_entry))
-            plando["evolutions"] = plando_evolutions
+                if plando_key == "levelup_moveset":
+                    if not (isinstance(value, list) or value is False):
+                        raise OptionError(f"Expected value of levelup_moveset key to be a list or 'false', got {type(value)}")
+                    for move_entry in value:
+                        if not isinstance(move_entry, dict):
+                            raise OptionError(f"Expected levelup move entry to be a dictionary, got {type(move_entry)}")
+                        if "move" not in move_entry:
+                            raise OptionError(f"A levelup move entry for species {spec} is missing the 'move' key")
+                        if "level" not in move_entry:
+                            raise OptionError(f"A levelup move entry for species {spec} is missing the 'level' key")
+                        for move_entry_key in move_entry:
+                            if not isinstance(move_entry_key, str):
+                                raise OptionError(
+                                    f"Levelup move entry key expected to be a string, got {type(move_entry_key)}")
+                            if move_entry_key not in PlandoLevelupMove._fields:
+                                raise OptionError(f"Unknown levelup move entry key: {move_entry_key}")
+                        plando_levelup_moves.append(PlandoLevelupMove(**move_entry))
+            plando["evolutions"], plando["levelup_moveset"] = plando_evolutions, plando_levelup_moves
             plandos[spec] = PlandoStat(**plando)
         return cls(plandos)
 
@@ -394,6 +461,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             if not isinstance(plando_stat.override_evolutions, int):
                 reasons.append((f"override_evolutions value \"{plando_stat.override_evolutions}\" is neither "
                                 f"a boolean nor an integer"))
+            if not isinstance(plando_stat.override_levelup_moveset, int):
+                reasons.append((f"override_levelup_moveset value \"{plando_stat.override_levelup_moveset}\" is neither "
+                                f"a boolean nor an integer"))
             if not (isinstance(plando_stat.base_hp, int) and 0 <= plando_stat.base_hp <= 255):
                 reasons.append(f"Base HP {plando_stat.base_hp} is not an integer in range 0-255")
             if not (isinstance(plando_stat.base_attack, int) and 0 <= plando_stat.base_attack <= 255):
@@ -410,34 +480,47 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                                                                  3 <= plando_stat.catch_rate <= 255)):
                 reasons.append(f"Catch rate {plando_stat.catch_rate} is neither 0 nor an integer in range 3-255")
             evo_sum = 0
-            for plando_evo in plando_stat.evolutions:
-                if plando_evo.species not in species_by_name and plando_evo.species not in dex_by_name:
-                    reasons.append(f"Unknown species name: {plando_evo.species}")
-                if plando_evo.partner not in species_by_name and plando_evo.partner not in dex_by_name:
-                    reasons.append(f"Unknown partner pokémon name: {plando_evo.partner}")
-                if plando_evo.method not in methods_table and plando_evo.method not in paired_table:
-                    reasons.append(f"Unknown evolution method: {plando_evo.method}")
-                evo_sum += paired_table.get(plando_evo.method, 1)
-                if not isinstance(plando_evo.level, int):
-                    reasons.append(f"Evolution level is not an integer: {plando_evo.level}")
-                if not 2 <= plando_evo.level <= 100:
-                    reasons.append(f"Evolution level {plando_evo.level} out of range, allowed are values in range 2-100")
-                if plando_evo.stone not in all_items_dict_view:
-                    reasons.append(f"Unknown evolution stone item: {plando_evo.stone}")
-                if all_items_dict_view[plando_evo.stone].item_id not in stone_items:
-                    reasons.append(f"Item {plando_evo.stone} is not an evolution stone")
-                if plando_evo.held not in all_items_dict_view:
-                    reasons.append(f"Unknown evolution held item: {plando_evo.held}")
-                if all_items_dict_view[plando_evo.held].item_id not in hold_items:
-                    reasons.append(f"Item {plando_evo.held} is not an evolution item")
-                if plando_evo.move not in move_by_name:
-                    reasons.append(f"Unknown move: {plando_evo.move}")
-                if plando_evo.species_2 not in species_by_name and plando_evo.species_2 not in dex_by_name:
-                    reasons.append(f"Unknown species name for key 'species_2': {plando_evo.species_2}")
-                if plando_evo.species_3 not in species_by_name and plando_evo.species_3 not in dex_by_name:
-                    reasons.append(f"Unknown species name for key 'species_3': {plando_evo.species_3}")
+            if plando_stat.evolutions is not False:
+                for plando_evo in plando_stat.evolutions:
+                    if plando_evo.species not in species_by_name and plando_evo.species not in dex_by_name:
+                        reasons.append(f"Unknown species name: {plando_evo.species}")
+                    if plando_evo.partner not in species_by_name and plando_evo.partner not in dex_by_name:
+                        reasons.append(f"Unknown partner pokémon name: {plando_evo.partner}")
+                    if plando_evo.method not in methods_table and plando_evo.method not in paired_table:
+                        reasons.append(f"Unknown evolution method: {plando_evo.method}")
+                    evo_sum += paired_table.get(plando_evo.method, 1)
+                    if not isinstance(plando_evo.level, int):
+                        reasons.append(f"Evolution level is not an integer: {plando_evo.level}")
+                    if not 2 <= plando_evo.level <= 100:
+                        reasons.append(f"Evolution level {plando_evo.level} out of range, allowed are values in range 2-100")
+                    if plando_evo.stone not in all_items_dict_view:
+                        reasons.append(f"Unknown evolution stone item: {plando_evo.stone}")
+                    if all_items_dict_view[plando_evo.stone].item_id not in stone_items:
+                        reasons.append(f"Item {plando_evo.stone} is not an evolution stone")
+                    if plando_evo.held not in all_items_dict_view:
+                        reasons.append(f"Unknown evolution held item: {plando_evo.held}")
+                    if all_items_dict_view[plando_evo.held].item_id not in hold_items:
+                        reasons.append(f"Item {plando_evo.held} is not an evolution item")
+                    if plando_evo.move not in move_by_name:
+                        reasons.append(f"Unknown move: {plando_evo.move}")
+                    if plando_evo.species_2 not in species_by_name and plando_evo.species_2 not in dex_by_name:
+                        reasons.append(f"Unknown species name for key 'species_2': {plando_evo.species_2}")
+                    if plando_evo.species_3 not in species_by_name and plando_evo.species_3 not in dex_by_name:
+                        reasons.append(f"Unknown species name for key 'species_3': {plando_evo.species_3}")
             if evo_sum > 7:
                 reasons.append(f"Too many evolution entries")
+            if plando_stat.levelup_moveset is not False:
+                any_1 = False
+                for plando_move in plando_stat.levelup_moveset:
+                    if plando_move.move not in move_by_name:
+                        reasons.append(f"Unknown move name: {plando_move.move}")
+                    if not isinstance(plando_move.level, int):
+                        reasons.append(f"Move level is not an integer: {plando_move.level}")
+                    if not 1 <= plando_move.level <= 100:
+                        reasons.append(f"Move level {plando_move.level} out of range, allowed are values in range 1-100")
+                    any_1 |= plando_move.level == 1
+                if plando_stat.override_levelup_moveset and not any_1:
+                    reasons.append(f"Overriding levelup moveset requires at least one move being learned at level 1")
             if reasons:
                 invalid.append(f"{plando[0]}: " + ", ".join(reasons))
         if invalid:

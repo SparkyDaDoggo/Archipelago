@@ -76,7 +76,7 @@ class PatchMethods:
     @staticmethod
     def write_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile) -> None:
         from patch.procedures import (write_text, write_wild_pokemon, write_trainer_pokemon, level_adjustments,
-                                      modify_rates, write_evolutions, write_stats)
+                                      modify_rates, write_evolutions, write_stats, write_levelup_movesets)
         from .plugins.generate import plugins_write_patch
 
         procedures: list[str] = ["base_patch", "write_text"]
@@ -111,6 +111,9 @@ class PatchMethods:
         if w_stats & 0b1101:
             procedures.append("write_stats")
             write_stats.write_patch(patch, opened_zipfile)
+        if w_stats & 0b10000:
+            procedures.append("write_levelup_movesets")
+            write_levelup_movesets.write_patch(patch, opened_zipfile)
 
         plugins_write_patch(patch.world, opened_zipfile)
 
@@ -140,7 +143,8 @@ class PatchMethods:
 
         from .ndspy.rom import NintendoDSRom
         from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
-                                       level_adjustments, write_text, modify_rates, write_evolutions, write_stats)
+                                       level_adjustments, write_text, modify_rates, write_evolutions, write_stats,
+                                       write_levelup_movesets)
         from .plugins.patch import plugins_patch
 
         patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch,
@@ -157,6 +161,7 @@ class PatchMethods:
             "write_text": write_text.patch,
             "write_evolutions": write_evolutions.patch,
             "write_stats": write_stats.patch,
+            "write_levelup_movesets": write_levelup_movesets.patch,
         }
 
         files_dump: dict[str, bytes | bytearray] = {}

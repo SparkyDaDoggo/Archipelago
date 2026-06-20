@@ -1,6 +1,5 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 from .. import SpeciesEntry
-from ...data import SpeciesData
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld

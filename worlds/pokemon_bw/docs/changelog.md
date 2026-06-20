@@ -66,6 +66,14 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Randomize`
   - `Follow evolutions`
   - `Correlate with base stats`
+- Added `Randomize Level Up Movesets` option with the following modifiers:
+  - `Randomize`
+  - `Keep types`
+  - `Progressive power`
+  - `Keep amount`
+  - `Keep levels`
+  - `Follow evolutions`
+  - `Start with 4`
 - Added `Stats Randomization Adjustments` option, currently with the following parameters:
   - `Stats total minimum`
   - `Stats total maximum`
@@ -73,6 +81,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Maximum evo level`
   - `Catch rates minimum`
   - `Catch rates maximum`
+  - `Levelup moves amount minimum`
+  - `Levelup moves amount maximum`
 - Added `Stats Plando` option, currently with the following keys for every species:
   - `base_hp`
   - `base_attack`
@@ -83,6 +93,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `catch_rates`
   - `evolutions`
   - `override_evolutions`
+  - `levelup_moveset`
+  - `override_levelup_moveset`
 - Added `Replace Evolution Methods` option with the following modifiers:
   - `Locations`
   - `Friendship`
