@@ -118,6 +118,15 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ### Is this version compatible with older multiworld slots and save files?
 No
 
+## 0.3.32
+
+- Fixed multiple plugins nullifying each other's modifications to the ROM
+- Fixed modifications to arm7 not being written to the ROM
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before 0.3.27 might show incorrect Dexsanity logic in UT
+
 ## 0.3.31
 
 - Reworked plugins system and added capabilities to modify world generation

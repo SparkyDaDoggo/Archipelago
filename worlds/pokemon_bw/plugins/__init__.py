@@ -24,6 +24,8 @@ if TYPE_CHECKING:
 
 
 class PluginProtocol:
+    """Initialized fields are written to all imported Plugin classes"""
+
     # Relevant to the plugin creator
     slot_data: ClassVar[dict[str, Any]] = {}
     general_options: ClassVar[dict[str, Any]] = {}
@@ -33,6 +35,8 @@ class PluginProtocol:
     world: "PokemonBWWorld"
     all_plugins: list
     random: Random
+    arm9: bytearray
+    arm7: bytearray
 
     # Hide from the plugin creator
     _initialized: bool
@@ -43,8 +47,8 @@ class PluginProtocol:
     _files_dump: dict[str, bytes | bytearray]
     _options: dict[str, Any]
     _settings: dict[str, Any]
-    _arm9: bytearray | None
-    _arm7: bytearray | None
+    _arm9: bytearray  # For backwards compatibility
+    _arm7: bytearray  # For backwards compatibility
 
     # Needs to be set by the plugin creator
     name: str
@@ -54,6 +58,7 @@ class PluginProtocol:
 
 
 class OverrideProtocol(PluginProtocol):
+    """Methods will be written into the imported Plugin classes, potentially overriding user-defined methods"""
 
     def __init__(self, plugins: list["Plugin"], patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld" = None):
         if not hasattr(PluginProtocol, "_initialized") or PluginProtocol._initialized is False:
@@ -84,27 +89,15 @@ class OverrideProtocol(PluginProtocol):
         self.world = world
         self.random = Random(PluginProtocol.slot_data["seed"])
 
-    def patching_prepare(self, rom: NintendoDSRom, files_dump: dict[str, bytes | bytearray]):
+    def patching_prepare(self, rom: NintendoDSRom, files_dump: dict[str, bytes | bytearray], common_narcs: dict,
+                         common_ov_table: dict, common_ov_arrays: dict, common_arm7: bytearray, common_arm9: bytearray):
         self._rom = rom
         self._files_dump = files_dump
-        self._narcs = {}
-        self._ov_table = rom.loadArm9Overlays()
-        self._ov_arrays = {}
-        self._arm7 = None
-        self._arm9 = None
-
-    def patching_done(self):
-        for path, narc in self._narcs.items():
-            self._rom.setFileByName(path, narc.save())
-        for ov_num, ov_data in self._ov_arrays.items():
-            ov = self._ov_table[ov_num]
-            ov.data = bytes(ov_data)
-            self._rom.files[ov.fileID] = ov.save(compress=ov.compressed)
-        self._rom.arm9OverlayTable = saveOverlayTable(self._ov_table)
-        if self._arm9 is not None:
-            arm9 = bytearray(codeCompression.compress(self._arm9, True))
-            arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")
-            self._rom.arm9 = bytes(arm9)
+        self._narcs = common_narcs
+        self._ov_table = common_ov_table
+        self._ov_arrays = common_ov_arrays
+        self.arm7 = self._arm7 = common_arm7  # For backwards compatibility
+        self.arm9 = self._arm9 = common_arm9  # For backwards compatibility
 
     @staticmethod
     def otpp_patch_array(array: bytearray, otp: bytes | bytearray):
@@ -159,17 +152,11 @@ class OverrideProtocol(PluginProtocol):
         self._files_dump[f"ov{ov_num}"] = ov
         return ov
 
-    def get_arm9(self) -> bytearray:
-        if self._arm9 is None:
-            self._arm9 = bytearray(codeCompression.decompress(self._rom.arm9))
-            self._files_dump["arm9"] = self._arm9
-        return self._arm9
+    def get_arm9(self) -> bytearray:  # For backwards compatibility
+        return self.arm9
 
-    def get_arm7(self) -> bytearray:
-        if self._arm7 is None:
-            self._arm7 = bytearray(self._rom.arm7)
-            self._files_dump["arm7"] = self._arm7
-        return self._arm7
+    def get_arm7(self) -> bytearray:  # For backwards compatibility
+        return self.arm7
 
     @staticmethod
     def modify_rule(old: "ExtendedRule", new: Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]):
@@ -188,6 +175,7 @@ class OverrideProtocol(PluginProtocol):
 
 
 class FillProtocol(PluginProtocol):
+    """Methods will only be written to the imported Plugin classes if they don't exist there yet"""
 
     def patch(self):
         ...
@@ -210,6 +198,21 @@ class FillProtocol(PluginProtocol):
 
 class Plugin(OverrideProtocol, FillProtocol):
     pass
+
+
+def patching_done(rom: NintendoDSRom, common_narcs: dict, common_ov_table: dict, common_ov_arrays: dict,
+                  common_arm7: bytearray, common_arm9: bytearray):
+    for path, narc in common_narcs.items():
+        rom.setFileByName(path, narc.save())
+    for ov_num, ov_data in common_ov_arrays.items():
+        ov = common_ov_table[ov_num]
+        ov.data = bytes(ov_data)
+        rom.files[ov.fileID] = ov.save(compress=ov.compressed)
+    rom.arm9OverlayTable = saveOverlayTable(common_ov_table)
+    arm9 = bytearray(codeCompression.compress(common_arm9, True))
+    arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")
+    rom.arm9 = bytes(arm9)
+    rom.arm7 = bytes(common_arm7)
 
 
 def load_plugins(patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld" = None) -> list[Plugin]:
