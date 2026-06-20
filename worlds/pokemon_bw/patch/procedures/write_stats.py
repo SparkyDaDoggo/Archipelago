@@ -21,7 +21,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
             byt[6] = data.evolution_stage
         if data.write & 0b1000:
             byt[7] = data.catch_rate
-        if data.write & 0b101:
+        if data.write & 0b1101:
             opened_zipfile.writestr(f"stats/{max(data.dex_number, data.custom_form_file)}", bytes(byt))
 
 
