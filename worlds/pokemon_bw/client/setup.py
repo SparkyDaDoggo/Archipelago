@@ -54,6 +54,8 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     else:
         await client.write_unset_flag(ctx, 0x1D0)
 
+    await client.write_var(ctx, 0xF7, ctx.slot_data["options"].get("reusable_tms", 0))
+
     # Things that should only be done once at the start of the game
     if not client.get_flag(0x1DE):
 
@@ -69,6 +71,10 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
                         await client.write_var(ctx, 0xC1, seasons.table[name].var_value)
                         break
 
+        # Initial exp multiplier
+        await client.write_var(ctx, 0xF4, (ctx.slot_data["options"]["exp_multiplier"]
+                                           if "exp_multiplier" in ctx.slot_data["options"] else 1)-1)
+
         # Late setup flag
         await client.write_set_flag(ctx, 0x1DE)
 
@@ -76,10 +82,6 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     # If things are added here, it's most likely temporary and will be moved to the upper section later
     version_int = version[2] + (version[1] << 8) + (version[0] << 16)
     if version_int != (await client.read_var(ctx, 0x128, 3)):
-
-        # Initial exp multiplier
-        await client.write_var(ctx, 0xF4, (ctx.slot_data["options"]["exp_multiplier"]
-                                           if "exp_multiplier" in ctx.slot_data["options"] else 1)-1)
 
         # all pokemon seen: male seen, female seen, male shown, forms seen, forms shown
         # shown flags always the later ones, so setting them to male won't change it if a different form was set ingame
