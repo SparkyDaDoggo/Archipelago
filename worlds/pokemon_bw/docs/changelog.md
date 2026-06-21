@@ -4,6 +4,9 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ## 0.3.34
 
 - Fixed client crashes resulting from the recently added funny dialog
+- Fixed small bugs of the recently added funny dialog
+- Tweaked the Chargestone Cave chuckster throwing animation
+- Fixed the new NPC in Accumula Town not appearing
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)
