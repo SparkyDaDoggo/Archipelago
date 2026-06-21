@@ -1166,6 +1166,7 @@ class ReusableTMs(Choice):
     option_of_course = 2
     option_im_not_a_masochist = 3
     default = 0
+    _by_name = {"true": 0, "on": 0, "yes": 1, "yes_please": 1, "of_course": 2, "im_not_a_masochist": 3}
 
     @classmethod
     def from_any(cls, data: typing.Any):

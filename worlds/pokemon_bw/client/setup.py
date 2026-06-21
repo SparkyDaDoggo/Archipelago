@@ -26,6 +26,7 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     from ..data.items import seasons
     from ..data.version import version
     from .items import reload_key_items
+    from ..options import ReusableTMs
 
     await reload_key_items(client, ctx)
 
@@ -54,7 +55,7 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     else:
         await client.write_unset_flag(ctx, 0x1D0)
 
-    await client.write_var(ctx, 0xF7, ctx.slot_data["options"].get("reusable_tms", 0))
+    await client.write_var(ctx, 0xF7, ReusableTMs._by_name[ctx.slot_data["options"].get("reusable_tms", "on")])
 
     # Things that should only be done once at the start of the game
     if not client.get_flag(0x1DE):
