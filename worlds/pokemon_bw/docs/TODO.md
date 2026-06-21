@@ -4,13 +4,6 @@
 
 ## APWorld
 
-- More modifiers
-  - Randomize Wild Pokemon
-    - Dungeon 1-1
-  - Randomize Trainer Pokémon 
-    - Prevent early Wonder Guard and fixed HP attacks
-    - Rivals take from box
-    - N uses pokemon from nearby
 - combined goals
 - allow encounter rate modifier to reduce slot count
 - stats and better evos in spoiler log when randomized
@@ -22,7 +15,6 @@
 ## Both
 
 - add now-possible locations
-- maybe [redacted] is actually possible? but definitely with restrictions
 - Dowsing Machine as a hard requirement for hidden items
 - revamp flags for static encounters so that resetting statics doesn't reset the flag
 - [arm7 expansion] revamp season control to be toggleable between vanilla and changeable ingame
@@ -31,15 +23,8 @@
 
 # Not urgent
 
-- look through scripts and remove space checking for specific items
-- fill evo method ids
-- more inclusion rules
-- post MonochromeScriptAssembler to ds romhacking servers
-- make simple script compiler, use for starting season, season npc vanish, tmhm hunt npc vanish, and other future stuff
 - change rules dict to being filled on the way
-- organize imports for type hints behind TYPE_CHECKING
 - rename slot methods to cave/dust cloud/etc everywhere
-- gracidea seems to only work on fateful encounters, assembly needed
 - gym leader scripts control traded obedience level?
 - wingull grams overworld items not disappearing
 - extended location hint for challenge rock
@@ -49,6 +34,13 @@
 - opelucid city fly flag only set after ghetsis scene?
 - bgm randomization
 - Early game cutscenes shortening option (skipping entire parts in script)
+- More modifiers
+  - Randomize Wild Pokemon
+    - Dungeon 1-1
+  - Randomize Trainer Pokémon 
+    - Prevent early Wonder Guard and fixed HP attacks
+    - Rivals take from box
+    - N uses pokemon from nearby
 
 # Single reports, cannot recreate, need to wait for more reports
 
