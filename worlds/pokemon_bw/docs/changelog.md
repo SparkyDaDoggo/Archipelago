@@ -119,6 +119,33 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ### Is this version compatible with older multiworld slots and save files?
 No
 
+## 0.3.34
+
+- Fixed client crashes resulting from the recently added funny dialog
+- Fixed small bugs of the recently added funny dialog
+- Tweaked the Chargestone Cave chuckster throwing animation
+- Fixed the new NPC in Accumula Town not appearing
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before 0.3.27 might show incorrect Dexsanity logic in UT
+
+## 0.3.33
+
+- Fixed multiple changes to the base ROM being reverted in previous updates
+- Made the Plasma grunts in Chargestone Cave always stay in the cave
+  - This fixes them potentially never appearing when playing through Chargestone Cave in reverse
+- Added an NPC to the southern entrance of Chargestone Cave that throws you to the northern exit
+  - He only appears after defeating N in Chargestone Cave
+- Removed the forced Musical Theater dress up minigame
+- Fixed the fight with N in Nacrene City being missable when doing the Pinwheel Forest events before that
+- Added a bit of funny dialog at the start of the game
+- Added an NPC next to the Pokémon Center in Accumula Town, who will be used for a feature in 0.4.0
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.3.0, except the pre-release 0.3.99(9)
+However, tracking worlds generated before 0.3.27 might show incorrect Dexsanity logic in UT
+
 ## 0.3.32
 
 - Fixed multiple plugins nullifying each other's modifications to the ROM

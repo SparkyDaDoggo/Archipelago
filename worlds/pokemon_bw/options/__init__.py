@@ -154,7 +154,11 @@ class Dexsanity(Range):
     If you want to have all 649 possible checks, then you need to randomize wild
     encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of dex numbers in order to plando what pokemon you want to have locations for.
+    Alternatively, you can put in a list of dex numbers in order to plando what pokemon you want to have locations for:
+    ```
+      dexsanity:
+        - [50, 51, 52, 53, 54, 460, 461, 500]
+    ```
     However, without wild pokemon randomization being enabled, pokemon that are not obtainable in the vanilla game
     will be ignored.
     """
@@ -841,6 +845,8 @@ class ReusableTMs(Choice):
     option_of_course = 2
     option_im_not_a_masochist = 3
     default = 0
+    _by_name = {"true": 0, "on": 0, "yes": 1, "yes_please": 1, "of_course": 2, "im_not_a_masochist": 3,
+                "no": 4, "off_please": 5, "im_serious_no": 6, "im_a_masochist": 7}
 
     @classmethod
     def from_any(cls, data: typing.Any):
@@ -851,9 +857,9 @@ class ReusableTMs(Choice):
     @classmethod
     def from_text(cls, text: str) -> Choice:
         text = text.lower()
-        no = {"no": 4, "off_please": 5, "im_serious_no": 6, "im_a_masochist": 7}
+        no = ("no", "off_please", "im_serious_no", "im_a_masochist")
         if text in no:
-            return cls(no[text])
+            return cls(cls._by_name[text])
         return super().from_text(text)
 
     @property
