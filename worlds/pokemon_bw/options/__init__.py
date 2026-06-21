@@ -851,14 +851,16 @@ class ReusableTMs(Choice):
     @classmethod
     def from_text(cls, text: str) -> Choice:
         text = text.lower()
-        if text in ("no", "off", "im_serious_no", "im_a_masochist"):
-            return cls(99)
+        no = {"no": 4, "off_please": 5, "im_serious_no": 6, "im_a_masochist": 7}
+        if text in no:
+            return cls(no[text])
         return super().from_text(text)
 
     @property
     def current_key(self) -> str:
-        if self.value == 99:
-            return "no"
+        no = {4: "no", 5: "off_please", 6: "im_serious_no", 7: "im_a_masochist"}
+        if self.value in no:
+            return no[self.value]
         return super().current_key
 
 

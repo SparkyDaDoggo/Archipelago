@@ -143,6 +143,10 @@ async def reload_key_items(client: "PokemonBWClient", ctx: "BizHawkClientContext
             case x if x in seasons.table:
                 await client.write_set_flag(ctx, seasons.table[name].flag_id)
             case x if x in all_tm_hm:
+                if ctx.slot_data["options"]["reusable_tms"] == "im_a_masochist":
+                    continue
+                if ctx.slot_data["options"]["reusable_tms"] == "im_serious_no" and name.startswith("TM"):
+                    continue
                 if tm_hm_bag_buffer is None:
                     tm_hm_bag_buffer = await read_bag(client, ctx, client.tm_hm_bag_offset, client.tm_hm_bag_size)
                 if not await write_to_bag(client, ctx, tm_hm_bag_buffer, client.tm_hm_bag_offset,
