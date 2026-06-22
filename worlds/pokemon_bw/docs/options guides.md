@@ -150,17 +150,16 @@ Every entry contains 2 or 3 arguments:
   - `[Scroll]` makes the text box scroll the lines up by one. It is always followed by a `[NextLine]`.
   - `[End]` ends the current chain of lines, waits for any button press, and shows an arrow indicating that. 
     It is never used alone. If followed by a `[NextLine]`, it will clear the text box after any button press 
-    and continues on the upper line. If followed by a `[Terminate]`, it will close the text box after any button press.
-  - `[Terminate]` closes the text box. It has to be written at the end of **every** line and **only** 
-    at the end of a line. If an `[End]` stands in front of it, it will first wait for any button press before closing.
+    and continues on the upper line. If written to the end of a line, it will close the text box after any button press.
     However, in case you haven't noticed, the game **always** waits for any button press before closing 
     almost any text box, but sometimes with an arrow indicating the wait for a button press and sometimes not.
-    The arrow only appears when combined with an `[End]`. You always need to make sure you only and always use 
+    The arrow only appears when the line ends with an `[End]`. You always need to make sure you only and always use 
     an `[End]` when needed. If it is needed, and you omit it, the text box will close without any player interaction.
     If it's not required, and you add it, the game will wait for two button presses.
-  - `[c_xxx_#x_x_...]` commands are various commands used for different purposes, e.g. displaying various names 
+    - `[c_xxx_#x_x_...]` are various commands used for different purposes, e.g. displaying various names 
     with different formatting, forcing the text to be displayed faster, changing the text color, etc.
-    The best way to learn what commands to use for your use case is by looking at already existing text lines.
+    The best way to learn what commands to use for your use case is by looking at already existing text lines, 
+    especially the one you are trying to overwrite.
   
   Since text boxes have limited width, it is recommended to make no line longer than 40 characters.
   Certain kinds of texts used in other places than text boxes (e.g. ability descriptions, pokédex entries, etc.)
@@ -181,13 +180,13 @@ that you can use to find where you have to place your text lines.
 Pokemon Black and White:
   ...
   text_plando:
-    - text: "Huh? Why did you press the[NextLine]B button?[Scroll][NextLine]It will stay weak![Terminate]"
+    - text: "Huh? Why did you press the[NextLine]B button?[Scroll][NextLine]It will stay weak!"
       at: "system 172 0 1"
       percentage: 100
-    - text: "[c_100_#1_0] received [c_101_#1_1]![End][NextLine]Congratulations![Terminate]"
+    - text: "[c_100_#1_0] received [c_101_#1_1]![End][NextLine]Congratulations!"
       at: "story 160 0 7"
       percentage: 50
-    - text: "The arch nemesis of every Nuzlocker.[Terminate]"
+    - text: "The arch nemesis of every Nuzlocker."
       at: "system 235 0 202"
 ```
 

@@ -81,6 +81,8 @@ def decode(data: bytes) -> list[list[Entry]]:
                 else:
                     st.line += f"[{hex(char)}]"
                 k += 1
+            if st.line.endswith("[Terminate]"):
+                st.line = st.line[:-11]
 
     return texts
 
@@ -170,7 +172,7 @@ def encode(texts: list[list[Entry]]) -> bytes:
                         end = entry.line.find("]", k)
                         raise Exception("Bad special characters: "+(entry.line[k+1:end] if end != -1 else entry.line[k+1]))
             if decchars[-1] != 0xffff:
-                raise Exception("Line ended without terminate: "+entry.line)
+                decchars.append(0xffff)
             encchars: list[int] = []
             key = entry.key
             for decoded in decchars:
