@@ -327,6 +327,7 @@ class PokemonBWWorld(World):
                     "master_ball_seller": self.options.master_ball_seller.value,
                     "modify_item_pool": self.options.modify_item_pool.value,
                     "modify_logic": self.options.modify_logic.value,
+                    "filler_items_blacklist": self.options.filler_items_blacklist,
                     "funny_dialog": self.options.funny_dialog.current_key,
                     "text_plando": self.options.text_plando.to_slot_data(),
                     "plugin_options": self.options.plugin_options.value,

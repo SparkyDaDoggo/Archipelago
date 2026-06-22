@@ -46,33 +46,43 @@ def get_main_item_pool(world: "PokemonBWWorld") -> list[PokemonBWItem]:
 def generate_filler(world: "PokemonBWWorld") -> str:
     if world.filler_nested is None:
         from .data.items import berries, main_items, medicine
+
+        filter_items = (lambda it: True) if not world.options.filler_items_blacklist \
+            else (lambda it: it not in world.options.filler_items_blacklist)
+        main_filler = tuple(it for it in main_items.filler if filter_items(it))
+        main_min_once = tuple(it for it in main_items.min_once if filter_items(it))
+        main_mail = tuple(it for it in main_items.mail if filter_items(it))
+        berries_standard = tuple(it for it in berries.standard if filter_items(it))
+        berries_niche = tuple(it for it in berries.niche if filter_items(it))
+        medicine_all = tuple(it for it in medicine.table if filter_items(it))
+
         main_nested = [
-            main_items.filler,
-            main_items.filler,
-            main_items.filler if not world.options.modify_item_pool.is_useful_filler else [
-                main_items.filler,
-                main_items.min_once,
-                main_items.min_once,
+            main_filler,
+            main_filler,
+            main_filler if not world.options.modify_item_pool.is_useful_filler else [
+                main_filler,
+                main_min_once,
+                main_min_once,
             ],
-            main_items.filler if world.options.modify_item_pool.is_ban_bad_filler else [
-                main_items.filler,
-                main_items.filler,
-                main_items.filler,
-                main_items.mail,
+            main_filler if world.options.modify_item_pool.is_ban_bad_filler else [
+                main_filler,
+                main_filler,
+                main_filler,
+                main_mail,
             ],
         ]
         berries_nested = [
-            berries.standard,
-            berries.standard,
-            berries.standard,
-            berries.niche,
+            berries_standard,
+            berries_standard,
+            berries_standard,
+            berries_niche,
         ]
         world.filler_nested = [
             main_nested,
             main_nested,
             berries_nested,
-            medicine.table,
-            medicine.table,
+            medicine_all,
+            medicine_all,
         ]
     return random_choice_nested(world.random, world.filler_nested)
 

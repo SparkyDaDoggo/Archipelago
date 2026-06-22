@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError,
-                     OptionCounter, StartInventoryPool, OptionDict)
+                     OptionCounter, StartInventoryPool, OptionDict, ItemSet)
 from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTradePokemon, RandomizeStarterPokemon,
                         RandomizeLegendaryPokemon, RandomizeStaticPokemon, RandomizeTrainerPokemon,
                         WildRandomizationBlacklist, TrainerRandomizationBlacklist, PokemonRandomizationAdjustments,
@@ -791,6 +791,14 @@ class ModifyLogic(ToggleSet):
     ]
 
 
+class FillerItemsBlacklist(ItemSet):
+    """
+    Excludes these items from being thrown into the item pool as filler items.
+    Items that are guaranteed to be in the item pool at least once, will stay.
+    """
+    display_name = "Filler Items Blacklist"
+
+
 class FunnyDialog(Choice):
     """
     Adds humorous dialogue submitted by the folks in the Pokemon Black and White channel
@@ -981,6 +989,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
     modify_item_pool: ModifyItemPool
     modify_logic: ModifyLogic
+    filler_items_blacklist: FillerItemsBlacklist
     funny_dialog: FunnyDialog
     text_plando: PokemonBWTextPlando
     plugin_options: PluginOptions
