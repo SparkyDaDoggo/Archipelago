@@ -14,9 +14,9 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
     from ...data.pokemon.species import by_id
 
     if not world.options.randomize_wild_pokemon.is_randomize:
-        return SpeciesChecklist([])
+        return SpeciesChecklist([], world)
     elif world.options.randomize_wild_pokemon.is_ensure_all:
-        return SpeciesChecklist([species for species, data in world.species_entries.items() if data.form < 6])
+        return SpeciesChecklist([species for species, data in world.species_entries.items() if data.form < 6], world)
     else:  # Just "Randomize"
         always_required = [
             "Celebi",
@@ -25,6 +25,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             "Suicune",
             "Tornadus",
             "Thundurus",
+            "Genesect",
             "Deerling (Spring)",
             "Deerling (Summer)",
             "Deerling (Autumn)",
@@ -77,7 +78,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             if len(always_required) < 115:
                 always_required += (overpowered[i][0] for i in range(115-len(always_required)))
 
-        return SpeciesChecklist(always_required)
+        return SpeciesChecklist(always_required, world)
 
 
 def random_percentage_distribution(world: "PokemonBWWorld", length: int) -> list[int]:

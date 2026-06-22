@@ -162,13 +162,16 @@ can_spawn_roamer: ExtendedRule = lambda state, world: state.can_reach_region("Ro
 has_forces_of_nature: ExtendedRule = lambda state, world: state.has_all(("Thundurus", "Tornadus"), world.player)
 has_celebi: ExtendedRule = lambda state, world: state.has("Celebi", world.player)
 has_legendary_beasts: ExtendedRule = lambda state, world: state.has_all(("Entei", "Raikou", "Suicune"), world.player)
+has_genesect: ExtendedRule = lambda state, world: state.has("Genesect", world.player)
+has_shaymin: ExtendedRule = lambda state, world: state.has("Shaymin", world.player)
+has_other_locations_species: ExtendedRule = lambda state, world: state.has(world.other_locations_species, world.player)
 has_25_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 25
 has_51_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 51
 has_60_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 60
 has_115_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 115
 
 
-# Miscellaneous requirements
+# Miscellaneous/mixed requirements
 
 has_fighting_type_species: ExtendedRule = lambda state, world: (
     state.has_any(world.fighting_type_species, world.player)
@@ -178,15 +181,25 @@ has_any_tm_hm: ExtendedRule = lambda state, world: (
     state.has_any(tm_hm.tm, world.player) or state.has_any(tm_hm.hm, world.player)
 )
 
-striaton_hidden_item: ExtendedRule = lambda state, world: state.can_reach_region("Route 3", world.player) or can_use_surf(state, world)
-dark_cave: ExtendedRule = lambda state, world: not world.options.modify_logic.is_require_flash or state.has("Out of logic", world.player) or can_use_flash(state, world)
+striaton_hidden_item: ExtendedRule = lambda state, world: (
+    state.can_reach_region("Route 3", world.player) or can_use_surf(state, world)
+)
+dark_cave: ExtendedRule = lambda state, world: (
+    not world.options.modify_logic.is_require_flash or can_use_flash(state, world)
+    or state.has("Out of logic", world.player)
+)
 challengers_cave: ExtendedRule = lambda state, world: has_red_chain(state, world) and dark_cave(state, world)
 mistralton_cave: ExtendedRule = lambda state, world: can_use_surf(state, world) and dark_cave(state, world)
-trial_chamber: ExtendedRule = lambda state, world: can_encounter_swords_of_justice(state, world) and can_use_strength(state, world)
+trial_chamber: ExtendedRule = lambda state, world: (
+    can_encounter_swords_of_justice(state, world) and can_use_strength(state, world)
+)
 moor_of_icirrus: ExtendedRule = lambda state, world: can_use_surf(state, world) or (
     state.can_reach_region("Nimbasa City", world.player) and (
         world.options.season_control == "changeable" or state.has_any(("Spring", "Summer", "Autumn"), world.player)
     )
+)
+driftveil_random_tm: ExtendedRule = lambda state, world: (
+    state.has_all((world.driftveil_random_tm, world.other_locations_species), world.player)
 )
 
 extended_rules_list: tuple = (

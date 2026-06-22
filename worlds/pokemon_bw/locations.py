@@ -64,7 +64,7 @@ def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: 
 
     overworld_items.create(world)
     hidden_items.create(world)
-    other.create(world)
+    other.create(world, catchable_species_data)
     badge_rewards.create(world)
     tm_hm.create(world)
     dexsanity.create(world, catchable_species_data)

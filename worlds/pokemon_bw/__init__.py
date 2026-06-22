@@ -159,6 +159,10 @@ class PokemonBWWorld(World):
         self.slot_data_cache: dict[str, Any] | None = None
         self.species_entries: dict[str, SpeciesEntry] | None = None
         self.plugins: list[Plugin] | None = None
+        self.other_locations_species: str | None = None
+        self.studio_castelia_type: str | None = None
+        self.driftveil_random_tm: str | None = None
+        self.driftveil_random_move_id: int = 0
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
@@ -307,7 +311,7 @@ class PokemonBWWorld(World):
                     "dexsanity": self.options.dexsanity.value,
                     "season_control": self.options.season_control.current_key,
                     "adjust_levels": self.options.adjust_levels.value,
-                    "modify_encounter_rates": self.options.modify_encounter_rates.value,  # value property because of plando
+                    "modify_encounter_rates": self.options.modify_encounter_rates.value,  # value instead of current_key property because of plando
                     "exp_multiplier": self.options.exp_multiplier.value,
                     "all_pokemon_seen": self.options.all_pokemon_seen.value,
                     "master_ball_seller": self.options.master_ball_seller.value,
@@ -318,6 +322,9 @@ class PokemonBWWorld(World):
                 },
                 "seed": self.seed,
                 "master_ball_seller_cost": self.master_ball_seller_cost,
+                "studio_castelia_type": self.studio_castelia_type,
+                "driftveil_random_move_id": self.driftveil_random_move_id,
+                "other_locations_species": self.other_locations_species,
             }
         return self.slot_data_cache
 

@@ -14,12 +14,12 @@ season_dependant: ProgressTypeMethod = lambda world: (
     else LocationProgressType.EXCLUDED
 )
 
-deerling_dependant: ProgressTypeMethod = lambda world: (
+wild_rando_dependant: ProgressTypeMethod = lambda world: (
     LocationProgressType.DEFAULT
-    if world.options.randomize_wild_pokemon.is_randomize or world.options.season_control != "vanilla"
+    if world.options.randomize_wild_pokemon.is_randomize
     else LocationProgressType.EXCLUDED
 )
 
-key_item_location: ProgressTypeMethod = lambda world: (
-    LocationProgressType.DEFAULT
-)
+deerling_dependant: ProgressTypeMethod = lambda world: season_dependant(world) or wild_rando_dependant(world)
+
+key_item_location: ProgressTypeMethod = always_default

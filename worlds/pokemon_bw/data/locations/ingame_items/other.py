@@ -9,8 +9,7 @@ from ... import FlagLocationData
 
 table: dict[str, FlagLocationData] = {
     "Nuvema Town - Item from Mom after first fight": FlagLocationData(0x189, always_default, "Nuvema Town", None, None),
-    # Following is broken due to script issues, item can be set to 0x80 but no flag
-    "Nuvema Town - Item #2 from Mom": FlagLocationData(0x185, always_default, "Nuvema Town", disabled, None),
+    "Nuvema Town - Item #2 from Mom": FlagLocationData(0x185, always_default, "Nuvema Town", None, None),
     # Vanilla location of Super Rod
     "Nuvema Town - Item from Looker after beating Ghetsis": FlagLocationData(0x18A, key_item_location, "Nuvema Town", None, can_beat_ghetsis),
     "Route 1 - Item after catching tutorial #1": FlagLocationData(0x18B, always_default, "Route 1 East", None, None),
@@ -22,8 +21,8 @@ table: dict[str, FlagLocationData] = {
     "Route 1 - Item from ranger Brenda": FlagLocationData(1420+531, always_default, "Route 1 West", None, None),
     "Route 1 - Item from ranger Claude": FlagLocationData(1420+532, always_default, "Route 1 West", None, None),
     # Requires pokémon being randomized
-    # "P2 Laboratory - Item from scientist #1": FlagLocationData(0000000, always_default, "P2 Laboratory", None, has_species("Genesect")), TODO
-    # "P2 Laboratory - Item from scientist #2": FlagLocationData(0000000, always_default, "P2 Laboratory", None, has_species("Genesect")), TODO
+    "P2 Laboratory - Item from scientist #1": FlagLocationData(0x1E0, wild_rando_dependant, "P2 Laboratory", None, has_genesect),
+    "P2 Laboratory - Item from scientist #2": FlagLocationData(0x1E0, wild_rando_dependant, "P2 Laboratory", None, has_genesect),
     "Accumula Town - Item from man in north west building": FlagLocationData(109, always_default, "Accumula Town", None, None),
     "Striaton City - Item from man in south east building": FlagLocationData(111, always_default, "Striaton City", None, None),
     "Striaton City - Item from roughneck": FlagLocationData(189, always_default, "Striaton City", None, None),
@@ -58,7 +57,7 @@ table: dict[str, FlagLocationData] = {
     "Pinwheel Forest - Item from Lenora": FlagLocationData(0x188, always_default, "Pinwheel Forest West", None, None),
     "Skyarrow Bridge - Item from hiker in gate": FlagLocationData(268, always_default, "Skyarrow Bridge", None, None),
     "Castelia City - Item from scientist at Thumb Pier": FlagLocationData(269, always_default, "Castelia City", None, None),
-    # The following locations involve trading and I don't know yet how to handle them
+    # The following locations involve trading and I don't know yet how to handle them, maybe once wondertrade is implemented?
     # Not changing the script
     # "Castelia City Pokémon Center - Item by man in black for 5 different IDs": FlagLocationData(0000000, always_excluded, "Castelia City", None, AAAAAA),
     # "Castelia City Pokémon Center - Item by man in black for 10 different IDs": FlagLocationData(0000000, always_excluded, "Castelia City", None, AAAAAA),
@@ -75,7 +74,7 @@ table: dict[str, FlagLocationData] = {
     "Battle Company - 47F item from scientist": FlagLocationData(191, always_default, "Castelia City", None, None),
     "Battle Company - 55F item from President Geoff": FlagLocationData(163, always_default, "Castelia City", None, None),
     # Asks for random pokémon type
-    "Castelia City - Item from harlequin in Studio Castelia": FlagLocationData(0x1BA, always_excluded, "Castelia City", disabled, None),
+    "Castelia City - Item from harlequin in Studio Castelia": FlagLocationData(0x1BA, always_default, "Castelia City", None, has_other_locations_species),
     "Castelia City - Item from manager in Café Sonata": FlagLocationData(164, always_default, "Castelia City", None, None),
     "Castelia City - Item from Iris in Plasma hideout": FlagLocationData(0x199, always_default, "Castelia City", None, None),
     "Castelia City - Item from dancers": FlagLocationData(0x196, always_default, "Castelia City", None, None),
@@ -87,7 +86,7 @@ table: dict[str, FlagLocationData] = {
     # "Passerby Analytics HQ - Item for completing all survey requests": FlagLocationData(0000000, always_default, "Castelia City", None, None),
     "Castelia Gym - Gym guide item": FlagLocationData(120, always_default, "Castelia City", None, None),
     # Royal Unova only accessible at season-dependant day times
-    "Royal Unova - Item for defeating every trainer": FlagLocationData(0x198, always_excluded, "Castelia City", disabled, can_beat_ghetsis),
+    "Royal Unova - Item for defeating every trainer": FlagLocationData(0x198, always_default, "Castelia City", None, can_beat_ghetsis),
     "Route 4 - Item from Professor Juniper #1": FlagLocationData(0x19B, always_default, "Route 4 North", None, None),
     "Route 4 - Item from Professor Juniper #2": FlagLocationData(0x19B, always_default, "Route 4 North", None, None),
     "Route 4 - Item from Professor Juniper #3": FlagLocationData(0x19B, always_default, "Route 4 North", None, None),
@@ -143,7 +142,7 @@ table: dict[str, FlagLocationData] = {
     "Driftveil City - Item from girl in pokémon center #3": FlagLocationData(147, always_default, "Driftveil City", None, None),
     "Driftveil City - Item from man in black in market": FlagLocationData(365, always_default, "Driftveil City", None, None),
     # That lady is asking for a random TM move every day
-    "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move": FlagLocationData(0x1BC, always_excluded, "Driftveil City", disabled, has_any_tm_hm),
+    "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move": FlagLocationData(0x1BC, always_default, "Driftveil City", None, driftveil_random_tm),
     "Driftveil Gym - Gym guide item": FlagLocationData(122, always_default, "Driftveil City", None, None),
     "Cold Storage - Item from worker": FlagLocationData(316, always_default, "Cold Storage", None, None),
     "Route 6 - Item from ranger Shanti": FlagLocationData(1420+186, always_default, "Route 6", None, None),
@@ -188,16 +187,16 @@ table: dict[str, FlagLocationData] = {
     "Route 13 - Random item from man in black": FlagLocationData(279, always_default, "Route 13", None, None),
     "Lacunosa Town - Item from executive": FlagLocationData(0x1CA, always_default, "Lacunosa Town", None, None),
     # Requires pokémon being randomized
-    # "Lacunosa Town - Item from girl for showing a Shaymin": FlagLocationData(0000000, always_default, "Lacunosa Town", None, has_species("Shaymin")), TODO
+    "Lacunosa Town - Item from girl for showing a Shaymin": FlagLocationData(329, wild_rando_dependant, "Lacunosa Town", None, has_shaymin),
     "Route 12 - Item from breeder Ethel": FlagLocationData(1420+452, always_default, "Route 12", None, None),
     "Route 12 - Item from breeder Eustace": FlagLocationData(1420+451, always_default, "Route 12", None, None),
     "Village Bridge - Item from baker Chris": FlagLocationData(0x1AF, always_default, "Village Bridge", None, None),
     # Following 5 items require a random pokémon every day
-    "Village Bridge - Item from fisherman for showing a certain pokémon #1": FlagLocationData(0x1B0, always_excluded, "Village Bridge", disabled, None),
-    "Village Bridge - Item from fisherman for showing a certain pokémon #2": FlagLocationData(0x1B0, always_excluded, "Village Bridge", disabled, None),
-    "Village Bridge - Item from fisherman for showing a certain pokémon #3": FlagLocationData(0x1B0, always_excluded, "Village Bridge", disabled, None),
-    "Village Bridge - Item from fisherman for showing a certain pokémon #4": FlagLocationData(0x1B0, always_excluded, "Village Bridge", disabled, None),
-    "Village Bridge - Item from fisherman for showing a certain pokémon #5": FlagLocationData(0x1B0, always_excluded, "Village Bridge", disabled, None),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #1": FlagLocationData(0x1B0, always_default, "Village Bridge", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #2": FlagLocationData(0x1B0, always_default, "Village Bridge", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #3": FlagLocationData(0x1B0, always_default, "Village Bridge", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #4": FlagLocationData(0x1B0, always_default, "Village Bridge", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #5": FlagLocationData(0x1B0, always_default, "Village Bridge", None, has_other_locations_species),
     "Route 11 - Item from ranger Thalia": FlagLocationData(1420+453, always_default, "Route 11", None, None),
     "Route 11 - Item from ranger Crofton": FlagLocationData(1420+455, always_default, "Route 11", None, can_use_waterfall),
     "Opelucid City - Item from female NPC in northern house": FlagLocationData(312, always_default, "Opelucid City", None, None),

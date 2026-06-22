@@ -6,7 +6,6 @@ special: dict[str, ItemData] = {
     "Dark Stone": ItemData(0x0269, always_progression),
     "Xtransceiver (Blue)": ItemData(0x026D, always_useful),
     "Xtransceiver (Red)": ItemData(0x0272, always_useful),
-    "Town Map": ItemData(0x01BA, always_useful),  # Already given to you by mom due to broken script
 }
 
 progression: dict[str, ItemData] = {
@@ -35,6 +34,7 @@ vanilla: dict[str, ItemData] = {
     "Gracidea": ItemData(0x01D2, always_progression),
     "Dowsing Machine": ItemData(0x01D7, dowsing_machine_logic),
     "Prop Case": ItemData(0x0242, always_useful),
+    "Town Map": ItemData(0x01BA, always_useful),
 }
 
 useless: dict[str, ItemData] = {
