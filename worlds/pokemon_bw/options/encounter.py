@@ -17,7 +17,7 @@ class RandomizeWildPokemon(ToggleSet):
     Randomizes wild pokemon encounters.
     You can add as many of the following modifiers as you want.
 
-    The following is an example for how options like this can look like:
+    The following is an example for how options like this can look like (when edited in a yaml):
     ```
     randomize_wild_pokemon:
         ["Randomize", "Prevent rare encounters"]
@@ -29,22 +29,27 @@ class RandomizeWildPokemon(ToggleSet):
         - Prevent rare encounters
     ```
 
-    - **Randomize** - Toggles wild pokemon being randomized. Automatically added if any other modifier is added.
-    - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving.
-    - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total
-        as the replaced encounter.
-    - **Prevent overpowered pokemon** - Tries to prevent pokemon with a base stat total over an adjustable threshold
-        being randomized into wild encounter slots. Other modifiers (except for **Similar base stats**) take priority
-        in case of conflicts.
-    - **Prevent bad early pokemon** - Prevents encountering Wonder Guard and fixed HP attacks in regions that don't
-        have at least level 20 encounters. Might not be fully ensured depending on other options.
-    - **Type themed areas** - Tries to make every pokemon in an area have a certain same type. Might not be fully
-        ensured depending on RNG.
-    - **Area 1-to-1** - Keeps the amount of different encounters and their encounter rate in every area.
-    - **Merge phenomenons** - Makes rustling grass, rippling water spots, dust clouds, and flying shadows
-        in the same area have only one encounter. Takes priority over **Area 1-to-1**.
-    - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance in each area
-        to the same pokemon. Takes priority over **Area 1-to-1**.
+    - **Randomize** - Toggles wild pokemon being randomized. Automatically added if any
+        other modifier is added.
+    - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by
+        either catching or evolving.
+    - **Similar base stats** - Tries to keep every randomized pokemon at a similar base
+        stat total as the replaced encounter.
+    - **Prevent overpowered pokemon** - Tries to prevent pokemon with a base stat total
+        over an adjustable threshold being randomized into wild encounter slots. Other
+        modifiers (except for **Similar base stats**) take priority in case of conflicts.
+    - **Prevent bad early pokemon** - Prevents encountering Wonder Guard and fixed HP
+        attacks in regions that don't have at least level 20 encounters. Might not be
+        fully ensured depending on other options.
+    - **Type themed areas** - Tries to make every pokemon in an area have a certain same
+        type. Might not be fully ensured depending on RNG.
+    - **Area 1 to 1** - Keeps the amount of different encounters and their encounter rate
+        in every area.
+    - **Merge phenomenons** - Makes rustling grass, rippling water spots, dust clouds,
+        and flying shadows in the same area have only one encounter. Takes priority over
+        **Area 1 to 1**.
+    - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance
+        in each area to the same pokemon. Takes priority over **Area 1-to-1**.
 
     It is **highly recommended** to include **Prevent rare encounters** if you want to randomize wild pokemon,
     else you might find yourself searching for two 1% encounters on every route.
@@ -73,19 +78,23 @@ class RandomizeTrainerPokemon(ToggleSet):
     Randomizes trainer pokemon.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles trainer pokemon being randomized. Automatically added if any other modifier is added.
-    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
-    - **Prevent overpowered pokemon** - Prevents trainers from having pokemon with a base stats total above an
-        adjustable threshold. Takes priority over most other modifiers.
-    - **Evolve when possible** - Tries to evolve pokemon if they are able to (based on their level). Pokémon that
-        evolve independently of their level are evolved at level 25.
+    - **Randomize** - Toggles trainer pokemon being randomized. Automatically added if
+        any other modifier is added.
+    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base
+        stat total as the replaced one.
+    - **Prevent overpowered pokemon** - Prevents trainers from having pokemon with a base
+        stats total above an adjustable threshold. Takes priority over most other modifiers.
+    - **Evolve when possible** - Tries to evolve pokemon if they are able to (based on
+        their level). Pokémon that evolve independently of their level are evolved at level 25.
     - **Force fully evolved** - Always fully evolves pokemon above a certain (adjustable) level.
     - **Type themed** - All pokemon of a trainer will share at least one randomly chosen type.
-    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned to their gym leader.
-    - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader and elite 4 member instead
-        of using their vanilla type. Do note that they always have type themed teams.
-    - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon in common, which will always evolve
-        when possible.
+    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned
+        to their gym leader.
+    - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader
+        and elite 4 member instead of using their vanilla type. Do note that they always
+        have type themed teams.
+    - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon in
+        common, which will always evolve when possible.
     """
     display_name = "Randomize Trainer Pokemon"
     is_randomize = False
@@ -114,11 +123,13 @@ class RandomizeStarterPokemon(ToggleSet):
     Randomizes the starter pokemon you receive at the start of the game.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles starter pokemon being randomized. Automatically added if any other modifier is added.
+    - **Randomize** - Toggles starter pokemon being randomized. Automatically added if
+        any other modifier is added.
     - **Any base** - Only use unevolved/baby pokemon.
-    - **Base with 2 evolutions** - Only use unevolved/baby pokemon that can evolve twice. Overrides **Any base**.
-    - **Only official starters** - Only use pokemon that have been a starter in any mainline game.
-        Overrides **Any base** and **Base with 2 evolutions**.
+    - **Base with 2 evolutions** - Only use unevolved/baby pokemon that can evolve twice.
+        Overrides **Any base**.
+    - **Only official starters** - Only use pokemon that have been a starter in any
+        mainline game. Overrides **Any base** and **Base with 2 evolutions**.
     - **Type variety** - Every starter will have types that are different from the other two.
     """
     display_name = "Randomize Starter Pokemon"
@@ -135,11 +146,14 @@ class RandomizeStarterPokemon(ToggleSet):
 
 class RandomizeStaticPokemon(ToggleSet):
     """
-    Randomizes static encounters you can battle and catch throughout the game, e.g. Volcarona in Relic Castle.
+    Randomizes static encounters you can battle and catch throughout the game,
+    e.g. Volcarona in Relic Castle.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles static pokemon being randomized. Automatically added if any other modifier is added.
-    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
+    - **Randomize** - Toggles static pokemon being randomized. Automatically added if any
+        other modifier is added.
+    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base
+        stat total as the replaced one.
     - **Only base** - Only use unevolved Pokemon.
     - **No legendaries** - Exclude legendaries from being placed into static encounters.
     - **Split statues** - Splits the statues in Desert Resort into 5 different species.
@@ -161,11 +175,13 @@ class RandomizeGiftPokemon(ToggleSet):
     Randomizes gift pokemon that you receive for free, e.g. the Larvesta egg on route 18.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles gift pokemon being randomized. Automatically added if any other modifier is added.
-    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
+    - **Randomize** - Toggles gift pokemon being randomized. Automatically added if any
+        other modifier is added.
+    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base
+        stat total as the replaced one.
     - **No legendaries** - Exclude legendaries from being placed into gift encounters.
-    - **Split monkeys** - Makes the gift encounter in Dreamyard depend on which starter you picked (like in vanilla),
-        else it will always give you the same species.
+    - **Split monkeys** - Makes the gift encounter in Dreamyard depend on which starter
+        you picked (like in vanilla), else it will always give you the same species.
     """
     display_name = "Randomize Gift Pokemon"
     valid_keys = [
@@ -180,13 +196,16 @@ class RandomizeGiftPokemon(ToggleSet):
 
 class RandomizeTradePokemon(ToggleSet):
     """
-    Randomizes trade offers from NPCs. Any **Randomize ...** is required for the other modifiers.
+    Randomizes trade offers from NPCs. Any **Randomize ...** is required for the
+    other modifiers.
     You can add as many of the following modifiers as you want.
 
     - **Randomize offer** - Toggles offered pokemon being randomized.
     - **Randomize request** - Toggles requested pokemon being randomized.
-    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
-    - **Coupled base stats** - Tries to make offered and requested pokemon have similar base stats
+    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base
+        stat total as the replaced one.
+    - **Coupled base stats** - Tries to make offered and requested pokemon have similar
+        base stats.
     - **No legendaries** - Exclude legendaries from being placed into trades.
     """
     display_name = "Randomize Trade Pokemon"
@@ -205,14 +224,16 @@ class RandomizeLegendaryPokemon(ToggleSet):
     Randomizes legendary and mythical encounters.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles legendary pokemon being randomized. Automatically added if any other modifier is added.
+    - **Randomize** - Toggles legendary pokemon being randomized. Automatically added if
+        any other modifier is added.
     - **Keep legendary** - Randomized pokemon will all still be legendaries or mythicals.
     - **No legendaries** - Exclude legendaries from being placed into these encounters.
-    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stat total as the replaced one.
-        Overrides **Keep legendary**.
+    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base
+        stat total as the replaced one. Overrides **Keep legendary**.
     - **Same type** - Tries to keep at least one type of every encounter.
 
-    Including **Keep legendary** AND **No legendaries** will instead only put pseudo legendaries into these encounters.
+    Including **Keep legendary** AND **No legendaries** will instead only put pseudo
+    legendaries into these encounters.
     """
     display_name = "Randomize Legendary Pokemon"
     valid_keys = [
@@ -228,18 +249,20 @@ class RandomizeLegendaryPokemon(ToggleSet):
 
 class PokemonRandomizationAdjustments(ExtendedOptionCounter):
     """
-    Adjust various parameters in various pokemon randomization options (with individual ranges).
+    Adjust various parameters in various pokemon randomization options
+    (with individual ranges).
     Every parameter can be specified as unweighted/weighted lists, "random",
     and "random-range-x-y" like usual range options.
 
-    - **Stats leniency** (0-1530) - The starting maximum difference between base stat totals of vanilla and
-        randomized species (for options with **Similar base stats** activated).
-    - **Rare encounters threshold** (1-100) - If **Prevent rare encounters** is included, this will be the minimum
-        encounter chance (in percent) for each species.
-    - **Overpowered threshold** (200, 1530) - The maximum base stat total (for options with **Prevent overpowered
-        pokemon** activated).
-    - **Force evolutions threshold** (1, 100) - The minimum level at which trainer pokemon are forced to be fully
-        evolved (if **Force fully evolved** is included).
+    - **Stats leniency** (0-1530) - The starting maximum difference between base stat
+        totals of vanilla and randomized species (for options with **Similar base stats**
+        activated).
+    - **Rare encounters threshold** (1-100) - If **Prevent rare encounters** is included,
+        this will be the minimum encounter chance (in percent) for each species.
+    - **Overpowered threshold** (200, 1530) - The maximum base stat total (for options
+        with **Prevent overpowered pokemon** activated).
+    - **Force evolutions threshold** (1, 100) - The minimum level at which trainer
+        pokemon are forced to be fully evolved (if **Force fully evolved** is included).
     """
     display_name = "Pokemon Randomization Adjustments"
     fill_defaults = True
@@ -283,7 +306,9 @@ class PlandoEncounter(typing.NamedTuple):
 
 class EncounterPlando(Option[list[PlandoEncounter]]):
     """
-    Places specific pokemon species at specific locations. Every entry follows the following format:
+    Places specific pokemon species at specific locations.
+
+    Every entry follows the following format:
     ```
     - map: Name of map
       seasons: Season name(s), optional
@@ -291,8 +316,9 @@ class EncounterPlando(Option[list[PlandoEncounter]]):
       slots: Slot number(s) (0-11), optional
       species: Name(s) of species, random if multiple
     ```
-    Encounter Plando requires the corresponding host setting to be enabled, else it will be ignored for all players.
-    Be aware that this can lead to generation failures when combined with other restrictive options.
+    Encounter Plando requires the corresponding host setting to be enabled, else it will
+    be ignored for all players. Be aware that this can lead to generation failures when
+    combined with other restrictive options.
     Refer to the Encounter Plando guide of this game for further information.
     """
     display_name = "Encounter Plando"
@@ -440,8 +466,8 @@ class EncounterPlando(Option[list[PlandoEncounter]]):
 class WildRandomizationBlacklist(OptionSet):
     """
     Excludes a list of pokemon from being used in wild randomization.
-    Do note that certain pokemon still have to be encountered somewhere, especially with **Ensure all obtainable**
-    enabled. Also, a big list can lead to generation failures.
+    Be aware that certain pokemon still have to be encountered somewhere, especially with
+    **Ensure all obtainable** enabled. Also, a big list can lead to generation failures.
     """
     display_name = "Wild Randomization Blacklist"
     valid_keys = list(species.by_name)
@@ -450,6 +476,7 @@ class WildRandomizationBlacklist(OptionSet):
 class TrainerRandomizationBlacklist(OptionSet):
     """
     Excludes a list of pokemon from being used in trainer randomization.
+    Be aware that a big list can lead to generation failures.
     """
     display_name = "Wild Randomization Blacklist"
     valid_keys = WildRandomizationBlacklist.valid_keys

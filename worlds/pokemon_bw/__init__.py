@@ -325,6 +325,7 @@ class PokemonBWWorld(World):
                 "studio_castelia_type": self.studio_castelia_type,
                 "driftveil_random_move_id": self.driftveil_random_move_id,
                 "other_locations_species": self.other_locations_species,
+                "combined_goals": self.options.goal.combined or [],
             }
         return self.slot_data_cache
 

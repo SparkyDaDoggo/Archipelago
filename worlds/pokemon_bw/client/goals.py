@@ -10,29 +10,37 @@ def get_method(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> Callab
     ["PokemonBWClient", "BizHawkClientContext"], Coroutine[Any, Any, bool]
 ]:
 
-    match ctx.slot_data["options"]["goal"]:
-        case "ghetsis":
-            return defeat_ghetsis
-        case "champion":
-            return become_champion
-        case "cynthia":
-            return defeat_cynthia
-        case "cobalion":
-            return encounter_cobalion
-        # case "regional_pokedex":
-        # case "national_pokedex":
-        # case "custom_pokedex":
-        case "tmhm_hunt":
-            return verify_tms_hms
-        case "seven_sages_hunt":
-            return find_seven_sages
-        case "legendary_hunt":
-            return encounter_legendaries
-        case "pokemon_master":
-            return do_everything
-        case _:
-            client.logger.warning("Bad goal in slot data: "+ctx.slot_data["options"]["goal"])
-            return error
+    all_goals = []
+    for goal in (ctx.slot_data["combined_goals"] or [ctx.slot_data["options"]["goal"]]):
+        match goal:
+            case "ghetsis":
+                all_goals.append(defeat_ghetsis)
+            case "champion":
+                all_goals.append(become_champion)
+            case "cynthia":
+                all_goals.append(defeat_cynthia)
+            case "cobalion":
+                all_goals.append(encounter_cobalion)
+            # case "regional_pokedex":
+            # case "national_pokedex":
+            # case "custom_pokedex":
+            case "tmhm_hunt":
+                all_goals.append(verify_tms_hms)
+            case "seven_sages_hunt":
+                all_goals.append(find_seven_sages)
+            case "legendary_hunt":
+                all_goals.append(encounter_legendaries)
+            case "pokemon_master":
+                all_goals.append(do_everything)
+            case _:
+                client.logger.warning("Bad goal in slot data: "+goal)
+                all_goals.append(error)
+    if len(all_goals) == 1:
+        return all_goals[0]
+    else:
+        async def combined_goals(_client: "PokemonBWClient", _ctx: "BizHawkClientContext") -> bool:
+            return all((await _g(_client, _ctx)) for _g in all_goals)
+        return combined_goals
 
 
 async def defeat_ghetsis(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> bool:

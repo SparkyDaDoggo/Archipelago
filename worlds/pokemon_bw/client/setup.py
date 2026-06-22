@@ -33,6 +33,8 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
 
     if ctx.slot_data["options"]["goal"] not in ("tmhm_hunt", "pokemon_master"):
         await client.write_set_flag(ctx, 0x192)
+    elif "tmhm_hunt" not in ctx.slot_data["combined_goals"] and "pokemon_master" not in ctx.slot_data["combined_goals"]:
+        await client.write_set_flag(ctx, 0x192)
     else:
         await client.write_unset_flag(ctx, 0x192)
 

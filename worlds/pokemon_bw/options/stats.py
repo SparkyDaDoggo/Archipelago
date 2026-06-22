@@ -16,10 +16,12 @@ class RandomizeBaseStats(ToggleSet):
     Randomizes the base stats of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles base stats being randomized. Automatically added if any other modifier is added.
-    - **Random total** - Allows the base stats of a species to be entirely random. Otherwise, the species will be
-        roughly as strong as before.
-    - **Follow evolutions** - Evolved species will use their pre-evolution's base stats and add on top of that.
+    - **Randomize** - Toggles base stats being randomized. Automatically added if any
+        other modifier is added.
+    - **Random total** - Allows the base stats of a species to be entirely random.
+        Otherwise, the species will be roughly as strong as before.
+    - **Follow evolutions** - Evolved species will use their pre-evolution's base stats
+        and add on top of that.
 
     If evolutions are randomized and **Follow evolutions** is included, then not including **Random total** might
     not be followed consistently.
@@ -36,20 +38,26 @@ class RandomizeEvolutions(ToggleSet):
     Randomizes the evolutions of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles evolutions being randomized. Automatically added if any other modifier is added.
-    - **Random methods** - Allows the method (e.g. levelup, evolution stone, ...) of every evolution to be randomized as well.
+    - **Randomize** - Toggles evolutions being randomized. Automatically added if any
+        other modifier is added.
+    - **Random methods** - Allows the method (e.g. levelup, evolution stone, ...) of
+        every evolution to be randomized as well.
     - **Common type** - Pre-evolution and evolved pokemon always share at least one type.
     - **Follow type** - Whole evolution lines will share at least one type.
     - **Multiple pre-evolutions** - Different pokemon species can evolve into the same species.
-    - **More or less branches** - Allows all species to be able to evolve into more or less different species than before.
-    - **Looping evolution lines** - Allows all species to evolve into one of their pre-evolutions.
-    - **Every level** - Makes all species only have a levelup evolution that triggers on any levelup.
-        Including **More or less branches** will only ensure at least one method is levelup. This potentially ignores
-        **Multiple pre-evolutions**, **Looping evolution lines**, and **Follow type** being
-        excluded and **Random methods** being included.
+    - **More or less branches** - Allows all species to be able to evolve into more or
+        less different species than before.
+    - **Looping evolution lines** - Allows all species to evolve into one of their
+        pre-evolutions.
+    - **Every level** - Makes all species only have a levelup evolution that triggers on
+        any levelup. Including **More or less branches** will only ensure at least one
+        method is levelup. This potentially ignores **Multiple pre-evolutions**,
+        **Looping evolution lines**, and **Follow type** being excluded and
+        **Random methods** being included.
     - **Pair stats** - Always makes the stats-dependent methods of Tyrogue be randomized together.
     - **Pair 50 50** - Always makes the PID-dependent methods of Wurmple be randomized together.
-    - **Increasing stats** - Evolved pokemon will always have an equal or higher base stat total than their pre-evolutions.
+    - **Increasing stats** - Evolved pokemon will always have an equal or higher base
+        stat total than their pre-evolutions.
     """
     display_name = "Randomize Evolutions"
     is_randomize = False
@@ -72,11 +80,14 @@ class RandomizeTypes(ToggleSet):
     You can add as many of the following modifiers as you want.
 
     - **Randomize** - Toggles types being randomized. Required for any other modifier.
-    - **Only secondary type** - Only randomizes the secondary type of every species and thereby keeps the primary type.
-        Includes removing it. Not compatible with **Only primary type**.
-    - **Only primary type** - Only randomizes the primary type of every species and thereby keeps the secondary type
-        (which might be none). Not compatible with **Only secondary type**.
-    - **Follow evolutions** - Evolved species will share at least one type with (one of) their pre-evolutions.
+    - **Only secondary type** - Only randomizes the secondary type of every species and
+        thereby keeps the primary type. Includes removing it. Not compatible with
+        **Only primary type**.
+    - **Only primary type** - Only randomizes the primary type of every species and
+        thereby keeps the secondary type (which might be none). Not compatible with
+        **Only secondary type**.
+    - **Follow evolutions** - Evolved species will share at least one type with (one of)
+        their pre-evolutions.
     """
     display_name = "Randomize Types"
     valid_keys_casefold = True
@@ -95,11 +106,14 @@ class RandomizeCatchRates(ToggleSet):
     Randomizes the catch rate of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Shuffle** - Gives every species a commonly used catch rate (e.g. 255, 45, 3, ...). Automatically added
-        if any other modifier is added.
-    - **Randomize** - Gives every species a completely random catch rate in range 3-255. Supersedes **Shuffle**.
-    - **Follow evolutions** - Evolved species will have a catch rate equal to or lower than their pre-evolution(s).
-    - **Correlate with base stats** - Species with a higher base stat total are more likely to have a lower catch rate.
+    - **Shuffle** - Gives every species a commonly used catch rate (e.g. 255, 45, 3, ...).
+        Automatically added if any other modifier is added.
+    - **Randomize** - Gives every species a completely random catch rate in range 3-255.
+        Supersedes **Shuffle**.
+    - **Follow evolutions** - Evolved species will have a catch rate equal to or lower
+        than their pre-evolution(s).
+    - **Correlate with base stats** - Species with a higher base stat total are more
+        likely to have a lower catch rate.
     """
     display_name = "Randomize Catch Rates"
     is_shuffle = False
@@ -114,10 +128,13 @@ class RandomizeGenderRatio(ToggleSet):
     Randomizes the gender ratio of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Shuffle** - Gives every species a commonly used gender ratio (e.g. 50/50, 1 in 8, ...).
-    - **Randomize** - Gives every species a completely random gender ratio. Overrides **Shuffle**.
-    - **Follow evolutions** - Evolved species will have the same gender ratio as (one of) their pre-evolution(s).
-        Not including this can lead to some pokémon changing their gender when evolved.
+    - **Shuffle** - Gives every species a commonly used gender ratio
+        (e.g. 50/50, 1 in 8, ...).
+    - **Randomize** - Gives every species a completely random gender ratio.
+        Overrides **Shuffle**.
+    - **Follow evolutions** - Evolved species will have the same gender ratio as (one of)
+        their pre-evolution(s). Not including this can lead to some pokémon changing
+        their gender when evolved.
     """
     display_name = "Randomize Gender Ratio"
     is_shuffle = False
@@ -162,12 +179,14 @@ class RandomizeTMHMCompatibility(ToggleSet):
     You can add as many of the following modifiers as you want.
 
     - **Force all TMs** - Forces all TMs to be compatible with every pokemon species.
-    - **Force all HMs** - Forces all HMs (and TM70 Flash) to be compatible with every pokemon species.
-    - **Randomize** - Toggles TM and HM compatibility being randomized. Required for any other modifier.
+    - **Force all HMs** - Forces all HMs (and TM70 Flash) to be compatible with every
+        pokemon species.
+    - **Randomize** - Toggles TM and HM compatibility being randomized. Required for any
+        other modifier.
     - **Keep types** - Randomized moves have either a matching or normal type.
     - **Keep amount** - Keeps the amount of moves a species learns normally.
-    - **Follow evolutions** - Evolved species will have at least 50% of the learnable TMs and HMs of their
-        pre-evolution(s). Overrides all **Keep ...** modifiers.
+    - **Follow evolutions** - Evolved species will have at least 50% of the learnable TMs
+        and HMs of their pre-evolution(s). Overrides all **Keep ...** modifiers.
     """
     display_name = "Randomize TM/HM Compatibility"
     valid_keys_casefold = True
@@ -189,9 +208,11 @@ class RandomizeAbilities(ToggleSet):
 
     - **Randomize** - Toggles abilities being randomized. Required for any other modifier.
     - **One per pokemon** - Gives every species only one ability.
-    - **Follow evolutions** - Evolved pokemon will have the abilities of (one of) their pre-evolution(s)..
-    - **Include hidden abilities** - Includes hidden abilities being randomized. Note that only a few select pokemon
-        that originate from these games can have their hidden ability.
+    - **Follow evolutions** - Evolved pokemon will have the abilities of (one of) their
+        pre-evolution(s).
+    - **Include hidden abilities** - Includes hidden abilities being randomized.
+        Note that only a few select pokemon that originate from these games can have
+        their hidden ability.
     """
     display_name = "Randomize Abilities"
     valid_keys_casefold = True
@@ -234,13 +255,13 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
 
     - **Stats total minimum/maximum** - The minimum/maximum base stats total, if randomized.
         Allowed values are integers in range 6 to 1530.
-    - **Levelup evo weight** - If evolutions are randomized and **Random methods** is included, this will determine
-        how likely it is to roll the levelup method. The lower this value, the more likely it is to get
-        special methods (like using a stone, high friendship, ...). Setting this to -1 disables other methods.
+    - **Levelup evo weight** - If evolutions are randomized and **Random methods** is
+        included, this will determine how likely it is to roll the levelup method.
+        The lower this value, the more likely it is to get special methods (like using a
+        stone, high friendship, ...). Setting this to -1 disables other methods.
         Otherwise, allowed values are integers in range 0 to 99.
-    - **Maximum evo level** - The maximum level at which levelup evolutions can occur. Allowed values are
-        integers in range 10 to 100.
-
+    - **Maximum evo level** - The maximum level at which levelup evolutions can occur.
+        Allowed values are integers in range 10 to 100.
     """
     # - **Catch rates minimum/maximum** - The minimum/maximum catch rates, if randomized. Allowed values are integers
     #     in range 3 to 255.
@@ -341,7 +362,8 @@ class PlandoStat(typing.NamedTuple):
 
 class StatsPlando(Option[dict[str, PlandoStat]]):
     """
-    Here you can change certain stats of a pokemon species to your liking. More stats are planned to be changeable.
+    Here you can change certain stats of a pokemon species to your liking.
+    More stats are planned to be changeable.
 
     Here's an example of how this would look like:
     ```
@@ -367,9 +389,10 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         override_levelup_moveset: false
     ```
 
-    Stats Plando requires the corresponding host setting to be enabled, else it will be ignored for all players.
-    Be aware that this can lead to generation failures when combined with other restrictive options or potential
-    softlocks. Refer to the Stats Plando guide of this game for further information.
+    Stats Plando requires the corresponding host setting to be enabled, else it will be
+    ignored for all players. Be aware that this can lead to generation failures when
+    combined with other restrictive options or potential softlocks.
+    Refer to the Stats Plando guide of this game for further information.
     """
     display_name = "Stats Plando"
     supports_weighting = False

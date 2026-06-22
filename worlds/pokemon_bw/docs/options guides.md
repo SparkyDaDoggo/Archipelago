@@ -346,3 +346,35 @@ Pokemon Black and White:
         level: 15
       override_evolutions: false
 ```
+
+# Combined goals guide (coming in 0.4.0)
+
+## How does this work?
+
+Usually, you choose one of many goals of an apworld, which is, well, the goal of your 
+adventure. 
+This game features a "Pokémon master" goal, which combines all other goal, 
+similar to Stardew Valley's "Perfection" goal.
+Using combined goals, you can make a Pokémon master goal with a somewhat smaller scope.
+
+## How do I use it?
+
+Instead of writing a single goal, you can write a list of multiple goals **as an entry**, 
+i.e. as a list inside a list. 
+Writing a simple list (e.g. `goal: ["ghetsis", "cobalion"]`) will be interpreted by AP 
+as a list to pick a random entry from, i.e. you will end up with only one of the 
+provided goals.
+However, this makes it possible to choose between multiple combinations, including 
+single goals.
+
+## An example on how using this option could look like
+
+```
+Pokemon Black and White:
+  ...
+  goal:
+    # One of the 3 (combined or single) goals will be chosen at random
+    - ["tmhm_hunt", "legendary_hunt"]
+    - ["seven_sages_hunt", "cobalion"]
+    - cynthia
+```
