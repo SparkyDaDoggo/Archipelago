@@ -110,6 +110,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Lacunosa Town - Item from girl for showing a Shaymin`
   - `Village Bridge - Item from fisherman for showing a certain pokémon caught today #1` (+ `#2`, `#3`, `#4`, and `#5`) (now requesting a fixed pokémon)
 - Added combined goals
+- Added `Filler Items Blacklist` option
 
 ### Bug fixes and technical stuff
 
@@ -158,7 +159,7 @@ However, tracking worlds generated before 0.3.27 might show incorrect Dexsanity 
 ## 0.3.32
 
 - Fixed multiple plugins nullifying each other's modifications to the ROM
-- Fixed modifications to arm7 not being written to the ROM
+- Fixed modifications by plugins to arm7 not being written to the ROM
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)

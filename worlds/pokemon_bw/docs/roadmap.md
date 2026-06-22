@@ -5,10 +5,12 @@ The "barely working" version will still be playable to goal, so it will start wi
 Most bigger features will increase the version by +0.1.
 <br>However, do not confuse that with semantic version naming: `major.minor.build`
 <br>Versions before 1.0.0 though can have small feature additions in +0.0.1 updates.
+<br>This can lead to some features not being listed for that version.
 
 Version 1.0.0 will happen when certain important features are implemented.
 
-The content of future updates used to be predetermined, but various circumstances resulted in that not really being followed, so it was changed to "whatever I wanna do next".
+The content of future updates used to be predetermined, but various circumstances 
+resulted in that not really being followed, so it was changed to "whatever I wanna do next".
 
 ## Road to 1.0.0 (Required for core)
 
@@ -61,9 +63,10 @@ The content of future updates used to be predetermined, but various circumstance
   - All pokémon seen (added in patch)
   - Modify Encounter Rates (added in patch)
   - Experience Multiplier (added in patch)
+  - Plugin system (added in patch)
 - UT auto-tabbing (added in patch)
 
-### 0.4.0
+### 0.4.0: Advanced Plandosanity
 
 - Modify Levels option
   - Simple method, shown on Webhost
@@ -86,49 +89,70 @@ The content of future updates used to be predetermined, but various circumstance
     - Themed gym trainers
     - Shuffle gym leader types
     - Rivals keep starter
-    - Prevent bad early pokemon
-    - Rivals take from box
-    - N uses pokemon from nearby
 - Randomization Blacklist
   - Wild pokémon
   - Trainer pokémon
-- Dowsing Machine as a hard requirement for hidden items (with option)
+- Stats randomization
+  - Base stats
+  - Evolutions
+  - Catch rates
+  - Levelup movesets
+- Stats plando (with all randomizable stats at that time)
+- Replace Evolution Methods option
+- Combined goals
 - An NPC in Accumula Town telling you some information about the world
+- Filler Items Blacklist option
 
 ### Other stuff required for 1.0.0
 
+- Scripting system (required for many other features)
+- arm7 expansion (required for advanced assembly)
 - Options
+  - More wild pokémon randomization modifiers
+    - Dungeon 1 to 1
+    - Global 1 to 1
+  - More trainer pokémon randomization modifiers
+    - Prevent bad early pokemon
+    - Rivals take from box
+    - N uses pokemon from nearby
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Seensanity (Only accounting for wild pokémon at first, trainer teams later; has impact on All Pokémon Seen)
   - Trainersanity
+  - Trainer pokémon plando
   - Decrease trainer eyesight
   - Customize roadblocks
   - Starter/Static/Gift/Trade/Legendary pokémon randomization
   - Seen count checks modifier
   - Free fly destination
+  - Adjust encounters (like Adjust levels, but with species, based on base stats)
+  - Ingame options (things changeable in PC, moving Experience modifier here)
+    - Season control (only when vanilla or changeable, not randomized)
+- Dowsing Machine as a hard requirement for hidden items (with option)
+- Reducing encounter slots in Modify Encounter Rates
 - Trainer rebattling
 - Trainer teams in spoiler
 - Xtransceiver being required to see certain story sequences (with some of them giving items)
   - Also, dynamic Xtransceiver item that automatically adds the correctly gendered version to the game
 - Relic castle room filling with sand unlockable via an item
 - Make HMs forgettable
+- Expand plugins to client
 
 ## Post-1.0.0 stuff
 
 - Options
   - Stats randomization
-    - Base stats (+ limit)
-    - Evolutions
-    - Catch rates (+ limit)
-    - Level up movesets
     - Types
     - Abilities
     - Gender Ratio (+ limit)
     - TM/HM compatibility
     - Move tutor compatibility
+  - Move data randomization
+    - Move power
+    - Move type
+    - Move accuracy
+    - Move category (only Physical <-> Special)
+    - Type effectiveness chart
   - Fairy type
-  - Evo methods replacing
-  - Experience modifier (using base exp of every species)
   - Levelup curve modifier
   - Dynamic version
   - Door shuffle
@@ -143,9 +167,10 @@ The content of future updates used to be predetermined, but various circumstance
   - Wonder trade
   - Multiworld gift Pokémon
   - Phenomena activation (vanilla, any badge, Striaton Gym, always)
+  - BGM randomization
+  - Cutscenes shortening
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
-  - Redirect NPC items to other script file
 - Display other players and item names ingame
 - Universal language support
 - Traps
