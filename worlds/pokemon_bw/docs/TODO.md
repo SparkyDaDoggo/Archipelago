@@ -7,14 +7,15 @@
 - combined goals
 - allow encounter rate modifier to reduce slot count
 - stats and better evos in spoiler log when randomized
-- tweak text system to make "[Terminate]" deprecated
 - put new options into slot data
+- update stats plando guide
+- add dexsanity to plando guide (+adjust option description)
+- figure out trainer text for text plando/funny dialog
 
 ## Rom
 
 ## Both
 
-- add now-possible locations
 - Dowsing Machine as a hard requirement for hidden items
 - revamp flags for static encounters so that resetting statics doesn't reset the flag
 - [arm7 expansion] revamp season control to be toggleable between vanilla and changeable ingame

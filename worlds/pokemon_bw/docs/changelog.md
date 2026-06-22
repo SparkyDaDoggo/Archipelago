@@ -20,7 +20,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - Both options require the text plando setting in the host yaml to be enabled
   - Added a setting to enable text extraction upon running a patch file
 - Added plando mode to `Dexsanity` option
-- Added what shall not be said at times
 - Added more modifiers for `Randomize Wild Pokémon`:
   - `Prevent overpowered pokemon`
     - Other modifiers take priority over this, except `Similar base stats`
@@ -101,6 +100,15 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Friendship`
   - `PID`
   - `Stats`
+- Added what shall not be said at times
+- Added a few (new and returning) locations:
+  - `Nuvema Town - Item #2 from Mom`
+  - `P2 Laboratory - Item from scientist #1` (and `#2`)
+  - `Castelia City - Item from harlequin in Studio Castelia` (now requesting a fixed type)
+  - `Royal Unova - Item for defeating every trainer` (now time independent)
+  - `Driftveil City - Item from lady asking for a pokémon knowing a certain TM move` (now requesting a fixed TM move)
+  - `Lacunosa Town - Item from girl for showing a Shaymin`
+  - `Village Bridge - Item from fisherman for showing a certain pokémon caught today #1` (+ `#2`, `#3`, `#4`, and `#5`) (now requesting a fixed pokémon)
 
 ### Bug fixes and technical stuff
 
