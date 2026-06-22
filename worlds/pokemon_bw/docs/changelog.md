@@ -109,6 +109,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Driftveil City - Item from lady asking for a pokémon knowing a certain TM move` (now requesting a fixed TM move)
   - `Lacunosa Town - Item from girl for showing a Shaymin`
   - `Village Bridge - Item from fisherman for showing a certain pokémon caught today #1` (+ `#2`, `#3`, `#4`, and `#5`) (now requesting a fixed pokémon)
+- Added combined goals
 
 ### Bug fixes and technical stuff
 

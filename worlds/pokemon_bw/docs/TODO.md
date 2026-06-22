@@ -4,13 +4,10 @@
 
 ## APWorld
 
-- combined goals
 - allow encounter rate modifier to reduce slot count
 - stats and better evos in spoiler log when randomized
-- put new options into slot data
-- update stats plando guide
-- add dexsanity to plando guide (+adjust option description)
 - figure out trainer text for text plando/funny dialog
+- write world info npc
 
 ## Rom
 

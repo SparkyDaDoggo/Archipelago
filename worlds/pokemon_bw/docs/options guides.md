@@ -56,11 +56,8 @@ but it will also not be considered in logic and give no warning or error message
 ## An example on how using this option could look like
 
 ```
-...
-
 Pokemon Black and White:
   ...
-  
   encounter_plando:
     - map: Route 1
       method: Grass
@@ -113,7 +110,6 @@ greater than 0.
 ## Examples on how using this option could look like
 
 ```
-...
 Pokemon Black and White:
   ...
   modify_encounter_rates:
@@ -176,7 +172,6 @@ that you can use to find where you have to place your text lines.
 ## An example on how using this option could look like
 
 ```
-...
 Pokemon Black and White:
   ...
   text_plando:
@@ -216,7 +211,6 @@ Do note that after every calculation, the result is rounded down and capped at 1
 The following example flattens the level curve of earlygame trainers, but makes it steeper for lategame trainers,
 while maintaining the minimum level of 5:
 ```
-...
 Pokemon Black and White:
   ...
   modify_levels:
@@ -236,7 +230,6 @@ Pokemon Black and White:
 
 Here's another example that sets the levels of all wild and trainer pokémon in the game to exactly 20:
 ```
-...
 Pokemon Black and White:
   ...
   modify_levels:
@@ -252,6 +245,40 @@ Pokemon Black and White:
     - type: Wild
       mode: Multiply
       value: 20
+```
+
+# Dexsanity Plando guide (coming in 0.4.0)
+
+## How does this work?
+
+Instead of writing a single number to determine the amount of random Dexsanity checks you 
+want to have in your world, you can provide a fixed list of dex numbers you want to have 
+checks for.
+However, adding a certain number doesn't guarantee that it will have a check.
+Only pokémon that are actually obtainable in your world can have Dexsanity checks (which 
+also applies to the standard way of using this option).
+You can ensure your dex numbers to have checks by either plando'ing those species 
+somewhere in the world or enabling wild pokémon randomization with 
+`Ensure all obtainable` included.
+
+## How do I use it?
+
+Instead of writing a single number, you can write a list of multiple dex numbers 
+**as an entry**, i.e. as a list inside a list. 
+Writing a simple list (e.g. `dexsanity: [1, 4, 7]`) will be interpreted by AP 
+as a list to pick a random entry from, i.e. you will end up with one of the numbers as 
+the amount of random checks.
+However, this makes it possible to choose between multiple lists of dex numbers.
+
+## An example on how using this option could look like
+
+```
+Pokemon Black and White:
+  ...
+  dexsanity:
+    - [50, 51, 52, 53, 54]
+    - [100, 200, 300, 400]
+    - 5  # A single number (which is then the amount of random checks again) can also be added as a possible value
 ```
 
 # Stats Plando guide (coming in 0.4.0)
@@ -309,18 +336,26 @@ Every entry (currently) consists of the following keys (with all of them being o
   - `species_3` (optional) is the species that is used by the `_Level up stats` macro. Standard pokémon names as well 
     as form names found in the [species names list](plando%20lists.md#all-species-names) are allowed. 
     Omitting this will default it to `Hitmontop`.
-- `override_evolutions` determines whether the supplied list of evolutions should override the existing evolutions 
+- `override_evolutions` determines whether the provided list of evolutions should override the existing evolutions 
   (thereby excluding that pokémon from evolution randomization) or append to the existing (potentially randomized) 
   evolutions. it is optional and defaults to `true` if omitted.
+- `levelup_moveset` will override that pokémon's levelup moveset (or append to them). 
+  It is an optional list of level-move entries. If it's supposed to override the levelup
+  moveset, at least one move learned at level 1 must be added. Each entry has the 
+  following format:
+  - `level` is the level at which the move should. Allowed values are in range 1-100.
+  - `move` is the name of the move that should be learned. Any move in the game is 
+    allowed to be used.
+- `override_levelup_moveset` determines whether the provided list of levelup moves should 
+  override the existing evolutions (thereby excluding that pokémon from levelup moves 
+  randomization) or append to the existing (potentially randomized) 
+  moves. it is optional and defaults to `true` if omitted.
 
 ## An example on how using this option could look like
 
 ```
-...
-
 Pokemon Black and White:
   ...
-  
   stats_plando:
     Bulbasaur:
       base_hp: 5
