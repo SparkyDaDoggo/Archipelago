@@ -244,7 +244,6 @@
 {"name": "Chargestone Cave - B1F north item"},
 {"name": "Chargestone Cave - B1F west hidden item"},
 {"name": "Chargestone Cave - B2F east hidden item"},
-{"name": "Chargestone Cave - B2F hidden item"},
 {"name": "Chargestone Cave - B2F west hidden item"},
 {"name": "Chargestone Cave - B2F north east item"},
 {"name": "Chargestone Cave - B2F south east item"},
@@ -546,7 +545,8 @@
         "sections": [
 {"name": "Lacunosa Town - Hidden item near policeman"},
 {"name": "Lacunosa Town - Hidden item on north eastern wall"},
-{"name": "Lacunosa Town - Item from executive"}
+{"name": "Lacunosa Town - Item from executive"},
+{"name": "Lacunosa Town - Item from girl for showing a Shaymin"}
         ],
         "map_locations": [
             {
@@ -761,6 +761,7 @@
         "name": "Nuvema Town",
         "sections": [
 {"name": "Nuvema Town - Item from Looker"},
+{"name": "Nuvema Town - Item #2 from Mom"},
 {"name": "Nuvema Town - Item from Mom after first fight"},
 {"name": "Nuvema Town - TM from Professor Juniper for seeing 115 species"},
 {"name": "Nuvema Town - TM from Professor Juniper for seeing 25 species"},
@@ -799,7 +800,9 @@
         "name": "P2 Laboratory",
         "sections": [
 {"name": "P2 Laboratory - Item inside"},
-{"name": "P2 Laboratory - Item outside"}
+{"name": "P2 Laboratory - Item outside"},
+{"name": "P2 Laboratory - Item from scientist #1"},
+{"name": "P2 Laboratory - Item from scientist #2"}
         ],
         "map_locations": [
             {
@@ -923,8 +926,6 @@
 {"name": "Route 10 - Hidden item on western cliff"},
 {"name": "Route 10 - Item from Bianca #1"},
 {"name": "Route 10 - Item from Bianca #2"},
-{"name": "Route 10 - Item from Bianka #1"},
-{"name": "Route 10 - Item from Bianka #2"},
 {"name": "Route 10 - Item from veteran near northern bridge"},
 {"name": "Route 10 - Item in dark grass #1"},
 {"name": "Route 10 - Item in dark grass #2"},

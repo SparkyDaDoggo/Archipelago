@@ -201,7 +201,7 @@
 {"sections": [{"name": "N's Castle - 4F center room item"}], "map_locations": [{"map": "nscastle4f", "x": 774, "y": 222}]},
 {"sections": [{"name": "N's Castle - Item from grunt in 3F left room"}], "map_locations": [{"map": "nscastle3f", "x": 484, "y": 78}]},
 {"sections": [{"name": "N's Castle - N's room item"}], "map_locations": [{"map": "nscastle4f", "x": 424, "y": 124}]},
-{"sections": [{"name": "P2 Laboratory - Item inside"}], "map_locations": [{"map": "routes_17_18_p2lab", "x": 1864, "y": 72}]},
+{"sections": [{"name": "P2 Laboratory - Item inside"},{"name": "P2 Laboratory - Item from scientist #1"},{"name": "P2 Laboratory - Item from scientist #2"}], "map_locations": [{"map": "routes_17_18_p2lab", "x": 1864, "y": 72}]},
 {"sections": [{"name": "P2 Laboratory - Item outside"}], "map_locations": [{"map": "routes_17_18_p2lab", "x": 1704, "y": 328}]},
 {"sections": [{"name": "Pinwheel Forest - East hidden item"}], "map_locations": [{"map": "pinwheelforest", "x": 1320, "y": 564}]},
 {"sections": [{"name": "Pinwheel Forest - East item inside tree stump"}], "map_locations": [{"map": "pinwheelforest", "x": 1624, "y": 338}]},
