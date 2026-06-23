@@ -111,6 +111,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Village Bridge - Item from fisherman for showing a certain pokémon caught today #1` (+ `#2`, `#3`, `#4`, and `#5`) (now requesting a fixed pokémon)
 - Added combined goals
 - Added `Filler Items Blacklist` option
+- Made the NPC next to the Pokémon Center in Accumula Town tell some information about the world
 
 ### Bug fixes and technical stuff
 
@@ -125,6 +126,9 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Made the Gracidea also accept non-event Shaymins
 - Fixed logic of move evolutions
 - Wrote down move IDs
+- Enhanced spoiler output by adding trainers + base stats + catch rates + levelup movesets and organizing evolutions
+- Fixed legendary hunt flags being reset after defeating Ghetsis/Alder and resetting statics
+- Fixed `Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)` not showing up on the UT map tracker
 
 ### Is this version compatible with older multiworld slots and save files?
 No

@@ -5,9 +5,8 @@
 ### Main development
 
 - BlastSlimey
-- SparkyDaDoggo / Eevee658
 
-### Universal Tracker integration
+### UT map tracker integration
 
 - palex00
 - RadisNoir
@@ -18,6 +17,7 @@
 
 - Darvitz
 - Seatori
+- SparkyDaDoggo / Eevee658
 
 ### Testing and bug reporting
 

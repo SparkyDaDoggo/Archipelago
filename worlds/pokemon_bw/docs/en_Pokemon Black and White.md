@@ -18,7 +18,7 @@ while still using the well-known grid-based movement mechanics and battle UI.
 - [Credits](credits.md)
 - [Features roadmap](roadmap.md)
 - [Various options guides](options%20guides.md)
-  - Including `Encounter Plando`, `Modify Encounter Rates`, and upcoming features in 0.4.0
+  - Including `Encounter Plando`, `Stats Plando`, `Modify Encounter Rates`, etc.
 
 ## Known bugs (might be outdated)
 
@@ -32,11 +32,13 @@ while still using the well-known grid-based movement mechanics and battle UI.
       Discord server for more information.
   <br>Other than that, follow the [setup guide for this game.](setup_en.md)
 - ***Where is the options page?***
-  <br>As this game is not (yet) merged into main, type `&template` into the `#aginahbot-spam` channel on the 
+  <br>As this game is not (yet) merged into main, type `&options` into the `#aginahbot-spam` channel on the 
       Discord server for more information.
 - ***Is there a tracker?***
   <br>You can use the Universal Tracker, which is fully compatible and includes a map tracker. See the 
       `#universal-tracker` channel on the Discord server for more information.
+  <br>Alternatively, you can use the Poptracker pack found in the tracker thread of the Pokémon BW channel 
+      on the Discord server.
 - ***Can I use UPR to randomize other parts of the rom?***
   <br>No. It will mess up logic due to the randomizer not knowing in what way the rom was modified 
       and might break the game before even getting to choose your starter.

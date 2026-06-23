@@ -160,7 +160,7 @@ The (preset) rates are (ordered by slot number)...
   - `Surfing` and `Surfing rippling`: 80, 10, 5, 4, 1
   - `Fishing` and `Fishing rippling`: 75, 15, 5, 4, 1
 
-# All species names
+## All species names
 
 These names are mostly sorted by dex number and form number.
 The exceptions at the end of this list originate from these forms having their own data in the games' files

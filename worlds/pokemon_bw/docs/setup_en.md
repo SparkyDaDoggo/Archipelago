@@ -26,7 +26,7 @@ If you find one, please report it in the channel of this game on the Archipelago
   - Check UT's channel and its threads on the discord server for more information and instructions
 - [The Poptracker pack for this game](https://github.com/Radis7Noir/pokemon-bw-ap-tracker/releases),
   to be used with [Poptracker](https://github.com/black-sliver/PopTracker/releases)
-- The QoL Lua script and various patching plugins
+- The QoL Lua script and various plugins
   - Check the unofficial mods thread in this game's channel
 
 ## Joining a MultiWorld Game

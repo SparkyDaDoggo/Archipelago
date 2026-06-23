@@ -4,15 +4,9 @@
 
 ## APWorld
 
-- stats and better evos in spoiler log when randomized
-- write world info npc
-
 ## Rom
 
 ## Both
-
-- revamp flags for static encounters so that resetting statics doesn't reset the flag
-- AFTER EVERYTHING ELSE: check docs for up-to-date information, update credits, update tests, update location names in ut   
 
 # Not urgent
 
@@ -25,6 +19,7 @@
 - Running shoes as an item, making mom cutscene on route 2 a check
 - opelucid city fly flag only set after ghetsis scene
 - fill more funny dialog
+- trainer teams in spoiler log need names
 
 # Single reports, cannot recreate, need to wait for more reports
 
