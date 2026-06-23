@@ -79,6 +79,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             location = PokemonBWLocation(world.player, location_name, None, region)
             item = PokemonBWItem(current_evoname, ItemClassification.progression, None, world.player)
             location.place_locked_item(item)
+            location.show_in_spoiler = False
             location.access_rule = get_rule(current_evodata, current_evoid[0])
             region.locations.append(location)
             # Add the evolution to catchable

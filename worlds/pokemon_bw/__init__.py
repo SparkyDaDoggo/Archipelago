@@ -276,9 +276,14 @@ class PokemonBWWorld(World):
         locations.extend_species_hints(self, hint_data)
 
     def write_spoiler(self, spoiler_handle: TextIO) -> None:
-        from .generate.spoiler import write_spoiler_encounter, write_spoiler_trainer
+        from .generate.spoiler import (write_spoiler_encounter, write_spoiler_trainer, write_spoiler_stats,
+                                       write_spoiler_evolutions, write_spoiler_levelup_movesets)
+
         write_spoiler_encounter(self, spoiler_handle)
         write_spoiler_trainer(self, spoiler_handle)
+        write_spoiler_stats(self, spoiler_handle)
+        write_spoiler_evolutions(self, spoiler_handle)
+        write_spoiler_levelup_movesets(self, spoiler_handle)
 
     def generate_output(self, output_directory: str) -> None:
         if self.options.version == "black":
