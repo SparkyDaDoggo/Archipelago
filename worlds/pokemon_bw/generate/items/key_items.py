@@ -10,29 +10,29 @@ def generate_default(world: "PokemonBWWorld") -> list[PokemonBWItem]:
     from ...data.items.medicine import important as med_important
 
     items = [
-        PokemonBWItem(name, data.classification(world), data.item_id, world.player)
+        PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
         for name, data in progression.items()
     ] + [
-        PokemonBWItem(name, data.classification(world), data.item_id, world.player)
+        PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
         for name, data in vanilla.items()
     ] + [
-        PokemonBWItem(name, data.classification(world), data.item_id, world.player)
+        PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
         for name, data in med_important.items()
     ]
 
     if world.options.modify_item_pool.is_useless_key_items:
         items += [
-            PokemonBWItem(name, data.classification(world), data.item_id, world.player)
+            PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
             for name, data in useless.items()
         ]
 
     data = special["Xtransceiver (Blue)"]
-    items.append(PokemonBWItem("Xtransceiver (Blue)", data.classification(world), data.item_id, world.player))
+    items.append(PokemonBWItem("Xtransceiver (Blue)", data.classification(world, "Xtransceiver (Blue)"), data.item_id, world.player))
     if world.options.version == "black":
         data = special["Light Stone"]
-        items.append(PokemonBWItem("Light Stone", data.classification(world), data.item_id, world.player))
+        items.append(PokemonBWItem("Light Stone", data.classification(world, "Light Stone"), data.item_id, world.player))
     else:
         data = special["Dark Stone"]
-        items.append(PokemonBWItem("Dark Stone", data.classification(world), data.item_id, world.player))
+        items.append(PokemonBWItem("Dark Stone", data.classification(world, "Dark Stone"), data.item_id, world.player))
 
     return items

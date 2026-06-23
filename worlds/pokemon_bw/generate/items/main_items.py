@@ -9,9 +9,9 @@ def generate_default(world: "PokemonBWWorld") -> list[PokemonBWItem]:
     from ...data.items.main_items import min_once, fossils
 
     return [
-        PokemonBWItem(name, data.classification(world), data.item_id, world.player)
+        PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
         for name, data in min_once.items()
     ] + [
-        PokemonBWItem(name, data.classification(world), data.item_id, world.player)
+        PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
         for name, data in fossils.items()
     ]

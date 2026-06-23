@@ -24,7 +24,7 @@ def generate_item(name: str, world: "PokemonBWWorld") -> PokemonBWItem:
 
     data = all_items_view[name]
     # Item id from lookup table is used instead of id from data for safety purposes
-    return PokemonBWItem(name, data.classification(world), world.item_name_to_id[name], world.player)
+    return PokemonBWItem(name, data.classification(world, name), world.item_name_to_id[name], world.player)
 
 
 def get_item_lookup_table() -> dict[str, int]:

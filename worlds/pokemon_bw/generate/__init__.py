@@ -153,4 +153,5 @@ class SpeciesChecklist:
         for evolution in data.evolutions:
             if evolution[0] == "Level up with party member":
                 self.add(self.by_id[(evolution[1], 0)])
-            self.check(self.by_id[(evolution[2], data.form)], loop+1)
+            evo_id = (evolution[2], data.form)
+            self.check(self.by_id[evo_id if evo_id in self.by_id else (evolution[2], 0)], loop+1)

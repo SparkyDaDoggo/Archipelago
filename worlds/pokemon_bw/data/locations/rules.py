@@ -162,8 +162,8 @@ can_spawn_roamer: ExtendedRule = lambda state, world: state.can_reach_region("Ro
 has_forces_of_nature: ExtendedRule = lambda state, world: state.has_all(("Thundurus", "Tornadus"), world.player)
 has_celebi: ExtendedRule = lambda state, world: state.has("Celebi", world.player)
 has_legendary_beasts: ExtendedRule = lambda state, world: state.has_all(("Entei", "Raikou", "Suicune"), world.player)
-has_genesect: ExtendedRule = lambda state, world: state.has("Genesect", world.player)
-has_shaymin: ExtendedRule = lambda state, world: state.has("Shaymin", world.player)
+has_genesect: ExtendedRule = lambda state, world: state.has("Genesect", world.player) or not world.options.randomize_wild_pokemon.is_randomize
+has_shaymin: ExtendedRule = lambda state, world: state.has("Shaymin", world.player) or not world.options.randomize_wild_pokemon.is_randomize
 has_other_locations_species: ExtendedRule = lambda state, world: state.has(world.other_locations_species, world.player)
 has_25_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 25
 has_51_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 51
@@ -223,11 +223,11 @@ extended_rules_list: tuple = (
     can_go_to_relic_castle_basement, can_find_woman_on_village_bridge, can_go_to_nimbasa_city,
     can_go_to_mistralton_city, can_spawn_roamer,
 
-    has_forces_of_nature, has_celebi, has_legendary_beasts,
+    has_forces_of_nature, has_celebi, has_legendary_beasts, has_genesect, has_shaymin, has_other_locations_species,
     has_25_species, has_51_species, has_60_species, has_115_species,
 
-    has_fighting_type_species, has_any_tm_hm,
-    striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave, trial_chamber, moor_of_icirrus,
+    has_fighting_type_species, has_any_tm_hm, striaton_hidden_item, dark_cave,
+    challengers_cave, mistralton_cave, trial_chamber, moor_of_icirrus, driftveil_random_tm,
 )
 
 

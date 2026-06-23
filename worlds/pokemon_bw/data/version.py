@@ -124,7 +124,7 @@ if __name__ == "__main__":
         metadata = {
             "game": "Pokemon Black and White",
             "minimum_ap_version": ".".join(str(i) for i in ap_minimum()),
-            "authors": ["BlastSlimey", "SparkyDaDoggo"],
+            "authors": ["BlastSlimey"],
             "world_version": ".".join(str(i) for i in version),
             "version": container_version,
             "compatible_version": 7,

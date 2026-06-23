@@ -13,7 +13,7 @@ else:
     from .. import PokemonBWWorld
     AccessRule: type = Callable[[CollectionState], bool]
     ExtendedRule: type = Callable[[CollectionState, PokemonBWWorld], bool]
-    ClassificationMethod: type = Callable[[PokemonBWWorld], ItemClassification]
+    ClassificationMethod: type = Callable[[PokemonBWWorld, str], ItemClassification]
     ProgressTypeMethod: type = Callable[[PokemonBWWorld], LocationProgressType]
     InclusionRule: type = Callable[[PokemonBWWorld], bool]
     RulesDict: type = dict[ExtendedRule | tuple[ExtendedRule, ...], AccessRule]

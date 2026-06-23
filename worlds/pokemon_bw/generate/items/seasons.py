@@ -10,7 +10,7 @@ def generate_default(world: "PokemonBWWorld") -> list[PokemonBWItem]:
 
     if world.options.season_control == "randomized":
         return [
-            PokemonBWItem(name, data.classification(world), data.item_id, world.player)
+            PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
             for name, data in table.items()
         ]
     else:

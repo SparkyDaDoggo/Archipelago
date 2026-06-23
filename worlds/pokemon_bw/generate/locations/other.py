@@ -35,7 +35,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
                     l.access_rule = world.rules_dict[data.rule]
                 r.locations.append(l)
 
-    chosen = world.random.choice(tuple(a for a in catchable_species_data.items()))
+    chosen = world.random.choice(tuple(a for a in catchable_species_data.items() if a[1].tm_hm_moves.tm_hm_moves))
     world.other_locations_species = chosen[0]
     world.studio_castelia_type = world.random.choice((chosen[1].type_1, chosen[1].type_2))
     chosen_tms = list(chosen[1].tm_hm_moves.tm_hm_moves)

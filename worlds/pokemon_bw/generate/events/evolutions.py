@@ -73,7 +73,8 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
                     # If required team member not found, add this evoid to next iteration and skip adding event
                     next_evoid_set[current_evoid] = None
                     continue
-            current_evoname = species.by_id[(current_evodata[2], current_base_data.form)]
+            evo_id_tup = (current_evodata[2], current_base_data.form)
+            current_evoname = species.by_id[evo_id_tup if evo_id_tup in species.by_id else (current_evodata[2], 0)]
             # Creating event
             location_name = f"Evolving {current_evoid[0]} #{current_evoid[1]+1}"
             location = PokemonBWLocation(world.player, location_name, None, region)
