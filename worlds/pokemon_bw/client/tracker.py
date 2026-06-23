@@ -184,19 +184,19 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
         bitmap |= 128
     if client.get_flag(0x1D8):  # Sage Bronius
         bitmap |= 256
-    if client.get_flag(779):  # Victini
+    if client.get_flag(0x1E5):  # Victini
         bitmap |= 512
     if client.get_flag(0x1CE):  # Reshiram/Zekrom
         bitmap |= 1024
-    if client.get_flag(801):  # Kyurem
+    if client.get_flag(0x1E4):  # Kyurem
         bitmap |= 2048
-    if client.get_flag(810):  # Volcarona
+    if client.get_flag(0x1E6):  # Volcarona
         bitmap |= 4096
-    if client.get_flag(649):  # Cobalion
+    if client.get_flag(0x1E1):  # Cobalion
         bitmap |= 8192
-    if client.get_flag(650):  # Terrakion
+    if client.get_flag(0x1E2):  # Terrakion
         bitmap |= 16384
-    if client.get_flag(651):  # Virizion
+    if client.get_flag(0x1E3):  # Virizion
         bitmap |= 32768
     if client.get_flag(0x1D4):  # Alder
         bitmap |= 65536
