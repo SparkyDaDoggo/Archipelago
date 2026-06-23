@@ -2,9 +2,15 @@ import random
 
 from test.bases import WorldTestBase
 
+from . import random_combination
+from ..options import Goal
+
 
 class PokemonBWTestBase(WorldTestBase):
     game = "Pokemon Black and White"
+
+
+all_goals = tuple(Goal.options)
 
 
 ###################################################
@@ -14,47 +20,33 @@ class PokemonBWTestBase(WorldTestBase):
 
 class TestGoalChampion(PokemonBWTestBase):
     options = {"goal": "champion"}
-
-
 class TestGoalCynthia(PokemonBWTestBase):
     options = {"goal": "cynthia"}
-
-
 class TestGoalCobalion(PokemonBWTestBase):
     options = {"goal": "cobalion"}
-
-
 class TestGoalTMHMHunt(PokemonBWTestBase):
     options = {"goal": "tmhm_hunt"}
-
-
 class TestGoalSevenSagesHunt(PokemonBWTestBase):
     options = {"goal": "seven_sages_hunt"}
-
-
 class TestGoalLegendaryHunt(PokemonBWTestBase):
     options = {"goal": "legendary_hunt"}
-
-
 class TestGoalPokemonMaster(PokemonBWTestBase):
     options = {"goal": "pokemon_master"}
-
-
-###################################################
-# Randomize Trainer Pokemon                       #
-###################################################
-
-
-class TestRandomizeTrainerPokemonSimple(PokemonBWTestBase):
-    options = {
-        "randomize_trainer_pokemon": ["Randomize"],
-    }
-
-
-class TestRandomizeTrainerPokemonStats(PokemonBWTestBase):
-    options = {
-        "randomize_trainer_pokemon": ["Randomize", "Similar base stats"],
-    }
+class TestCombinedGoal(PokemonBWTestBase):
+    options = {"randomize_base_stats": random_combination(all_goals)}
+    def setUp(self) -> None:
+        print("Modifiers: "+", ".join(self.options["randomize_base_stats"]))
+        super().setUp()
+class TestCombinedGoal1(TestCombinedGoal):
+    options = {"randomize_base_stats": random_combination(all_goals)}
+class TestCombinedGoal2(TestCombinedGoal):
+    options = {"randomize_base_stats": random_combination(all_goals)}
+class TestCombinedGoal3(TestCombinedGoal):
+    options = {"randomize_base_stats": random_combination(all_goals)}
+class TestCombinedGoal4(TestCombinedGoal):
+    options = {"randomize_base_stats": random_combination(all_goals)}
+class TestCombinedGoal5(TestCombinedGoal):
+    options = {"randomize_base_stats": random_combination(all_goals)}
 
 
 ###################################################

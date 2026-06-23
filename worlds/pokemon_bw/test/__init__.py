@@ -1,3 +1,14 @@
+import random
+from typing import Iterable
+
+
+def random_combination(mods: Iterable[str]) -> list[str]:
+    ret = []
+    for i in mods:
+        if random.random() < 0.5:
+            ret.append(i)
+    return ret
+
 
 # Options checklist:
 
@@ -5,19 +16,18 @@
 #   always random
 # goal:
 #   default ghetsis
-#   each other has its own test
+#   one test for each other
+#   6 tests with random combinations
 # randomize_wild_pokemon:
 #   default []
-#   one test for all modifiers
+#   one test for just randomize
 #   11 tests for "Randomize" + random selection of other modifiers
 # randomize_trainer_pokemon:
 #   default []
-#   one test for just "Randomize"
-#   one test for both
+#   one test for just randomize
+#   11 tests for "Randomize" + random selection of other modifiers
 # pokemon_randomization_adjustments:
-#   default {"Stats leniency": 10, "Overpowered threshold": 500}
-#   other values irrelevant
-#   no other parameters so far
+#   irrelevant for tests
 # encounter_plando:
 #   default []
 #   one test for multiple plandos with all different parameter variations

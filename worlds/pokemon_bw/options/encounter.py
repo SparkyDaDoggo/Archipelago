@@ -289,7 +289,7 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
 def plando_to_slotdata(value) -> typing.Any:
     if isinstance(value, dict):
         return {v: plando_to_slotdata(vv) for v, vv in value.items()}
-    if isinstance(value, typing.NamedTuple):
+    if isinstance(value, tuple) and hasattr(value, "_fields") and hasattr(value, "_asdict"):
         return {v: plando_to_slotdata(vv) for v, vv in value._asdict()}
     if not isinstance(value, str) and isinstance(value, typing.Iterable):
         return tuple(plando_to_slotdata(v) for v in value)
