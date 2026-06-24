@@ -26,6 +26,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             "Tornadus",
             "Thundurus",
             "Genesect",
+            "Shaymin",
             "Deerling (Spring)",
             "Deerling (Summer)",
             "Deerling (Autumn)",

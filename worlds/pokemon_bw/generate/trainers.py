@@ -38,7 +38,7 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
         allowed_forms_by_dex = {key: value for key, value in allowed_forms_by_dex.items() if value}
 
     for next_data in table:
-        trainer = trainer_table[next_data.trainer_id]
+        trainer = trainer_table[next_data.trainer_id - 1]
         if (
             rivals_starter and trainer.rival in (1, 2) and rivals_starter[trainer.rival - 1]
             and next_data.team_number == trainer.pokemon_count - 1
@@ -101,7 +101,8 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
                     evo_tups = species_data.evolutions.copy()
                     world.random.shuffle(evo_tups)
                     for evo_tup in evo_tups:
-                        evo_name = by_id[(evo_tup[2], species_data.form)]
+                        evo_id_tup = (evo_tup[2], species_data.form)
+                        evo_name = by_id[evo_id_tup if evo_id_tup in by_id else (evo_tup[2], 0)]
                         if evo_name == species_name:
                             continue
                         evo_data = world.species_entries[species_name]
@@ -121,7 +122,8 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
                     for evo_tup in evo_tups:
                         if next_data.level < (evo_tup[1] if methods[evo_tup[0]].has_level_value else 25):
                             continue
-                        evo_name = by_id[(evo_tup[2], species_data.form)]
+                        evo_id_tup = (evo_tup[2], species_data.form)
+                        evo_name = by_id[evo_id_tup if evo_id_tup in by_id else (evo_tup[2], 0)]
                         if evo_name == species_name:
                             continue
                         evo_data = world.species_entries[species_name]

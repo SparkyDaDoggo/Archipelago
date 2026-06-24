@@ -76,7 +76,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 species_data = world.species_entries[species]
                 for evolution in species_data.evolutions:
                     if evolution[0] != "Level up with party member":
-                        species_checklist.check(by_id[(evolution[2], species_data.form)])
+                        evo_id_tup = (evolution[2], species_data.form)
+                        species_checklist.check(by_id[evo_id_tup if evo_id_tup in by_id else (evolution[2], 0)])
         if len(species_checklist) > len(logic_slots):
             raise OptionError(
                 f"More required species for randomized wild encounter than slots they could be placed in "
@@ -103,7 +104,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 continue
             spec_total = stats_total(spec_data)
             for evo_tuple in spec_data.evolutions:
-                evolved_name = by_id[evo_tuple[2], spec_data.form]
+                evo_id_tup = (evo_tuple[2], spec_data.form)
+                evolved_name = by_id[evo_id_tup if evo_id_tup in by_id else (evo_tuple[2], 0)]
                 if evolved_name not in species_checklist.to_check:
                     continue
                 if evo_tuple[0] == "Level up with party member":
@@ -176,9 +178,9 @@ def generate_wild_encounters(world: "PokemonBWWorld",
 
     any_species = forms_by_dex if not (prevent_overpowered or blacklist) else {
         key: [
-            (name, data)
-            for name, data in value
-            if stats_total(data) <= stats_threshold and name not in blacklist
+            name
+            for name in value
+            if stats_total(world.species_entries[name]) <= stats_threshold and name not in blacklist
         ]
         for key, value in forms_by_dex.items()
     }
