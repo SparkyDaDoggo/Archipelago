@@ -118,22 +118,25 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Seensanity (Only accounting for wild pokémon at first, trainer teams later; has impact on All Pokémon Seen)
   - Trainersanity
+  - Formsanity (not that many checks)
+  - Shinysanity
+  - Dexcountsanity
+  - Seencountsanity
   - Trainer pokémon plando
   - Decrease trainer eyesight
   - Customize roadblocks
+    - Relic castle room filling with sand unlockable via an item
   - Starter/Static/Gift/Trade/Legendary pokémon randomization
-  - Seen count checks modifier
-  - Free fly destination
+  - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Adjust encounters (like Adjust levels, but with species, based on base stats)
   - Ingame options (things changeable in PC, moving Experience modifier here)
     - Season control (only when vanilla or changeable, not randomized)
+    - Shiny chance modifier (Only activated if Shinysanity not off)
 - Dowsing Machine as a hard requirement for hidden items (with option)
 - Reducing encounter slots in Modify Encounter Rates
 - Trainer rebattling
-- Trainer teams in spoiler
 - Xtransceiver being required to see certain story sequences (with some of them giving items)
   - Also, dynamic Xtransceiver item that automatically adds the correctly gendered version to the game
-- Relic castle room filling with sand unlockable via an item
 - Make HMs forgettable
 - Expand plugins to client
 
@@ -146,6 +149,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Gender Ratio (+ limit)
     - TM/HM compatibility
     - Move tutor compatibility
+    - Held items
+    - Egg groups
   - Move data randomization
     - Move power
     - Move type
@@ -158,6 +163,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Door shuffle
   - Shuffle roadblock requirements
   - Original content
+  - Free fly destination
   - Trainer randomization (i.e. what trainer you're actually battling against)
     - With plando capabilities
   - Trashsanity
@@ -169,6 +175,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Phenomena activation (vanilla, any badge, Striaton Gym, always)
   - BGM randomization
   - Cutscenes shortening
+  - Dusk cloud hunt (dusk clouds have a chance to give a check)
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
 - Display other players and item names ingame

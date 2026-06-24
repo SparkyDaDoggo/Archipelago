@@ -957,6 +957,8 @@ class PokemonBWOptions(PerGameCommonOptions):
     randomize_level_up_movesets: RandomizeLevelUpMovesets
     # randomize_tm_hm_compatibility: RandomizeTMHMCompatibility
     # randomize_abilities: RandomizeAbilities
+    # randomize_held_items: RandomizeHeldItems
+    # randomize_egg_groups: RandomizeEggGroups
     stats_randomization_adjustments: StatsRandomizationAdjustments
     stats_plando: StatsPlando
 
@@ -985,7 +987,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     # deathlink: DeathLink  # Needs to be imported from base options
     # wonder_trade: WonderTrade
     # multiworld_gift_pokemon: MultiworldGiftPokemon
-    # traps_percentage: TrapsPercentage
+    # traps_probability: TrapsProbability
     start_inventory_from_pool: StartInventoryPool
     modify_item_pool: ModifyItemPool
     modify_logic: ModifyLogic

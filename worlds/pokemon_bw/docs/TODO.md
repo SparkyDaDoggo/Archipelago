@@ -19,7 +19,6 @@
 - Running shoes as an item, making mom cutscene on route 2 a check
 - opelucid city fly flag only set after ghetsis scene
 - fill more funny dialog
-- trainer teams in spoiler log need names
 
 # Single reports, cannot recreate, need to wait for more reports
 
