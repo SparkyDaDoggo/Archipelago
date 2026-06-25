@@ -129,6 +129,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Enhanced spoiler output by adding trainers + base stats + catch rates + levelup movesets and organizing evolutions
 - Fixed legendary hunt flags being reset after defeating Ghetsis/Alder and resetting statics
 - Fixed `Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)` not showing up on the UT map tracker
+- Added option groups
 
 ### Is this version compatible with older multiworld slots and save files?
 No

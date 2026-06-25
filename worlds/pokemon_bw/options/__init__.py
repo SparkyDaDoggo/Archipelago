@@ -974,6 +974,9 @@ class PokemonBWOptions(PerGameCommonOptions):
     # shinysanity: Shinysanity
     # door_shuffle: DoorShuffle
     season_control: SeasonControl
+    modify_item_pool: ModifyItemPool
+    modify_logic: ModifyLogic
+    filler_items_blacklist: FillerItemsBlacklist
 
     # Miscellaneous
     adjust_levels: AdjustLevels
@@ -989,9 +992,6 @@ class PokemonBWOptions(PerGameCommonOptions):
     # multiworld_gift_pokemon: MultiworldGiftPokemon
     # traps_probability: TrapsProbability
     start_inventory_from_pool: StartInventoryPool
-    modify_item_pool: ModifyItemPool
-    modify_logic: ModifyLogic
-    filler_items_blacklist: FillerItemsBlacklist
     funny_dialog: FunnyDialog
     text_plando: PokemonBWTextPlando
     plugin_options: PluginOptions

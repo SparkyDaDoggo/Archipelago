@@ -11,6 +11,7 @@ from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry, SpeciesEntry
 from .data import RulesDict
 from .plugins import Plugin
+from .options.groups import option_groups
 
 bizhawk_client.register_client()
 
@@ -75,6 +76,7 @@ class PokemonBWSettings(settings.Group):
 class PokemonBWWeb(WebWorld):
     rich_text_options_doc = True
     theme = ("grassFlowers", "ocean", "dirt", "ice")[(datetime.datetime.now().month - 1) % 4]
+    option_groups = option_groups
     game_info_languages = ["en"]
     setup_en = Tutorial(
         "Multiworld Setup Guide",
