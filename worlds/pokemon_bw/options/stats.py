@@ -323,7 +323,7 @@ def plando_to_slotdata(value) -> typing.Any:
     if isinstance(value, dict):
         return {v: plando_to_slotdata(vv) for v, vv in value.items()}
     if isinstance(value, tuple) and hasattr(value, "_fields") and hasattr(value, "_asdict"):
-        return {v: plando_to_slotdata(vv) for v, vv in value._asdict()}
+        return {v: plando_to_slotdata(vv) for v, vv in value._asdict().items()}
     if not isinstance(value, str) and isinstance(value, typing.Iterable):
         return tuple(plando_to_slotdata(v) for v in value)
     return value
@@ -410,6 +410,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         for spec, plando in data.items():
             if not isinstance(spec, str):
                 raise OptionError(f"Species name in Stats Plando expected to be a string, got {type(plando)}")
+            if isinstance(plando, PlandoStat):
+                plandos[spec] = plando
+                continue
             if not isinstance(plando, dict):
                 raise OptionError(f"Expected dictionary as Stats Plando entry {spec}, got {type(plando)}")
             plando_evolutions, plando_levelup_moves = [], []
@@ -420,6 +423,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                     if not (isinstance(value, list) or value is False):
                         raise OptionError(f"Expected value of evolutions key to be a list or 'false', got {type(value)}")
                     for evo_entry in value:
+                        if isinstance(evo_entry, PlandoEvolution):
+                            plando_evolutions.append(evo_entry)
+                            continue
                         if not isinstance(evo_entry, dict):
                             raise OptionError(f"Expected evolution entry to be a dictionary, got {type(evo_entry)}")
                         if "species" not in evo_entry:
@@ -435,6 +441,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                     if not (isinstance(value, list) or value is False):
                         raise OptionError(f"Expected value of levelup_moveset key to be a list or 'false', got {type(value)}")
                     for move_entry in value:
+                        if isinstance(move_entry, PlandoLevelupMove):
+                            plando_levelup_moves.append(move_entry)
+                            continue
                         if not isinstance(move_entry, dict):
                             raise OptionError(f"Expected levelup move entry to be a dictionary, got {type(move_entry)}")
                         if "move" not in move_entry:

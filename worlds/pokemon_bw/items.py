@@ -89,13 +89,17 @@ def generate_filler(world: "PokemonBWWorld") -> str:
 
 def random_choice_nested(random: Random, nested: Iterable[str | list | tuple | dict]) -> Any:
     """Helper function for getting a random element from a nested list."""
-    current: str | Iterable = nested
-    while isinstance(current, list | tuple | dict):
-        if isinstance(current, list | tuple):
-            current = random.choice(current)
-        else:
-            current = random.choice(tuple(current.keys()))
-    return current
+    try:
+        current: str | Iterable = nested
+        while isinstance(current, list | tuple | dict):
+            if isinstance(current, list | tuple):
+                current = random.choice(current)
+            else:
+                current = random.choice(tuple(current.keys()))
+        return current
+    except IndexError as e:
+        e.add_note(f"nested = {nested}")
+        raise e
 
 
 def populate_starting_inventory(world: "PokemonBWWorld", items: list[PokemonBWItem]) -> None:

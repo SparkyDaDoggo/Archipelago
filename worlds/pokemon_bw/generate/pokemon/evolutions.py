@@ -144,21 +144,22 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
     max_level = world.options.stats_randomization_adjustments["Maximum evo level"]
     if mods.is_random_methods and levelup_weight != -1:
         random_method = ("Level up", ) * levelup_weight + ((
-            "Stone" if replace.is_pid else ("Stone", ) * 38 + ("Stone male", "Stone female"),
+            "Stone" if replace.is_pid else (("Stone", ) * 38 + ("Stone male", "Stone female")),
             "_Level up item",
             ("_Level up split", "_Level up item", "Stone"),
             ("Level up with move", "_Level up item", "Stone"),
             ("Level up with party member", "_Level up item", "Stone", "_Level up item", "Stone"),
         ) + (
-            ("Friendship", ) if not replace.is_friendship else ()
+            ("Friendship", ) if not replace.is_friendship else ("Level up", )
         ) + (
-            (("Magnetic area", "Level up moss rock", "Level up ice rock"), ) if not replace.is_locations else ()
+            (("Magnetic area", "Level up moss rock",
+              "Level up ice rock"), ) if not replace.is_locations else ("Level up", )
         ) + (
             (("Level up higher defense", "Level up higher attack", "Level up equal physical")
-             if not mods.is_pair_stats else "_Level up stats", ) if not replace.is_stats else ()
+             if not mods.is_pair_stats else "_Level up stats", ) if not replace.is_stats else ("Level up", )
         ) + (
             (("Level up Silcoon", "Level up Cascoon") if not mods.is_pair_50_50 else "_Level up PID",
-             ("Level up (female)", "Level up (male)")) if not replace.is_pid else ()
+             ("Level up (female)", "Level up (male)")) if not replace.is_pid else ("Level up", )
         ), )
     else:
         random_method = ("Level up",)
@@ -172,7 +173,7 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
 
     def _get_random_target(_curr_targets: set, this: str, _dat: SpeciesEntry) -> tuple[str | None, SpeciesEntry | None]:
         picked = world.random.randrange(1, 650) - 1
-        end = picked - 1
+        end = picked - 1 if picked > 1 else 649
         while picked != end:
             picked = picked % 649 + 1
             picked_name = species_tables.by_id[(picked, 0)]
@@ -183,15 +184,17 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
             if mods.is_common_type and _dat.type_1 not in picked_types and _dat.type_2 not in picked_types:
                 continue
             if mods.is_follow_type:
-                _dat.evo_line = _dat.evo_line.search()
-                picked_data.evo_line = picked_data.evo_line.search()
                 if _dat.evo_line and picked_data.evo_line:
+                    _dat.evo_line = _dat.evo_line.search()
+                    picked_data.evo_line = picked_data.evo_line.search()
                     if _dat.evo_line.type != picked_data.evo_line.type:
                         continue
                 elif _dat.evo_line:
+                    _dat.evo_line = _dat.evo_line.search()
                     if _dat.evo_line.type not in picked_types:
                         continue
                 elif picked_data.evo_line:
+                    picked_data.evo_line = picked_data.evo_line.search()
                     if picked_data.evo_line.type not in (_dat.type_1, _dat.type_2):
                         continue
                 elif _dat.type_1 not in picked_types and _dat.type_2 not in picked_types:
@@ -206,7 +209,7 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
         return None, None
 
     split = world.random.randrange(1, 650)
-    for dex_num in (*range(split, 650), *range(split)):
+    for dex_num in (*range(split, 650), *range(1, split)):
         name = species_tables.by_id[(dex_num, 0)]
         data = all_species[name]
         if data.write & 2:
@@ -216,48 +219,66 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
 
         if not mods.is_random_methods:
             restricted_methods = []
-            for evo in data.evolutions:
+            for evo in data.evolutions_copy:
                 method = resolve_paired(evo[0])
                 if method not in restricted_methods:
                     restricted_methods.append(method)
         else:
             restricted_methods = random_method
 
-        if data.gender_ratio in (0, 254, 255):
-            bad = (() + (("Level up (male)", "Stone male") if data.gender_ratio in (254, 255) else ())
-                   + (("Level up (female)", "Stone female") if data.gender_ratio in (0, 255) else ()))
+        bad = (() + (("Level up (male)", "Stone male") if data.gender_ratio in (254, 255) else ())
+               + (("Level up (female)", "Stone female") if data.gender_ratio in (0, 255) else ()))
 
-            def cop(obj: Iterable) -> Iterable:
-                return tuple((o if isinstance(o, str) else cop(o)) for o in obj if o and (o not in bad))
+        def cop(obj: Iterable) -> Iterable:
+            return tuple(oo for oo in ((o if isinstance(o, str) else cop(o)) for o in obj if o not in bad) if oo)
 
-            restricted_methods = cop(restricted_methods) or ("Level up", )
+        restricted_methods = cop(restricted_methods) or ("Level up", )
 
         if mods.is_every_level:
             method_list.append(("Level up", 2))
             method_slots += 1
             if mods.is_more_less_branches:
-                while method_slots < 7 and world.random.random() < 0.5:
+                tries = 0
+                while method_slots < 7 and world.random.random() < 0.5 and tries < 3:
                     method = random_choice_nested(world.random, restricted_methods)
-                    method_list.insert(0, (method, -1))
-                    method_slots += evolution_methods.paired_method_slots.get(method, 1)
+                    add_method_slots = evolution_methods.paired_method_slots.get(method, 1)
+                    if method_slots + add_method_slots <= 7:
+                        method_list.insert(0, (method, -1))
+                        method_slots += add_method_slots
+                    else:
+                        tries += 1
         elif mods.is_more_less_branches:
-            while method_slots < 7 and world.random.random() < 0.75:
+            tries = 0
+            while method_slots < 7 and world.random.random() < 0.75 and tries < 3:
                 method = random_choice_nested(world.random, restricted_methods)
-                method_list.insert(0, (method, -1))
-                method_slots += evolution_methods.paired_method_slots.get(method, 1)
+                add_method_slots = evolution_methods.paired_method_slots.get(method, 1)
+                if method_slots + add_method_slots <= 7:
+                    method_list.insert(0, (method, -1))
+                    method_slots += add_method_slots
+                else:
+                    tries += 1
         else:
-            for evo in data.evolutions:
-                if evo[0] in ("Level up item night", "Level up Shedinja") or (
-                    mods.is_pair_stats and evo[0] in ("Level up higher attack", "Level up equal physical")
-                ) or (mods.is_pair_50_50 and evo[0] == "Level up Cascoon"):
+            for evo in data.evolutions_copy:
+                if evo[0] in ("Level up item night", "Level up Shedinja"):
+                    continue
+                if mods.is_pair_50_50 and evo[0] == "Level up Cascoon":
+                    continue
+                if mods.is_pair_stats and evo[0] in ("Level up higher attack", "Level up equal physical"):
                     continue
                 if data.gender_ratio in (0, 255) and evo[0] in ("Level up (female)", "Stone female"):
                     continue
                 if data.gender_ratio in (254, 255) and evo[0] in ("Level up (male)", "Stone male"):
                     continue
-                method = resolve_paired(evo[0]) if not mods.is_random_methods else random_choice_nested(world.random, restricted_methods)
-                method_list.insert(0, (method, evo[1]))
-                method_slots += evolution_methods.paired_method_slots.get(method, 1)
+                tries = 0
+                while tries < 3:
+                    method = resolve_paired(evo[0]) if not mods.is_random_methods else random_choice_nested(world.random, restricted_methods)
+                    add_method_slots = evolution_methods.paired_method_slots.get(method, 1)
+                    if method_slots + add_method_slots <= 7:
+                        method_list.insert(0, (method, evo[1] if not mods.is_random_methods else -1))
+                        method_slots += evolution_methods.paired_method_slots.get(method, 1)
+                        break
+                    else:
+                        tries += 1
 
         curr_evo_targets = set()  # ONLY LOOKUP
         curr_max_lvl = 1
@@ -280,11 +301,11 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
                 case c if c in ("Friendship", "Magnetic area", "Level up moss rock", "Level up ice rock"):
                     data.evolutions.insert(0, (method, 0, target_data.dex_number))
                 case "Level up with move":
-                    move_id = value if value != -1 else move_tables.by_name[world.random.choice(movesets_level_up.table[name].level_up_moves)[1]]
-                    data.evolutions.insert(0, ("Level up with move", move_id, target_data.dex_number))
+                    move_id = value if value != -1 else move_tables.by_name[world.random.choice(all_species[name].level_up_moves.level_up_moves)[1]].id
+                    data.evolutions.insert(0, (method, move_id, target_data.dex_number))
                 case "Level up with party member":
                     wanted_dex = value if value != -1 else world.random.randrange(1, 650)
-                    data.evolutions.insert(0, ("Level up with move", wanted_dex, target_data.dex_number))
+                    data.evolutions.insert(0, (method, wanted_dex, target_data.dex_number))
                 case "_Level up item":
                     item_id = value if value != -1 else world.random.choice(evolution_methods.hold_items)
                     data.evolutions.insert(0, ("Level up item night", item_id, target_data.dex_number))

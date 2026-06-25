@@ -114,7 +114,8 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
     )
 
     def roll(species: str, data: SpeciesEntry, pre: list[int] | tuple[int, ...]):
-        total = max(sum(pre) + 1, stats_total(by_name[species])) if not mods.is_random_total else world.random.randint(sum(pre) + 1, max_total)
+        total = max(sum(pre) + 1, stats_total(by_name[species])) if not mods.is_random_total \
+            else world.random.randint(max(min(sum(pre) + 1, max_total), min_total), max_total)
         append = tuple(world.random.randint(1, 255) for _ in range(6))
         dist = [pre[i] + int(append[i] / sum(append) * (total - sum(pre))) for i in range(6)]
         cache = total - sum(dist)
@@ -164,7 +165,8 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
             for form in range(6):
                 if (data.dex_number, form) not in by_id:
                     break
-                evo_species = by_id[(evo_tup[2], form)]
+                evo_id_tup = (evo_tup[2], form)
+                evo_species = by_id[evo_id_tup if evo_id_tup in by_id else (evo_tup[2], 0)]
                 evo_dat = all_species[evo_species]
                 if form and not evo_dat.is_custom_form:
                     break

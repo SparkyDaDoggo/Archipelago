@@ -1,4 +1,3 @@
-import itertools
 from typing import TYPE_CHECKING
 from .. import SpeciesEntry
 from ...data import LevelUpMovesetData
@@ -103,7 +102,7 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             for move_tup in chosen_0_power_moves:
                 chosen_moves.insert(world.random.randint(0, len(chosen_moves)), move_tup)
 
-        plandod_levels = [t[0] for t in plando_append[spec_name]]
+        plandod_levels = [t[0] for t in plando_append[spec_name]] if spec_name in plando_append else []
         chosen_levels = world.random.choices(tuple(range(1, 101)), k=amount-len(plandod_moves))
         chosen_levels.sort()
         plando_1s = len(tuple(1 for i in plandod_levels if i == 1))
@@ -112,7 +111,7 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
         if mods.is_start_with_4:
             chosen_levels[:4-min(4, plando_1s)] = (1, ) * (4 - plando_1s)
 
-        data.level_up_moves.level_up_moves = [(chosen_levels[i], chosen_moves[i][0]) for i in range(amount)] + plando_append.get(spec_name, [])
+        data.level_up_moves.level_up_moves.extend([(chosen_levels[i], chosen_moves[i][0]) for i in range(amount)] + plando_append.get(spec_name, []))
         if spec_name not in plando_append:
             data.level_up_moves.level_up_moves.sort(key=sort_by_level)
         if mods.is_follow_evolutions:
@@ -123,7 +122,8 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             for form in range(6):
                 if (data.dex_number, form) not in by_id:
                     break
-                evo_species = by_id[(evo_tup[2], form)]
+                evo_id_tup = (evo_tup[2], form)
+                evo_species = by_id[evo_id_tup if evo_id_tup in by_id else (evo_tup[2], 0)]
                 evo_dat = all_species[evo_species]
                 if form and not evo_dat.is_custom_form:
                     break

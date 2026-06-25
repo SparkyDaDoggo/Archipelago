@@ -114,7 +114,8 @@ def plando_evolutions_override(world: "PokemonBWWorld", all_species: dict[str, S
         new_evos = generate_plando_evolutions(world, plando_stat.evolutions, all_species)
         for evo_tup in new_evos:
             for form in range(6):
-                evo_data = all_species[by_id[(evo_tup[2], form)]]
+                evo_id_tup = (evo_tup[2], form)
+                evo_data = all_species[by_id[evo_id_tup if evo_id_tup in by_id else (evo_tup[2], 0)]]
                 if form and not evo_data.is_custom_form:
                     break
                 if world.options.randomize_evolutions.is_randomize:
@@ -146,7 +147,8 @@ def plando_evolutions_append(world: "PokemonBWWorld", all_species: dict[str, Spe
                               f"limit of 7 evolutions per species")
         for evo_tup in new_evos:
             for form in range(6):
-                evo_data = all_species[by_id[(evo_tup[2], form)]]
+                evo_id_tup = (evo_tup[2], form)
+                evo_data = all_species[by_id[evo_id_tup if evo_id_tup in by_id else (evo_tup[2], 0)]]
                 if form and not evo_data.is_custom_form:
                     break
                 update_evo_stage(evo_data, data.evolution_stage+1)

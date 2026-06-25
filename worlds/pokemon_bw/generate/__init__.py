@@ -47,6 +47,7 @@ class SpeciesEntry:
     abilities: tuple[str, str, str]
     # tuple(method, parameter, evolve into)
     evolutions: list[tuple[str, int, int]]
+    evolutions_copy: list[tuple[str, int, int]]
     # tuple(level, move name)
     level_up_moves: LevelUpMovesetData
     # TM number (internal order is TM1-95 HM1-6)
@@ -76,6 +77,7 @@ class SpeciesEntry:
         self.evolution_stage = data.evolution_stage
         self.abilities = data.abilities
         self.evolutions = [(evo_tup[0], evo_tup[1], by_name[evo_tup[2]].dex_number) for evo_tup in data.evolutions]
+        self.evolutions_copy = self.evolutions.copy()
         self.level_up_moves = movesets_level_up.table[name]
         self.tm_hm_moves = movesets_tm_hm.table[name]
         self.is_custom_form = data.is_custom_form
