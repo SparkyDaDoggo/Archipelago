@@ -889,7 +889,7 @@ class PokemonBWTextPlando(PlandoTexts):
 
 
 class PluginOptions(OptionDict):
-    """This can be used to define certain options that are used by patching plugins.
+    """This can be used to define certain options that are used by plugins.
     The main apworld will ignore this option entirely."""
     display_name = "Plugin Options"
 

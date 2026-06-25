@@ -45,7 +45,7 @@ class RandomizeWildPokemon(ToggleSet):
         type. Might not be fully ensured depending on RNG.
     - **Area 1 to 1** - Keeps the amount of different encounters and their encounter rate
         in every area.
-    - **Merge phenomenons** - Makes rustling grass, rippling water spots, dust clouds,
+    - **Merge phenomena** - Makes rustling grass, rippling water spots, dust clouds,
         and flying shadows in the same area have only one encounter. Takes priority over
         **Area 1 to 1**.
     - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance

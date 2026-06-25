@@ -248,25 +248,22 @@ class RandomizeEggGroups(ToggleSet):
 
 class StatsRandomizationAdjustments(ExtendedOptionCounter):
     """
-    Adjust various parameters in various randomization options (more modifiers are planned).
+    Adjust various parameters in various randomization options.
     Any minimum parameter cannot be higher than its corresponding maximum parameter.
     Every parameter can be specified as unweighted/weighted lists, "random",
     and "random-range-x-y" like usual range options.
 
-    - **Stats total minimum/maximum** - The minimum/maximum base stats total, if randomized.
-        Allowed values are integers in range 6 to 1530.
-    - **Levelup evo weight** - If evolutions are randomized and **Random methods** is
-        included, this will determine how likely it is to roll the levelup method.
+    - **Stats total minimum/maximum** (6-1530) - The minimum/maximum base stats total,
+        if randomized.
+    - **Levelup evo weight** (0-99) - If evolutions are randomized and **Random methods**
+        is included, this will determine how likely it is to roll the levelup method.
         The lower this value, the more likely it is to get special methods (like using a
         stone, high friendship, ...). Setting this to -1 disables other methods.
-        Otherwise, allowed values are integers in range 0 to 99.
-    - **Maximum evo level** - The maximum level at which levelup evolutions can occur.
-        Allowed values are integers in range 10 to 100.
+    - **Maximum evo level** (10-100) - The maximum level at which levelup evolutions can occur.
+    - **Catch rates minimum/maximum** (3-255) - The minimum/maximum catch rates, if randomized.
+    - **Levelup moves amount minimum/maximum** (1-100) - The minimum/maximum amount of
+        levelup moves a species can get, if randomized.
     """
-    # - **Catch rates minimum/maximum** - The minimum/maximum catch rates, if randomized. Allowed values are integers
-    #     in range 3 to 255.
-    # - **Gender ratio minimum/maximum** - The minimum gender ratio, if randomized. Allowed values are integers
-    #     in range 0 to 255. A gender ratio of 0 is always female and 255 is always male.
     display_name = "Stats Randomization Adjustments"
     fill_defaults = True
     valid_keys = [
@@ -276,10 +273,10 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Maximum evo level",
         "Catch rates minimum",
         "Catch rates maximum",
-        # "Gender ratio minimum",
-        # "Gender ratio maximum",
         "Levelup moves amount minimum",
         "Levelup moves amount maximum",
+        # "Gender ratio minimum",
+        # "Gender ratio maximum",
         # "No held item chance",
         # "Single egg group chance",
     ]

@@ -115,6 +115,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Prevent bad early pokemon
     - Rivals take from box
     - N uses pokemon from nearby
+    - More or less per trainer
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Seensanity (Only accounting for wild pokémon at first, trainer teams later; has impact on All Pokémon Seen)
   - Trainersanity
