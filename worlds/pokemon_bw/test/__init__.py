@@ -21,18 +21,44 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 # randomize_wild_pokemon:
 #   default []
 #   one test for just randomize
-#   11 tests for "Randomize" + random selection of other modifiers
+#   11 tests for random selection of modifiers
 # randomize_trainer_pokemon:
 #   default []
 #   one test for just randomize
-#   11 tests for "Randomize" + random selection of other modifiers
+#   11 tests for random selection of modifiers
 # pokemon_randomization_adjustments:
-#   irrelevant for tests
+#   no tests
 # encounter_plando:
 #   default []
 #   one test for multiple plandos with all different parameter variations
 #   one test for two plandos + randomize_wild_pokemon = ["Randomize"]
 #   one test for two plandos + randomize_wild_pokemon = ["Randomize", "Ensure all obtainable"]
+# wild_randomization_blacklist:
+#   no tests
+# trainer_randomization_blacklist:
+#   no tests
+# randomize_base_stats:
+#   default []
+#   one test for just randomize
+#   11 tests for random selection of modifiers
+# randomize_evolutions:
+#   default []
+#   one test for just randomize
+#   11 tests for random selection of modifiers
+# randomize_catch_rates:
+#   default []
+#   one test for just shuffle
+#   11 tests for random selection of modifiers
+# randomize_level_up_movesets:
+#   default []
+#   one test for just randomize
+#   11 tests for random selection of modifiers
+# stats_randomization_adjustments:
+#   no tests
+# stats_plando:
+#   default []
+#   One test for partial base stats and catch rates
+#   One test each for rando/vanilla override/append evolutions + levelup moveset
 # shuffle_badges:
 #   default shuffle
 #   each other has its own test
@@ -49,6 +75,14 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 # season_control:
 #   default vanilla
 #   each other has its own test
+# modify_item_pool:
+#   default []
+#   one test for all modifiers combined
+# modify_logic:
+#   one test for []
+#   one test for all included
+# filler_items_blacklist:
+#   no tests
 # adjust_levels:
 #   default ["Trainer", "Wild"]
 #   one test for []
@@ -60,11 +94,15 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 # modify_encounter_rates:
 #   default vanilla
 #   one test for each other choice each
-#   one test for custom rates
+#   one test for custom rates with not all methods filled
 # experience_multiplier:
 #   irrelevant for generator
 # all_pokemon_seen:
-#   irrelevant for generator
+#   default false
+#   one test for true
+# replace_evo_methods:
+#   default []
+#   one test for all included
 # master_ball_seller:
 #   default []
 #   one test for one seller and one standard cost
@@ -72,14 +110,7 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 #   one test for one seller and no cost
 #   one test for one seller and two random custom costs
 # start_inventory_from_pool:
-#   default {}
-#   taken from core without modifications
-# modify_item_pool:
-#   default []
-#   one test for all modifiers combined
-# modify_logic:
-#   default ["Require Dowsing Machine", "Prioritize key item locations"]
-#   one test for []
+#   no tests
 # funny_dialog:
 #   default none
 #   one test for each other choice
@@ -88,5 +119,7 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 #   one test for multiple lines with all kinds of commands
 #   one test for multiple lines + funny dialog
 #   one test for multiple lines + efficient dialog
+# plugin_options:
+#   irrelevant to generator
 # reusable_tms:
 #   too complex to test

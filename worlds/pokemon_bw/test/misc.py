@@ -126,6 +126,74 @@ class TestEncounterPlandoRandomizeAllObtainable(PokemonBWTestBase):
 
 
 ###################################################
+# Stats Plando                                    #
+###################################################
+
+class TestAAAStatsPlandoBaseStatsCatchRate(PokemonBWTestBase):
+    options = {"stats_plando": {
+        "Bulbasaur": {"base_hp": 120,
+                      "base_attack": 10,
+                      "base_sp_defense": 200,
+                      "catch_rate": 220},
+        "Squirtle": {"base_defense": 120,
+                     "base_sp_attack": 10,
+                     "base_speed": 200},
+    }}
+
+
+class TestAAAStatsPlandoEvoLevelupMoveVanilla(PokemonBWTestBase):
+    options = {"stats_plando": {
+        "Bulbasaur": {"evolutions": [{"species": "Weedle"},
+                                     {"species": "Caterpie",
+                                      "method": "Stone",
+                                      "stone": "Water Stone"}],
+                      "override_evolutions": True,
+                      "levelup_moveset": [{"move": "Pound",
+                                           "level": 1},
+                                          {"move": "Earthquake",
+                                           "level": 100}],
+                      "override_levelup_moveset": True},
+        "Squirtle": {"evolutions": [{"species": "Weedle",
+                                     "level": 5},
+                                    {"species": "Caterpie",
+                                     "method": "Stone",
+                                     "stone": "Water Stone"}],
+                     "override_evolutions": False,
+                     "levelup_moveset": [{"move": "Pound",
+                                          "level": 10},
+                                         {"move": "Earthquake",
+                                          "level": 100}],
+                     "override_levelup_moveset": False},
+    }}
+
+
+class TestAAAStatsPlandoEvoLevelupMoveRandomized(PokemonBWTestBase):
+    options = {"stats_plando": {
+        "Bulbasaur": {"evolutions": [{"species": "Weedle"},
+                                     {"species": "Caterpie",
+                                      "method": "Stone",
+                                      "stone": "Water Stone"}],
+                      "override_evolutions": True,
+                      "levelup_moveset": [{"move": "Pound",
+                                           "level": 1},
+                                          {"move": "Earthquake",
+                                           "level": 100}],
+                      "override_levelup_moveset": True},
+        "Squirtle": {"evolutions": [{"species": "Weedle",
+                                     "level": 5},
+                                    {"species": "Caterpie",
+                                     "method": "Stone",
+                                     "stone": "Water Stone"}],
+                     "override_evolutions": False,
+                     "levelup_moveset": [{"move": "Pound",
+                                          "level": 10},
+                                         {"move": "Earthquake",
+                                          "level": 100}],
+                     "override_levelup_moveset": False},
+    }, "randomize_evolutions": ["Randomize"], "randomize_level_up_movesets": ["Randomize"]}
+
+
+###################################################
 # Shuffle Badges                                  #
 ###################################################
 
