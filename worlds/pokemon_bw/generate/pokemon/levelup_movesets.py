@@ -111,11 +111,16 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
         if mods.is_start_with_4:
             chosen_levels[:4-min(4, plando_1s)] = (1, ) * (4 - plando_1s)
 
-        data.level_up_moves.level_up_moves.extend([(chosen_levels[i], chosen_moves[i][0]) for i in range(amount)] + plando_append.get(spec_name, []))
+        data.level_up_moves.level_up_moves.extend(
+            [(chosen_levels[i], chosen_moves[i][0]) for i in range(amount-len(plandod_moves))]
+            + plando_append.get(spec_name, [])
+        )
+
         if spec_name not in plando_append:
             data.level_up_moves.level_up_moves.sort(key=sort_by_level)
         if mods.is_follow_evolutions:
-            do_evos(data, chosen_moves if spec_name not in plando_append else [(t[1], move_by_name[t[1]]) for t in data.level_up_moves.level_up_moves])
+            do_evos(data, chosen_moves if spec_name not in plando_append else [(t[1], move_by_name[t[1]]) for t in
+                                                                               data.level_up_moves.level_up_moves])
 
     def do_evos(data: SpeciesEntry, extra: list[tuple[str, "MoveData"]]):
         for evo_tup in data.evolutions:

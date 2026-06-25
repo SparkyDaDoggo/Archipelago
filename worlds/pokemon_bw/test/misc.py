@@ -129,7 +129,7 @@ class TestEncounterPlandoRandomizeAllObtainable(PokemonBWTestBase):
 # Stats Plando                                    #
 ###################################################
 
-class TestAAAStatsPlandoBaseStatsCatchRate(PokemonBWTestBase):
+class TestStatsPlandoBaseStatsCatchRate(PokemonBWTestBase):
     options = {"stats_plando": {
         "Bulbasaur": {"base_hp": 120,
                       "base_attack": 10,
@@ -141,7 +141,7 @@ class TestAAAStatsPlandoBaseStatsCatchRate(PokemonBWTestBase):
     }}
 
 
-class TestAAAStatsPlandoEvoLevelupMoveVanilla(PokemonBWTestBase):
+class TestStatsPlandoEvoLevelupMoveVanilla(PokemonBWTestBase):
     options = {"stats_plando": {
         "Bulbasaur": {"evolutions": [{"species": "Weedle"},
                                      {"species": "Caterpie",
@@ -167,7 +167,7 @@ class TestAAAStatsPlandoEvoLevelupMoveVanilla(PokemonBWTestBase):
     }}
 
 
-class TestAAAStatsPlandoEvoLevelupMoveRandomized(PokemonBWTestBase):
+class TestStatsPlandoEvoLevelupMoveRandomized(PokemonBWTestBase):
     options = {"stats_plando": {
         "Bulbasaur": {"evolutions": [{"species": "Weedle"},
                                      {"species": "Caterpie",
@@ -202,10 +202,6 @@ class TestShuffleBadgesVanilla(PokemonBWTestBase):
     options = {"shuffle_badges": "vanilla"}
 
 
-class TestShuffleBadgesAnyBadge(PokemonBWTestBase):
-    options = {"shuffle_badges": "any_badge"}
-
-
 class TestShuffleBadgesAnything(PokemonBWTestBase):
     options = {"shuffle_badges": "anything"}
 
@@ -217,10 +213,6 @@ class TestShuffleBadgesAnything(PokemonBWTestBase):
 
 class TestShuffleTMHMHMWithBadge(PokemonBWTestBase):
     options = {"shuffle_tm_hm": "hm_with_badge"}
-
-
-class TestShuffleTMHMAnyTMHM(PokemonBWTestBase):
-    options = {"shuffle_tm_hm": "any_tm_hm"}
 
 
 class TestShuffleTMHMAnything(PokemonBWTestBase):
@@ -277,6 +269,29 @@ class TestSeasonControlRandomized(PokemonBWTestBase):
 
 
 ###################################################
+# Modify Item Pool                                #
+###################################################
+
+
+class TestModifyItemPoolAll(PokemonBWTestBase):
+    options = {"modify_item_pool": ["Useless key items", "Useful filler", "Ban bad filler"]}
+
+
+###################################################
+# Modify Logic                                    #
+###################################################
+
+
+class TestModifyLogicNone(PokemonBWTestBase):
+    options = {"modify_logic": []}
+
+
+class TestModifyLogicAll(PokemonBWTestBase):
+    options = {"modify_logic": ["Require Dowsing Machine", "Require flash", "Consider evolutions",
+                                "Consider static pokemon", "Consider trades", "Consider form change"]}
+
+
+###################################################
 # Adjust Levels                                   #
 ###################################################
 
@@ -330,6 +345,14 @@ class TestModifyEncounterRatesInvasive(PokemonBWTestBase):
     options = {"modify_encounter_rates": "invasive"}
 
 
+class TestModifyEncounterRatesOnePerMethod(PokemonBWTestBase):
+    options = {"modify_encounter_rates": "one_per_method"}
+
+
+class TestModifyEncounterRatesDexsanityFriendly(PokemonBWTestBase):
+    options = {"modify_encounter_rates": "dexsanity_friendly"}
+
+
 class TestModifyEncounterRatesRandomized12(PokemonBWTestBase):
     options = {"modify_encounter_rates": "randomized_12"}
 
@@ -339,6 +362,24 @@ class TestModifyEncounterRatesCustom(PokemonBWTestBase):
         "Grass": [12, 23, 4, 6, 18, 1, 6, 5, 5, 7, 7, 6],
         "Fishing": [21, 19, 22, 18, 20],
     }}
+
+
+###################################################
+# All Pokémon Seen                                #
+###################################################
+
+
+class TestAllPokemonSeenTrue(PokemonBWTestBase):
+    options = {"all_pokemon_seen": True}
+
+
+###################################################
+# Replace Evo Methods                             #
+###################################################
+
+
+class TestReplaceEvoMethodsAll(PokemonBWTestBase):
+    options = {"replace_evo_methods": ["Locations", "Friendship", "PID", "Stats"]}
 
 
 ###################################################
@@ -364,24 +405,6 @@ class TestMasterBallSellerCustomCosts(PokemonBWTestBase):
         f"Cost {random.randint(0, 30000)}",
         f"Cost {random.randint(0, 30000)}"
     ]}
-
-
-###################################################
-# Modify Item Pool                                #
-###################################################
-
-
-class TestModifyItemPoolAll(PokemonBWTestBase):
-    options = {"modify_item_pool": ["Useless key items", "Useful filler", "Ban bad filler"]}
-
-
-###################################################
-# Modify Logic                                    #
-###################################################
-
-
-class TestModifyLogicNone(PokemonBWTestBase):
-    options = {"modify_logic": []}
 
 
 ###################################################
