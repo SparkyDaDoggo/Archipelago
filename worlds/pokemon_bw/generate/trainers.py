@@ -51,7 +51,8 @@ def generate_trainer_teams(world: "PokemonBWWorld") -> list[TrainerPokemonEntry]
                 evo_tup = species_data.evolutions[rivals_starter[trainer.rival + 1] % len(species_data.evolutions)]
                 if next_data.level < (evo_tup[1] if methods[evo_tup[0]].has_level_value else 25):
                     break
-                evo_name = by_id[(evo_tup[2], species_data.form)]
+                evo_id_tup = (evo_tup[2], species_data.form)
+                evo_name = by_id[evo_id_tup if evo_id_tup in by_id else (evo_tup[2], 0)]
                 if evo_name == species_name:
                     break
                 evo_data = world.species_entries[species_name]

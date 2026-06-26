@@ -136,7 +136,7 @@ by_name: dict[str, MoveData] = {
     "Constrict": MoveData(132, "Normal", "Physical", 10, 100, 35),
     "Amnesia": MoveData(133, "Psychic", "Status", 0, 101, 20),
     "Kinesis": MoveData(134, "Psychic", "Status", 0, 80, 15),
-    "Soft-Boiled": MoveData(135, "Normal", "Status", 0, 101, 10),
+    "Softboiled": MoveData(135, "Normal", "Status", 0, 101, 10),
     "Hi Jump Kick": MoveData(136, "Fighting", "Physical", 130, 90, 10),
     "Glare": MoveData(137, "Normal", "Status", 0, 90, 30),
     "Dream Eater": MoveData(138, "Psychic", "Special", 100, 100, 15),

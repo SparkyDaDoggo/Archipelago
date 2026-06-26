@@ -122,8 +122,8 @@ methods: dict[str, EvolutionMethodData] = {
     "Trade": EvolutionMethodData(5, False, lambda value, species: always_possible),  # Only in plando
     "Trade with item": EvolutionMethodData(6, False, item_evo),  # Only in plando
     "Trade Karrablast Shelmet": EvolutionMethodData(7, False, lambda value, species: always_possible),  # Only in plando
-    "Magnetic area": EvolutionMethodData(28, False, lambda value, species: can_reach_magnetic_area),
-    "Unused area": EvolutionMethodData(25, False, lambda value, species: can_reach_magnetic_area),  # Only in plando, unless used for custom area
+    "Magnetic area": EvolutionMethodData(25, False, lambda value, species: can_reach_magnetic_area),
+    "Unused area": EvolutionMethodData(28, False, lambda value, species: can_reach_magnetic_area),  # Only in plando, unless used for custom area
     "Level up with move": EvolutionMethodData(21, False, move_lvlup),
     "Level up moss rock": EvolutionMethodData(26, False, lambda value, species: can_reach_moss_rock),
     "Level up ice rock": EvolutionMethodData(27, False, lambda value, species: can_reach_ice_rock),

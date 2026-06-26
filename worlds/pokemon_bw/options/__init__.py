@@ -413,20 +413,22 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
                 mode = self.value[f'{encounter} mode']
                 if mode not in mode_min_max:
                     errors.append(f"Bad {encounter} mode {mode}")
-                _min, _max = mode_min_max[mode]
-                if not _min <= self.value[f"{encounter} value"] <= _max:
-                    errors.append(f"{encounter} value {self.value[f'{encounter} value']} "
-                                  f"out of range {_min} to {_max} for mode {mode}")
+                else:
+                    _min, _max = mode_min_max[mode]
+                    if not _min <= self.value[f"{encounter} value"] <= _max:
+                        errors.append(f"{encounter} value {self.value[f'{encounter} value']} "
+                                      f"out of range {_min} to {_max} for mode {mode}")
         elif isinstance(self.value, list):
             for entry in self.value:
                 entry: dict[str, int | str]
                 mode = entry["mode"]
                 if mode not in mode_min_max:
                     errors.append(f"Bad {entry['type']} mode {mode}")
-                _min, _max = mode_min_max[mode]
-                if not _min <= entry["value"] <= _max:
-                    errors.append(f"{entry['type']} value {entry['value']} "
-                                  f"out of range {_min} to {_max} for mode {mode}")
+                else:
+                    _min, _max = mode_min_max[mode]
+                    if not _min <= entry["value"] <= _max:
+                        errors.append(f"{entry['type']} value {entry['value']} "
+                                      f"out of range {_min} to {_max} for mode {mode}")
         else:
             raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(self.value)}")
 
@@ -816,8 +818,8 @@ class FunnyDialog(Choice):
     def verify(self, world: typing.Type["World"], player_name: str, plando_options: "PlandoOptions") -> None:
         from BaseClasses import PlandoOptions
         if self.current_key != "none" and not (PlandoOptions.texts & plando_options):
-            # plando is disabled but plando options were given so overwrite the options
-            self.value = []
+            # plando is disabled but plando options were given so overwrite the option
+            self.value = 0
             logging.warning(f"The plando texts module is turned off, "
                             f"so funny/efficient dialog for {player_name} will be ignored.")
         else:
