@@ -3,7 +3,8 @@ from typing import Callable
 from test.bases import WorldTestBase
 
 from . import random_combination
-from ..options import RandomizeBaseStats, RandomizeEvolutions, RandomizeCatchRates, RandomizeLevelUpMovesets
+from ..options import (RandomizeBaseStats, RandomizeEvolutions, RandomizeCatchRates, RandomizeLevelUpMovesets,
+                       RandomizeTypes)
 
 
 def multiply_random_combinations(option: str, mods: tuple, count: int) -> Callable:
@@ -36,6 +37,7 @@ stats_mods = tuple(RandomizeBaseStats.valid_keys)
 evolution_mods = tuple(RandomizeEvolutions.valid_keys)
 catch_rate_mods = tuple(RandomizeCatchRates.valid_keys)
 levelup_moves_mods = tuple(RandomizeLevelUpMovesets.valid_keys)
+type_mods = tuple(RandomizeTypes.valid_keys)
 
 
 class TestRandomizeBaseStatsSimple(PokemonBWTestBase):
@@ -44,7 +46,6 @@ class TestRandomizeBaseStatsSimple(PokemonBWTestBase):
 
 @multiply_random_combinations("randomize_base_stats", stats_mods, 4)
 class TestRandomizeBaseStats(PokemonBWTestBase):
-    # options = {"randomize_base_stats": random_combination(stats_mods)}
     def setUp(self) -> None:
         print("Modifiers: "+", ".join(self.options["randomize_base_stats"]))
         super().setUp()
@@ -56,7 +57,6 @@ class TestRandomizeEvolutionsSimple(PokemonBWTestBase):
 
 @multiply_random_combinations("randomize_evolutions", evolution_mods, 10)
 class TestRandomizeEvolutions(PokemonBWTestBase):
-    # options = {"randomize_evolutions": random_combination(evolution_mods)}
     def setUp(self) -> None:
         print("Modifiers: "+", ".join(self.options["randomize_evolutions"]))
         super().setUp()
@@ -68,7 +68,6 @@ class TestRandomizeCatchRatesSimple(PokemonBWTestBase):
 
 @multiply_random_combinations("randomize_catch_rates", catch_rate_mods, 4)
 class TestRandomizeCatchRates(PokemonBWTestBase):
-    # options = {"randomize_catch_rates": random_combination(catch_rate_mods)}
     def setUp(self) -> None:
         print("Modifiers: "+", ".join(self.options["randomize_catch_rates"]))
         super().setUp()
@@ -80,7 +79,17 @@ class TestRandomizeLevelupMovesSimple(PokemonBWTestBase):
 
 @multiply_random_combinations("randomize_level_up_movesets", levelup_moves_mods, 10)
 class TestRandomizeLevelupMoves(PokemonBWTestBase):
-    # options = {"randomize_level_up_movesets": random_combination(levelup_moves_mods)}
     def setUp(self) -> None:
         print("Modifiers: "+", ".join(self.options["randomize_level_up_movesets"]))
+        super().setUp()
+
+
+class TestRandomizeTypesSimple(PokemonBWTestBase):
+    options = {"randomize_types": ["Randomize"]}
+
+
+@multiply_random_combinations("randomize_types", type_mods, 10)
+class TestRandomizeTypes(PokemonBWTestBase):
+    def setUp(self) -> None:
+        print("Modifiers: "+", ".join(self.options["randomize_types"]))
         super().setUp()

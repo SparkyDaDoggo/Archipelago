@@ -87,7 +87,7 @@ def replace_evolutions(world: "PokemonBWWorld", all_species: dict[str, SpeciesEn
 
 
 def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
-    from ...data.pokemon import species as species_tables, evolution_methods, moves as move_tables, movesets_level_up
+    from ...data.pokemon import species as species_tables, evolution_methods, moves as move_tables
     from ...items import random_choice_nested
 
     mods = world.options.randomize_evolutions

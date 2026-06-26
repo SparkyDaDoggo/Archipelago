@@ -951,7 +951,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     # Pokemon stats
     randomize_base_stats: RandomizeBaseStats
     randomize_evolutions: RandomizeEvolutions
-    # randomize_types: RandomizeTypes
+    randomize_types: RandomizeTypes
     randomize_catch_rates: RandomizeCatchRates
     # randomize_gender_ratio: RandomizeGenderRatio
     randomize_level_up_movesets: RandomizeLevelUpMovesets

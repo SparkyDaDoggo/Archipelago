@@ -79,25 +79,34 @@ class RandomizeTypes(ToggleSet):
     Randomizes the type(s) of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles types being randomized. Required for any other modifier.
-    - **Only secondary type** - Only randomizes the secondary type of every species and
-        thereby keeps the primary type. Includes removing it. Not compatible with
-        **Only primary type**.
-    - **Only primary type** - Only randomizes the primary type of every species and
-        thereby keeps the secondary type (which might be none). Not compatible with
-        **Only secondary type**.
+    - **Randomize** - Toggles types being randomized. Automatically added if any other
+        modifier is added.
+    - **Mono only** - All species will only get a single type.
+    - **Dual only** - All species will only get two distinct types.
     - **Follow evolutions** - Evolved species will share at least one type with (one of)
-        their pre-evolutions.
+        their pre-evolutions. Might not be fully ensured if combined with plando.
+    - **Force evolutions** - Evolved species will have the exact same type(s) as
+        (one of) their pre-evolutions. Might not be fully ensured if combined with
+        plando. Supersedes **Follow evolutions**.
+    - **Usual combinations** - Usual combinations in vanilla (e.g. Normal/Flying,
+        Rock/Ground, ...) and more prominent mono types are more likely to show up.
+    - **Permutation** - Each type will be replaced by a fixed other type, e.g. all Water
+        types might be replaced with Flying types.
+
+    Including both **Mono only** and **Dual only** will cancel each other out, i.e.
+    it will be the same as including none of them.
     """
     display_name = "Randomize Types"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Randomize",
-        "Only secondary type",
-        "Only primary type",
-        "Follow evolutions",
-    ]
-    default = []
+    is_randomize = False
+    is_single_only = False, "Mono only"
+    is_dual_only = False
+    # is_only_secondary = False, "Only secondary type"
+    # is_only_primary = False, "Only primary type"
+    is_follow_evolutions = False
+    is_force_evolutions = False
+    is_usual_combinations = False
+    is_permutation = False
+    # is_no_4x_weaknesses = False
     auto_add_if_any = "Randomize"
 
 
@@ -232,6 +241,8 @@ class RandomizeHeldItems(ToggleSet):
     display_name = "Randomize Held Items"
     is_randomize = False
     is_follow_evolutions = False
+    is_no_1_percent = False
+    is_no_5_percent = False
     auto_add_if_any = "Randomize"
 
 
@@ -355,6 +366,7 @@ class PlandoStat(typing.NamedTuple):
     override_evolutions: bool = True
     levelup_moveset: list[PlandoLevelupMove] | bool = False
     override_levelup_moveset: bool = True
+    types: list[str] = []
 
 
 class StatsPlando(Option[dict[str, PlandoStat]]):
@@ -384,6 +396,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
           - move: Pound
             level: 100
         override_levelup_moveset: false
+        types: [Fire, Electric]
     ```
 
     Stats Plando requires the corresponding host setting to be enabled, else it will be
@@ -412,7 +425,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 continue
             if not isinstance(plando, dict):
                 raise OptionError(f"Expected dictionary as Stats Plando entry {spec}, got {type(plando)}")
-            plando_evolutions, plando_levelup_moves = [], []
+            plando_evolutions, plando_levelup_moves, plando_types = [], [], ()
             for plando_key, value in plando.items():
                 if plando_key not in PlandoStat._fields:
                     raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
@@ -454,7 +467,16 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                             if move_entry_key not in PlandoLevelupMove._fields:
                                 raise OptionError(f"Unknown levelup move entry key: {move_entry_key}")
                         plando_levelup_moves.append(PlandoLevelupMove(**move_entry))
-            plando["evolutions"], plando["levelup_moveset"] = plando_evolutions, plando_levelup_moves
+                if plando_key == "types":
+                    if isinstance(value, list) or isinstance(value, tuple):
+                        plando_types = list(value)
+                    elif isinstance(value, str):
+                        plando_types = [value]
+                    else:
+                        raise OptionError(f"Expected value of types key to be a list or string, got {type(value)}")
+            plando["evolutions"] = plando_evolutions
+            plando["levelup_moveset"] = plando_levelup_moves
+            plando["types"] = plando_types
             plandos[spec] = PlandoStat(**plando)
         return cls(plandos)
 
@@ -476,6 +498,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         from ..data.pokemon.evolution_methods import methods as methods_table, paired_method_slots as paired_table, stone_items, hold_items
         from ..data.items import all_items_dict_view
         from ..data.pokemon.moves import by_name as move_by_name
+        from ..data.pokemon.types import by_name as types_by_name
 
         invalid: list[str] = []
         for plando in self:
@@ -508,6 +531,11 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             if not (isinstance(plando_stat.catch_rate, int) and (not plando_stat.catch_rate or
                                                                  3 <= plando_stat.catch_rate <= 255)):
                 reasons.append(f"Catch rate {plando_stat.catch_rate} is neither 0 nor an integer in range 3-255")
+            if len(plando_stat.types) > 2:
+                reasons.append(f"A maximum of 2 types is allowed, not {len(plando_stat.types)}")
+            for plando_type in plando_stat.types:
+                if plando_type not in types_by_name:
+                    reasons.append(f"{plando_type} is not an allowed type")
             evo_sum = 0
             if plando_stat.evolutions is not False:
                 for plando_evo in plando_stat.evolutions:

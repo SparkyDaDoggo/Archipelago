@@ -338,7 +338,7 @@ Every entry (currently) consists of the following keys (with all of them being o
     Omitting this will default it to `Hitmontop`.
 - `override_evolutions` determines whether the provided list of evolutions should override the existing evolutions 
   (thereby excluding that pokémon from evolution randomization) or append to the existing (potentially randomized) 
-  evolutions. it is optional and defaults to `true` if omitted.
+  evolutions. It is optional and defaults to `true` if omitted.
 - `levelup_moveset` will override that pokémon's levelup moveset (or append to them). 
   It is an optional list of level-move entries. If it's supposed to override the levelup
   moveset, at least one move learned at level 1 must be added. Each entry has the 
@@ -349,7 +349,9 @@ Every entry (currently) consists of the following keys (with all of them being o
 - `override_levelup_moveset` determines whether the provided list of levelup moves should 
   override the existing evolutions (thereby excluding that pokémon from levelup moves 
   randomization) or append to the existing (potentially randomized) 
-  moves. it is optional and defaults to `true` if omitted.
+  moves. It is optional and defaults to `true` if omitted.
+- `types` overrides that pokémon's type(s). It is optional and accepts a single type as a string as well as up to two 
+  types as a list of strings. An empty list has no effect.
 
 ## An example on how using this option could look like
 
@@ -380,6 +382,21 @@ Pokemon Black and White:
         method: _Level up split
         level: 15
       override_evolutions: false
+      levelup_moveset:
+      - move: Pound
+        level: 20
+      - move: Flamethrower
+        level: 99
+      override_levelup_moveset: false
+      types: Flying
+    Genesect:
+      levelup_moveset:
+      - move: Pound
+        level: 1
+      - move: Flamethrower
+        level: 99
+      override_levelup_moveset: true
+      types: [Psychic, Fighting]
 ```
 
 # Combined goals guide (coming in 0.4.0)

@@ -95,6 +95,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Stats randomization
   - Base stats
   - Evolutions
+  - Types
   - Catch rates
   - Levelup movesets
 - Stats plando (with all randomizable stats at that time)
@@ -145,19 +146,20 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 
 - Options
   - Stats randomization
-    - Types
     - Abilities
     - Gender Ratio (+ limit)
     - TM/HM compatibility
     - Move tutor compatibility
     - Held items
     - Egg groups
+    - Pokémon names
   - Move data randomization
     - Move power
     - Move type
     - Move accuracy
     - Move category (only Physical <-> Special)
     - Type effectiveness chart
+    - Move names
   - Fairy type
   - Levelup curve modifier
   - Dynamic version

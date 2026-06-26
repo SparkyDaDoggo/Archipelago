@@ -12,6 +12,7 @@ def generate_species_data(world: "PokemonBWWorld") -> dict[str, SpeciesEntry]:
     from .base_stats import randomize_stats_post_evo, randomize_stats_pre_evo
     from .catch_rates import randomize_catch_rates
     from .levelup_movesets import randomize_levelup_movesets
+    from .types import randomize_types_pre_evo, randomize_types_post_evo
 
     all_species = {name: SpeciesEntry(name, data) for name, data in species.by_name.items()}
 
@@ -28,7 +29,7 @@ def generate_species_data(world: "PokemonBWWorld") -> dict[str, SpeciesEntry]:
     # Egg groups - Evolutions, types
 
     randomize_stats_pre_evo(world, all_species)
-    # randomize_types_pre_evo(world, all_species)
+    randomize_types_pre_evo(world, all_species)
     # randomize_gender_ratio_pre_evo(world, all_species)
 
     replace_evolutions(world, all_species)
@@ -37,7 +38,7 @@ def generate_species_data(world: "PokemonBWWorld") -> dict[str, SpeciesEntry]:
     plando_evolutions_append(world, all_species)
 
     randomize_stats_post_evo(world, all_species)
-    # randomize_types_post_evo(world, all_species)
+    randomize_types_post_evo(world, all_species)
     # randomize_gender_ratio_post_evo(world, all_species)
 
     randomize_catch_rates(world, all_species)

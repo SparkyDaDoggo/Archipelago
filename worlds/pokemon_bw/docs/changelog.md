@@ -74,6 +74,14 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Keep levels`
   - `Follow evolutions`
   - `Start with 4`
+- Added `Randomize Types` option with the following modifiers:
+  - `Randomize`
+  - `Mono only`
+  - `Dual only`
+  - `Follow evolutions`
+  - `Force evolutions`
+  - `Usual combinations`
+  - `Permutation`
 - Added `Stats Randomization Adjustments` option, currently with the following parameters:
   - `Stats total minimum`
   - `Stats total maximum`
@@ -95,6 +103,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `override_evolutions`
   - `levelup_moveset`
   - `override_levelup_moveset`
+  - `types`
 - Added `Replace Evolution Methods` option with the following modifiers:
   - `Locations`
   - `Friendship`
