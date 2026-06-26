@@ -13,6 +13,7 @@ option_groups = [
     OptionGroup("Stats", [
         RandomizeBaseStats,
         RandomizeEvolutions,
+        RandomizeTypes,
         RandomizeCatchRates,
         RandomizeLevelUpMovesets,
         StatsRandomizationAdjustments,

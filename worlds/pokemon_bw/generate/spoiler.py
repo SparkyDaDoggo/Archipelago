@@ -33,8 +33,8 @@ def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> No
         teams: dict[int, list[str]] = {}
         for entry in world.trainer_teams:
             if entry.team_number not in teams:
-                teams[entry.team_number] = []
-            teams[entry.team_number].append(entry.species)
+                teams[entry.trainer_id] = []
+            teams[entry.trainer_id].append(entry.species)
 
         spoiler_handle.write(f"\n\nTrainer teams ({world.player_name}, Trainer names are WIP):\n\n")
         for trainer, species in teams.items():
@@ -77,3 +77,12 @@ def write_spoiler_levelup_movesets(world: "PokemonBWWorld", spoiler_handle: Text
                              f"move name>):\n\n")
         for name, data in world.species_entries.items():
             spoiler_handle.write(f"{name}: "+str(data.level_up_moves.level_up_moves).replace("'", "")+"\n")
+
+
+def write_spoiler_types(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
+
+    if world.options.randomize_types.is_randomize or world.options.stats_plando:
+
+        spoiler_handle.write(f"\n\nTypes ({world.player_name}):\n\n")
+        for name, data in world.species_entries.items():
+            spoiler_handle.write(f"{name}: {data.type_1}{(', '+data.type_2) if data.type_1 != data.type_2 else ''}\n")

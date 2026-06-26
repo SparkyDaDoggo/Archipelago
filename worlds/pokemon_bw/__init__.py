@@ -278,14 +278,14 @@ class PokemonBWWorld(World):
         locations.extend_species_hints(self, hint_data)
 
     def write_spoiler(self, spoiler_handle: TextIO) -> None:
-        from .generate.spoiler import (write_spoiler_encounter, write_spoiler_trainer, write_spoiler_stats,
-                                       write_spoiler_evolutions, write_spoiler_levelup_movesets)
+        from .generate import spoiler
 
-        write_spoiler_encounter(self, spoiler_handle)
-        write_spoiler_trainer(self, spoiler_handle)
-        write_spoiler_stats(self, spoiler_handle)
-        write_spoiler_evolutions(self, spoiler_handle)
-        write_spoiler_levelup_movesets(self, spoiler_handle)
+        spoiler.write_spoiler_encounter(self, spoiler_handle)
+        spoiler.write_spoiler_trainer(self, spoiler_handle)
+        spoiler.write_spoiler_stats(self, spoiler_handle)
+        spoiler.write_spoiler_evolutions(self, spoiler_handle)
+        spoiler.write_spoiler_levelup_movesets(self, spoiler_handle)
+        spoiler.write_spoiler_types(self, spoiler_handle)
 
     def generate_output(self, output_directory: str) -> None:
         if self.options.version == "black":
@@ -334,7 +334,7 @@ class PokemonBWWorld(World):
                     "master_ball_seller": self.options.master_ball_seller.value,
                     "modify_item_pool": self.options.modify_item_pool.value,
                     "modify_logic": self.options.modify_logic.value,
-                    "filler_items_blacklist": self.options.filler_items_blacklist,
+                    "filler_items_blacklist": self.options.filler_items_blacklist.value,
                     "funny_dialog": self.options.funny_dialog.current_key,
                     "text_plando": self.options.text_plando.to_slot_data(),
                     "plugin_options": self.options.plugin_options.value,
