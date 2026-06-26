@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
-          files_dump: zipfile.ZipFile) -> None:
+          files_dump: dict[str, bytes | bytearray]) -> None:
     import orjson
     from ...data.text import funny_dialog, efficient_dialog
     from ..text import decode, encode
@@ -38,7 +38,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                 insert_line(text_file, value[0], value[1], value[2])
             encoded = encode(text_file)
             narc.files[key[1]] = encoded
-            files_dump.writestr(f"{'a002' if narc == narc_system else 'a003'}/{key[1]}", encoded)
+            files_dump[f"{'a002' if narc == narc_system else 'a003'}/{key[1]}"] = encoded
     elif data["dialog"] == "efficient":
         for key, table in efficient_dialog.table.items():
             narc = narc_system if key[0] == "system" else narc_story
@@ -48,7 +48,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                     insert_line(text_file, block_num, line_num, text)
             encoded = encode(text_file)
             narc.files[key[1]] = encoded
-            files_dump.writestr(f"{'a002' if narc == narc_system else 'a003'}/{key[1]}", encoded)
+            files_dump[f"{'a002' if narc == narc_system else 'a003'}/{key[1]}"] = encoded
 
     # Plando
     all_lines: dict[tuple[str, int], list[tuple[int, int, str]]] = {}
@@ -216,6 +216,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     insert_line(text_file, 0, 43, info43)
     insert_line(text_file, 0, 44, info44)
     insert_line(text_file, 0, 45, info45)
+    encoded = encode(text_file)
+    narc_story.files[436] = encoded
+    files_dump["a003/436"] = encoded
 
     rom.setFileByName("a/0/0/2", narc_system.save())
     rom.setFileByName("a/0/0/3", narc_story.save())
