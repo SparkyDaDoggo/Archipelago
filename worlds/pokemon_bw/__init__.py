@@ -319,6 +319,7 @@ class PokemonBWWorld(World):
                     "randomize_evolutions": self.options.randomize_evolutions.value,
                     "randomize_catch_rates": self.options.randomize_catch_rates.value,
                     "randomize_level_up_movesets": self.options.randomize_level_up_movesets.value,
+                    "randomize_types": self.options.randomize_types.value,
                     "stats_randomization_adjustments": self.options.stats_randomization_adjustments.value,
                     "stats_plando": self.options.stats_plando.to_slot_data(),
                     "shuffle_badges": self.options.shuffle_badges.current_key,

@@ -6,10 +6,10 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 ### Content and QoL
 
 - Added `Modify Levels` option (expanded from v0.3.99 pre-release)
-  - Simple method (how it will be shown on Webhost):
+  - Simple method
     - Encounter types: `Trainer`, `Wild`
     - Modes: `Multiply`, `Add`, `Power`
-  - Advanced method (cannot be shown on Webhost, but with more capabilities)
+  - Advanced method
     - Same as simple, but accepts multiple chained calculations
 - Added a location group for season-dependant item locations
 - Added an item group for fossils and another one for TMs and HMs combined

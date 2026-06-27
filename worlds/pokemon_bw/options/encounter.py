@@ -51,8 +51,9 @@ class RandomizeWildPokemon(ToggleSet):
     - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance
         in each area to the same pokemon. Takes priority over **Area 1-to-1**.
 
-    It is **highly recommended** to include **Prevent rare encounters** if you want to randomize wild pokemon,
-    else you might find yourself searching for two 1% encounters on every route.
+    It is **highly recommended** to include **Prevent rare encounters** if you want to
+    randomize wild pokemon, else you might find yourself searching for two 1% encounters
+    on every route.
     """
     # **Ensure all obtainable** -  ... This is automatically checked if **National pokedex** is chosen as the goal.
     display_name = "Randomize Wild Pokemon"
@@ -95,6 +96,9 @@ class RandomizeTrainerPokemon(ToggleSet):
         have type themed teams.
     - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon in
         common, which will always evolve when possible.
+
+    Combining multiple modifiers that affect all trainer pokémon (i.e. not just gym
+    trainers, ...) might massively increase generation time.
     """
     display_name = "Randomize Trainer Pokemon"
     is_randomize = False
@@ -106,13 +110,10 @@ class RandomizeTrainerPokemon(ToggleSet):
     is_themed_gym_trainers = False
     is_shuffle_gym_types = False, "Shuffle gym leader types"
     is_rivals_keep_starter = False
-    # is_themed_gym_trainers = False
     # Not sure whether I really want to implement these:
     # is_randomize_abilities = False
     # is_randomize_natures = False
     # is_randomize_held_items = False
-    # is_only_already_held = False, "Only already with held item"
-    # is_allow_no_held_item = False
     # is_randomize_unique = False, "Randomize unique moves"
     # is_themed_unique = False, "Only themed unique moves"
     auto_add_if_any = "Randomize"
@@ -131,16 +132,16 @@ class RandomizeStarterPokemon(ToggleSet):
     - **Only official starters** - Only use pokemon that have been a starter in any
         mainline game. Overrides **Any base** and **Base with 2 evolutions**.
     - **Type variety** - Every starter will have types that are different from the other two.
+    - **Vanilla types** - Every starter will have one of the vanilla types, i.e. Grass,
+        Fire, and Water.
     """
     display_name = "Randomize Starter Pokemon"
-    valid_keys = [
-        "Randomize",
-        "Any base",
-        "Base with 2 evolutions",
-        "Only official starters"
-        "Type variety",
-    ]
-    default = []
+    is_randomize = False
+    is_any_base = False
+    is_base_2_evos = False, "Base with 2 evolutions"
+    is_only_official = False, "Only official starters"
+    is_type_variety = False
+    is_vanilla_types = False
     auto_add_if_any = "Randomize"
 
 
@@ -154,19 +155,16 @@ class RandomizeStaticPokemon(ToggleSet):
         other modifier is added.
     - **Similar base stats** - Tries to keep the randomized pokemon at a similar base
         stat total as the replaced one.
-    - **Only base** - Only use unevolved Pokemon.
+    - **Any base** - Only use unevolved/baby pokemon.
     - **No legendaries** - Exclude legendaries from being placed into static encounters.
     - **Split statues** - Splits the statues in Desert Resort into 5 different species.
     """
     display_name = "Randomize Static Pokemon"
-    valid_keys = [
-        "Randomize",
-        "Similar base stats",
-        "Only base",
-        "No legendaries",
-        "Split statues",
-    ]
-    default = []
+    is_randomize = False
+    is_similar_stats = False, "Similar base stats"
+    is_any_base = False
+    is_no_legendaries = False
+    is_split_statues = False
     auto_add_if_any = "Randomize"
 
 

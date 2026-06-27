@@ -81,7 +81,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         for goal in slotdata["combined_goals"]:
             info41 += f"-- {goal.replace('_', ' ').capitalize()}[Scroll][NextLine]"
     else:
-        info41 += f"- {slotdata['options']['goal'].replace('_', ' ').capitalize()}[Scroll][NextLine]"
+        info41 += f"- Goal: {slotdata['options']['goal'].replace('_', ' ').capitalize()}[Scroll][NextLine]"
     if slotdata["options"]["plugin_options"]:
         info41 += "- Plugin options found for...[Scroll][NextLine]"
         for domain in slotdata["options"]["plugin_options"]:
@@ -135,6 +135,12 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             info43 += f"-- {mod.capitalize()}[Scroll][NextLine]"
     else:
         info43 += "- No levelup moveset randomization[Scroll][NextLine]"
+    if slotdata["options"]["randomize_types"]:
+        info43 += "- Types randomization modifiers:[Scroll][NextLine]"
+        for mod in slotdata["options"]["randomize_types"]:
+            info43 += f"-- {mod.capitalize()}[Scroll][NextLine]"
+    else:
+        info43 += "- No types randomization[Scroll][NextLine]"
     if slotdata["options"]["stats_plando"]:
         if len(slotdata["options"]["stats_plando"]) == 1:
             info43 += "- One stats plando entry[Scroll][NextLine]"
@@ -148,9 +154,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                f"- Season control: {slotdata['options']['season_control'].replace('_', ' ').capitalize()}"
                f"[Scroll][NextLine]")
     if isinstance(slotdata['options']['shuffle_tm_hm'], list):
-        info44 += f"- {len(slotdata['options']['shuffle_tm_hm'])} fixed Dexsanity checks[Scroll][NextLine]"
+        info44 += f"- {len(slotdata['options']['dexsanity'])} fixed Dexsanity checks[Scroll][NextLine]"
     else:
-        info44 += f"- {slotdata['options']['shuffle_tm_hm']} random Dexsanity checks[Scroll][NextLine]"
+        info44 += f"- {slotdata['options']['dexsanity']} random Dexsanity checks[Scroll][NextLine]"
     if slotdata["options"]["replace_evo_methods"]:
         info44 += "- Replaced evolution methods:[Scroll][NextLine]"
         for mod in slotdata["options"]["replace_evo_methods"]:
