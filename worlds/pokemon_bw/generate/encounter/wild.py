@@ -144,8 +144,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                         if "Wonder Guard" in species_data.abilities:
                             skipped_bad = True
                             continue
-                        moveset = moveset_table[random_species].level_up_moves
-                        if any((move_learn[1] in ("SonicBoom", "Dragon Rage")) for move_learn in moveset):
+                        moveset = world.species_entries[random_species].level_up_moves.level_up_moves
+                        if any((move_learn[1] in ("Sonic Boom", "Dragon Rage")) for move_learn in moveset):
                             skipped_bad = True
                             continue
                 if similar_base_stats:  # stats last because it's more lenient than others

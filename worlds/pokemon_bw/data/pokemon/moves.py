@@ -266,7 +266,7 @@ by_name: dict[str, MoveData] = {
     "Memento": MoveData(262, "Dark", "Status", 0, 100, 10),
     "Facade": MoveData(263, "Normal", "Physical", 70, 100, 20),
     "Focus Punch": MoveData(264, "Fighting", "Physical", 150, 100, 20),
-    "Smelling Salts": MoveData(265, "Normal", "Physical", 60, 100, 10),
+    "Smelling Salt": MoveData(265, "Normal", "Physical", 60, 100, 10),
     "Follow Me": MoveData(266, "Normal", "Status", 0, 101, 20),
     "Nature Power": MoveData(267, "Normal", "Status", 0, 101, 20),
     "Charge": MoveData(268, "Electric", "Status", 0, 101, 20),

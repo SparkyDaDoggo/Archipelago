@@ -70,15 +70,15 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             location.access_rule = has_any(deoxys_forms)
             region.locations.append(location)
 
-    # if "Shaymin" in catchable_species_data or "Shaymin (Sky)" in catchable_species_data:
-    #     region = world.regions["Form Change"]
-    #     location = PokemonBWLocation(world.player, "Change Shaymin to Sky", None, region)
-    #     item = PokemonBWItem("Shaymin (Sky)", ItemClassification.progression, None, world.player)
-    #     location.place_locked_item(item)
-    #     location.access_rule = lambda state: state.has_all(("Shaymin", "Gracidea"), world.player)
-    #     region.locations.append(location)
-    #     location = PokemonBWLocation(world.player, "Change Shaymin to Land", None, region)
-    #     item = PokemonBWItem("Shaymin", ItemClassification.progression, None, world.player)
-    #     location.place_locked_item(item)
-    #     location.access_rule = lambda state: state.has_all(("Shaymin (Sky)", "Gracidea"), world.player)
-    #     region.locations.append(location)
+    if "Shaymin" in catchable_species_data or "Shaymin (Sky)" in catchable_species_data:
+        region = world.regions["Form Change"]
+        location = PokemonBWLocation(world.player, "Change Shaymin to Sky", None, region)
+        item = PokemonBWItem("Shaymin (Sky)", ItemClassification.progression, None, world.player)
+        location.place_locked_item(item)
+        location.access_rule = lambda state: state.has_all(("Shaymin", "Gracidea"), world.player)
+        region.locations.append(location)
+        location = PokemonBWLocation(world.player, "Change Shaymin to Land", None, region)
+        item = PokemonBWItem("Shaymin", ItemClassification.progression, None, world.player)
+        location.place_locked_item(item)
+        location.access_rule = lambda state: state.has_all(("Shaymin (Sky)", "Gracidea"), world.player)
+        region.locations.append(location)
