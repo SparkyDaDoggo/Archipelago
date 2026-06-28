@@ -425,11 +425,12 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 continue
             if not isinstance(plando, dict):
                 raise OptionError(f"Expected dictionary as Stats Plando entry {spec}, got {type(plando)}")
-            plando_evolutions, plando_levelup_moves, plando_types = [], [], ()
+            plando_evolutions, plando_levelup_moves, plando_types = False, False, []
             for plando_key, value in plando.items():
                 if plando_key not in PlandoStat._fields:
                     raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
                 if plando_key == "evolutions":
+                    plando_evolutions = []
                     if not (isinstance(value, list) or value is False):
                         raise OptionError(f"Expected value of evolutions key to be a list or 'false', got {type(value)}")
                     for evo_entry in value:
@@ -448,6 +449,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                                 raise OptionError(f"Unknown evolution entry key: {evo_entry_key}")
                         plando_evolutions.append(PlandoEvolution(**evo_entry))
                 if plando_key == "levelup_moveset":
+                    plando_levelup_moves = []
                     if not (isinstance(value, list) or value is False):
                         raise OptionError(f"Expected value of levelup_moveset key to be a list or 'false', got {type(value)}")
                     for move_entry in value:
@@ -602,3 +604,6 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
 
     def __len__(self) -> int:
         return len(self.value)
+
+    def __contains__(self, item) -> bool:
+        return item in self.value

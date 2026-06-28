@@ -6,36 +6,12 @@ if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
-def plando_stats(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]) -> list[str]:
-    from ...data.pokemon.pokedex import by_name as dex_by_name
-    from ...data.pokemon.species import by_id
-
-    all_plandod = []
-
-    for species, plando_stat in world.options.stats_plando:
-        if any((plando_stat.base_hp, plando_stat.base_attack, plando_stat.base_defense,
-                plando_stat.base_sp_attack, plando_stat.base_sp_defense, plando_stat.base_speed)):
-            actual_spec = by_id[(dex_by_name[species], 0)] if species not in all_species else species
-            data = all_species[actual_spec]
-            data.write |= 0b100
-            data.base_hp = plando_stat.base_hp or data.base_hp
-            data.base_attack = plando_stat.base_attack or data.base_attack
-            data.base_defense = plando_stat.base_defense or data.base_defense
-            data.base_sp_attack = plando_stat.base_sp_attack or data.base_sp_attack
-            data.base_sp_defense = plando_stat.base_sp_defense or data.base_sp_defense
-            data.base_speed = plando_stat.base_speed or data.base_speed
-            all_plandod.append(actual_spec)
-
-    return all_plandod
-
-
 def randomize_stats_pre_evo(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
     from ...data.pokemon.species import by_name, by_id
 
     mods = world.options.randomize_base_stats
 
     if not mods.is_randomize:
-        plando_stats(world, all_species)
         return
 
     for species, data in all_species.items():
@@ -45,8 +21,6 @@ def randomize_stats_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
 
     if mods.is_follow_evolutions:
         return
-
-    plando_stats(world, all_species)
 
     max_total = world.options.stats_randomization_adjustments["Stats total maximum"]
     min_total = world.options.stats_randomization_adjustments["Stats total minimum"]
@@ -89,6 +63,22 @@ def randomize_stats_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
                                 f"min_total = {min_total}, individual = {individual}")
         data.base_hp, data.base_attack, data.base_defense, data.base_sp_attack, data.base_sp_defense, data.base_speed \
             = dist
+        if species in world.options.stats_plando:
+            plando_stat = world.options.stats_plando[species]
+            data.base_hp = plando_stat.base_hp or data.base_hp
+            data.base_attack = plando_stat.base_attack or data.base_attack
+            data.base_defense = plando_stat.base_defense or data.base_defense
+            data.base_sp_attack = plando_stat.base_sp_attack or data.base_sp_attack
+            data.base_sp_defense = plando_stat.base_sp_defense or data.base_sp_defense
+            data.base_speed = plando_stat.base_speed or data.base_speed
+        elif data.dex_name in world.options.stats_plando:
+            plando_stat = world.options.stats_plando[data.dex_name]
+            data.base_hp = plando_stat.base_hp or data.base_hp
+            data.base_attack = plando_stat.base_attack or data.base_attack
+            data.base_defense = plando_stat.base_defense or data.base_defense
+            data.base_sp_attack = plando_stat.base_sp_attack or data.base_sp_attack
+            data.base_sp_defense = plando_stat.base_sp_defense or data.base_sp_defense
+            data.base_speed = plando_stat.base_speed or data.base_speed
     for species, data in all_species.items():
         if data.form and not data.is_custom_form:
             base_data = all_species[by_id[(data.dex_number, 0)]]
@@ -103,8 +93,6 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
 
     if not mods.is_randomize or not mods.is_follow_evolutions:
         return
-
-    plandod_species = plando_stats(world, all_species)
 
     max_total = world.options.stats_randomization_adjustments["Stats total maximum"]
     min_total = world.options.stats_randomization_adjustments["Stats total minimum"]
@@ -144,6 +132,22 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
                                 f"min_total = {min_total}, append = {append}")
         data.base_hp, data.base_attack, data.base_defense, data.base_sp_attack, data.base_sp_defense, data.base_speed \
             = dist
+        if species in world.options.stats_plando:
+            plando_stat = world.options.stats_plando[species]
+            data.base_hp = plando_stat.base_hp or data.base_hp
+            data.base_attack = plando_stat.base_attack or data.base_attack
+            data.base_defense = plando_stat.base_defense or data.base_defense
+            data.base_sp_attack = plando_stat.base_sp_attack or data.base_sp_attack
+            data.base_sp_defense = plando_stat.base_sp_defense or data.base_sp_defense
+            data.base_speed = plando_stat.base_speed or data.base_speed
+        elif data.dex_name in world.options.stats_plando:
+            plando_stat = world.options.stats_plando[data.dex_name]
+            data.base_hp = plando_stat.base_hp or data.base_hp
+            data.base_attack = plando_stat.base_attack or data.base_attack
+            data.base_defense = plando_stat.base_defense or data.base_defense
+            data.base_sp_attack = plando_stat.base_sp_attack or data.base_sp_attack
+            data.base_sp_defense = plando_stat.base_sp_defense or data.base_sp_defense
+            data.base_speed = plando_stat.base_speed or data.base_speed
         do_evos(data, dist)
 
     def upgrade(data: SpeciesEntry, pre: list[int] | tuple[int, ...]):
@@ -172,12 +176,11 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
                     break
                 if not evo_dat.base_hp:
                     roll(evo_species, evo_dat, this)
-                elif evo_species not in plandod_species and (evo_dat.evo_line is None or data.dex_number not in evo_dat.evo_line):
+                elif (evo_species not in world.options.stats_plando
+                      and evo_dat.dex_name not in world.options.stats_plando
+                      and (evo_dat.evo_line is None or data.dex_number not in evo_dat.evo_line)):
                     upgrade(evo_dat, this)
 
-    for spec in plandod_species:
-        dat = all_species[spec]
-        do_evos(dat, (dat.base_hp, dat.base_attack, dat.base_defense, dat.base_sp_attack, dat.base_sp_defense, dat.base_speed))
     for spec, dat in all_species.items():
         if not dat.base_hp and (not dat.form or dat.is_custom_form):
             roll(spec, dat, (0, 0, 0, 0, 0, 0))

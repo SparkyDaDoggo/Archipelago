@@ -340,7 +340,14 @@ class PokemonBWWorld(World):
                     "text_plando": self.options.text_plando.to_slot_data(),
                     "plugin_options": self.options.plugin_options.value,
                     "reusable_tms": self.options.reusable_tms.current_key,
-                },
+                }
+            }
+        return self.slot_data_cache
+
+    def extended_slot_data(self) -> dict[str, Any]:
+        part = self.part_slot_data()
+        if "seed" not in part:
+            part |= {
                 "seed": self.seed,
                 "master_ball_seller_cost": self.master_ball_seller_cost,
                 "studio_castelia_type": self.studio_castelia_type,
@@ -348,12 +355,12 @@ class PokemonBWWorld(World):
                 "other_locations_species": self.other_locations_species,
                 "combined_goals": self.options.goal.combined,
             }
-        return self.slot_data_cache
+        return part
 
     def fill_slot_data(self) -> Mapping[str, Any]:
         from .data import version
 
-        return self.part_slot_data() | {
+        return self.extended_slot_data() | {
             # Needed for UT
             "ut_compatibility": version.ut(),
             # Needed for PopTracker

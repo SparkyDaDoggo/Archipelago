@@ -67,7 +67,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             insert_line(text_file, value[0], value[1], value[2])
         encoded = encode(text_file)
         narc.files[key[1]] = encoded
-        files_dump.writestr(f"{'a002' if narc == narc_system else 'a003'}/{key[1]}", encoded)
+        files_dump[f"{'a002' if narc == narc_system else 'a003'}/{key[1]}"] = encoded
 
     # world info NPC
     info41 = "General information about the world:[NextLine]"
@@ -153,7 +153,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                f"[Scroll][NextLine]"
                f"- Season control: {slotdata['options']['season_control'].replace('_', ' ').capitalize()}"
                f"[Scroll][NextLine]")
-    if isinstance(slotdata['options']['shuffle_tm_hm'], list):
+    if isinstance(slotdata['options']['dexsanity'], list):
         info44 += f"- {len(slotdata['options']['dexsanity'])} fixed Dexsanity checks[Scroll][NextLine]"
     else:
         info44 += f"- {slotdata['options']['dexsanity']} random Dexsanity checks[Scroll][NextLine]"
@@ -188,11 +188,14 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             info45 += f"-- Trainer ^ {slotdata['options']['modify_levels']['Trainer value'] / 100}[Scroll][NextLine]"
     else:
         info45 += "- Advanced level modifications[Scroll][NextLine]"
-    rates = orjson.loads(bw_patch_instance.get_file("encounter_rates.json"))
-    if rates["choice"] != "custom":
-        info45 += f"- Encounter rates: {rates['choice'].replace('_', ' ').capitalize()}[Scroll][NextLine]"
+    if "encounter_rates.json" in bw_patch_instance.files:
+        rates = orjson.loads(bw_patch_instance.files["encounter_rates.json"])
+        if rates["choice"] != "custom":
+            info45 += f"- Encounter rates: {rates['choice'].replace('_', ' ').capitalize()}[Scroll][NextLine]"
+        else:
+            info45 += "- Custom encounter rates[Scroll][NextLine]"
     else:
-        info45 += "- Custom encounter rates[Scroll][NextLine]"
+        info45 += "- Vanilla encounter rates[Scroll][NextLine]"
     if not slotdata["options"]["master_ball_seller"]:
         info45 += "- No Master Ball seller[Scroll][NextLine]"
     else:

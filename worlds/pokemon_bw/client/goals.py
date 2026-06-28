@@ -39,7 +39,10 @@ def get_method(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> Callab
         return all_goals[0]
     else:
         async def combined_goals(_client: "PokemonBWClient", _ctx: "BizHawkClientContext") -> bool:
-            return all((await _g(_client, _ctx)) for _g in all_goals)
+            for _g in all_goals:
+                if not await _g(_client, _ctx):
+                    return False
+            return True
         return combined_goals
 
 

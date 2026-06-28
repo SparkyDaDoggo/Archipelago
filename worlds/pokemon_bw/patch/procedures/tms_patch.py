@@ -12,7 +12,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     use_code = b'\x08\xb5\x03\x1c\xfb\xf7\x4e\xfc\x18\x1c\x59\x59\x44\x31\x09\x88\xfb\xf7\x7a\xfc\x08\xbd'
     overlay_table = rom.loadArm9Overlays()
     ov91 = overlay_table[91]
-    data = bytes(ov91.data)
+    data = bytearray(ov91.data)
     data[0x8b28:0x8b28+len(use_code)] = use_code
     data[0x1e3e:0x1e3e+4] = b'\x06\xf0\x73\xfe'
     ov91.data = bytes(data)

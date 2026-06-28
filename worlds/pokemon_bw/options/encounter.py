@@ -476,5 +476,5 @@ class TrainerRandomizationBlacklist(OptionSet):
     Excludes a list of pokemon from being used in trainer randomization.
     Be aware that a big list can lead to generation failures.
     """
-    display_name = "Wild Randomization Blacklist"
+    display_name = "Trainer Randomization Blacklist"
     valid_keys = WildRandomizationBlacklist.valid_keys

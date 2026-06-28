@@ -109,7 +109,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Friendship`
   - `PID`
   - `Stats`
-- Added what shall not be said at times
 - Added a few (new and returning) locations:
   - `Nuvema Town - Item #2 from Mom`
   - `P2 Laboratory - Item from scientist #1` (and `#2`)

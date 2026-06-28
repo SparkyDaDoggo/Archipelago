@@ -89,6 +89,7 @@ class Goal(Choice):
         if isinstance(data, list):
             if not data:
                 raise OptionError("Combined goals list must not be empty")
+            data = list((d.casefold() if isinstance(d, str) else d) for d in data)
             if all((d in cls.options or d in cls.name_lookup) for d in data):
                 c = cls(cls.option_pokemon_master)
                 c.combined = [(d if isinstance(d, str) else cls.name_lookup[d]) for d in data]
@@ -907,7 +908,7 @@ class ReusableTMs(Choice):
     option_im_not_a_masochist = 3
     default = 0
     _by_name = {"true": 0, "on": 0, "yes": 1, "yes_please": 1, "of_course": 2, "im_not_a_masochist": 3,
-                "no": 4, "off_please": 5, "im_serious_no": 6, "im_a_masochist": 7}
+                "false": 4, "no": 4, "off_please": 5, "im_serious_no": 6, "im_a_masochist": 7}
 
     @classmethod
     def from_any(cls, data: typing.Any):
@@ -918,9 +919,9 @@ class ReusableTMs(Choice):
     @classmethod
     def from_text(cls, text: str) -> Choice:
         text = text.lower()
-        no = ("no", "off_please", "im_serious_no", "im_a_masochist")
-        if text in no:
-            return cls(cls._by_name[text])
+        # no = ("false", "no", "off_please", "im_serious_no", "im_a_masochist")
+        # if text in no:
+        #     return cls(cls._by_name[text])
         return super().from_text(text)
 
     @property
@@ -929,6 +930,13 @@ class ReusableTMs(Choice):
         if self.value in no:
             return no[self.value]
         return super().current_key
+
+    @classmethod
+    def get_option_name(cls, value) -> str:
+        no = {4: "no", 5: "off_please", 6: "im_serious_no", 7: "im_a_masochist"}
+        if value in no:
+            return no[value].replace("_", " ").title()
+        return super().get_option_name(value)
 
 
 @dataclass

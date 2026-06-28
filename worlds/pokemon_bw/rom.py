@@ -121,7 +121,7 @@ class PatchMethods:
 
         opened_zipfile.writestr("procedures.txt", "\n".join(procedures))
         opened_zipfile.writestr("slot_data.json",
-                                orjson.dumps(NetUtils.convert_to_base_types(patch.world.part_slot_data())))
+                                orjson.dumps(NetUtils.convert_to_base_types(patch.world.extended_slot_data())))
 
     @staticmethod
     def get_manifest(patch: PokemonBWPatch, manifest: dict[str, Any]) -> Dict[str, Any]:

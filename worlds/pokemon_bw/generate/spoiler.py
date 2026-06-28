@@ -57,16 +57,17 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
 
     if (
         world.options.randomize_base_stats.is_randomize
-        or world.options.randomize_catch_rates
+        or world.options.randomize_catch_rates.is_randomize
+        or world.options.randomize_types.is_randomize
         or world.options.stats_plando
     ):
 
-        spoiler_handle.write(f"\n\nStats ({world.player_name}, the format is <hp, attack, defense, special attack, "
+        spoiler_handle.write(f"\n\nStats ({world.player_name}, the format is <type(s), hp, attack, defense, special attack, "
                              f"special defense, speed, catch rate>):\n\n")
         for name, data in world.species_entries.items():
-            spoiler_handle.write(f"{name}: {data.base_hp}, {data.base_attack}, {data.base_defense}, "
-                                 f"{data.base_sp_attack}, {data.base_sp_defense}, {data.base_speed}, "
-                                 f"{data.catch_rate}, \n")
+            spoiler_handle.write(f"{name}: {data.type_1}{', '+data.type_2 if data.type_1 != data.type_2 else ''}, "
+                                 f"{data.base_hp}, {data.base_attack}, {data.base_defense}, {data.base_sp_attack}, "
+                                 f"{data.base_sp_defense}, {data.base_speed}, {data.catch_rate}\n")
 
 
 def write_spoiler_levelup_movesets(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:

@@ -68,10 +68,12 @@ class OverrideProtocol(PluginProtocol):
                 PluginProtocol.slot_data.update(orjson.loads(patch_instance.files.get("slot_data.json", b'{}')))
                 PluginProtocol.general_options.update(PluginProtocol.slot_data.get("options", {}))
                 PluginProtocol.all_plugin_options.update(PluginProtocol.general_options.get("plugin_options", {}))
+                self.random = Random(PluginProtocol.slot_data.get("seed", 10000))
             else:
                 PluginProtocol.slot_data.update(world.part_slot_data())
                 PluginProtocol.general_options.update(PluginProtocol.slot_data["options"])
                 PluginProtocol.all_plugin_options.update(PluginProtocol.general_options["plugin_options"])
+                self.random = Random(world.seed)
         options = PluginProtocol.all_plugin_options.get(self.domain, {})
         this_settings = PluginProtocol.all_plugin_settings.get(self.domain, {})
         if isinstance(options, list):
@@ -87,7 +89,6 @@ class OverrideProtocol(PluginProtocol):
         self.all_plugins = plugins
         self.patch_instance = patch_instance
         self.world = world
-        self.random = Random(PluginProtocol.slot_data["seed"])
 
     def patching_prepare(self, rom: NintendoDSRom, files_dump: dict[str, bytes | bytearray], common_narcs: dict,
                          common_ov_table: dict, common_ov_arrays: dict, common_arm7: bytearray, common_arm9: bytearray):
