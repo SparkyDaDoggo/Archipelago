@@ -184,13 +184,14 @@ class MoveData(NamedTuple):
 class TMHMData(NamedTuple):
     move: str
     is_HM: bool
+    index: int
 
 
 class EvolutionMethodData(NamedTuple):
     id: int
     has_level_value: bool
     # Takes value from evolution data and returns the access rule for that evolution
-    rule: Callable[[int, str], ExtendedRule] | None
+    rule: Callable[[int, str, "PokemonBWWorld"], ExtendedRule] | None
 
 
 class TypeData(NamedTuple):

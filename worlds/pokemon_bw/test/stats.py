@@ -4,7 +4,7 @@ from test.bases import WorldTestBase
 
 from . import random_combination
 from ..options import (RandomizeBaseStats, RandomizeEvolutions, RandomizeCatchRates, RandomizeLevelUpMovesets,
-                       RandomizeTypes)
+                       RandomizeTypes, RandomizeTMHMCompatibility)
 
 
 def multiply_random_combinations(option: str, mods: tuple, count: int) -> Callable:
@@ -37,6 +37,7 @@ stats_mods = tuple(RandomizeBaseStats.valid_keys)
 evolution_mods = tuple(RandomizeEvolutions.valid_keys)
 catch_rate_mods = tuple(RandomizeCatchRates.valid_keys)
 levelup_moves_mods = tuple(RandomizeLevelUpMovesets.valid_keys)
+tmhm_compat_mods = tuple(RandomizeTMHMCompatibility.valid_keys)
 type_mods = tuple(RandomizeTypes.valid_keys)
 
 
@@ -92,4 +93,15 @@ class TestRandomizeTypesSimple(PokemonBWTestBase):
 class TestRandomizeTypes(PokemonBWTestBase):
     def setUp(self) -> None:
         print("Modifiers: "+", ".join(self.options["randomize_types"]))
+        super().setUp()
+
+
+class TestRandomizeTMHMCompatSimple(PokemonBWTestBase):
+    options = {"randomize_tm_hm_compatibility": ["Randomize"]}
+
+
+@multiply_random_combinations("randomize_tm_hm_compatibility", tmhm_compat_mods, 10)
+class TestRandomizeTMHMCompat(PokemonBWTestBase):
+    def setUp(self) -> None:
+        print("Modifiers: "+", ".join(self.options["randomize_tm_hm_compatibility"]))
         super().setUp()

@@ -1,7 +1,10 @@
-from typing import Callable
+from typing import Callable, Any, TYPE_CHECKING
 
 from .. import EvolutionMethodData, ExtendedRule
 from . import movesets_level_up, movesets_tm_hm, moves as move_tables, species
+
+if TYPE_CHECKING:
+    from ... import PokemonBWWorld
 
 
 def has_item(name: str) -> ExtendedRule:
@@ -92,41 +95,41 @@ is_in_appropriate_region: dict[int, ExtendedRule] = {  # Artificial logic so tha
 }
 
 
-def stats_lvlup(value: int, spec: str) -> ExtendedRule:
+def stats_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:
     return lambda state, world: (is_in_appropriate_region[value//5](state, world)
                                  and can_buy_item_mall(state, world))
 
 
-def move_lvlup(value: int, spec: str) -> ExtendedRule:
-    for lvl_move in movesets_level_up.table[spec].level_up_moves:
+def move_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:  # TODO these evo rule builders need the world, because I need to check for the actual TM/HM moveset
+    for lvl_move in world.species_entries[spec].level_up_moves.level_up_moves:
         if move_tables.by_name[lvl_move[1]].id == value:
             return lambda state, world: (is_in_appropriate_region[lvl_move[0]//5](state, world)
                                          and can_reach_mistralton_city(state, world))
-    for tm_move in movesets_tm_hm.table[spec].tm_hm_moves:
-        if move_tables.by_name[move_tables.tm_hm[tm_move]].id == value:
+    for tm_move in world.species_entries[spec].tm_hm_moves.tm_hm_moves:
+        if move_tables.by_name[move_tables.tm_hm[tm_move].move].id == value:
             return has_item(tm_move)
     return can_reach_mistralton_city
 
 
-appropriate_region: Callable[[int, str], ExtendedRule] = lambda value, species: is_in_appropriate_region[value//5]
-item_evo: Callable[[int, str], ExtendedRule] = lambda value, species: can_buy_item[value]
+appropriate_region: Callable[[int, str, "PokemonBWWorld"], ExtendedRule] = lambda value, species, world: is_in_appropriate_region[value//5]
+item_evo: Callable[[int, str, "PokemonBWWorld"], ExtendedRule] = lambda value, species, world: can_buy_item[value]
 
 methods: dict[str, EvolutionMethodData] = {
     "Level up": EvolutionMethodData(4, True, appropriate_region),
     "Stone": EvolutionMethodData(8, False, item_evo),
     "Stone male": EvolutionMethodData(17, False, item_evo),  # Repeatable encounters, including static, are ensured
     "Stone female": EvolutionMethodData(18, False, item_evo),  # Repeatable encounters, including static, are ensured
-    "Friendship": EvolutionMethodData(1, False, lambda value, species: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
-    "Friendship (Day)": EvolutionMethodData(2, False, lambda value, species: can_reach_nacrene_city),  # Only in plando
-    "Friendship (Night)": EvolutionMethodData(3, False, lambda value, species: can_reach_nacrene_city),  # Only in plando
-    "Trade": EvolutionMethodData(5, False, lambda value, species: always_possible),  # Only in plando
+    "Friendship": EvolutionMethodData(1, False, lambda value, species, world: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
+    "Friendship (Day)": EvolutionMethodData(2, False, lambda value, species, world: can_reach_nacrene_city),  # Only in plando
+    "Friendship (Night)": EvolutionMethodData(3, False, lambda value, species, world: can_reach_nacrene_city),  # Only in plando
+    "Trade": EvolutionMethodData(5, False, lambda value, species, world: always_possible),  # Only in plando
     "Trade with item": EvolutionMethodData(6, False, item_evo),  # Only in plando
-    "Trade Karrablast Shelmet": EvolutionMethodData(7, False, lambda value, species: always_possible),  # Only in plando
-    "Magnetic area": EvolutionMethodData(25, False, lambda value, species: can_reach_magnetic_area),
-    "Unused area": EvolutionMethodData(28, False, lambda value, species: can_reach_magnetic_area),  # Only in plando, unless used for custom area
+    "Trade Karrablast Shelmet": EvolutionMethodData(7, False, lambda value, species, world: always_possible),  # Only in plando
+    "Magnetic area": EvolutionMethodData(25, False, lambda value, species, world: can_reach_magnetic_area),
+    "Unused area": EvolutionMethodData(28, False, lambda value, species, world: can_reach_magnetic_area),  # Only in plando, unless used for custom area
     "Level up with move": EvolutionMethodData(21, False, move_lvlup),
-    "Level up moss rock": EvolutionMethodData(26, False, lambda value, species: can_reach_moss_rock),
-    "Level up ice rock": EvolutionMethodData(27, False, lambda value, species: can_reach_ice_rock),
+    "Level up moss rock": EvolutionMethodData(26, False, lambda value, species, world: can_reach_moss_rock),
+    "Level up ice rock": EvolutionMethodData(27, False, lambda value, species, world: can_reach_ice_rock),
     "Level up item day": EvolutionMethodData(19, False, item_evo),  # Always paired with night
     "Level up item night": EvolutionMethodData(20, False, item_evo),  # Always paired with day
     "Level up higher defense": EvolutionMethodData(11, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
@@ -136,10 +139,10 @@ methods: dict[str, EvolutionMethodData] = {
     "Level up Cascoon": EvolutionMethodData(13, True, appropriate_region),  # Repeatable encounters, including static, are ensured
     "Level up Ninjask": EvolutionMethodData(14, True, appropriate_region),
     "Level up Shedinja": EvolutionMethodData(15, True, appropriate_region),
-    "Level up high beauty": EvolutionMethodData(16, False, lambda value, species: always_possible),  # Only in plando
+    "Level up high beauty": EvolutionMethodData(16, False, lambda value, species, world: always_possible),  # Only in plando
     "Level up (female)": EvolutionMethodData(23, True, appropriate_region),  # Repeatable encounters, including static, are ensured
     "Level up (male)": EvolutionMethodData(24, True, appropriate_region),  # Repeatable encounters, including static, are ensured
-    "Level up with party member": EvolutionMethodData(22, False, lambda value, spec: has_item(species.by_id[value, 0])),
+    "Level up with party member": EvolutionMethodData(22, False, lambda value, spec, world: has_item(species.by_id[value, 0])),
 }
 
 

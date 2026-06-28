@@ -285,7 +285,7 @@ class PokemonBWWorld(World):
         spoiler.write_spoiler_stats(self, spoiler_handle)
         spoiler.write_spoiler_evolutions(self, spoiler_handle)
         spoiler.write_spoiler_levelup_movesets(self, spoiler_handle)
-        spoiler.write_spoiler_types(self, spoiler_handle)
+        spoiler.write_spoiler_tm_hm_compat(self, spoiler_handle)
 
     def generate_output(self, output_directory: str) -> None:
         if self.options.version == "black":
@@ -317,9 +317,10 @@ class PokemonBWWorld(World):
                     "trainer_randomization_blacklist": self.options.trainer_randomization_blacklist.value,
                     "randomize_base_stats": self.options.randomize_base_stats.value,
                     "randomize_evolutions": self.options.randomize_evolutions.value,
-                    "randomize_catch_rates": self.options.randomize_catch_rates.value,
-                    "randomize_level_up_movesets": self.options.randomize_level_up_movesets.value,
                     "randomize_types": self.options.randomize_types.value,
+                    "randomize_level_up_movesets": self.options.randomize_level_up_movesets.value,
+                    "randomize_tm_hm_compatibility": self.options.randomize_tm_hm_compatibility.value,
+                    "randomize_catch_rates": self.options.randomize_catch_rates.value,
                     "stats_randomization_adjustments": self.options.stats_randomization_adjustments.value,
                     "stats_plando": self.options.stats_plando.to_slot_data(),
                     "shuffle_badges": self.options.shuffle_badges.current_key,

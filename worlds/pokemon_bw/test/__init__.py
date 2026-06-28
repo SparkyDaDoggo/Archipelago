@@ -53,6 +53,10 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 #   default []
 #   one test for just randomize
 #   11 tests for random selection of modifiers
+# randomize_tm_hm_compatibility:
+#   default []
+#   one test for just randomize
+#   11 tests for random selection of modifiers
 # stats_randomization_adjustments:
 #   no tests
 # stats_plando:

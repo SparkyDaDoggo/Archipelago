@@ -42,7 +42,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added `Wild Randomization Blacklist` and `Trainer Randomization Blacklist` options
   - The wild blacklist might not prevent some pokémon for various reasons (including other options)
   - Ignored by `Encounter Plando`
-- Added more choices to `Modify Encounter Rates`:
+- Added more preset choices to `Modify Encounter Rates`:
   - `One per method`
   - `Dexsanity friendly`
 - Added `Randomize Base Stats` option with the following modifiers:
@@ -61,19 +61,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Pair stats`
   - `Pair 50 50`
   - `Increasing stats`
-- Added `Randomize Catch Rates` option with the following modifiers:
-  - `Shuffle`
-  - `Randomize`
-  - `Follow evolutions`
-  - `Correlate with base stats`
-- Added `Randomize Level Up Movesets` option with the following modifiers:
-  - `Randomize`
-  - `Keep types`
-  - `Progressive power`
-  - `Keep amount`
-  - `Keep levels`
-  - `Follow evolutions`
-  - `Start with 4`
 - Added `Randomize Types` option with the following modifiers:
   - `Randomize`
   - `Mono only`
@@ -82,6 +69,25 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Force evolutions`
   - `Usual combinations`
   - `Permutation`
+- Added `Randomize Level Up Movesets` option with the following modifiers:
+  - `Randomize`
+  - `Keep types`
+  - `Progressive power`
+  - `Keep amount`
+  - `Keep levels`
+  - `Follow evolutions`
+  - `Start with 4`
+- Added `Randomize TM/HM Compatibility` option with the following modifiers:
+  - `Force all TMs`
+  - `Force all HMs`
+  - `Randomize`
+  - `Match types`
+  - `Follow evolutions`
+- Added `Randomize Catch Rates` option with the following modifiers:
+  - `Shuffle`
+  - `Randomize`
+  - `Follow evolutions`
+  - `Correlate with base stats`
 - Added `Stats Randomization Adjustments` option, currently with the following parameters:
   - `Stats total minimum`
   - `Stats total maximum`
@@ -138,6 +144,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed legendary hunt flags being reset after defeating Ghetsis/Alder and resetting statics
 - Fixed `Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)` not showing up on the UT map tracker
 - Added option groups
+- Merged both Aha quiz locations into one
 
 ### Is this version compatible with older multiworld slots and save files?
 No

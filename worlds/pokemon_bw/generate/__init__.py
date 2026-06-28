@@ -60,7 +60,8 @@ class SpeciesEntry:
     b2 = base stats
     b3 = catch rate
     b4 = levelup moveset
-    b5 = types"""
+    b5 = types
+    b6 = tm/hm compatibility"""
     evo_line: EvoLine | None = None
 
     def __init__(self, name: str, data: SpeciesData):
@@ -153,7 +154,7 @@ class SpeciesChecklist:
         if species in self.to_check:
             self.to_check.remove(species)
         self.already_checked.add(species)
-        # Looping evolutions are not planned to be prevented
+        # Looping evolutions are possible if enabled in randomization
         if loop >= 5:
             return
         data = self.by_name[species]

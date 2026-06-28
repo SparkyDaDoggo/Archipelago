@@ -29,7 +29,7 @@
 {"sections": [{"name": "Icirrus City - East hidden item #2"}], "map_locations": [{"map": "icirruscity", "x": 1000, "y": 584}]},
 {"sections": [{"name": "Icirrus City - Hidden item in large water puddle"}], "map_locations": [{"map": "icirruscity", "x": 504, "y": 744}]},
 {"sections": [{"name": "Icirrus City - Hidden item west of pokémon center (Winter)"}], "map_locations": [{"map": "icirruscity", "x": 216, "y": 488}]},
-{"sections": [{"name": "Icirrus City - Item from Aha if answer was correct"},{"name": "Icirrus City - Item from Aha if answer was incorrect"}], "map_locations": [{"map": "icirruscity", "x": 376, "y": 120}]},
+{"sections": [{"name": "Icirrus City - Item from Aha if answer was correct"},{"name": "Icirrus City - Item from Aha if answer was incorrect"},{"name": "Icirrus City - Item from Aha for any answer"}], "map_locations": [{"map": "icirruscity", "x": 376, "y": 120}]},
 {"sections": [{"name": "Icirrus City - Item from Pokémon Fan Club chairman for gaining 25 levels"},{"name": "Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels"},{"name": "Icirrus City - Item from Pokémon Fan Club chairman for gaining 99 levels"}], "map_locations": [{"map": "icirruscity", "x": 152, "y": 344}]},
 {"sections": [{"name": "Icirrus City - Item from the former Team Rocket member's wife (Winter)"}], "map_locations": [{"map": "icirruscity", "x": 808, "y": 920}]},
 {"sections": [{"name": "Icirrus City - Item west of pokémon center (Winter)"}], "map_locations": [{"map": "icirruscity", "x": 136, "y": 488}]},

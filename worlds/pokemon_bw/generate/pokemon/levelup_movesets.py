@@ -57,7 +57,7 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
 
     def roll(spec_name: str, data: SpeciesEntry, extra: list[tuple[str, "MoveData"]]):
         if mods.is_keep_amount:
-            amount = len(moveset_table[spec_name].level_up_moves)
+            amount = len(moveset_table[spec_name].level_up_moves)  # referencing vanilla table because table in SpeciesEntry has been cleared
         else:
             amount = world.random.randint(moves_amount_min, moves_amount_max)
             if extra:

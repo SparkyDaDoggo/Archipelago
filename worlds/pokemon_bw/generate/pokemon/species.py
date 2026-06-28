@@ -13,6 +13,7 @@ def generate_species_data(world: "PokemonBWWorld") -> dict[str, SpeciesEntry]:
     from .catch_rates import randomize_catch_rates
     from .levelup_movesets import randomize_levelup_movesets
     from .types import randomize_types_pre_evo, randomize_types_post_evo
+    from .tm_hm_compatibility import randomize_tm_hm_compat
 
     all_species = {name: SpeciesEntry(name, data) for name, data in species.by_name.items()}
 
@@ -43,7 +44,7 @@ def generate_species_data(world: "PokemonBWWorld") -> dict[str, SpeciesEntry]:
 
     randomize_catch_rates(world, all_species)
     randomize_levelup_movesets(world, all_species)
-    # randomize_tm_hm(world, all_species)
+    randomize_tm_hm_compat(world, all_species)
     # randomize_abilities(world, all_species)
     # randomize_held_items(world, all_species)
     # randomize_egg_groups(world, all_species)

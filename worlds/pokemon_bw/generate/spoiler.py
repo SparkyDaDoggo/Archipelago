@@ -44,7 +44,8 @@ def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> No
 def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
     from ..data.pokemon.pokedex import by_number
 
-    if world.options.randomize_evolutions.is_randomize or world.options.stats_plando:
+    if world.options.randomize_evolutions.is_randomize or any(data.evolutions is not False
+                                                              for data in world.options.stats_plando.value.values()):
 
         spoiler_handle.write(f"\n\nEvolutions ({world.player_name}, each entry in the format "
                              f"<method, value, species>):\n\n")
@@ -59,11 +60,13 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
         world.options.randomize_base_stats.is_randomize
         or world.options.randomize_catch_rates.is_randomize
         or world.options.randomize_types.is_randomize
-        or world.options.stats_plando
+        or any((data.base_hp or data.base_attack or data.base_defense or data.base_sp_attack or data.base_sp_defense
+                or data.base_speed or data.catch_rate or data.types)
+               for data in world.options.stats_plando.value.values())
     ):
 
-        spoiler_handle.write(f"\n\nStats ({world.player_name}, the format is <type(s), hp, attack, defense, special attack, "
-                             f"special defense, speed, catch rate>):\n\n")
+        spoiler_handle.write(f"\n\nStats ({world.player_name}, the format is <type(s), hp, attack, defense, "
+                             f"special attack, special defense, speed, catch rate>):\n\n")
         for name, data in world.species_entries.items():
             spoiler_handle.write(f"{name}: {data.type_1}{', '+data.type_2 if data.type_1 != data.type_2 else ''}, "
                                  f"{data.base_hp}, {data.base_attack}, {data.base_defense}, {data.base_sp_attack}, "
@@ -72,7 +75,8 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
 
 def write_spoiler_levelup_movesets(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
 
-    if world.options.randomize_level_up_movesets.is_randomize or world.options.stats_plando:
+    if world.options.randomize_level_up_movesets.is_randomize or any(data.levelup_moveset is not False for data in
+                                                                     world.options.stats_plando.value.values()):
 
         spoiler_handle.write(f"\n\nLevelup movesets ({world.player_name}, with each entry having the format <level, "
                              f"move name>):\n\n")
@@ -80,10 +84,11 @@ def write_spoiler_levelup_movesets(world: "PokemonBWWorld", spoiler_handle: Text
             spoiler_handle.write(f"{name}: "+str(data.level_up_moves.level_up_moves).replace("'", "")+"\n")
 
 
-def write_spoiler_types(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
+def write_spoiler_tm_hm_compat(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
 
-    if world.options.randomize_types.is_randomize or world.options.stats_plando:
+    if world.options.randomize_tm_hm_compatibility.is_randomize or any(data.tm_hm_compatibility for data in
+                                                                       world.options.stats_plando.value.values()):
 
-        spoiler_handle.write(f"\n\nTypes ({world.player_name}):\n\n")
+        spoiler_handle.write(f"\n\nTM/HM compatibility ({world.player_name}):\n\n")
         for name, data in world.species_entries.items():
-            spoiler_handle.write(f"{name}: {data.type_1}{(', '+data.type_2) if data.type_1 != data.type_2 else ''}\n")
+            spoiler_handle.write(f"{name}: {', '.join(data.tm_hm_moves.tm_hm_moves)}\n")

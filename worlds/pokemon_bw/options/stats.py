@@ -190,24 +190,19 @@ class RandomizeTMHMCompatibility(ToggleSet):
     - **Force all TMs** - Forces all TMs to be compatible with every pokemon species.
     - **Force all HMs** - Forces all HMs (and TM70 Flash) to be compatible with every
         pokemon species.
-    - **Randomize** - Toggles TM and HM compatibility being randomized. Required for any
-        other modifier.
-    - **Keep types** - Randomized moves have either a matching or normal type.
-    - **Keep amount** - Keeps the amount of moves a species learns normally.
-    - **Follow evolutions** - Evolved species will have at least 50% of the learnable TMs
-        and HMs of their pre-evolution(s). Overrides all **Keep ...** modifiers.
+    - **Randomize** - Toggles TM and HM compatibility being randomized. Automatically
+        added if any other modifier is added.
+    - **Match types** - Compatible TM moves have either a matching or normal type.
+    - **Follow evolutions** - Evolved species will be able to learn all TMs/HMs of their
+        pre-evolution(s).
     """
     display_name = "Randomize TM/HM Compatibility"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Force all TMs",
-        "Force all HMs",
-        "Randomize",
-        "Keep types",
-        "Keep amount",
-        "Follow evolutions",
-    ]
-    default = []
+    is_all_tms = False, "Force all TMs"
+    is_all_hms = False, "Force all HMs"
+    is_randomize = False
+    is_match_types = False
+    is_follow_evolutions = False
+    auto_add_if_any = "Randomize"
 
 
 class RandomizeAbilities(ToggleSet):
@@ -361,12 +356,13 @@ class PlandoStat(typing.NamedTuple):
     base_sp_attack: int = 0
     base_sp_defense: int = 0
     base_speed: int = 0
-    catch_rate: int = 0
+    types: list[str] = []
     evolutions: list[PlandoEvolution] | bool = False
     override_evolutions: bool = True
     levelup_moveset: list[PlandoLevelupMove] | bool = False
     override_levelup_moveset: bool = True
-    types: list[str] = []
+    tm_hm_compatibility: list[str] = []
+    catch_rate: int = 0
 
 
 class StatsPlando(Option[dict[str, PlandoStat]]):
@@ -381,7 +377,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         base_hp: 5
         base_attack: 5
         base_sp_attack: 255
-        catch_rate: 190
+        types: [Fire, Electric]
         evolutions:
           - species: Squirtle
             method: Stone
@@ -396,7 +392,8 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
           - move: Pound
             level: 100
         override_levelup_moveset: false
-        types: [Fire, Electric]
+        tm_hm_compatibility: [TM70, HM03]
+        catch_rate: 190
     ```
 
     Stats Plando requires the corresponding host setting to be enabled, else it will be
@@ -476,6 +473,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                         plando_types = [value]
                     else:
                         raise OptionError(f"Expected value of types key to be a list or string, got {type(value)}")
+                if plando_key == "tm_hm_compatibility":
+                    if not isinstance(value, list):
+                        raise OptionError(f"Expected value of tm_hm_compatibility key to be a list, got {type(value)}")
             plando["evolutions"] = plando_evolutions
             plando["levelup_moveset"] = plando_levelup_moves
             plando["types"] = plando_types
@@ -499,7 +499,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         from ..data.pokemon.pokedex import by_name as dex_by_name
         from ..data.pokemon.evolution_methods import methods as methods_table, paired_method_slots as paired_table, stone_items, hold_items
         from ..data.items import all_items_dict_view
-        from ..data.pokemon.moves import by_name as move_by_name
+        from ..data.pokemon.moves import by_name as move_by_name, tm_hm
         from ..data.pokemon.types import by_name as types_by_name
 
         invalid: list[str] = []
@@ -538,6 +538,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             for plando_type in plando_stat.types:
                 if plando_type not in types_by_name:
                     reasons.append(f"{plando_type} is not an allowed type")
+            for plando_tm in plando_stat.tm_hm_compatibility:
+                if plando_tm not in tm_hm:
+                    reasons.append(f"{plando_tm} is not an allowed TM or HM")
             evo_sum = 0
             if plando_stat.evolutions is not False:
                 for plando_evo in plando_stat.evolutions:

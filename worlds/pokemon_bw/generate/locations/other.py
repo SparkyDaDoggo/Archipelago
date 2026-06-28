@@ -44,5 +44,5 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
     for name in all_tm_hm:
         if name.startswith(chosen_tm):
             world.driftveil_random_tm = name
-            world.driftveil_random_move_id = moves.by_name[moves.tm_hm[chosen_tm]].id
+            world.driftveil_random_move_id = moves.by_name[moves.tm_hm[chosen_tm].move].id
             break

@@ -98,6 +98,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Types
   - Catch rates
   - Levelup movesets
+  - TM/HM compatibility
 - Stats plando (with all randomizable stats at that time)
 - Replace Evolution Methods option
 - Combined goals
@@ -131,6 +132,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Starter/Static/Gift/Trade/Legendary pokémon randomization
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Adjust encounters (like Adjust levels, but with species, based on base stats)
+  - Disable hidden items/field items/abyssal ruins items (disabling field items will also disable min_once items)
   - Ingame options (things changeable in PC, moving Experience modifier here)
     - Season control (only when vanilla or changeable, not randomized)
     - Shiny chance modifier (Only activated if Shinysanity not off)
@@ -148,7 +150,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Stats randomization
     - Abilities
     - Gender Ratio (+ limit)
-    - TM/HM compatibility
     - Move tutor compatibility
     - Held items
     - Egg groups
@@ -160,18 +161,23 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Move category (only Physical <-> Special)
     - Type effectiveness chart
     - Move names
+    - TM/HM content
   - Fairy type
   - Levelup curve modifier
   - Dynamic version
   - Door shuffle
   - Shuffle roadblock requirements
   - Original content
+    - Story scenes
+    - Community-made trainers + teams
+    - Types
+    - Berry fields
   - Free fly destination
   - Trainer randomization (i.e. what trainer you're actually battling against)
     - With plando capabilities
   - Trashsanity
-  - Boss fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame))
-  - Story fight Plando (Cheren, Bianca, N, ...)
+  - Boss fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame)) (?)
+  - Story fight Plando (Cheren, Bianca, N, ...) (?)
   - DeathLink
   - Wonder trade
   - Multiworld gift Pokémon

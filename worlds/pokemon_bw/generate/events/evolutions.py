@@ -35,7 +35,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
     def get_rule(f_evodata: tuple[str, int, int], f_base_species: str) -> Callable[[CollectionState], bool]:
         # helper function to prevent lambdas in for loops
         method: "EvolutionMethodData" = evolution_methods.methods[f_evodata[0]]
-        ext_rule: "ExtendedRule" = method.rule(f_evodata[1], f_base_species)
+        ext_rule: "ExtendedRule" = method.rule(f_evodata[1], f_base_species, world)
         return lambda state: ext_rule(state, world) and state.has(f_base_species, world.player)
 
     # Dict instead of set to make it deterministic

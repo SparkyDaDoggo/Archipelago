@@ -156,8 +156,9 @@ table: dict[str, FlagLocationData] = {
     "Route 7 - Item from ranger Mary": FlagLocationData(1420+187, always_default, "Route 7", None, None),
     "Route 7 - Item from ranger Pedro": FlagLocationData(1420+183, always_default, "Route 7", None, None),
     "Twist Mountain - Item from worker near ice rock cave": FlagLocationData(0x1BF, always_default, "Twist Mountain", None, can_beat_ghetsis),
-    "Icirrus City - Item from Aha if answer was correct": FlagLocationData(0x1A7, always_default, "Icirrus City", None, None),
-    "Icirrus City - Item from Aha if answer was incorrect": FlagLocationData(0x1A6, always_default, "Icirrus City", None, None),
+    "Icirrus City - Item from Aha if answer was correct": FlagLocationData(0x1A7, always_default, "Icirrus City", disabled, None),
+    "Icirrus City - Item from Aha if answer was incorrect": FlagLocationData(0x1A6, always_default, "Icirrus City", disabled, None),
+    "Icirrus City - Item from Aha for any answer": FlagLocationData(0x1E7, always_default, "Icirrus City", None, None),
     "Icirrus City - Item from Pokémon Fan Club chairman for gaining 25 levels": FlagLocationData(251, always_default, "Icirrus City", None, None),
     "Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels": FlagLocationData(252, always_default, "Icirrus City", None, can_beat_ghetsis),
     # This is not only unreasonable, but also has an astronomically low softlock chance if we don't document breeding data and consider it during generation

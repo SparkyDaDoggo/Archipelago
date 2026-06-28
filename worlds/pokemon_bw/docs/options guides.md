@@ -309,8 +309,8 @@ Every entry (currently) consists of the following keys (with all of them being o
   corresponding base stat. Allowed values are in range 1-255. Setting them to 0 will use the vanilla stat instead.
   Omitting any of these keys will default them to 0. Setting any of them to a non-zero value will exclude 
   that pokémon from having its base stats randomized.
-- `catch_rate` sets the catch rate. The higher the catch rate of a pokémon species is, the easier it is to catch.
-  Allowed values are in range 3-255. Setting this to 0 or omitting it will not plando the species' catch rate.
+- `types` overrides that pokémon's type(s). It is optional and accepts a single type as a string as well as up to two 
+  types as a list of strings. An empty list has no effect.
 - `evolutions` will override that pokémon's evolutions (or append to them). It is an optional list of evolution entries 
   with each of those having the following format (putting in an empty list will accordingly remove all evolutions 
   (or append none)):
@@ -350,8 +350,11 @@ Every entry (currently) consists of the following keys (with all of them being o
   override the existing evolutions (thereby excluding that pokémon from levelup moves 
   randomization) or append to the existing (potentially randomized) 
   moves. It is optional and defaults to `true` if omitted.
-- `types` overrides that pokémon's type(s). It is optional and accepts a single type as a string as well as up to two 
-  types as a list of strings. An empty list has no effect.
+- `tm_hm_compatibility` adds a list of TMs and HMs to the list of (potentially randomized) already compatible TMs and 
+  HMs. Each list entry needs to be written as `TMxx` or `HMxx` with `xx` being the number. It is optional and defaults 
+  to an empty list if omitted.
+- `catch_rate` sets the catch rate. The higher the catch rate of a pokémon species is, the easier it is to catch.
+  Allowed values are in range 3-255. Setting this to 0 or omitting it will not plando the species' catch rate.
 
 ## An example on how using this option could look like
 
@@ -363,6 +366,7 @@ Pokemon Black and White:
       base_hp: 5
       base_attack: 5
       base_sp_attack: 255
+      catch_rate: 120
     Eevee:
       evolutions:
       - species: Giratina
@@ -377,10 +381,12 @@ Pokemon Black and White:
     Shelmet:
       base_defense: 200
       base_sp_defense: 200
+      types: Flying
       evolutions:
       - species: Karrablast
         method: _Level up split
         level: 15
+        species_2: Shelmet
       override_evolutions: false
       levelup_moveset:
       - move: Pound
@@ -388,15 +394,19 @@ Pokemon Black and White:
       - move: Flamethrower
         level: 99
       override_levelup_moveset: false
-      types: Flying
     Genesect:
+      types: [Psychic, Fighting]
       levelup_moveset:
       - move: Pound
         level: 1
       - move: Flamethrower
         level: 99
       override_levelup_moveset: true
-      types: [Psychic, Fighting]
+      tm_hm_compatibility:
+      - TM01
+      - TM06
+      - TM71
+      - HM02
 ```
 
 # Combined goals guide (coming in 0.4.0)

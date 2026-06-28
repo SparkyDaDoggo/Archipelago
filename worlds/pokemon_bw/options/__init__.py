@@ -962,10 +962,10 @@ class PokemonBWOptions(PerGameCommonOptions):
     randomize_base_stats: RandomizeBaseStats
     randomize_evolutions: RandomizeEvolutions
     randomize_types: RandomizeTypes
+    randomize_level_up_movesets: RandomizeLevelUpMovesets
+    randomize_tm_hm_compatibility: RandomizeTMHMCompatibility
     randomize_catch_rates: RandomizeCatchRates
     # randomize_gender_ratio: RandomizeGenderRatio
-    randomize_level_up_movesets: RandomizeLevelUpMovesets
-    # randomize_tm_hm_compatibility: RandomizeTMHMCompatibility
     # randomize_abilities: RandomizeAbilities
     # randomize_held_items: RandomizeHeldItems
     # randomize_egg_groups: RandomizeEggGroups

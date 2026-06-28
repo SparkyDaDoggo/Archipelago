@@ -10,11 +10,12 @@ if TYPE_CHECKING:
 
 def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.ZipFile) -> None:
     from ...data.pokemon.types import by_name
+    from ...data.pokemon.moves import tm_hm
 
     for species, data in bw_patch_instance.world.species_entries.items():
         if data.form and not data.is_custom_form:
             continue
-        byt = bytearray(10)
+        byt = bytearray(23)
 
         if data.write & 0b100:
             byt[:6] = (data.base_hp, data.base_attack, data.base_defense,
@@ -33,7 +34,15 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
             byt[8] = 0xff
             byt[9] = 0xff
 
-        if data.write & 0b101101:
+        if data.write & 0b1000000:
+            flags = 0
+            for tm in data.tm_hm_moves.tm_hm_moves:
+                flags |= 1 << tm_hm[tm].index
+            byt[10:23] = flags.to_bytes(13, "little")
+        else:
+            byt[22] = 0x80
+
+        if data.write & 0b1101101:
             opened_zipfile.writestr(f"stats/{max(data.dex_number, data.custom_form_file)}", bytes(byt))
 
 
@@ -53,6 +62,8 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             byt[8] = loaded[7] or byt[8]
             byt[6] = loaded[8] if loaded[8] != 0xff else byt[6]
             byt[7] = loaded[9] if loaded[9] != 0xff else byt[7]
+            if not loaded[22] & 0x80:
+                byt[0x28:0x35] = loaded[10:23]
 
             narc.files[i] = bytes(byt)
             files_dump[f"a016/{i}"] = narc.files[i]
