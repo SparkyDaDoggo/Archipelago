@@ -8,7 +8,7 @@ from types import FunctionType
 from orjson import orjson
 
 import settings
-from BaseClasses import CollectionState, ItemClassification
+from BaseClasses import CollectionState, ItemClassification, CollectionRule
 from ..ndspy import codeCompression
 from ..ndspy.code import Overlay, saveOverlayTable
 from ..ndspy.rom import NintendoDSRom
@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from .. import PokemonBWWorld
     from ..items import PokemonBWItem
     from ..data import SpeciesData, ExtendedRule
+    ModifiedExtendedRule = Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]
 
 
 class PluginProtocol:
@@ -158,11 +159,22 @@ class OverrideProtocol(PluginProtocol):
         return self.arm7
 
     @staticmethod
-    def modify_rule(old: "ExtendedRule", new: Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]):
-        old_code_function = FunctionType(old.__code__, globals())
-        old.__code__ = (lambda state, world: new(old_code_function, state, world)).__code__
+    def modify_rule(old: "ExtendedRule", new: "ModifiedExtendedRule"):
+        if not getattr(old, "_is_modified", False):
+            old_code_function = FunctionType(old.__code__, globals())
+            def wrapper(state: CollectionState, world: "PokemonBWWorld", _old: "ExtendedRule",
+                        _new: tuple["ModifiedExtendedRule", ...]):
+                current = _old
+                for __new in _new:
+                    current = getattr(__new, "__get__")(current)
+                return current(state, world)
+            old.__code__ = wrapper.__code__
+            old._is_modified = True
+            old.__defaults__ = (None, None, old_code_function, (new, ))
+        else:
+            old.__defaults__ = (None, None, old.__defaults__[2], old.__defaults__[3] + (new, ))
 
-    def new_item(self, name: str, classification: ItemClassification | None = None):
+    def new_item(self, name: str, classification: ItemClassification = None) -> "PokemonBWItem":
         from ..items import PokemonBWItem
         from ..data.items import all_items_dict_view
 
@@ -171,6 +183,37 @@ class OverrideProtocol(PluginProtocol):
                              classification if classification is not None else data.classification(self.world),
                              data.item_id,
                              self.world.player)
+
+    def new_event(self, location: str, item: str, region: str, *,
+                  collection_rule: CollectionRule = None, extended_rule: "ExtendedRule" = None) -> None:
+        from ..locations import PokemonBWLocation
+        from ..items import PokemonBWItem
+
+        region = self.world.regions[region]
+        location = PokemonBWLocation(self.world.player, location, None, region)
+        location.place_locked_item(PokemonBWItem(item, ItemClassification.progression, None, self.world.player))
+        if collection_rule is not None and extended_rule is not None:
+            raise Exception(f"Event [({region}) {location}: {item}] defined both a collection rule and an "
+                            f"extended rule, which is not allowed")
+        elif collection_rule is not None:
+            location.access_rule = collection_rule
+        elif extended_rule is not None:
+            location.access_rule = lambda state: extended_rule(state, self.world)
+        region.locations.append(location)
+
+    @staticmethod
+    def replace_filler(item_pool: list["PokemonBWItem"], *items: "PokemonBWItem"):
+        items_index = 0
+        for i in range(len(item_pool)):
+            item = item_pool[i]
+            if item.classification == ItemClassification.filler:
+                item_pool[i] = items[items_index]
+                items_index += 1
+                if items_index >= len(items):
+                    return
+        else:
+            raise Exception(f"Could not find {len(items)-items_index} more filler item(s) to be replaced by "
+                            f"{', '.join(it.name for it in items)}")
 
 
 class FillProtocol(PluginProtocol):
