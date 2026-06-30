@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from ..items import PokemonBWItem
     from ..data import ExtendedRule
     from ..generate import SpeciesEntry
+    ModifiedExtendedRule = Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]
 
 
 class PluginProtocol:
@@ -160,9 +161,20 @@ class OverrideProtocol(PluginProtocol):
         return self.arm7
 
     @staticmethod
-    def modify_rule(old: "ExtendedRule", new: Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]):
-        old_code_function = FunctionType(old.__code__, globals())
-        old.__code__ = (lambda state, world: new(old_code_function, state, world)).__code__
+    def modify_rule(old: "ExtendedRule", new: "ModifiedExtendedRule"):
+        if not getattr(old, "_is_modified", False):
+            old_code_function = FunctionType(old.__code__, globals())
+            def wrapper(state: CollectionState, world: "PokemonBWWorld", _old: "ExtendedRule",
+                        _new: tuple["ModifiedExtendedRule", ...]):
+                current = _old
+                for __new in _new:
+                    current = getattr(__new, "__get__")(current)
+                return current(state, world)
+            old.__code__ = wrapper.__code__
+            old._is_modified = True
+            old.__defaults__ = (None, None, old_code_function, (new, ))
+        else:
+            old.__defaults__ = (None, None, old.__defaults__[2], old.__defaults__[3] + (new, ))
 
     def new_item(self, name: str, classification: ItemClassification | None = None):
         from ..items import PokemonBWItem
@@ -170,7 +182,7 @@ class OverrideProtocol(PluginProtocol):
 
         data = all_items_dict_view[name]
         return PokemonBWItem(name,
-                             classification if classification is not None else data.classification(self.world),
+                             classification if classification is not None else data.classification(self.world, name),
                              data.item_id,
                              self.world.player)
 

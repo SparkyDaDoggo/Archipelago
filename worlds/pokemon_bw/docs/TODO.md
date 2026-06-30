@@ -1,12 +1,11 @@
 # Important stuff
 
-# 0.4.0
-
-## APWorld
-
-## Rom
-
-## Both
+- copy exp curves in evo rando
+- `increasing stats` in evo rando not working?
+- `Keep Levels` and `Keep amount` in levelup moves rando not working?
+- `Evolve when possible` and `Force fully evolved` in trainer rando not working?
+- Accumula Town Cutscene empty text boxes
+- fill more funny dialog
 
 # Not urgent
 
@@ -18,7 +17,8 @@
 - a way to check whether map or fly menu is opened, used for switching to ow map in UT
 - Running shoes as an item, making mom cutscene on route 2 a check
 - opelucid city fly flag only set after ghetsis scene
-- fill more funny dialog
+- Make event locations more distinguishable in spoiler from normal locations
+- text extraction starts all lines with [Terminate]
 
 # Single reports, cannot recreate, need to wait for more reports
 

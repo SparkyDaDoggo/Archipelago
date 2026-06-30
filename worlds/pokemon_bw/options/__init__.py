@@ -804,13 +804,13 @@ class FillerItemsBlacklist(ItemSet):
 
 class FunnyDialog(Choice):
     """
-    Adds humorous dialogue submitted by the folks in the Pokemon Black and White channel
+    Adds humorous dialog submitted by the folks in the Pokemon Black and White channel
     of the Archipelago Discord server. Alternatively, the efficient mode shortens many
     story lines for quicker playthroughs.
 
     This option requires Text Plando being enabled in the host settings.
     """
-    display_name = "Funny Dialogue"
+    display_name = "Funny Dialog"
     option_none = 0
     option_funny = 1
     option_efficient = 2
