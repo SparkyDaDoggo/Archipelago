@@ -125,14 +125,23 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Shinysanity
   - Dexcountsanity
   - Seencountsanity
+  - Dexgendersanity
+  - Seengendersanity
   - Trainer pokémon plando
   - Decrease trainer eyesight
   - Customize roadblocks
     - Relic castle room filling with sand unlockable via an item
+    - Extra cuttable trees
+    - Rock Smash rocks
   - Starter/Static/Gift/Trade/Legendary pokémon randomization
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
+  - Fan club chairman levels checks modifier
   - Adjust encounters (like Adjust levels, but with species, based on base stats)
-  - Disable hidden items/field items/abyssal ruins items (disabling field items will also disable min_once items)
+  - Disable certain location groups
+    - Hidden items
+    - Field items (will also disable min_once items)
+    - Abyssal Ruins
+    - Post goal locations
   - Ingame options (things changeable in PC, moving Experience modifier here)
     - Season control (only when vanilla or changeable, not randomized)
     - Shiny chance modifier (Only activated if Shinysanity not off)
