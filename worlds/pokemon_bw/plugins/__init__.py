@@ -8,7 +8,7 @@ from types import FunctionType
 from orjson import orjson
 
 import settings
-from BaseClasses import CollectionState, ItemClassification, CollectionRule
+from BaseClasses import CollectionState, ItemClassification
 from ..ndspy import codeCompression
 from ..ndspy.code import Overlay, saveOverlayTable
 from ..ndspy.rom import NintendoDSRom
@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from .. import PokemonBWWorld
     from ..items import PokemonBWItem
     from ..data import SpeciesData, ExtendedRule
+    from BaseClasses import CollectionRule
     ModifiedExtendedRule = Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]
 
 
@@ -199,7 +200,7 @@ class OverrideProtocol(PluginProtocol):
                              self.world.player)
 
     def new_event(self, location: str, item: str, region: str, *,
-                  collection_rule: CollectionRule = None, extended_rule: "ExtendedRule" = None) -> None:
+                  collection_rule: "CollectionRule" = None, extended_rule: "ExtendedRule" = None) -> None:
         from ..locations import PokemonBWLocation
         from ..items import PokemonBWItem
 
