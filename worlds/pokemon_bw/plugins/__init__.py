@@ -78,10 +78,14 @@ class OverrideProtocol(PluginProtocol):
             options = {value: True for value in options}
         elif not isinstance(options, dict):
             options = {}
+        else:
+            options = options.copy()
         if isinstance(this_settings, list):
             this_settings = {value: True for value in this_settings}
         elif not isinstance(this_settings, dict):
             this_settings = {}
+        else:
+            this_settings = options.copy()
         self._options = options
         self._settings = this_settings
         self.all_plugins = plugins
@@ -111,9 +115,14 @@ class OverrideProtocol(PluginProtocol):
             ret2 = {r: rr for r, rr in ret.items() if isinstance(rr, int) and isinstance(r, typ)}
             if not len(ret2):
                 return default
-            return self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            self._options[name] = self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            return self._options[name]
         if support_weighting and isinstance(ret, list) and typ.__hash__ is not None:
-            return self.random.choice([r for r in ret if isinstance(r, typ)])
+            ret2 = [r for r in ret if isinstance(r, typ)]
+            if not len(ret2):
+                return default
+            self._options[name] = self.random.choice(ret2)
+            return self._options[name]
         return ret
 
     def get_setting(self, name: str, default=None, typ: type = object, support_weighting=True) -> Any:
@@ -124,9 +133,14 @@ class OverrideProtocol(PluginProtocol):
             ret2 = {r: rr for r, rr in ret.items() if isinstance(rr, int) and isinstance(r, typ)}
             if not len(ret2):
                 return default
-            return self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            self._settings[name] = self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            return self._settings[name]
         if support_weighting and typ.__hash__ is not None and isinstance(ret, list):
-            return self.random.choice([r for r in ret if isinstance(r, typ)])
+            ret2 = [r for r in ret if isinstance(r, typ)]
+            if not len(ret2):
+                return default
+            self._settings[name] = self.random.choice(ret2)
+            return self._settings[name]
         return ret
 
     def get_from_narc(self, path: str, file_num: int) -> bytearray:
