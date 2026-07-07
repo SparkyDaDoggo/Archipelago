@@ -45,6 +45,10 @@ class PokemonBWSettings(settings.Group):
         """Toggles whether Stats Plando is enabled for players in generation.
         If disabled, yamls that use Stats Plando do not raise OptionErrors, but display a warning."""
 
+    class EnableMoveDataPlando(settings.Bool):
+        """Toggles whether Move Data Plando is enabled for players in generation.
+        If disabled, yamls that use Move Data Plando do not raise OptionErrors, but display a warning."""
+
     class DumpPatchedFiles(settings.Bool):
         """If enabled, files inside the rom that are changed as part of the patching process (except for base patches)
         will be dumped into a zip file next to the patched rom (for debug purposes)."""
@@ -67,6 +71,7 @@ class PokemonBWSettings(settings.Group):
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
     enable_stats_plando: EnableStatsPlando | bool = True
+    enable_move_data_plando: EnableMoveDataPlando | bool = True
     dump_patched_files: DumpPatchedFiles | bool = False
     enable_arm7_expansion_test: EnableArm7ExpansionTest | bool = False
     extract_text: ExtractText | bool = False
@@ -165,6 +170,8 @@ class PokemonBWWorld(World):
         self.studio_castelia_type: str | None = None
         self.driftveil_random_tm: str | None = None
         self.driftveil_random_move_id: int = 0
+        self.move_entries: dict[str, MoveEntry] | None = None
+        self.type_chart: dict[tuple[str, str], int] | None = None
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
@@ -172,6 +179,7 @@ class PokemonBWWorld(World):
     def generate_early(self) -> None:
         from .generate.encounter import wild, checklist, static, plando
         from .generate.pokemon import species
+        from .generate.move_data.randomize import generate_move_data
         from .generate import trainers
         from .data import version
         from .plugins import load_plugins
@@ -218,6 +226,7 @@ class PokemonBWWorld(World):
         self.rules_dict = locations.create_rule_dict(self)
         locations.connect_regions(self)
         locations.cleanup_regions(self.regions)
+        self.move_entries, self.type_chart = generate_move_data(self)
         self.species_entries = species.generate_species_data(self)
         species_checklist = checklist.get_species_checklist(self)
         slots_checklist = checklist.get_slots_checklist(self)
@@ -286,6 +295,8 @@ class PokemonBWWorld(World):
         spoiler.write_spoiler_evolutions(self, spoiler_handle)
         spoiler.write_spoiler_levelup_movesets(self, spoiler_handle)
         spoiler.write_spoiler_tm_hm_compat(self, spoiler_handle)
+        spoiler.write_spoiler_move_data(self, spoiler_handle)
+        spoiler.write_spoiler_type_chart(self, spoiler_handle)
 
     def generate_output(self, output_directory: str) -> None:
         if self.options.version == "black":
@@ -323,6 +334,10 @@ class PokemonBWWorld(World):
                     "randomize_catch_rates": self.options.randomize_catch_rates.value,
                     "stats_randomization_adjustments": self.options.stats_randomization_adjustments.value,
                     "stats_plando": self.options.stats_plando.to_slot_data(),
+                    "randomize_move_data": self.options.randomize_move_data.value,
+                    "randomize_type_chart": self.options.randomize_type_chart.value,
+                    "move_data_randomization_adjustments": self.options.move_data_randomization_adjustments.value,
+                    "move_data_plando": self.options.move_data_plando.to_slot_data(),
                     "shuffle_badges": self.options.shuffle_badges.current_key,
                     "shuffle_tm_hm": self.options.shuffle_tm_hm.current_key,
                     "dexsanity": self.options.dexsanity.value,

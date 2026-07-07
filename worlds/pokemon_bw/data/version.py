@@ -129,12 +129,14 @@ if __name__ == "__main__":
             "version": container_version,
             "compatible_version": 7,
         }
-        zipf2.writestr(os.path.join(apworld, "archipelago.json"), orjson.dumps(metadata))
+        manifest = orjson.dumps(metadata)
+        with open("../archipelago.json", "wb") as manifest_out:
+            manifest_out.write(manifest)
         for root, dirs, files in os.walk("../"):
             if "__pycache__" in root:
                 continue
             for file in files:
-                if "_dev.py" in file:
+                if file == "_dev.py":
                     continue
                 zipf2.write(os.path.join(root, file),
                             os.path.relpath(os.path.join(root, file),

@@ -76,7 +76,8 @@ class PatchMethods:
     @staticmethod
     def write_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile) -> None:
         from .patch.procedures import (write_text, write_wild_pokemon, write_trainer_pokemon, level_adjustments,
-                                       modify_rates, write_evolutions, write_stats, write_levelup_movesets)
+                                       modify_rates, write_evolutions, write_stats, write_levelup_movesets,
+                                       write_move_data, write_type_chart)
         from .plugins.generate import plugins_write_patch
 
         procedures: list[str] = ["base_patch", "write_text"]
@@ -116,6 +117,12 @@ class PatchMethods:
         if w_stats & 0b10000:
             procedures.append("write_levelup_movesets")
             write_levelup_movesets.write_patch(patch, opened_zipfile)
+        if any(data.write & 1 for data in patch.world.move_entries.values()):
+            procedures.append("write_move_data")
+            write_move_data.write_patch(patch, opened_zipfile)
+        if any(effect != 0xff for effect in patch.world.type_chart.values()):
+            procedures.append("write_type_chart")
+            write_type_chart.write_patch(patch, opened_zipfile)
 
         plugins_write_patch(patch.world, opened_zipfile)
 
@@ -146,7 +153,7 @@ class PatchMethods:
         from .ndspy.rom import NintendoDSRom
         from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
                                        level_adjustments, write_text, modify_rates, write_evolutions, write_stats,
-                                       write_levelup_movesets, tms_patch)
+                                       write_levelup_movesets, tms_patch, write_move_data, write_type_chart)
         from .plugins.patch import plugins_patch
 
         patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch,
@@ -165,6 +172,8 @@ class PatchMethods:
             "write_evolutions": write_evolutions.patch,
             "write_stats": write_stats.patch,
             "write_levelup_movesets": write_levelup_movesets.patch,
+            "write_move_data": write_move_data.patch,
+            "write_type_chart": write_type_chart.patch,
         }
 
         files_dump: dict[str, bytes | bytearray] = {}

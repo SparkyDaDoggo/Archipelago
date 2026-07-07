@@ -104,6 +104,14 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Combined goals
 - An NPC in Accumula Town telling you some information about the world
 - Filler Items Blacklist option
+- Move data randomization
+  - Move power
+  - Move type
+  - Move accuracy
+  - Move category (only Physical <-> Special)
+  - Move pp
+  - Type effectiveness chart
+- Move data plando (with all randomizable data at that time)
 
 ### Other stuff required for 1.0.0
 
@@ -121,22 +129,36 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Seensanity (Only accounting for wild pokémon at first, trainer teams later; has impact on All Pokémon Seen)
   - Trainersanity
+  - Dexcountsanity
   - Formsanity (not that many checks)
   - Shinysanity
-  - Dexcountsanity
-  - Seencountsanity
-  - Dexgendersanity
-  - Seengendersanity
+  - Genderdexsanity
+  - All combinations of Dex/Seen/Form/Shiny/Gender/Count-sanities
+    - Will be hidden from template, simple webhost, and options creator, instead explained in options guide
+    - Dex/Seen distinguishes between caught/seen flags, thereby always using exactly one of them
+    - Form uses form flags instead of dex flags
+    - Shiny reduces to only shiny flags instead of shiny/nonshiny flags (and activates shiny rate being changeable ingame)
+    - Gender splits from any gender flag into male-or-female
+    - Count turns specific flags into any flags but certain amount
+    - That makes 32 sanities in total, with only 6 being shown in template/simple webhost/options creator
+    - Fixed naming scheme:
+      - Dex+Form = Form, Dex+Shiny = Shiny, Dex+Gender = Genderdex, Dex+Count = Dexcount
+      - Seen+Form = Formseen, Seen+Shiny = Shinyseen, Seen+Gender = Genderseen, Seen+Count = Seencount
+      - Form+Shiny = Shinyform, Form+Gender = Formgender, Form+Count = Formcount
+      - Shiny+Gender = Shinygender, Shiny+Count = Shinycount
+      - Gender+Count = Gendercount
   - Trainer pokémon plando
   - Decrease trainer eyesight
   - Customize roadblocks
     - Relic castle room filling with sand unlockable via an item
     - Extra cuttable trees
     - Rock Smash rocks
+    - Roadblocks on routes 13+14
+    - Something with the badge gates
   - Starter/Static/Gift/Trade/Legendary pokémon randomization
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Fan club chairman levels checks modifier
-  - Adjust encounters (like Adjust levels, but with species, based on base stats)
+  - Adjust encounters (like Adjust levels, but with species, based on base stats, mostly just devolve)
   - Disable certain location groups
     - Hidden items
     - Field items (will also disable min_once items)
@@ -164,11 +186,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Egg groups
     - Pokémon names
   - Move data randomization
-    - Move power
-    - Move type
-    - Move accuracy
-    - Move category (only Physical <-> Special)
-    - Type effectiveness chart
     - Move names
     - TM/HM content
   - Fairy type

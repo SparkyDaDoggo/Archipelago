@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
     from ...data.pokemon.species import by_id
     from ...data.pokemon.pokedex import by_name as dex_by_name
-    from ...data.pokemon.moves import tm_hm, by_name as moves_by_name
+    from ...data.pokemon.moves import tm_hm
     from ...data import TMHMMovesetData
 
     mods = world.options.randomize_tm_hm_compatibility
@@ -31,7 +31,8 @@ def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, Speci
             elif mods.is_all_hms and tm_data.is_HM:
                 new_set.add(tm_name)
             elif world.random.random() < 0.5:
-                if not mods.is_match_types or moves_by_name[tm_data.move].type in (data.type_1, data.type_2, "Normal"):
+                if not mods.is_match_types or world.move_entries[tm_data.move].type in (*data.types,
+                                                                                        "Normal"):
                     new_set.add(tm_name)
         new_set.update(pre)
         if name in world.options.stats_plando:

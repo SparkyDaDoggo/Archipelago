@@ -34,7 +34,7 @@ def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> No
         for entry in world.trainer_teams:
             if entry.team_number not in teams:
                 teams[entry.trainer_id] = []
-            teams[entry.trainer_id].append(entry.species)
+            teams[entry.trainer_id].append(f"{entry.species} Lv.{entry.level}")
 
         spoiler_handle.write(f"\n\nTrainer teams ({world.player_name}, Trainer names are WIP):\n\n")
         for trainer, species in teams.items():
@@ -92,3 +92,11 @@ def write_spoiler_tm_hm_compat(world: "PokemonBWWorld", spoiler_handle: TextIO) 
         spoiler_handle.write(f"\n\nTM/HM compatibility ({world.player_name}):\n\n")
         for name, data in world.species_entries.items():
             spoiler_handle.write(f"{name}: {', '.join(data.tm_hm_moves.tm_hm_moves)}\n")
+
+
+def write_spoiler_move_data(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
+    pass  # TODO
+
+
+def write_spoiler_type_chart(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
+    pass  # TODO

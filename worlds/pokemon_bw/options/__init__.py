@@ -492,7 +492,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
             raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(value)}")
 
     @classmethod
-    def modify_wild(cls, value: dict[str, int] | list[dict[str, int | str]], level) -> int:
+    def modify_wild(cls, value: dict[str, int] | list[dict[str, int | str]], level: int) -> int:
         if isinstance(value, dict):
             return cls.modify(value["Wild mode"], value["Wild value"], level)
         elif isinstance(value, list):
@@ -971,6 +971,12 @@ class PokemonBWOptions(PerGameCommonOptions):
     # randomize_egg_groups: RandomizeEggGroups
     stats_randomization_adjustments: StatsRandomizationAdjustments
     stats_plando: StatsPlando
+
+    # Move data
+    randomize_move_data: RandomizeMoveData
+    randomize_type_chart: RandomizeTypeChart
+    move_data_randomization_adjustments: MoveDataRandomizationAdjustments
+    move_data_plando: MoveDataPlando
 
     # Items, locations, and progression
     shuffle_badges: ShuffleBadgeRewards

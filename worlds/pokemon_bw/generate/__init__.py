@@ -120,6 +120,28 @@ class TrainerPokemonEntry(NamedTuple):
     # moves: tuple[str, str, str, str] | None
 
 
+class MoveEntry:
+    id: int
+    type: str
+    category: Literal["Physical", "Special", "Status"]
+    power: int
+    accuracy: int
+    pp: int
+    name: str
+    write: int = 0
+    """b0 = general data
+    b1 = name"""
+
+    def __init__(self, name: str, data: MoveData):
+        self.id = data.id
+        self.type = data.type
+        self.category = data.category
+        self.power = data.power
+        self.accuracy = data.accuracy
+        self.pp = data.pp
+        self.name = name
+
+
 class SpeciesChecklist:
     to_check: list[str]
     already_checked: set[str]

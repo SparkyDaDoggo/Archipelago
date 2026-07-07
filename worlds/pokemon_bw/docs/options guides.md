@@ -440,3 +440,70 @@ Pokemon Black and White:
     - ["seven_sages_hunt", "cobalion"]
     - cynthia
 ```
+
+# Move Data Plando guide (coming in 0.4.0)
+
+## How does this work?
+
+Move Data Plando lets you force set certain data of moves in the game like their power and accuracy, and individual 
+entries in the type effectiveness chart, regardless of whether that data/effectiveness was randomized or not. 
+Every entry applies to a specific move or attacking-type-defending-type combination and takes priority over regular 
+randomization, while also influencing that.
+This option might be expanded in its functionalities once new randomization options get implemented.
+
+## Important notes for multiworld hosts
+
+Move Data Plando can lead to generation failures that might not look like coming from this option. 
+The Pokémon Black and White host.yaml settings have a toggle to enable or disable this option, 
+which is by default set to true. 
+If disabled, Move Data Plando entries will be ignored and only print a warning to the console 
+without stopping multiworld generation.
+
+## How do I use it?
+
+Every entry belongs to a specific move or attacking-type-defending-type combination and contains multiple keys for 
+editing a certain aspect each. 
+For move data entries, the key must be the name of the move (the exact in-game name, a list of all names can be found 
+in the [move names list](plando%20lists.md#all-move-names)) you want to plando.
+Every entry (currently) consists of the following keys (with all of them being optional):
+- `power` is the power, that's displayed on the move summary screen of (most) physical or special moves. Allowed values 
+  are in range 5-250. Setting it to 0 will keep the vanilla power instead. Changing the power of status moves and moves 
+  with a unique calculation is not allowed
+- `accuracy` is the accuracy, that's displayed on the move summary screen of all moves. Allowed values 
+  are in range 5-100. Setting it to 0 will keep the vanilla accuracy instead. Changing the accuracy of moves with a 
+  guaranteed hit chance is not allowed
+- `pp` is the power points, that determines how many times you can use a move before healing your pokémon. Allowed 
+  values are in range 1-250. Setting it to 0 will keep the vanilla power points instead.
+- `type` is the type of the move, that has an effect on the damage the move deals, based on the attacker's and 
+  defender's types. Allowed values are all 17 types in the game (in uppercase). Setting it to an empty string will keep 
+  the vanilla type instead.
+- `category` is the category of the move, that determines the base stats that should be used to calculate the damage. 
+  Allowed values are only `Physical` an `Special`. Setting it to an empty string will keep the vanilla category 
+  instead. Changing the category of status moves is not allowed
+
+For type effectiveness entries, the key must consist of two types that are connected by and underscore (`_`). The frist 
+type is the attacking type and the second type is the defending type.
+Every entry (currently) consists of only the `effectiveness` key, which is required and can be one of the numbers 
+`0`, `2`, `4`, or `8`. `0` is an immunity, `2` is a resistance, `4` is neutral, and `8` is a weakness.
+
+## An example on how using this option could look like
+
+```
+Pokemon Black and White:
+  ...
+  move_data_plando:
+    Tackle:
+      power: 200
+      accuracy: 30
+      pp: 250
+    Bite:
+      type: Normal
+      category: Special
+      pp: 1
+    Normal_Ice:
+      effectiveness: 8
+    Psychic_Bug:
+      effectiveness: 0
+    Fire_Dragon:
+      effectiveness: 4
+```

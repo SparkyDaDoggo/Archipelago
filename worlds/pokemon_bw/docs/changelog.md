@@ -126,6 +126,40 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added combined goals
 - Added `Filler Items Blacklist` option
 - Made the NPC next to the Pokémon Center in Accumula Town tell some information about the world
+- Added `Randomize Move Data` option with the following modifiers:
+  - `Shuffle power`
+  - `Randomize power`
+  - `Randomize type`
+  - `Shuffle accuracy`
+  - `Randomize accuracy`
+  - `Randomize category`
+  - `Shuffle PP`
+  - `Randomize PP`
+  - `Correlate power and PP`
+  - `Correlate power and accuracy`
+  - `Correlate PP and accuracy`
+- Added `Randomize Type Chart` option with the following modifiers:
+  - `Shuffle`
+  - `Randomize`
+  - `Disable weaknesses`
+  - `Disable resistances`
+  - `Disable immunities`
+- Added `Move Data Randomization Adjustments` option, currently with the following parameters:
+  - `Move power minimum`
+  - `Move power maximum`
+  - `Accuracy minimum`
+  - `Accuracy maximum`
+  - `PP minimum`
+  - `PP maximum`
+  - `Normal type probability`
+- Added `Move Data Plando` option, currently with the following possible entries:
+  - Move data, currently with the following keys for every move:
+    - `power`
+    - `type`
+    - `accuracy`
+    - `category`
+    - `pp`
+  - Type effectiveness, currently only with the `effectiveness` key for every type combination
 
 ### Bug fixes and technical stuff
 

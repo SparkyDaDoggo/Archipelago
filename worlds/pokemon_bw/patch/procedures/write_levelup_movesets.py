@@ -9,7 +9,6 @@ if TYPE_CHECKING:
 
 
 def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.ZipFile) -> None:
-    from ...data.pokemon.moves import by_name
 
     for species, data in bw_patch_instance.world.species_entries.items():
         if data.form and not data.is_custom_form:
@@ -18,7 +17,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
             continue
         byt = bytearray()
         for tup in data.level_up_moves.level_up_moves:
-            byt += by_name[tup[1]].id.to_bytes(2, "little")
+            byt += bw_patch_instance.world.move_entries[tup[1]].id.to_bytes(2, "little")
             byt += tup[0].to_bytes(2, "little")
         byt += b'\xff\xff\xff\xff'
         opened_zipfile.writestr(f"levelup_moves/{max(data.dex_number, data.custom_form_file)}", bytes(byt))

@@ -20,6 +20,12 @@ option_groups = [
         StatsRandomizationAdjustments,
         StatsPlando,
     ]),
+    OptionGroup("Move Data", [
+        RandomizeMoveData,
+        RandomizeTypeChart,
+        MoveDataRandomizationAdjustments,
+        MoveDataPlando,
+    ]),
     OptionGroup("Items, locations, and progression", [
         ShuffleBadgeRewards,
         ShuffleTMRewards,

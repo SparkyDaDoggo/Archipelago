@@ -4,21 +4,21 @@ from ...data import LevelUpMovesetData
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...data import MoveData
+    from ...generate import MoveEntry
 
 
 def sort_by_level(move: tuple[int, str]) -> int:
     return move[0]
 
 
-def sort_by_power(move: tuple[str, "MoveData"]) -> int:
+def sort_by_power(move: tuple[str, "MoveEntry"]) -> int:
     return move[1].power
 
 
 def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
     from ...data.pokemon.species import by_id
     from ...data.pokemon.pokedex import by_name as dex_by_name
-    from ...data.pokemon.moves import by_name as move_by_name, by_id as move_by_id
+    from ...data.pokemon.moves import by_id as move_by_id
     from ...data.pokemon.movesets_level_up import table as moveset_table
 
     mods = world.options.randomize_level_up_movesets
@@ -51,7 +51,7 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             else:
                 plando_append[species] = new_moves
 
-    all_moves = tuple((n, d) for n, d in move_by_name.items())
+    all_moves = tuple((n, d) for n, d in world.move_entries.items())
     moves_amount_min = world.options.stats_randomization_adjustments["Levelup moves amount minimum"]
     moves_amount_max = world.options.stats_randomization_adjustments["Levelup moves amount maximum"]
 
@@ -85,9 +85,9 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
         possible_random = all_moves if not mods.is_keep_types else tuple(
             t for t in all_moves if t[1].type in (data.type_1, data.type_2, "Normal")
         )
-        chosen_moves, plandod_moves = [(n, move_by_name[n]) for n in evo_moves], []
+        chosen_moves, plandod_moves = [(n, world.move_entries[n]) for n in evo_moves], []
         if spec_name in plando_append:
-            plandod_moves += ((t[1], move_by_name[t[1]]) for t in plando_append[spec_name])
+            plandod_moves += ((t[1], world.move_entries[t[1]]) for t in plando_append[spec_name])
         if len(plandod_moves) < amount:
             extra_moves = extra[-(amount-len(plandod_moves)-len(chosen_moves)):]
             for evo_move in chosen_moves:
@@ -119,10 +119,10 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
         if spec_name not in plando_append:
             data.level_up_moves.level_up_moves.sort(key=sort_by_level)
         if mods.is_follow_evolutions:
-            do_evos(data, chosen_moves if spec_name not in plando_append else [(t[1], move_by_name[t[1]]) for t in
+            do_evos(data, chosen_moves if spec_name not in plando_append else [(t[1], world.move_entries[t[1]]) for t in
                                                                                data.level_up_moves.level_up_moves])
 
-    def do_evos(data: SpeciesEntry, extra: list[tuple[str, "MoveData"]]):
+    def do_evos(data: SpeciesEntry, extra: list[tuple[str, "MoveEntry"]]):
         for evo_tup in data.evolutions:
             for form in range(6):
                 if (data.dex_number, form) not in by_id:
