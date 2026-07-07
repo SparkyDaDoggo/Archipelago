@@ -76,9 +76,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     info44 = "Information about locations and logic:[NextLine]"
     info45 = "Miscellaneous information:[NextLine]"
 
-    if slotdata["combined_goals"]:
+    if isinstance(slotdata['options']['goal'], list):
         info41 += "- Combined goals:[Scroll][NextLine]"
-        for goal in slotdata["combined_goals"]:
+        for goal in slotdata['options']['goal']:
             info41 += f"-- {goal.replace('_', ' ').capitalize()}[Scroll][NextLine]"
     else:
         info41 += f"- Goal: {slotdata['options']['goal'].replace('_', ' ').capitalize()}[Scroll][NextLine]"

@@ -13,6 +13,7 @@ from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTra
 from .stats import (RandomizeLevelUpMovesets, RandomizeEvolutions, RandomizeTypes, RandomizeAbilities,
                     RandomizeBaseStats, RandomizeCatchRates, RandomizeGenderRatio, RandomizeTMHMCompatibility,
                     StatsRandomizationAdjustments, StatsPlando)
+from .moves import RandomizeMoveData, RandomizeTypeChart, MoveDataRandomizationAdjustments, MoveDataPlando
 from ..data.common_options import ToggleSet
 
 if typing.TYPE_CHECKING:
@@ -96,6 +97,9 @@ class Goal(Choice):
                 return c
             raise OptionError(f"Combined goals list has invalid entries: {data}")
         return super().from_any(data)
+
+    def to_slot_data(self) -> str | list[str]:
+        return self.current_key if self.combined is None else self.combined
 
 
 class ShuffleBadgeRewards(Choice):

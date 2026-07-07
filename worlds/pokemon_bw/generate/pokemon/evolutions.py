@@ -301,7 +301,7 @@ def randomize_evolutions(world: "PokemonBWWorld", all_species: dict[str, Species
                 case c if c in ("Friendship", "Magnetic area", "Level up moss rock", "Level up ice rock"):
                     data.evolutions.insert(0, (method, 0, target_data.dex_number))
                 case "Level up with move":
-                    move_id = value if value != -1 else move_tables.by_name[world.random.choice(all_species[name].level_up_moves.level_up_moves)[1]].id
+                    move_id = value if value != -1 else world.move_entries[world.random.choice(all_species[name].level_up_moves.level_up_moves)[1]].id
                     data.evolutions.insert(0, (method, move_id, target_data.dex_number))
                 case "Level up with party member":
                     wanted_dex = value if value != -1 else world.random.randrange(1, 650)

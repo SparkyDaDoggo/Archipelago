@@ -31,12 +31,11 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
 
     await reload_key_items(client, ctx)
 
-    if ctx.slot_data["options"]["goal"] not in ("tmhm_hunt", "pokemon_master"):
-        await client.write_set_flag(ctx, 0x192)
-    elif "tmhm_hunt" not in ctx.slot_data["combined_goals"] and "pokemon_master" not in ctx.slot_data["combined_goals"]:
-        await client.write_set_flag(ctx, 0x192)
-    else:
+    if "tmhm_hunt" in ctx.slot_data["options"]["goal"] or "pokemon_master" in ctx.slot_data["options"]["goal"]:
+        # "name **in** goal" works for both single goal strings and combined goals lists
         await client.write_unset_flag(ctx, 0x192)
+    else:
+        await client.write_set_flag(ctx, 0x192)
 
     master_ball_cost: int = ctx.slot_data["master_ball_seller_cost"]
     seller_modifiers = [mod.casefold() for mod in ctx.slot_data["options"]["master_ball_seller"]]

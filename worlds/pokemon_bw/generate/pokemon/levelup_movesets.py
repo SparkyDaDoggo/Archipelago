@@ -55,7 +55,7 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
     moves_amount_min = world.options.stats_randomization_adjustments["Levelup moves amount minimum"]
     moves_amount_max = world.options.stats_randomization_adjustments["Levelup moves amount maximum"]
 
-    def roll(spec_name: str, data: SpeciesEntry, extra: list[tuple[str, "MoveData"]]):
+    def roll(spec_name: str, data: SpeciesEntry, extra: list[tuple[str, "MoveEntry"]]):
         if mods.is_keep_amount:
             amount = len(moveset_table[spec_name].level_up_moves)  # referencing vanilla table because table in SpeciesEntry has been cleared
         else:

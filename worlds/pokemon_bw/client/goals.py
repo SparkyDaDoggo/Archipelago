@@ -11,7 +11,11 @@ def get_method(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> Callab
 ]:
 
     all_goals = []
-    for goal in (ctx.slot_data["combined_goals"] or [ctx.slot_data["options"]["goal"]]):
+    if isinstance(ctx.slot_data["options"]["goal"], list):
+        goals_list = ctx.slot_data["options"]["goal"]
+    else:
+        goals_list = [ctx.slot_data["options"]["goal"]]
+    for goal in goals_list:
         match goal:
             case "ghetsis":
                 all_goals.append(defeat_ghetsis)

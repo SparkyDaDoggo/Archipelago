@@ -8,7 +8,8 @@ from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
 from Options import Option
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
-from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry, SpeciesEntry
+from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry, SpeciesEntry, \
+    MoveEntry
 from .data import RulesDict
 from .plugins import Plugin
 from .options.groups import option_groups
@@ -319,7 +320,7 @@ class PokemonBWWorld(World):
             self.slot_data_cache = {
                 "options": {
                     "version": self.options.version.current_key,
-                    "goal": self.options.goal.current_key,
+                    "goal": self.options.goal.to_slot_data(),
                     "randomize_wild_pokemon": self.options.randomize_wild_pokemon.value,
                     "randomize_trainer_pokemon": self.options.randomize_trainer_pokemon.value,
                     "pokemon_randomization_adjustments": self.options.pokemon_randomization_adjustments.value,
@@ -369,7 +370,6 @@ class PokemonBWWorld(World):
                 "studio_castelia_type": self.studio_castelia_type,
                 "driftveil_random_move_id": self.driftveil_random_move_id,
                 "other_locations_species": self.other_locations_species,
-                "combined_goals": self.options.goal.combined,
             }
         return part
 

@@ -1,7 +1,7 @@
-from typing import Callable, Any, TYPE_CHECKING
+from typing import Callable, TYPE_CHECKING
 
 from .. import EvolutionMethodData, ExtendedRule
-from . import movesets_level_up, movesets_tm_hm, moves as move_tables, species
+from . import moves as move_tables, species
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -100,13 +100,13 @@ def stats_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:
                                  and can_buy_item_mall(state, world))
 
 
-def move_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:  # TODO these evo rule builders need the world, because I need to check for the actual TM/HM moveset
+def move_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:
     for lvl_move in world.species_entries[spec].level_up_moves.level_up_moves:
-        if move_tables.by_name[lvl_move[1]].id == value:
+        if world.move_entries[lvl_move[1]].id == value:
             return lambda state, world: (is_in_appropriate_region[lvl_move[0]//5](state, world)
                                          and can_reach_mistralton_city(state, world))
     for tm_move in world.species_entries[spec].tm_hm_moves.tm_hm_moves:
-        if move_tables.by_name[move_tables.tm_hm[tm_move].move].id == value:
+        if world.move_entries[move_tables.tm_hm[tm_move].move].id == value:
             return has_item(tm_move)
     return can_reach_mistralton_city
 
