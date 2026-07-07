@@ -302,8 +302,9 @@ without stopping multiworld generation.
 
 Every entry belongs to a specific pokémon species and contains multiple keys for editing a certain stat each. 
 The specified species can either be the standard pokémon name (i.e. without any form suffix) or the form's name 
-found in the [species names list](plando%20lists.md#all-species-names). However, non-base forms that are not at the 
-bottom of that list don't have separate data in the game's files and are thereby not allowed in this context. 
+found in the [species names list](plando%20lists.md#all-species-names) (note that adding an entry for the standard name **and** base form name, e.g. 
+`Deerling`&`Deerling (Spring)`, is not allowed). However, non-base forms that are not at the bottom of that list 
+don't have separate data in the game's files and are thereby not allowed in this context. 
 Every entry (currently) consists of the following keys (with all of them being optional):
 - `base_hp`, `base_attack`, `base_defense`, `base_sp_attack`, `base_sp_defense`, and `base_speed` set the 
   corresponding base stat. Allowed values are in range 1-255. Setting them to 0 will use the vanilla stat instead.
@@ -314,28 +315,26 @@ Every entry (currently) consists of the following keys (with all of them being o
 - `evolutions` will override that pokémon's evolutions (or append to them). It is an optional list of evolution entries 
   with each of those having the following format (putting in an empty list will accordingly remove all evolutions 
   (or append none)):
-  - `species` (required) is the pokémon that should be evolved into. Standard pokémon names as well as form names 
-    found in the [species names list](plando%20lists.md#all-species-names) are allowed.
+  - `species` (required) is the pokémon that should be evolved into. Only standard pokémon names are allowed.
   - `method` (optional) is the way the evolution should be triggered. See the 
     [methods list](plando%20lists.md#evolution-methods-list) for allowed values. Omitting this will default it 
     to `Level up`.
   - `level` (optional) is the level at which certain levelup methods should be triggered. Allowed values are
     in range 2-100. Omitting this will default it to 20.
-  - `stone` (optional) is the item that triggers the stone-based methods. See the [evolution items]() list for 
-    allowed values. Omitting this will default it to the `Shiny Stone`.
-  - `held` (optional) is the item that triggers the held item-based methods. See the [evolution items]() list for 
-    allowed values. Omitting this will default it to the `King's Rock`.
+  - `stone` (optional) is the item that triggers the stone-based methods. See the 
+    [evolution items](plando%20lists.md#evolution-items-list) list for allowed values. Omitting this will default it 
+    to the `Shiny Stone`.
+  - `held` (optional) is the item that triggers the held item-based methods. See the 
+    [evolution items](plando%20lists.md#evolution-items-list) list for allowed values. Omitting this will default it 
+    to the `King's Rock`.
   - `move` (optional) is the name of the move that triggers the `Level up with move` method. Any move in the game 
     is allowed to be used. Omitting this will default it to the `Toxic`.
   - `partner` (optional) is the species that triggers the `Level up with party member` method when present 
-    in your party. Standard pokémon names as well as form names found in the 
-    [species names list](plando%20lists.md#all-species-names) are allowed. Omitting this will default it to `Remoraid`.
+    in your party. Only standard pokémon names are allowed. Omitting this will default it to `Remoraid`.
   - `species_2` (optional) is the species that is used by the `_Level up split`, `_Level up PID`, and `_Level up stats` 
-    macros. Standard pokémon names as well as form names found in the 
-    [species names list](plando%20lists.md#all-species-names) are allowed. Omitting this will default it to `Shedinja`.
-  - `species_3` (optional) is the species that is used by the `_Level up stats` macro. Standard pokémon names as well 
-    as form names found in the [species names list](plando%20lists.md#all-species-names) are allowed. 
-    Omitting this will default it to `Hitmontop`.
+    macros. Only standard pokémon names are allowed. Omitting this will default it to `Shedinja`.
+  - `species_3` (optional) is the species that is used by the `_Level up stats` macro. Only standard pokémon names are
+    allowed. Omitting this will default it to `Hitmontop`.
 - `override_evolutions` determines whether the provided list of evolutions should override the existing evolutions 
   (thereby excluding that pokémon from evolution randomization) or append to the existing (potentially randomized) 
   evolutions. It is optional and defaults to `true` if omitted.

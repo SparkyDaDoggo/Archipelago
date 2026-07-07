@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from ..items import PokemonBWItem
     from ..data import ExtendedRule
     from ..generate import SpeciesEntry
+    from BaseClasses import CollectionRule
     ModifiedExtendedRule = Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]
 
 
@@ -81,10 +82,14 @@ class OverrideProtocol(PluginProtocol):
             options = {value: True for value in options}
         elif not isinstance(options, dict):
             options = {}
+        else:
+            options = options.copy()
         if isinstance(this_settings, list):
             this_settings = {value: True for value in this_settings}
         elif not isinstance(this_settings, dict):
             this_settings = {}
+        else:
+            this_settings = options.copy()
         self._options = options
         self._settings = this_settings
         self.all_plugins = plugins
@@ -113,9 +118,14 @@ class OverrideProtocol(PluginProtocol):
             ret2 = {r: rr for r, rr in ret.items() if isinstance(rr, int) and isinstance(r, typ)}
             if not len(ret2):
                 return default
-            return self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            self._options[name] = self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            return self._options[name]
         if support_weighting and isinstance(ret, list) and typ.__hash__ is not None:
-            return self.random.choice([r for r in ret if isinstance(r, typ)])
+            ret2 = [r for r in ret if isinstance(r, typ)]
+            if not len(ret2):
+                return default
+            self._options[name] = self.random.choice(ret2)
+            return self._options[name]
         return ret
 
     def get_setting(self, name: str, default=None, typ: type = object, support_weighting=True) -> Any:
@@ -126,9 +136,14 @@ class OverrideProtocol(PluginProtocol):
             ret2 = {r: rr for r, rr in ret.items() if isinstance(rr, int) and isinstance(r, typ)}
             if not len(ret2):
                 return default
-            return self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            self._settings[name] = self.random.choices(tuple(ret2.keys()), tuple(ret2.values()))[0]
+            return self._settings[name]
         if support_weighting and typ.__hash__ is not None and isinstance(ret, list):
-            return self.random.choice([r for r in ret if isinstance(r, typ)])
+            ret2 = [r for r in ret if isinstance(r, typ)]
+            if not len(ret2):
+                return default
+            self._settings[name] = self.random.choice(ret2)
+            return self._settings[name]
         return ret
 
     def get_from_narc(self, path: str, file_num: int) -> bytearray:
@@ -164,8 +179,8 @@ class OverrideProtocol(PluginProtocol):
     def modify_rule(old: "ExtendedRule", new: "ModifiedExtendedRule"):
         if not getattr(old, "_is_modified", False):
             old_code_function = FunctionType(old.__code__, globals())
-            def wrapper(state: CollectionState, world: "PokemonBWWorld", _old: "ExtendedRule",
-                        _new: tuple["ModifiedExtendedRule", ...]):
+            def wrapper(state: CollectionState, world: "PokemonBWWorld",
+                        _old: "ExtendedRule", _new: tuple["ModifiedExtendedRule", ...]):
                 current = _old
                 for __new in _new:
                     current = getattr(__new, "__get__")(current)
@@ -176,7 +191,7 @@ class OverrideProtocol(PluginProtocol):
         else:
             old.__defaults__ = (None, None, old.__defaults__[2], old.__defaults__[3] + (new, ))
 
-    def new_item(self, name: str, classification: ItemClassification | None = None):
+    def new_item(self, name: str, classification: ItemClassification = None):
         from ..items import PokemonBWItem
         from ..data.items import all_items_dict_view
 
@@ -185,6 +200,37 @@ class OverrideProtocol(PluginProtocol):
                              classification if classification is not None else data.classification(self.world, name),
                              data.item_id,
                              self.world.player)
+
+    def new_event(self, location: str, item: str, region: str, *,
+                  collection_rule: "CollectionRule" = None, extended_rule: "ExtendedRule" = None) -> None:
+        from ..locations import PokemonBWLocation
+        from ..items import PokemonBWItem
+
+        region = self.world.regions[region]
+        location = PokemonBWLocation(self.world.player, location, None, region)
+        location.place_locked_item(PokemonBWItem(item, ItemClassification.progression, None, self.world.player))
+        if collection_rule is not None and extended_rule is not None:
+            raise Exception(f"Event [({region}) {location}: {item}] defined both a collection rule and an "
+                            f"extended rule, which is not allowed")
+        elif collection_rule is not None:
+            location.access_rule = collection_rule
+        elif extended_rule is not None:
+            location.access_rule = lambda state: extended_rule(state, self.world)
+        region.locations.append(location)
+
+    @staticmethod
+    def replace_filler(item_pool: list["PokemonBWItem"], *items: "PokemonBWItem"):
+        items_index = 0
+        for i in range(len(item_pool)):
+            item = item_pool[i]
+            if item.classification == ItemClassification.filler:
+                item_pool[i] = items[items_index]
+                items_index += 1
+                if items_index >= len(items):
+                    return
+        else:
+            raise Exception(f"Could not find {len(items)-items_index} more filler item(s) to be replaced by "
+                            f"{', '.join(it.name for it in items)}")
 
 
 class FillProtocol(PluginProtocol):

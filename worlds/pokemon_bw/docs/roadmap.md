@@ -132,17 +132,17 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Dexcountsanity
   - Formsanity (not that many checks)
   - Shinysanity
-  - Genderdexsanity
+  - Gendersanity
   - All combinations of Dex/Seen/Form/Shiny/Gender/Count-sanities
     - Will be hidden from template, simple webhost, and options creator, instead explained in options guide
     - Dex/Seen distinguishes between caught/seen flags, thereby always using exactly one of them
-    - Form uses form flags instead of dex flags
+    - Form uses form flags instead of dex flags, but doesn't distinguish dex/seen and gender
     - Shiny reduces to only shiny flags instead of shiny/nonshiny flags (and activates shiny rate being changeable ingame)
     - Gender splits from any gender flag into male-or-female
     - Count turns specific flags into any flags but certain amount
-    - That makes 32 sanities in total, with only 6 being shown in template/simple webhost/options creator
+    - That makes 20 sanities with ~16700 locations in total, with only 6 being shown in template/simple webhost/options creator
     - Fixed naming scheme:
-      - Dex+Form = Form, Dex+Shiny = Shiny, Dex+Gender = Genderdex, Dex+Count = Dexcount
+      - Dex+Form = Form, Dex+Shiny = Shiny, Dex+Gender = Gender, Dex+Count = Dexcount
       - Seen+Form = Formseen, Seen+Shiny = Shinyseen, Seen+Gender = Genderseen, Seen+Count = Seencount
       - Form+Shiny = Shinyform, Form+Gender = Formgender, Form+Count = Formcount
       - Shiny+Gender = Shinygender, Shiny+Count = Shinycount

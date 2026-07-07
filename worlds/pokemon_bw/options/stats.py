@@ -411,6 +411,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
 
     @classmethod
     def from_any(cls, data: dict) -> typing.Self:
+        from ..data.pokemon.species import by_name as spec_by_name, by_id
+        from ..data.pokemon.pokedex import by_name as dex_by_name
+
         if not isinstance(data, dict):
             raise OptionError(f"Expected dictionary for Stats Plando, got {type(data)}")
         plandos: dict[str, PlandoStat] = {}
@@ -421,7 +424,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 plandos[spec] = plando
                 continue
             if not isinstance(plando, dict):
-                raise OptionError(f"Expected dictionary as Stats Plando entry {spec}, got {type(plando)}")
+                raise OptionError(f"Expected dictionary as Stats Plando entry for species {spec}, got {type(plando)}")
             plando_evolutions, plando_levelup_moves, plando_types = False, False, []
             for plando_key, value in plando.items():
                 if plando_key not in PlandoStat._fields:
@@ -479,6 +482,12 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             plando["evolutions"] = plando_evolutions
             plando["levelup_moveset"] = plando_levelup_moves
             plando["types"] = plando_types
+            if spec not in spec_by_name:
+                if spec not in dex_by_name:
+                    raise OptionError(f"{spec} is neither a dex name, nor a form name")
+                spec = by_id[dex_by_name[spec], 0].species_name
+            if spec in plandos:
+                raise OptionError(f"Species {spec} is added twice, likely by dex name and base form name")
             plandos[spec] = PlandoStat(**plando)
         return cls(plandos)
 
@@ -505,12 +514,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         invalid: list[str] = []
         for plando in self:
             reasons = []
-            if plando[0] in species_by_name:
-                spec_data = species_by_name[plando[0]]
-                if spec_data.form and not spec_data.is_custom_form:
-                    reasons.append(f"Species name is a form that cannot be edited")
-            elif plando[0] not in dex_by_name:
-                reasons.append(f"Unknown species name")
+            spec_data = species_by_name[plando[0]]
+            if spec_data.form and not spec_data.is_custom_form:
+                reasons.append(f"Species name is a form that cannot be edited")
             plando_stat: PlandoStat = plando[1]
             if not isinstance(plando_stat.override_evolutions, int):
                 reasons.append((f"override_evolutions value \"{plando_stat.override_evolutions}\" is neither "
@@ -544,9 +550,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             evo_sum = 0
             if plando_stat.evolutions is not False:
                 for plando_evo in plando_stat.evolutions:
-                    if plando_evo.species not in species_by_name and plando_evo.species not in dex_by_name:
+                    if plando_evo.species not in dex_by_name:
                         reasons.append(f"Unknown species name: {plando_evo.species}")
-                    if plando_evo.partner not in species_by_name and plando_evo.partner not in dex_by_name:
+                    if plando_evo.partner not in dex_by_name:
                         reasons.append(f"Unknown partner pokémon name: {plando_evo.partner}")
                     if plando_evo.method not in methods_table and plando_evo.method not in paired_table:
                         reasons.append(f"Unknown evolution method: {plando_evo.method}")
@@ -565,9 +571,9 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                         reasons.append(f"Item {plando_evo.held} is not an evolution item")
                     if plando_evo.move not in move_by_name:
                         reasons.append(f"Unknown move: {plando_evo.move}")
-                    if plando_evo.species_2 not in species_by_name and plando_evo.species_2 not in dex_by_name:
+                    if plando_evo.species_2 not in dex_by_name:
                         reasons.append(f"Unknown species name for key 'species_2': {plando_evo.species_2}")
-                    if plando_evo.species_3 not in species_by_name and plando_evo.species_3 not in dex_by_name:
+                    if plando_evo.species_3 not in dex_by_name:
                         reasons.append(f"Unknown species name for key 'species_3': {plando_evo.species_3}")
             if evo_sum > 7:
                 reasons.append(f"Too many evolution entries")

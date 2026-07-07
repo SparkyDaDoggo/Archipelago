@@ -16,8 +16,7 @@ def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, Specie
     all_plandod = []
     for species, plando_stat in world.options.stats_plando:
         if plando_stat.catch_rate:
-            actual_spec = by_id[(dex_by_name[species], 0)] if species not in all_species else species
-            dat = all_species[actual_spec]
+            dat = all_species[species]
             dat.catch_rate = plando_stat.catch_rate
             dat.write |= 0b1000
             all_plandod.append(actual_spec)

@@ -1,4 +1,5 @@
 import logging
+import random
 import typing
 from copy import deepcopy
 from dataclasses import dataclass
@@ -899,6 +900,29 @@ class PluginOptions(OptionDict):
     """This can be used to define certain options that are used by plugins.
     The main apworld will ignore this option entirely."""
     display_name = "Plugin Options"
+
+    @classmethod
+    def from_any(cls, data: dict[str, typing.Any]) -> OptionDict:
+        if not isinstance(data, dict):
+            raise NotImplementedError(f"Cannot Convert from non-dictionary, got {type(data)}")
+        return cls(PluginOptions.search_recursively(data.copy()))
+
+    @staticmethod
+    def search_recursively(data: dict | list) -> typing.Any:
+        if isinstance(data, dict):
+            if any(not isinstance(key, str) for key in data):
+                if any(not isinstance(value, int) for value in data.values()):
+                    raise OptionError(f"Seemingly a weighted list of non-strings found, "
+                                      f"but not all values are integers")
+                return random.choices(tuple(data), tuple(data.values()))[0]
+            for key in tuple(data):
+                if isinstance(data[key], dict | list):
+                    data[key] = PluginOptions.search_recursively(data[key])
+        else:
+            for i in range(len(data)):
+                if isinstance(data[i], dict | list):
+                    data[i] = PluginOptions.search_recursively(data[i])
+        return data
 
 
 class ReusableTMs(Choice):

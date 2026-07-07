@@ -14,6 +14,8 @@ version: tuple[int, int, int] = (0, 4, 0)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
     (0, 4, 0): VersionCompatibility((0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 6, 4)),
+    (0, 3, 36): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 34), (0, 3, 27), (0, 6, 4)),
+    (0, 3, 35): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 34), (0, 3, 27), (0, 6, 4)),
     (0, 3, 34): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 34), (0, 3, 27), (0, 6, 4)),
     (0, 3, 33): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 33), (0, 3, 27), (0, 6, 4)),
     (0, 3, 32): VersionCompatibility((0, 3, 14), (0, 3, 0), (0, 3, 31), (0, 3, 27), (0, 6, 4)),
