@@ -1,7 +1,7 @@
 import logging
 import sys
 from random import Random
-from typing import Any, TYPE_CHECKING, ClassVar, Callable
+from typing import Any, TYPE_CHECKING, Callable
 from zipfile import ZipFile
 from types import FunctionType
 
@@ -19,19 +19,22 @@ if TYPE_CHECKING:
     from ..rom import PokemonBWPatch
     from .. import PokemonBWWorld
     from ..items import PokemonBWItem
-    from ..data import SpeciesData, ExtendedRule
+    from ..data import SpeciesData, ExtendedRule, AccessRule
     from BaseClasses import CollectionRule
-    ModifiedExtendedRule = Callable[["ExtendedRule", CollectionState, "PokemonBWWorld"], bool]
+    ModifiedExtendedRule = Callable[["AccessRule", CollectionState, "PokemonBWWorld"], bool]
+
+
+all_plugin_classes: list[type] | None = None
 
 
 class PluginProtocol:
     """Initialized fields are written to all imported Plugin classes"""
 
     # Relevant to the plugin creator
-    slot_data: ClassVar[dict[str, Any]] = {}
-    general_options: ClassVar[dict[str, Any]] = {}
-    all_plugin_options: ClassVar[dict[str, Any]] = {}
-    all_plugin_settings: ClassVar[dict[str, Any]] = {}
+    slot_data: dict[str, Any]
+    general_options: dict[str, Any]
+    all_plugin_options: dict[str, Any]
+    all_plugin_settings: dict[str, Any]
     patch_instance: "PokemonBWPatch"
     world: "PokemonBWWorld"
     all_plugins: list
@@ -62,33 +65,36 @@ class OverrideProtocol(PluginProtocol):
     """Methods will be written into the imported Plugin classes, potentially overriding user-defined methods"""
 
     def __init__(self, plugins: list["Plugin"], patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld" = None):
-        if not hasattr(PluginProtocol, "_initialized") or PluginProtocol._initialized is False:
-            PluginProtocol._initialized = True
-            PluginProtocol.all_plugin_settings.update(settings.get_settings()["pokemon_bw_settings"]["plugin_settings"])
-            if world is None:
-                PluginProtocol.slot_data.update(orjson.loads(patch_instance.files.get("slot_data.json", b'{}')))
-                PluginProtocol.general_options.update(PluginProtocol.slot_data.get("options", {}))
-                PluginProtocol.all_plugin_options.update(PluginProtocol.general_options.get("plugin_options", {}))
+        if plugins:
+            self.all_plugin_settings = plugins[0].all_plugin_settings
+            self._settings = plugins[0]._settings
+            self.slot_data = plugins[0].slot_data
+            self.general_options = plugins[0].general_options
+            self.all_plugin_options = plugins[0].all_plugin_options
+        else:
+            self.all_plugin_settings = settings.get_settings()["pokemon_bw_settings"]["plugin_settings"].copy()
+            self._settings = self.all_plugin_settings.get(self.domain, {})
+            if isinstance(self._settings, list):
+                self._settings = {value: True for value in self._settings}
+            elif not isinstance(self._settings, dict):
+                self._settings = {}
             else:
-                PluginProtocol.slot_data.update(world.part_slot_data())
-                PluginProtocol.general_options.update(PluginProtocol.slot_data["options"])
-                PluginProtocol.all_plugin_options.update(PluginProtocol.general_options["plugin_options"])
-        options = PluginProtocol.all_plugin_options.get(self.domain, {})
-        this_settings = PluginProtocol.all_plugin_settings.get(self.domain, {})
-        if isinstance(options, list):
-            options = {value: True for value in options}
-        elif not isinstance(options, dict):
-            options = {}
+                self._settings = self._settings.copy()
+            if world is None:
+                self.slot_data = orjson.loads(patch_instance.files.get("slot_data.json", b'{}'))
+                self.general_options = self.slot_data.get("options", {})
+                self.all_plugin_options = self.general_options.get("plugin_options", {})
+            else:
+                self.slot_data = world.part_slot_data()
+                self.general_options = self.slot_data["options"]
+                self.all_plugin_options = self.general_options["plugin_options"]
+        self._options = self.all_plugin_options.get(self.domain, {})
+        if isinstance(self._options, list):
+            self._options = {value: True for value in self._options}
+        elif not isinstance(self._options, dict):
+            self._options = {}
         else:
-            options = options.copy()
-        if isinstance(this_settings, list):
-            this_settings = {value: True for value in this_settings}
-        elif not isinstance(this_settings, dict):
-            this_settings = {}
-        else:
-            this_settings = options.copy()
-        self._options = options
-        self._settings = this_settings
+            self._options = self._options.copy()
         self.all_plugins = plugins
         self.patch_instance = patch_instance
         self.world = world
@@ -189,6 +195,20 @@ class OverrideProtocol(PluginProtocol):
         else:
             old.__defaults__ = (None, None, old.__defaults__[2], old.__defaults__[3] + (new, ))
 
+    def modify_local_rule(self, old: "ExtendedRule", new: "ModifiedExtendedRule", apply_combined=True):
+        assert self.world.rules_dict is not None, "Trying to modify local rules before being initialized"
+        if old in self.world.rules_dict:
+            old_acc = self.world.rules_dict[old]
+            self.world.rules_dict[old] = lambda state: new(old_acc, state, self.world)
+        else:
+            self.world.rules_dict[old] = lambda state: new(old, state, self.world)
+        if apply_combined:
+            def mod(_old: "AccessRule") -> "AccessRule":
+                return lambda state: new(_old, state, self.world)
+            for rules in tuple(self.world.rules_dict):
+                if isinstance(rules, tuple) and old in rules:
+                    self.world.rules_dict[rules] = mod(self.world.rules_dict[rules])
+
     def new_item(self, name: str, classification: ItemClassification = None) -> "PokemonBWItem":
         from ..items import PokemonBWItem
         from ..data.items import all_items_dict_view
@@ -234,23 +254,24 @@ class OverrideProtocol(PluginProtocol):
 class FillProtocol(PluginProtocol):
     """Methods will only be written to the imported Plugin classes if they don't exist there yet"""
 
-    def patch(self):
-        ...
+    def patch(self): ...
 
-    def generate_early(self):
-        ...
+    @classmethod
+    def stage_init(cls): ...
 
-    def generate_encounter(self):
-        ...
+    def generate_early(self): ...
 
-    def create_regions(self, catchable_species_data: dict[str, "SpeciesData"]):
-        ...
+    def fill_rules(self): ...
 
-    def create_items(self, item_pool: list["PokemonBWItem"]):
-        ...
+    def generate_encounter(self): ...
 
-    def write_patch(self, opened_zipfile: ZipFile):
-        ...
+    def create_regions(self, catchable_species_data: dict[str, "SpeciesData"]): ...
+
+    def create_items_main_only(self, item_pool: list["PokemonBWItem"]): ...
+
+    def create_items(self, item_pool: list["PokemonBWItem"]): ...
+
+    def write_patch(self, opened_zipfile: ZipFile): ...
 
 
 class Plugin(OverrideProtocol, FillProtocol):
@@ -273,28 +294,30 @@ def patching_done(rom: NintendoDSRom, common_narcs: dict, common_ov_table: dict,
 
 
 def load_plugins(patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld" = None) -> list[Plugin]:
+    global all_plugin_classes
+    if all_plugin_classes is None:
+        all_plugin_classes = []
+        for module_name, module_type in sys.modules.items():
+            if not module_name.startswith("worlds.pokemon_bw_"):
+                continue
+            if hasattr(module_type, "Plugin"):
+                if not isinstance(module_type.Plugin, type):
+                    logging.warning(f"{module_name[7:]}.Plugin is not a class")
+                else:
+                    for key, value in OverrideProtocol.__dict__.items():
+                        if not isinstance(value, Callable):
+                            continue
+                        setattr(module_type.Plugin, key, value)
+                    for key, value in FillProtocol.__dict__.items():
+                        if not isinstance(value, Callable) or hasattr(module_type.Plugin, key):
+                            continue
+                        setattr(module_type.Plugin, key, value)
+                    getattr(module_type.Plugin, "stage_init")()
+                    all_plugin_classes.append(module_type.Plugin)
+            elif "." not in module_name[7:]:
+                logging.warning(f"{module_name[7:]} has the patch plugin naming scheme, "
+                                f"but doesn't contain a class named 'Plugin' in __init__.py")
     plugins: list[Plugin] = []
-    for module_name, module_type in sys.modules.items():
-        if not module_name.startswith("worlds.pokemon_bw_"):
-            continue
-        if hasattr(module_type, "Plugin"):
-            if not isinstance(module_type.Plugin, type):
-                logging.warning(f"{module_name[7:]}.Plugin is not a class")
-            else:
-                for key, value in OverrideProtocol.__dict__.items():
-                    if not isinstance(value, Callable):
-                        continue
-                    setattr(module_type.Plugin, key, value)
-                for key, value in FillProtocol.__dict__.items():
-                    if not isinstance(value, Callable) or hasattr(module_type.Plugin, key):
-                        continue
-                    setattr(module_type.Plugin, key, value)
-                for key, value in PluginProtocol.__annotations__.items():
-                    if key not in PluginProtocol.__dict__:
-                        continue
-                    setattr(module_type.Plugin, key, PluginProtocol.__dict__[key])
-                plugins.append(module_type.Plugin(plugins, patch_instance, world))
-        elif "." not in module_name[7:]:
-            logging.warning(f"{module_name[7:]} has the patch plugin naming scheme, "
-                            f"but doesn't contain a class named 'Plugin' in __init__.py")
+    for plugin_class in all_plugin_classes:
+        plugins.append(plugin_class(plugins, patch_instance, world))
     return plugins

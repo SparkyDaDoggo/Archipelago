@@ -1,5 +1,6 @@
 # Important stuff
 
+- send plugin options over slot data as string (only in 0.4.0, breaks backwards compatibility)
 
 # Not urgent
 

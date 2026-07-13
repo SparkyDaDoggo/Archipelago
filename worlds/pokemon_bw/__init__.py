@@ -143,6 +143,11 @@ class PokemonBWWorld(World):
         self.regions: dict[str, Region] | None = None
         self.prepare_text = None
         self.rules_dict: RulesDict | None = None
+        """IMPORTANT: Always do
+        `lambda state: rule(state, world)`
+        for single rules and
+        `lambda state: rule_1(state, world) and rule_2(state, world) and ...`
+        for multiple rules"""
         self.master_ball_seller_cost: int = 0
         self.filler_nested: list[str | list] | None = None
         self.slot_data_cache: dict[str, Any] | None = None
@@ -156,7 +161,7 @@ class PokemonBWWorld(World):
         from .generate import trainers
         from .data import version
         from .plugins import load_plugins
-        from .plugins.generate import plugins_generate_early, plugins_generate_encounters
+        from .plugins.generate import plugins_generate_early, plugins_generate_encounters, plugins_fill_rules
 
         # Load values from UT if this is a regenerated world
         if hasattr(self.multiworld, "re_gen_passthrough"):
@@ -197,6 +202,7 @@ class PokemonBWWorld(World):
         self.regions = locations.get_regions(self)
         self.prepare_text = version.revert
         self.rules_dict = locations.create_rule_dict(self)
+        plugins_fill_rules(self)
         locations.connect_regions(self)
         locations.cleanup_regions(self.regions)
         species_checklist = checklist.get_species_checklist(self)
@@ -229,9 +235,10 @@ class PokemonBWWorld(World):
         self.multiworld.regions.extend(self.regions.values())
 
     def create_items(self) -> None:
-        from .plugins.generate import plugins_create_items
+        from .plugins.generate import plugins_create_items, plugins_create_items_main_only
 
         item_pool = items.get_main_item_pool(self)
+        plugins_create_items_main_only(self, item_pool)
         items.populate_starting_inventory(self, item_pool)
         if len(item_pool) > self.to_be_filled_locations:
             raise Exception(f"Player {self.player_name} has more guaranteed items ({len(item_pool)}) "
