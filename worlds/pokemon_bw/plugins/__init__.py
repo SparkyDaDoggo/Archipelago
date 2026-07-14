@@ -23,6 +23,11 @@ if TYPE_CHECKING:
     from BaseClasses import CollectionRule
     ModifiedExtendedRule = Callable[["AccessRule", CollectionState, "PokemonBWWorld"], bool]
 
+try:
+    from ._dev import DEV
+except ImportError:
+    DEV = False
+
 
 all_plugin_classes: list[type] | None = None
 
@@ -98,7 +103,7 @@ class OverrideProtocol(PluginProtocol):
         self.all_plugins = plugins
         self.patch_instance = patch_instance
         self.world = world
-        self.random = Random(PluginProtocol.slot_data["seed"])
+        self.random = Random(self.slot_data["seed"])
 
     def patching_prepare(self, rom: NintendoDSRom, files_dump: dict[str, bytes | bytearray], common_narcs: dict,
                          common_ov_table: dict, common_ov_arrays: dict, common_arm7: bytearray, common_arm9: bytearray):
@@ -182,7 +187,8 @@ class OverrideProtocol(PluginProtocol):
     @staticmethod
     def modify_rule(old: "ExtendedRule", new: "ModifiedExtendedRule"):
         if not getattr(old, "_is_modified", False):
-            old_code_function = FunctionType(old.__code__, globals())
+            from ..data.locations.rules import _g
+            old_code_function = FunctionType(old.__code__, _g)
             def wrapper(state: CollectionState, world: "PokemonBWWorld", _old: "ExtendedRule",
                         _new: tuple["ModifiedExtendedRule", ...]):
                 current = _old
@@ -304,18 +310,21 @@ def load_plugins(patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld
                 if not isinstance(module_type.Plugin, type):
                     logging.warning(f"{module_name[7:]}.Plugin is not a class")
                 else:
+                    if DEV and not hasattr(module_type.Plugin, "_allow_dev"):
+                        continue
+                    logging.info(f"Plugin {module_name[7:]} loaded")
                     for key, value in OverrideProtocol.__dict__.items():
-                        if not isinstance(value, Callable):
+                        if not isinstance(value, Callable | classmethod):
                             continue
                         setattr(module_type.Plugin, key, value)
                     for key, value in FillProtocol.__dict__.items():
-                        if not isinstance(value, Callable) or hasattr(module_type.Plugin, key):
+                        if not isinstance(value, Callable | classmethod) or hasattr(module_type.Plugin, key):
                             continue
                         setattr(module_type.Plugin, key, value)
                     getattr(module_type.Plugin, "stage_init")()
                     all_plugin_classes.append(module_type.Plugin)
             elif "." not in module_name[7:]:
-                logging.warning(f"{module_name[7:]} has the patch plugin naming scheme, "
+                logging.warning(f"{module_name[7:]} has the plugin naming scheme, "
                                 f"but doesn't contain a class named 'Plugin' in __init__.py")
     plugins: list[Plugin] = []
     for plugin_class in all_plugin_classes:

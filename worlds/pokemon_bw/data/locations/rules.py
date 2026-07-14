@@ -1,6 +1,5 @@
 from .. import ExtendedRule, InclusionRule
 from ..pokemon import species
-from ..items import tm_hm
 
 
 # Item requirements
@@ -168,10 +167,6 @@ has_fighting_type_species: ExtendedRule = lambda state, world: (
     state.has_any(world.fighting_type_species, world.player)
 )
 
-has_any_tm_hm: ExtendedRule = lambda state, world: (
-    state.has_any(tm_hm.tm, world.player) or state.has_any(tm_hm.hm, world.player)
-)
-
 striaton_hidden_item: ExtendedRule = lambda state, world: state.can_reach_region("Route 3", world.player) or can_use_surf(state, world)
 dark_cave: ExtendedRule = lambda state, world: not world.options.modify_logic.is_require_flash or can_use_flash(state, world)
 challengers_cave: ExtendedRule = lambda state, world: has_red_chain(state, world) and dark_cave(state, world)
@@ -207,7 +202,7 @@ extended_rules_list: tuple = (
     has_forces_of_nature, has_celebi, has_legendary_beasts,
     has_25_species, has_51_species, has_60_species, has_115_species,
 
-    has_fighting_type_species, has_any_tm_hm,
+    has_fighting_type_species,
     striaton_hidden_item, dark_cave, challengers_cave, mistralton_cave, trial_chamber, moor_of_icirrus,
 )
 
@@ -217,3 +212,7 @@ extended_rules_list: tuple = (
 changeable_seasons: InclusionRule = lambda world: world.options.season_control != "vanilla"
 disabled: InclusionRule = lambda world: False  # Due to missing wild randomization
 randomized_wild: InclusionRule = lambda world: world.options.randomize_wild_pokemon.is_randomize
+
+# Technical stuff
+
+_g = globals()

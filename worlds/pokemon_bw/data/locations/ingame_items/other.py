@@ -142,8 +142,8 @@ table: dict[str, FlagLocationData] = {
     "Driftveil City - Item from girl in pokémon center #2": FlagLocationData(147, always_default, "Driftveil City", None, None),
     "Driftveil City - Item from girl in pokémon center #3": FlagLocationData(147, always_default, "Driftveil City", None, None),
     "Driftveil City - Item from man in black in market": FlagLocationData(365, always_default, "Driftveil City", None, None),
-    # That lady is asking for a random TM move every day
-    "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move": FlagLocationData(0x1BC, always_excluded, "Driftveil City", disabled, has_any_tm_hm),
+    # That lady is asking for a random TM move every day, rule removed in order to reduce imports in rules.py
+    "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move": FlagLocationData(0x1BC, always_excluded, "Driftveil City", disabled, None),
     "Driftveil Gym - Gym guide item": FlagLocationData(122, always_default, "Driftveil City", None, None),
     "Cold Storage - Item from worker": FlagLocationData(316, always_default, "Cold Storage", None, None),
     "Route 6 - Item from ranger Shanti": FlagLocationData(1420+186, always_default, "Route 6", None, None),

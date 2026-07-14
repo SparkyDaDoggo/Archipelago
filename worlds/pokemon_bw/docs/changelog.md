@@ -7,6 +7,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added the `modify_local_rule` plugin API function
 - Added the `stage_init`, `fill_rules`, and `create_items_main_only` plugin hooks
 - Tweaked location and region connection rules to be a bit more plugin friendly
+- Made the `if DEV: return` in plugins obsolete
+- Fixed not being able to modify rules that use other rules within their calculation
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.3.0, except the pre-release 0.3.99(9)
