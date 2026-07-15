@@ -94,6 +94,8 @@ class TradeEncounterData(NamedTuple):
 
 class TrainerData(NamedTuple):
     id: int
+    name: str
+    region: str
     trainer_class: int
     pokemon_count: int
     items: tuple[str | None, str | None, str | None, str | None] | None  # Will be filled in the future
@@ -131,8 +133,6 @@ class EncounterRegionConnectionData(NamedTuple):
     entering_region: str
     rules: tuple[ExtendedRule, ...] | ExtendedRule | None
     inclusion_rule: InclusionRule | None  # None means always included
-    # The following will become important when wild encounter randomization happens
-    # file_number: int
 
 
 class SpeciesData(NamedTuple):
