@@ -170,6 +170,7 @@ encounter_can_set_winter: ExtendedRule = lambda state, world: (
 # Region requirements
 
 can_beat_ghetsis: ExtendedRule = lambda state, world: state.can_reach_region("N's Castle", world.player)
+can_beat_alder: ExtendedRule = lambda state, world: state.can_reach_region("Pokémon League", world.player)
 can_encounter_swords_of_justice: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton Cave Inner", world.player)
 can_cut_dreamyard_tree: ExtendedRule = lambda state, world: state.can_reach_region("Dreamyard North", world.player)
 can_go_deeper_into_relic_castle: ExtendedRule = lambda state, world: state.can_reach_region("Relic Castle Lower Floors", world.player)
@@ -239,9 +240,9 @@ extended_rules_list: tuple = (
     can_set_other_than_winter, can_catch_all_deerlings, can_use_surf_or_set_other_than_winter,
     encounter_can_set_spring, encounter_can_set_summer, encounter_can_set_autumn, encounter_can_set_winter,
 
-    can_beat_ghetsis, can_encounter_swords_of_justice, can_cut_dreamyard_tree, can_go_deeper_into_relic_castle,
-    can_go_to_relic_castle_basement, can_find_woman_on_village_bridge, can_go_to_nimbasa_city,
-    can_go_to_mistralton_city, can_spawn_roamer,
+    can_beat_ghetsis, can_beat_alder, can_encounter_swords_of_justice, can_cut_dreamyard_tree,
+    can_go_deeper_into_relic_castle, can_go_to_relic_castle_basement, can_find_woman_on_village_bridge,
+    can_go_to_nimbasa_city, can_go_to_mistralton_city, can_spawn_roamer,
 
     has_forces_of_nature, has_celebi, has_legendary_beasts, has_genesect, has_shaymin, has_other_locations_species,
     has_25_species, has_51_species, has_60_species, has_115_species,
@@ -253,6 +254,7 @@ extended_rules_list: tuple = (
 
 # Encounter inclusion rules
 
+vanilla_seasons: InclusionRule = lambda world: world.options.season_control == "vanilla"
 changeable_seasons: InclusionRule = lambda world: world.options.season_control != "vanilla"
-disabled: InclusionRule = lambda world: False  # Due to missing wild randomization
+disabled: InclusionRule = lambda world: False
 randomized_wild: InclusionRule = lambda world: world.options.randomize_wild_pokemon.is_randomize

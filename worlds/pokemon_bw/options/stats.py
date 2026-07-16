@@ -187,7 +187,7 @@ class RandomizeTMHMCompatibility(ToggleSet):
     Randomizes the TM and HM compatibility of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Force all TMs** - Forces all TMs to be compatible with every pokemon species.
+    - **Force all TMs** - Forces all TMs (not HMs) to be compatible with every pokemon species.
     - **Force all HMs** - Forces all HMs (and TM70 Flash) to be compatible with every
         pokemon species.
     - **Randomize** - Toggles TM and HM compatibility being randomized. Automatically

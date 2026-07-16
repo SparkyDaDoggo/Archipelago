@@ -66,6 +66,14 @@ class DexLocationData(NamedTuple):
     ut_alias: str | None = None
 
 
+class TrainerLocationData(NamedTuple):
+    trainer_ids: int | tuple[int, ...]
+    region: str
+    # common_script: bool
+    inclusion_rule: InclusionRule | None
+    rule: ExtendedRule | None
+
+
 class EncounterData(NamedTuple):
     species_black: tuple[int, int]
     species_white: tuple[int, int]
@@ -96,7 +104,7 @@ class TrainerData(NamedTuple):
     id: int
     name: str
     region: str
-    trainer_class: int
+    trainer_class: str
     pokemon_count: int
     items: tuple[str | None, str | None, str | None, str | None] | None  # Will be filled in the future
     held_items: bool
