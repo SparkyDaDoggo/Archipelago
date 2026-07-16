@@ -1,6 +1,5 @@
 from .. import ExtendedRule, InclusionRule
 from ..pokemon import species
-from ..items import tm_hm
 
 
 # Item requirements
@@ -97,6 +96,30 @@ can_set_winter: ExtendedRule = lambda state, world: (
     )
 )
 
+can_set_autumn: ExtendedRule = lambda state, world: (
+    world.options.season_control == "vanilla" or (
+        state.can_reach_region("Nimbasa City", world.player) and (
+            world.options.season_control == "changeable" or state.has("Autumn", world.player)
+        )
+    )
+)
+
+can_set_summer: ExtendedRule = lambda state, world: (
+    world.options.season_control == "vanilla" or (
+        state.can_reach_region("Nimbasa City", world.player) and (
+            world.options.season_control == "changeable" or state.has("Summer", world.player)
+        )
+    )
+)
+
+can_set_spring: ExtendedRule = lambda state, world: (
+    world.options.season_control == "vanilla" or (
+        state.can_reach_region("Nimbasa City", world.player) and (
+            world.options.season_control == "changeable" or state.has("Spring", world.player)
+        )
+    )
+)
+
 can_set_other_than_winter: ExtendedRule = lambda state, world: (
     world.options.season_control == "vanilla" or (
         state.can_reach_region("Nimbasa City", world.player) and (
@@ -115,8 +138,8 @@ can_catch_all_deerlings: ExtendedRule = lambda state, world: (
     ), world.player)
 )
 
-can_use_strength_and_set_other_than_winter: ExtendedRule = lambda state, world: (
-    can_use_strength(state, world) and can_set_other_than_winter(state, world)
+can_use_surf_or_set_other_than_winter: ExtendedRule = lambda state, world: (
+    can_use_surf(state, world) or can_set_other_than_winter(state, world)
 )
 
 encounter_can_set_spring: ExtendedRule = lambda state, world: (
@@ -177,10 +200,6 @@ has_fighting_type_species: ExtendedRule = lambda state, world: (
     state.has_any(world.fighting_type_species, world.player)
 )
 
-has_any_tm_hm: ExtendedRule = lambda state, world: (
-    state.has_any(tm_hm.tm, world.player) or state.has_any(tm_hm.hm, world.player)
-)
-
 striaton_hidden_item: ExtendedRule = lambda state, world: (
     state.can_reach_region("Route 3", world.player) or can_use_surf(state, world)
 )
@@ -216,7 +235,8 @@ extended_rules_list: tuple = (
     has_trio_badge, has_basic_badge, has_insect_badge, has_bolt_badge,
     has_quake_badge, has_jet_badge, has_freeze_badge, has_legend_badge,
 
-    can_set_winter, can_set_other_than_winter, can_catch_all_deerlings, can_use_strength_and_set_other_than_winter,
+    can_set_winter, can_set_autumn, can_set_summer, can_set_spring,
+    can_set_other_than_winter, can_catch_all_deerlings, can_use_surf_or_set_other_than_winter,
     encounter_can_set_spring, encounter_can_set_summer, encounter_can_set_autumn, encounter_can_set_winter,
 
     can_beat_ghetsis, can_encounter_swords_of_justice, can_cut_dreamyard_tree, can_go_deeper_into_relic_castle,
@@ -226,7 +246,7 @@ extended_rules_list: tuple = (
     has_forces_of_nature, has_celebi, has_legendary_beasts, has_genesect, has_shaymin, has_other_locations_species,
     has_25_species, has_51_species, has_60_species, has_115_species,
 
-    has_fighting_type_species, has_any_tm_hm, striaton_hidden_item, dark_cave,
+    has_fighting_type_species, striaton_hidden_item, dark_cave,
     challengers_cave, mistralton_cave, trial_chamber, moor_of_icirrus, driftveil_random_tm,
 )
 

@@ -168,7 +168,7 @@ table: dict[str, FlagLocationData] = {
     "Dragonspiral Tower - Item from Cedric Juniper": FlagLocationData(310, always_default, "Dragonspiral Tower", None, None),
     "Route 8 - Item from Bianca": FlagLocationData(0x1A8, always_default, "Route 8", None, None),
     "Route 8 - Item from ranger Lewis": FlagLocationData(1420+184, always_default, "Route 8", None, None),
-    "Route 8 - Item from ranger Annie": FlagLocationData(1420+188, always_default, "Route 8", None, None),
+    "Route 8 - Item from ranger Annie": FlagLocationData(1420+188, always_default, "Moor of Icirrus", None, None),
     "Route 8 - Item from eastern parasol lady": FlagLocationData(0x1C2, always_default, "Route 8", None, None),
     "Moor of Icirrus - Item from ranger Chloris": FlagLocationData(1420+582, always_default, "Moor of Icirrus", None, None),
     "Moor of Icirrus - Item from ranger Harry": FlagLocationData(1420+583, always_default, "Moor of Icirrus", None, None),

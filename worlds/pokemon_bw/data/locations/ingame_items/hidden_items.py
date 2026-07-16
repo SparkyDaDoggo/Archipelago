@@ -153,5 +153,5 @@ seasonal: dict[str, FlagLocationData] = {
     "Icirrus City - South hidden item #2 (Winter)": FlagLocationData(0x1C1, season_dependant, "Icirrus City", None, can_set_winter),
     "Icirrus City - South hidden item #3 (Winter)": FlagLocationData(1026, season_dependant, "Icirrus City", None, can_set_winter),
     "Route 8 - West hidden item (Spring/Summer/Autumn)": FlagLocationData(980, season_dependant, "Route 8", None, can_set_other_than_winter),
-    "Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)": FlagLocationData(1037, season_dependant, "Moor of Icirrus", None, can_use_strength_and_set_other_than_winter),
+    "Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)": FlagLocationData(1037, season_dependant, "Moor of Icirrus West", None, can_set_other_than_winter),
 }

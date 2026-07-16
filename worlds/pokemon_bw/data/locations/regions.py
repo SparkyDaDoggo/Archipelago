@@ -59,6 +59,7 @@ region_list: set[str] = {
     "Dragonspiral Tower",
     "Route 8",
     "Moor of Icirrus",
+    "Moor of Icirrus West",  # Behind strength boulder
     "Tubeline Bridge",
     "Route 9",
     "Challenger's Cave",
