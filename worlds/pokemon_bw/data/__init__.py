@@ -145,18 +145,14 @@ class EncounterRegionConnectionData(NamedTuple):
 
 class SpeciesData(NamedTuple):
     dex_name: str
+    species_name: str | None
     dex_number: int
     form: int
-    type_1: str
-    type_2: str
-    base_hp: int
-    base_attack: int
-    base_defense: int
-    base_sp_attack: int
-    base_sp_defense: int
-    base_speed: int
+    types: tuple[str, str]
+    base_stats: tuple[int, int, int, int, int, int]
     catch_rate: int
     gender_ratio: int
+    exp_curve: int
     # starts with 1 for base evolutions
     evolution_stage: int
     # (primary, secondary, hidden)

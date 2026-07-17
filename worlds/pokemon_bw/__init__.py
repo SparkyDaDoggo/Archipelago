@@ -166,6 +166,7 @@ class PokemonBWWorld(World):
         self.filler_nested: list[str | list] | None = None
         self.slot_data_cache: dict[str, Any] | None = None
         self.species_entries: dict[str, SpeciesEntry] | None = None
+        self.species_entries_by_id: dict[tuple[int, int], SpeciesEntry] | None = None
         self.plugins: list[Plugin] | None = None
         self.other_locations_species: str | None = None
         self.studio_castelia_type: str | None = None
@@ -228,7 +229,7 @@ class PokemonBWWorld(World):
         locations.connect_regions(self)
         locations.cleanup_regions(self.regions)
         self.move_entries, self.type_chart = generate_move_data(self)
-        self.species_entries = species.generate_species_data(self)
+        self.species_entries, self.species_entries_by_id = species.generate_species_data(self)
         species_checklist = checklist.get_species_checklist(self)
         slots_checklist = checklist.get_slots_checklist(self)
         # Static and trade encounter generation also remove and add species from/to checklist

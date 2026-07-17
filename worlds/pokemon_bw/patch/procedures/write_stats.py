@@ -15,7 +15,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
     for species, data in bw_patch_instance.world.species_entries.items():
         if data.form and not data.is_custom_form:
             continue
-        byt = bytearray(23)
+        byt = bytearray(24)
 
         if data.write & 0b100:
             byt[:6] = (data.base_hp, data.base_attack, data.base_defense,
@@ -42,7 +42,12 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         else:
             byt[22] = 0x80
 
-        if data.write & 0b1101101:
+        if data.write & 0b10000000:
+            byt[23] = data.exp_curve
+        else:
+            byt[23] = 0xff
+
+        if data.write & 0b11101101:
             opened_zipfile.writestr(f"stats/{max(data.dex_number, data.custom_form_file)}", bytes(byt))
 
 
@@ -64,6 +69,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             byt[7] = loaded[9] if loaded[9] != 0xff else byt[7]
             if not loaded[22] & 0x80:
                 byt[0x28:0x35] = loaded[10:23]
+            byt[21] = loaded[23] if loaded[23] != 0xff else byt[21]
 
             narc.files[i] = bytes(byt)
             files_dump[f"a016/{i}"] = narc.files[i]

@@ -142,7 +142,7 @@ methods: dict[str, EvolutionMethodData] = {
     "Level up high beauty": EvolutionMethodData(16, False, lambda value, species, world: always_possible),  # Only in plando
     "Level up (female)": EvolutionMethodData(23, True, appropriate_region),  # Repeatable encounters, including static, are ensured
     "Level up (male)": EvolutionMethodData(24, True, appropriate_region),  # Repeatable encounters, including static, are ensured
-    "Level up with party member": EvolutionMethodData(22, False, lambda value, spec, world: has_item(species.by_id[value, 0])),
+    "Level up with party member": EvolutionMethodData(22, False, lambda value, spec, world: has_item(species.by_id[value, 0].species_name)),
 }
 
 

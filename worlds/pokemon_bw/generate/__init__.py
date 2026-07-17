@@ -1,6 +1,6 @@
-from typing import NamedTuple, Self, TYPE_CHECKING
+from typing import NamedTuple, Self, TYPE_CHECKING, Iterator, Literal
 
-from ..data import InclusionRule, ExtendedRule, SpeciesData, LevelUpMovesetData, TMHMMovesetData
+from ..data import InclusionRule, ExtendedRule, SpeciesData, LevelUpMovesetData, TMHMMovesetData, MoveData
 from ..data.pokemon import movesets_level_up, movesets_tm_hm
 
 if TYPE_CHECKING:
@@ -17,7 +17,7 @@ class EvoLine:
             curr = curr.members
         return curr
 
-    def __contains__(self, item):
+    def __contains__(self, item: int):
         return item in self.search().members
 
     def merge(self, other: Self):
@@ -29,27 +29,26 @@ class EvoLine:
 
 class SpeciesEntry:
     dex_name: str
+    species_name: str
     dex_number: int
     form: int
-    type_1: str
-    type_2: str
-    base_hp: int
-    base_attack: int
-    base_defense: int
-    base_sp_attack: int
-    base_sp_defense: int
-    base_speed: int
+    types: tuple[str, str]
+    base_stats: tuple[int, int, int, int, int, int]
+    base_stats_copy: tuple[int, int, int, int, int, int]
     catch_rate: int
     gender_ratio: int
+    exp_curve: int
     # starts with 0 for base evolutions
     evolution_stage: int
     # (primary, secondary, hidden)
     abilities: tuple[str, str, str]
     # tuple(method, parameter, evolve into)
-    evolutions: list[tuple[str, int, int]]
-    evolutions_copy: list[tuple[str, int, int]]
+    evolutions: list[tuple[str, int, tuple[Self, ...]]]
+    evolutions_copy: list[tuple[str, int, int]]  # This is just for comparison
+    pre_evolutions: dict[Self, bool]
     # tuple(level, move name)
     level_up_moves: LevelUpMovesetData
+    vanilla_moves_count: int
     # TM number (internal order is TM1-95 HM1-6)
     tm_hm_moves: TMHMMovesetData
     is_custom_form: bool
@@ -61,30 +60,28 @@ class SpeciesEntry:
     b3 = catch rate
     b4 = levelup moveset
     b5 = types
-    b6 = tm/hm compatibility"""
-    evo_line: EvoLine | None = None
+    b6 = tm/hm compatibility
+    b7 = exp curve"""
+    evo_line: EvoLine | None = None  # Only instantiated when randomized
 
     def __init__(self, name: str, data: SpeciesData):
-        from ..data.pokemon.species import by_name
-
         self.dex_name = data.dex_name
+        self.species_name = data.species_name or data.dex_name
         self.dex_number = data.dex_number
         self.form = data.form
-        self.type_1 = data.type_1
-        self.type_2 = data.type_2
-        self.base_hp = data.base_hp
-        self.base_attack = data.base_attack
-        self.base_defense = data.base_defense
-        self.base_sp_attack = data.base_sp_attack
-        self.base_sp_defense = data.base_sp_defense
-        self.base_speed = data.base_speed
+        self.types = data.types
+        self.base_stats = data.base_stats
+        self.base_stats_copy = data.base_stats
         self.catch_rate = data.catch_rate
         self.gender_ratio = data.gender_ratio
+        self.exp_curve = data.exp_curve
         self.evolution_stage = data.evolution_stage
         self.abilities = data.abilities
-        self.evolutions = [(evo_tup[0], evo_tup[1], by_name[evo_tup[2]].dex_number) for evo_tup in data.evolutions]
-        self.evolutions_copy = self.evolutions.copy()
+        self.evolutions = []  # Gets filled from outside of __init__
+        self.evolutions_copy = []  # Gets filled from outside of __init__
+        self.pre_evolutions = {}  # Gets filled from outside of __init__
         self.level_up_moves = movesets_level_up.table[name]
+        self.vanilla_moves_count = len(self.level_up_moves)
         self.tm_hm_moves = movesets_tm_hm.table[name]
         self.is_custom_form = data.is_custom_form
         self.custom_form_file = data.custom_form_file
@@ -146,23 +143,21 @@ class SpeciesChecklist:
     to_check: list[str]
     already_checked: set[str]
     by_name: dict[str, SpeciesEntry]
-    by_id: dict[tuple[int, int], str]
+    by_id: dict[tuple[int, int], SpeciesEntry]
 
     def __init__(self, initial: list[str], world: "PokemonBWWorld"):
-        from ..data.pokemon.species import by_id
-
-        self.to_check = list({entry: 0 for entry in initial})
+        self.to_check = list({entry: 0 for entry in initial})  # list->dict->list to get rid of duplicates, no sets because determinism
         self.already_checked = set()
         self.by_name = world.species_entries
-        self.by_id = by_id
+        self.by_id = world.species_entries_by_id
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return self.to_check.__iter__()
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.to_check)
 
-    def copy_list(self):
+    def copy_list(self) -> list[str]:
         return self.to_check.copy()
 
     def add(self, species: str):
@@ -182,6 +177,7 @@ class SpeciesChecklist:
         data = self.by_name[species]
         for evolution in data.evolutions:
             if evolution[0] == "Level up with party member":
-                self.add(self.by_id[(evolution[1], 0)])
-            evo_id = (evolution[2], data.form)
-            self.check(self.by_id[evo_id if evo_id in self.by_id else (evolution[2], 0)], loop+1)
+                self.add(self.by_id[(evolution[1], 0)].species_name)
+            for evo_data in evolution[2]:
+                if evo_data.form == data.form or (evo_data.form == 0 and (evo_data.dex_number, data.form) not in self.by_id):
+                    self.check(evo_data.species_name, loop+1)
