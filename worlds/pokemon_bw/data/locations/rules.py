@@ -20,14 +20,14 @@ can_use_cut: ExtendedRule = lambda state, world: (
 )
 
 can_use_waterfall: ExtendedRule = lambda state, world: (
-    state.has_all(("HM03 Surf", "HM05 Waterfall"), world.player)
-    and state.has_any(world.surf_species, world.player)
+    can_use_surf(state, world)
+    and state.has("HM05 Waterfall", world.player)
     and state.has_any(world.waterfall_species, world.player)
 )
 
 can_use_dive: ExtendedRule = lambda state, world: (
-    state.has_all(("HM03 Surf", "HM06 Dive"), world.player)
-    and state.has_any(world.surf_species, world.player)
+    can_use_surf(state, world)
+    and state.has("HM06 Dive", world.player)
     and state.has_any(world.dive_species, world.player)
 )
 
@@ -37,13 +37,7 @@ can_use_flash: ExtendedRule = lambda state, world: (
 )
 
 can_use_surf_or_strength: ExtendedRule = lambda state, world: (
-    (
-        state.has("HM03 Surf", world.player)
-        and state.has_any(world.surf_species, world.player)
-    ) or (
-        state.has("HM04 Strength", world.player)
-        and state.has_any(world.strength_species, world.player)
-    )
+    can_use_surf(state, world) or can_use_strength(state, world)
 )
 
 can_fish: ExtendedRule = lambda state, world: state.has("Super Rod", world.player)
@@ -258,3 +252,7 @@ vanilla_seasons: InclusionRule = lambda world: world.options.season_control == "
 changeable_seasons: InclusionRule = lambda world: world.options.season_control != "vanilla"
 disabled: InclusionRule = lambda world: False
 randomized_wild: InclusionRule = lambda world: world.options.randomize_wild_pokemon.is_randomize
+
+# Technical stuff
+
+_g = globals()

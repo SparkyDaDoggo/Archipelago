@@ -35,6 +35,18 @@ def plugins_generate_early(world: "PokemonBWWorld"):
         popup(plugin_errors, "generate_early")
 
 
+def plugins_fill_rules(world: "PokemonBWWorld"):
+    plugin_errors = []
+    for plugin in world.plugins:
+        try:
+            plugin.fill_rules()
+        except Exception as e:
+            for arg in e.args:
+                plugin_errors.append(f"[{plugin.name}] {arg}")
+    if plugin_errors:
+        popup(plugin_errors, "fill_rules")
+
+
 def plugins_generate_encounters(world: "PokemonBWWorld"):
     plugin_errors = []
     for plugin in world.plugins:
@@ -45,6 +57,18 @@ def plugins_generate_encounters(world: "PokemonBWWorld"):
                 plugin_errors.append(f"[{plugin.name}] {arg}")
     if plugin_errors:
         popup(plugin_errors, "generate_encounters")
+
+
+def plugins_create_items_main_only(world: "PokemonBWWorld", item_pool: list["PokemonBWItem"]):
+    plugin_errors = []
+    for plugin in world.plugins:
+        try:
+            plugin.create_items_main_only(item_pool)
+        except Exception as e:
+            for arg in e.args:
+                plugin_errors.append(f"[{plugin.name}] {arg}")
+    if plugin_errors:
+        popup(plugin_errors, "create_items_main_only")
 
 
 def plugins_create_items(world: "PokemonBWWorld", item_pool: list["PokemonBWItem"]):
