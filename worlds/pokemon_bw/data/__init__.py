@@ -130,6 +130,13 @@ class TrainerPokemonData(NamedTuple):
     # moves: tuple[str, str, str, str] | None
 
 
+class RegionData(NamedTuple):
+    type: Literal["City", "Route", "Dungeon", "Gate", "Interior", "Bridge", "Virtual"]
+    map_id: int  # -1 for virtual maps
+    has_encounters: bool  # referring to map id
+    full_map: bool = True  # Not a full map are e.g. Route 1 East/West
+
+
 class RegionConnectionData(NamedTuple):
     exiting_region: str
     entering_region: str

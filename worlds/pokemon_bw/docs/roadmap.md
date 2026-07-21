@@ -135,6 +135,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Gendersanity
   - All combinations of Dex/Seen/Form/Shiny/Gender/Count-sanities
     - Will be hidden from template, simple webhost, and options creator, instead explained in options guide
+    - Internal flag that disables all combined sanities from doing anything in generation and being added to location lookup table
+      - Publishing a plugin that simply flips that flag
     - Dex/Seen distinguishes between caught/seen flags, thereby always using exactly one of them
     - Form uses form flags instead of dex flags, but doesn't distinguish dex/seen and gender
     - Shiny reduces to only shiny flags instead of shiny/nonshiny flags (and activates shiny rate being changeable ingame)
@@ -155,6 +157,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Rock Smash rocks
     - Roadblocks on routes 13+14
     - Something with the badge gates
+    - Something needed to cross quicksand in relic castle
   - Starter/Static/Gift/Trade/Legendary pokémon randomization
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Fan club chairman levels checks modifier

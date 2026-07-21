@@ -325,6 +325,7 @@ class PokemonBWWorld(World):
             ).write()
 
     def part_slot_data(self) -> dict[str, Any]:
+        """Earliest to call, plugins get this"""  # though they actually don't need it in this form?
         if self.slot_data_cache is None:
             self.slot_data_cache = {
                 "options": {
@@ -366,15 +367,19 @@ class PokemonBWWorld(World):
                     "text_plando": self.options.text_plando.to_slot_data(),
                     "plugin_options": self.options.plugin_options.value,
                     "reusable_tms": self.options.reusable_tms.current_key,
-                }
+                },
+                "seed": self.seed,
             }
         return self.slot_data_cache
 
     def extended_slot_data(self) -> dict[str, Any]:
+        """
+        Only call in patching, various values are initialized only late in generation,
+        but tracker stuff is not needed in patch files
+        """
         part = self.part_slot_data()
-        if "seed" not in part:
+        if "master_ball_seller_cost" not in part:
             part |= {
-                "seed": self.seed,
                 "master_ball_seller_cost": self.master_ball_seller_cost,
                 "studio_castelia_type": self.studio_castelia_type,
                 "driftveil_random_move_id": self.driftveil_random_move_id,

@@ -253,16 +253,29 @@ class DoorShuffle(ToggleSet):
     Shuffles or randomizes door warps.
     You can add as many of the following modifiers as you want.
 
-    - **Gates** - Shuffles city gate entrances, leading to the region having a different
-        layout than normally.
+    - **Gates** - Shuffles all gate entrances, leading to the region having a
+        slightly different layout than normally.
     - **Buildings per map** - Shuffles the building entrances (not gates) within every
         city or route.
     - **Buildings anywhere** - Shuffles building entrances (not gates) all over Unova.
-    - **Dungeons** - Shuffles the location of all dungeons with two entrances and all
+        Supersedes **Building per map**.
+    - **Dungeons** - Shuffles the locations of all dungeons with two entrances and all
         dungeons with only one entrance.
-    - **Full** - Fully shuffle all door warps. Overrides all modifiers above.
-    - **Decoupled** - Removes the requirement for all shuffled door warps leading to
+    - **Dungeon interiors** - Shuffles all entrances within a dungeon.
+    - **Dungeon interiors anywhere** - Shuffles all entrances within all dungeons between
+        each other. Supersedes **Dungeon interiors**.
+    - **Bridges** - Shuffles the locations of all bridges with each other.
+    - **Castelia layout** - Shuffles the open areas of Castelia City, leading to that
+        City having a slightly different layout than normally.
+    - **Full** - Fully shuffle all door warps. Supersedes all modifiers above.
+    - **Decoupled** - Removes the requirement for all shuffled warps leading to
         each other.
+    """
+    _ = """
+    - **Elevators** - Shuffles all elevator destinations. The only buildings with
+        elevators are those in Castelia City. Not included in **Full**.
+    - **Quicksand** - Shuffles all quicksand traps in Relic Castle amongst each other. 
+        Not included in **Full**.
     """
     display_name = "Door Shuffle"
     valid_keys_casefold = True
@@ -271,7 +284,13 @@ class DoorShuffle(ToggleSet):
         "Buildings per map",
         "Buildings anywhere",
         "Dungeons",
+        "Dungeon interiors",
+        "Dungeon interiors anywhere",
+        "Bridges",
+        "Castelia layout",
         "Full",
+        # "Elevators",
+        # "Quicksand",
         "Decoupled",
     ]
     default = []
