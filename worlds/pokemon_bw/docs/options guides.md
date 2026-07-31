@@ -354,6 +354,10 @@ Every entry (currently) consists of the following keys (with all of them being o
   to an empty list if omitted.
 - `catch_rate` sets the catch rate. The higher the catch rate of a pokémon species is, the easier it is to catch.
   Allowed values are in range 3-255. Setting this to 0 or omitting it will not plando the species' catch rate.
+- `egg_groups` overrides that pokémon's egg group(s). It is optional and accepts a single group as a string as well as 
+  up to two groups as a list of strings. An empty list has no effect. See the 
+  [egg group names](plando%20lists.md#egg-group-names) list for allowed names. Note that `Ditto` and `Unknown` cannot 
+  be combined with other egg groups and always have to be a mono group.
 
 ## An example on how using this option could look like
 
@@ -393,6 +397,7 @@ Pokemon Black and White:
       - move: Flamethrower
         level: 99
       override_levelup_moveset: false
+      egg_groups: Water 3
     Genesect:
       types: [Psychic, Fighting]
       levelup_moveset:
@@ -406,6 +411,7 @@ Pokemon Black and White:
       - TM06
       - TM71
       - HM02
+      egg_groups: [Monster, "Human-Like"]
 ```
 
 # Combined goals guide (coming in 0.4.0)

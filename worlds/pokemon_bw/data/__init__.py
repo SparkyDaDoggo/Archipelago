@@ -209,6 +209,11 @@ class TypeData(NamedTuple):
     id: int
 
 
+class EggGroupData(NamedTuple):
+    id: int
+    compatible_types: tuple[str, ...] | None
+
+
 class WildAdjustmentData(NamedTuple):
     calculation: Callable[[int], int]
     file: int

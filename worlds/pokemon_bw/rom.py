@@ -111,7 +111,7 @@ class PatchMethods:
         if w_stats & 0b1:
             procedures.append("write_evolutions")
             write_evolutions.write_patch(patch, opened_zipfile)
-        if w_stats & 0b11101101:
+        if w_stats & 0b111101101:
             procedures.append("write_stats")
             write_stats.write_patch(patch, opened_zipfile)
         if w_stats & 0b10000:

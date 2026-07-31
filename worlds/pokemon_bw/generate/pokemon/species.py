@@ -15,6 +15,7 @@ def generate_species_data(world: "PokemonBWWorld") -> tuple[dict[str, SpeciesEnt
     from .levelup_movesets import randomize_levelup_movesets
     from .types import randomize_types_pre_evo, randomize_types_post_evo
     from .tm_hm_compatibility import randomize_tm_hm_compat
+    from .egg_groups import randomize_egg_groups
 
     all_species = {name: SpeciesEntry(name, data) for name, data in species.by_name.items()}
     by_id = {(data.dex_number, data.form): data for data in all_species.values()}
@@ -45,9 +46,9 @@ def generate_species_data(world: "PokemonBWWorld") -> tuple[dict[str, SpeciesEnt
     # Gender ratio - Evolutions
     # Levelup movesets - Evolutions, types
     # TM/HM compatibility - Evolutions, types
+    # Egg groups - Evolutions, types
     # Abilities - Evolutions
     # Held items - Evolutions
-    # Egg groups - Evolutions, types
 
     randomize_stats_pre_evo(world, all_species, by_id)
     randomize_types_pre_evo(world, all_species, by_id)
@@ -66,8 +67,8 @@ def generate_species_data(world: "PokemonBWWorld") -> tuple[dict[str, SpeciesEnt
     randomize_catch_rates(world, all_species, by_id)
     randomize_levelup_movesets(world, all_species, by_id)
     randomize_tm_hm_compat(world, all_species, by_id)
+    randomize_egg_groups(world, all_species, by_id)
     # randomize_abilities(world, all_species, by_id)
     # randomize_held_items(world, all_species, by_id)
-    # randomize_egg_groups(world, all_species, by_id)
 
     return all_species, by_id

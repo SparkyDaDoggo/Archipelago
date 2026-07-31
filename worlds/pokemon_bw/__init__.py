@@ -343,6 +343,7 @@ class PokemonBWWorld(World):
                     "randomize_level_up_movesets": self.options.randomize_level_up_movesets.value,
                     "randomize_tm_hm_compatibility": self.options.randomize_tm_hm_compatibility.value,
                     "randomize_catch_rates": self.options.randomize_catch_rates.value,
+                    "randomize_egg_groups": self.options.randomize_egg_groups.value,
                     "stats_randomization_adjustments": self.options.stats_randomization_adjustments.value,
                     "stats_plando": self.options.stats_plando.to_slot_data(),
                     "randomize_move_data": self.options.randomize_move_data.value,

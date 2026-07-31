@@ -1548,3 +1548,21 @@ Some of them have been changed in later games, so look twice if you're not entir
 - V-create
 - Fusion Flare
 - Fusion Bolt
+
+# Egg group names
+
+- Monster
+- Water 1
+- Water 2
+- Water 3
+- Bug
+- Flying
+- Field
+- Fairy
+- Grass
+- Human-Like (note that you always have to put this group in quotation marks (`"`))
+- Mineral
+- Amorphous
+- Dragon
+- Ditto
+- Unknown

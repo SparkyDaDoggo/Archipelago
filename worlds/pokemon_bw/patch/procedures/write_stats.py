@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.ZipFile) -> None:
     from ...data.pokemon.types import by_name
     from ...data.pokemon.moves import tm_hm
+    from ...data.pokemon.egg_groups import groups
 
     for species, data in bw_patch_instance.world.species_entries.items():
         if data.form and not data.is_custom_form:
@@ -34,8 +35,11 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
             byt.extend(flags.to_bytes(13, "little"))
         if data.write & 0b10000000:
             byt.append(data.exp_curve)
+        if data.write & 0b100000000:
+            byt.append(groups[data.egg_groups[0]].id)
+            byt.append(groups[data.egg_groups[1]].id)
 
-        if data.write & 0b11101101:
+        if data.write & 0b111101101:
             opened_zipfile.writestr(f"stats/{max(data.dex_number, data.custom_form_file)}", bytes(byt))
 
 
@@ -77,6 +81,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                 byt[0x28:0x35] = read(13)
             if flags & 0b10000000:
                 byt[21] = read_one()
+            if flags & 0b100000000:
+                byt[22] = read_one()
+                byt[33] = read_one()
 
             narc.files[i] = bytes(byt)
             files_dump[f"a016/{i}"] = narc.files[i]

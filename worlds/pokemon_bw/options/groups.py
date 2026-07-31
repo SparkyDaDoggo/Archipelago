@@ -17,6 +17,7 @@ option_groups = [
         RandomizeCatchRates,
         RandomizeLevelUpMovesets,
         RandomizeTMHMCompatibility,
+        RandomizeEggGroups,
         StatsRandomizationAdjustments,
         StatsPlando,
     ]),

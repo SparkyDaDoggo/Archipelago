@@ -51,6 +51,7 @@ class SpeciesEntry:
     vanilla_moves_count: int
     # TM number (internal order is TM1-95 HM1-6)
     tm_hm_moves: TMHMMovesetData
+    egg_groups: tuple[str, str] | None
     is_custom_form: bool
     custom_form_file: int
     write: int = 0
@@ -61,7 +62,8 @@ class SpeciesEntry:
     b4 = levelup moveset
     b5 = types
     b6 = tm/hm compatibility
-    b7 = exp curve"""
+    b7 = exp curve
+    b8 = egg groups"""
     evo_line: EvoLine | None = None  # Only instantiated when randomized
 
     def __init__(self, name: str, data: SpeciesData):
@@ -83,6 +85,7 @@ class SpeciesEntry:
         self.level_up_moves = movesets_level_up.table[name]
         self.vanilla_moves_count = len(self.level_up_moves)
         self.tm_hm_moves = movesets_tm_hm.table[name]
+        self.egg_groups = None
         self.is_custom_form = data.is_custom_form
         self.custom_form_file = data.custom_form_file
 

@@ -243,12 +243,38 @@ class RandomizeHeldItems(ToggleSet):
 
 class RandomizeEggGroups(ToggleSet):
     """
+    Randomizes the egg groups of every pokemon species.
+    You can add as many of the following modifiers as you want.
+
+    - **Randomize** - Toggles egg groups being randomized. Automatically added if any
+        other modifier is added.
+    - **Mono only** - Gives every species only one egg group.
+    - **Dual only** - Gives every species exactly two egg group.
+    - **Correlate with types** - Prevents unreasonable combinations of types and egg
+        groups. Best effect if combined with randomized types.
+    - **Follow evolutions** - Evolved pokemon will have the same egg groups as their
+        pre-evolution(s). Takes priority over **Correlate with types**.
+    - **Allow baby stages** - If **Follow evolutions** is included, pre-evolutions of
+        non-Unknown pokemon are allowed to have the Unknown egg group (which is the case
+        for most vanilla baby pokemon).
+    - **Keep Ditto** - Keeps Ditto's egg group and gives no other pokemon that same egg
+        group. Takes priority over other modifiers.
+
+    **Mono only** and **Dual only** will cancel each other out.
+    """
+    _ = """
+    - **Keep Unknown** - Pokemon with the Unknown egg group will keep that and no other
+        pokemon will get that egg group.
     """
     display_name = "Randomize Egg Groups"
     is_randomize = False
-    is_keep_amount = False
-    is_type_themed = False
+    is_mono_only = False
+    is_dual_only = False
+    is_correlate_with_types = False
     is_follow_evolutions = False
+    is_allow_baby_stages = False
+    is_keep_ditto = False
+    # is_keep_unknown = False
     auto_add_if_any = "Randomize"
 
 
@@ -363,6 +389,7 @@ class PlandoStat(typing.NamedTuple):
     override_levelup_moveset: bool = True
     tm_hm_compatibility: list[str] = []
     catch_rate: int = 0
+    egg_groups: list[str] = []
 
 
 class StatsPlando(Option[dict[str, PlandoStat]]):
@@ -379,21 +406,22 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         base_sp_attack: 255
         types: [Fire, Electric]
         evolutions:
-          - species: Squirtle
-            method: Stone
-            stone: Water Stone
-          - species: Eevee
-            method: Level up
-            level: 30
+        - species: Squirtle
+          method: Stone
+          stone: Water Stone
+        - species: Eevee
+          method: Level up
+          level: 30
         override_evolutions: false
         levelup_moveset:
-          - move: Earthquake
-            level: 1
-          - move: Pound
-            level: 100
+        - move: Earthquake
+          level: 1
+        - move: Pound
+          level: 100
         override_levelup_moveset: false
         tm_hm_compatibility: [TM70, HM03]
         catch_rate: 190
+        egg_groups: [Monster, "Human-Like"]
     ```
 
     Stats Plando requires the corresponding host setting to be enabled, else it will be
@@ -425,7 +453,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 continue
             if not isinstance(plando, dict):
                 raise OptionError(f"Expected dictionary as Stats Plando entry for species {spec}, got {type(plando)}")
-            plando_evolutions, plando_levelup_moves, plando_types = False, False, []
+            plando_evolutions, plando_levelup_moves, plando_types, plando_egg_groups = False, False, [], []
             for plando_key, value in plando.items():
                 if plando_key not in PlandoStat._fields:
                     raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
@@ -476,12 +504,20 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                         plando_types = [value]
                     else:
                         raise OptionError(f"Expected value of types key to be a list or string, got {type(value)}")
+                if plando_key == "egg_groups":
+                    if isinstance(value, list) or isinstance(value, tuple):
+                        plando_types = list(value)
+                    elif isinstance(value, str):
+                        plando_types = [value]
+                    else:
+                        raise OptionError(f"Expected value of egg_groups key to be a list or string, got {type(value)}")
                 if plando_key == "tm_hm_compatibility":
                     if not isinstance(value, list):
                         raise OptionError(f"Expected value of tm_hm_compatibility key to be a list, got {type(value)}")
             plando["evolutions"] = plando_evolutions
             plando["levelup_moveset"] = plando_levelup_moves
             plando["types"] = plando_types
+            plando["egg_groups"] = plando_egg_groups
             if spec not in spec_by_name:
                 if spec not in dex_by_name:
                     raise OptionError(f"{spec} is neither a dex name, nor a form name")
@@ -510,6 +546,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         from ..data.items import all_items_dict_view
         from ..data.pokemon.moves import by_name as move_by_name, tm_hm
         from ..data.pokemon.types import by_name as types_by_name
+        from ..data.pokemon.egg_groups import groups as egg_groups_by_name
 
         invalid: list[str] = []
         for plando in self:
@@ -544,6 +581,15 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             for plando_type in plando_stat.types:
                 if plando_type not in types_by_name:
                     reasons.append(f"{plando_type} is not an allowed type")
+            if len(plando_stat.egg_groups) > 2:
+                reasons.append(f"A maximum of 2 egg groups is allowed, not {len(plando_stat.egg_groups)}")
+            for plando_egg_group in plando_stat.egg_groups:
+                if plando_egg_group not in egg_groups_by_name:
+                    reasons.append(f"{plando_egg_group} is not an allowed egg group")
+            if len(plando_stat.egg_groups) == 2:
+                egg_1, egg_2 = plando_stat.egg_groups
+                if any(g in plando_stat.egg_groups for g in ("Ditto", "Unknown")) and egg_1 != egg_2:
+                    reasons.append(f"Egg groups Ditto and Unknown cannot be combined with other groups")
             for plando_tm in plando_stat.tm_hm_compatibility:
                 if plando_tm not in tm_hm:
                     reasons.append(f"{plando_tm} is not an allowed TM or HM")

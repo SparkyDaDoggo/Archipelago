@@ -99,6 +99,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Catch rates
   - Levelup movesets
   - TM/HM compatibility
+  - Egg groups
 - Stats plando (with all randomizable stats at that time)
 - Replace Evolution Methods option
 - Combined goals
@@ -186,7 +187,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Gender Ratio (+ limit)
     - Move tutor compatibility
     - Held items
-    - Egg groups
     - Pokémon names
   - Move data randomization
     - Move names

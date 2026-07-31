@@ -66,11 +66,19 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
     ):
 
         spoiler_handle.write(f"\n\nStats ({world.player_name}, the format is <type(s), hp, attack, defense, "
-                             f"special attack, special defense, speed, catch rate>):\n\n")
+                             f"special attack, special defense, speed, catch rate, egg groups (if "
+                             f"randomized/plando'd)>):\n\n")
         for name, data in world.species_entries.items():
-            spoiler_handle.write(f"{name}: {data.type_1}{', '+data.type_2 if data.type_1 != data.type_2 else ''}, "
-                                 f"{data.base_hp}, {data.base_attack}, {data.base_defense}, {data.base_sp_attack}, "
-                                 f"{data.base_sp_defense}, {data.base_speed}, {data.catch_rate}\n")
+            line = [data.types[0]]
+            if data.types[0] != data.types[1]:
+                line.append(data.types[1])
+            line.extend(str(s) for s in data.base_stats)
+            line.append(str(data.catch_rate))
+            if data.egg_groups is not None:
+                line.append(data.egg_groups[0])
+                if data.egg_groups[0] != data.egg_groups[1]:
+                    line.append(data.egg_groups[1])
+            spoiler_handle.write(f"{name}: {', '.join(line)}\n")
 
 
 def write_spoiler_levelup_movesets(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
