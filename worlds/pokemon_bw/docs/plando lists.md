@@ -1564,5 +1564,5 @@ Some of them have been changed in later games, so look twice if you're not entir
 - Mineral
 - Amorphous
 - Dragon
-- Ditto
+- Ditto (Doesn't have an effect currently)
 - Unknown

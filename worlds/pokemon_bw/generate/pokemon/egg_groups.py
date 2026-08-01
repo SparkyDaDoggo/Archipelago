@@ -79,12 +79,14 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
                     do_evos(pre_evo_data, pre)
 
     allowed = list(groups)
-    if mods.is_keep_ditto:
+    keep_ditto = True  # Needs assembly changes
+    if keep_ditto:
         allowed.remove("Ditto")
         dat = all_species["Ditto"]
         dat.egg_groups = ("Ditto", "Ditto")
         if mods.is_follow_evolutions:
-            do_evos(dat, ("Ditto", "Ditto"))
+            # do_evos(dat, ("Ditto", "Ditto"))
+            do_evos(dat, roll_groups(dat))
     if mods.is_follow_evolutions:
         for dat in all_plandod:
             do_evos(dat, dat.egg_groups)
