@@ -358,6 +358,8 @@ Every entry (currently) consists of the following keys (with all of them being o
   up to two groups as a list of strings. An empty list has no effect. See the 
   [egg group names](plando%20lists.md#egg-group-names) list for allowed names. Note that `Ditto` and `Unknown` cannot 
   be combined with other egg groups and always have to be a mono group.
+- `egg_species` overrides the resulting egg of breeding that pokémon either as the female parent or with a Ditto. 
+  It is optional and accepts dex names as well as form names.
 
 ## An example on how using this option could look like
 
@@ -381,6 +383,7 @@ Pokemon Black and White:
         method: Stone
         stone: Shiny Stone
       override_evolutions: true
+      egg_species: Giratina
     Shelmet:
       base_defense: 200
       base_sp_defense: 200

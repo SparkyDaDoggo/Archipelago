@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import NamedTuple, Self, TYPE_CHECKING, Iterator, Literal
 
 from ..data import InclusionRule, ExtendedRule, SpeciesData, LevelUpMovesetData, TMHMMovesetData, MoveData
@@ -52,6 +53,7 @@ class SpeciesEntry:
     # TM number (internal order is TM1-95 HM1-6)
     tm_hm_moves: TMHMMovesetData
     egg_groups: tuple[str, str] | None
+    egg_species: str | None
     is_custom_form: bool
     custom_form_file: int
     write: int = 0
@@ -63,7 +65,8 @@ class SpeciesEntry:
     b5 = types
     b6 = tm/hm compatibility
     b7 = exp curve
-    b8 = egg groups"""
+    b8 = egg groups
+    b9 = egg species"""
     evo_line: EvoLine | None = None  # Only instantiated when randomized
 
     def __init__(self, name: str, data: SpeciesData):
@@ -86,6 +89,7 @@ class SpeciesEntry:
         self.vanilla_moves_count = len(self.level_up_moves)
         self.tm_hm_moves = movesets_tm_hm.table[name]
         self.egg_groups = None
+        self.egg_species = None
         self.is_custom_form = data.is_custom_form
         self.custom_form_file = data.custom_form_file
 

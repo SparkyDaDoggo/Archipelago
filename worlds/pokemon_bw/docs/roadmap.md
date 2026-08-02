@@ -100,6 +100,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Levelup movesets
   - TM/HM compatibility
   - Egg groups
+  - Egg species
 - Stats plando (with all randomizable stats at that time)
 - Replace Evolution Methods option
 - Combined goals

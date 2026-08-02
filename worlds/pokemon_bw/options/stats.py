@@ -279,6 +279,33 @@ class RandomizeEggGroups(ToggleSet):
     auto_add_if_any = "Randomize"
 
 
+class RandomizeEggSpecies(ToggleSet):  # TODO remove fixed eggs
+    """
+    Randomizes the pokemon species that results from breeding specific other species.
+    Note that the resulting species is always either the mother's egg species
+    or whatever was bred with Ditto. Also, certain species with special breeding results
+    currently might result in their vanilla egg species even if randomized.
+    You can add as many of the following modifiers as you want.
+
+    - **Fix evolutions** - Makes all species have an unevolved species of their evolution
+        line as their egg species. Intended for evolution randomization and plando.
+        Looping evolution lines with no unevolved species will result in the same egg
+        species as the breeding species.
+    - **Randomize** - Toggles egg species being randomized. Automatically added if any
+        other of the modifiers below is added. Supersedes **Fix evolutions**.
+    - **Base stages only** - Only allows species with no pre-evolutions to be egg species.
+    - **Common type** - Breeding species and egg species always share at least one type.
+    - **Follow evolutions** - Evolved pokemon will have the same egg species as their
+        pre-evolution(s). Takes priority over **Common type**.
+    """
+    display_name = "Randomize Egg Species"
+    is_fix_evolutions = False
+    is_randomize = False
+    is_base_stages_only = False
+    is_common_type = False
+    is_follow_evolutions = False
+
+
 class StatsRandomizationAdjustments(ExtendedOptionCounter):
     """
     Adjust various parameters in various randomization options.
@@ -391,6 +418,7 @@ class PlandoStat(typing.NamedTuple):
     tm_hm_compatibility: list[str] = []
     catch_rate: int = 0
     egg_groups: list[str] = []
+    egg_species: str | None = None
 
 
 class StatsPlando(Option[dict[str, PlandoStat]]):
@@ -423,6 +451,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         tm_hm_compatibility: [TM70, HM03]
         catch_rate: 190
         egg_groups: [Monster, "Human-Like"]
+        egg_species: Venusaur
     ```
 
     Stats Plando requires the corresponding host setting to be enabled, else it will be
@@ -454,7 +483,11 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 continue
             if not isinstance(plando, dict):
                 raise OptionError(f"Expected dictionary as Stats Plando entry for species {spec}, got {type(plando)}")
-            plando_evolutions, plando_levelup_moves, plando_types, plando_egg_groups = False, False, [], []
+            plando_evolutions = False
+            plando_levelup_moves = False
+            plando_types = []
+            plando_egg_groups = []
+            plando_egg_species = None
             for plando_key, value in plando.items():
                 if plando_key not in PlandoStat._fields:
                     raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
@@ -515,10 +548,18 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                 if plando_key == "tm_hm_compatibility":
                     if not isinstance(value, list):
                         raise OptionError(f"Expected value of tm_hm_compatibility key to be a list, got {type(value)}")
+                if plando_key == "egg_species" and value is not None:
+                    if value in spec_by_name:
+                        plando_egg_species = value
+                    elif value in dex_by_name:
+                        plando_egg_species = by_id[dex_by_name[value], 0].species_name
+                    elif value is not None:
+                        raise OptionError(f"Expected value of egg_species key to be a dex or form name, got {type(value)}")
             plando["evolutions"] = plando_evolutions
             plando["levelup_moveset"] = plando_levelup_moves
             plando["types"] = plando_types
             plando["egg_groups"] = plando_egg_groups
+            plando["egg_species"] = plando_egg_species
             if spec not in spec_by_name:
                 if spec not in dex_by_name:
                     raise OptionError(f"{spec} is neither a dex name, nor a form name")

@@ -66,8 +66,8 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
     ):
 
         spoiler_handle.write(f"\n\nStats ({world.player_name}, the format is <type(s), hp, attack, defense, "
-                             f"special attack, special defense, speed, catch rate, egg groups (if "
-                             f"randomized/plando'd)>):\n\n")
+                             f"special attack, special defense, speed, catch rate, egg group(s), egg species> "
+                             f"(last two only if randomized/plando'd)):\n\n")
         for name, data in world.species_entries.items():
             line = [data.types[0]]
             if data.types[0] != data.types[1]:
@@ -78,6 +78,8 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
                 line.append(data.egg_groups[0])
                 if data.egg_groups[0] != data.egg_groups[1]:
                     line.append(data.egg_groups[1])
+            if data.egg_species is not None:
+                line.append(data.egg_species)
             spoiler_handle.write(f"{name}: {', '.join(line)}\n")
 
 

@@ -13,7 +13,7 @@ from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTra
                         EncounterPlando)
 from .stats import (RandomizeLevelUpMovesets, RandomizeEvolutions, RandomizeTypes, RandomizeAbilities,
                     RandomizeBaseStats, RandomizeCatchRates, RandomizeGenderRatio, RandomizeTMHMCompatibility,
-                    StatsRandomizationAdjustments, StatsPlando, RandomizeEggGroups)
+                    StatsRandomizationAdjustments, StatsPlando, RandomizeEggGroups, RandomizeEggSpecies)
 from .moves import RandomizeMoveData, RandomizeTypeChart, MoveDataRandomizationAdjustments, MoveDataPlando
 from ..data.common_options import ToggleSet
 
@@ -1016,6 +1016,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     # randomize_abilities: RandomizeAbilities
     # randomize_held_items: RandomizeHeldItems
     randomize_egg_groups: RandomizeEggGroups
+    randomize_egg_species: RandomizeEggSpecies
     stats_randomization_adjustments: StatsRandomizationAdjustments
     stats_plando: StatsPlando
 
