@@ -279,12 +279,12 @@ class RandomizeEggGroups(ToggleSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeEggSpecies(ToggleSet):  # TODO remove fixed eggs
+class RandomizeEggSpecies(ToggleSet):
     """
     Randomizes the pokemon species that results from breeding specific other species.
     Note that the resulting species is always either the mother's egg species
-    or whatever was bred with Ditto. Also, certain species with special breeding results
-    currently might result in their vanilla egg species even if randomized.
+    or whatever was bred with Ditto. Also, certain special conditions that lead to
+    non-standard egg species (e.g. baby stages, Nidoran, ...) will be removed.
     You can add as many of the following modifiers as you want.
 
     - **Fix evolutions** - Makes all species have an unevolved species of their evolution

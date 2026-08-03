@@ -359,7 +359,9 @@ Every entry (currently) consists of the following keys (with all of them being o
   [egg group names](plando%20lists.md#egg-group-names) list for allowed names. Note that `Ditto` and `Unknown` cannot 
   be combined with other egg groups and always have to be a mono group.
 - `egg_species` overrides the resulting egg of breeding that pokémon either as the female parent or with a Ditto. 
-  It is optional and accepts dex names as well as form names.
+  It is optional and accepts dex names as well as form names. Changing the egg species of certain species with special 
+  conditions (e.g. Nidoran) or using certain species as egg species (e.g. baby stages) will result in those conditions 
+  being removed.
 
 ## An example on how using this option could look like
 
@@ -444,8 +446,8 @@ Pokemon Black and White:
   ...
   goal:
     # One of the 3 (combined or single) goals will be chosen at random
-    - ["tmhm_hunt", "legendary_hunt"]
-    - ["seven_sages_hunt", "cobalion"]
+    - [tmhm_hunt, legendary_hunt]
+    - [seven_sages_hunt, cobalion]
     - cynthia
 ```
 
