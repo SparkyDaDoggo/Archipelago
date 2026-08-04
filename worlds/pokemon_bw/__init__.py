@@ -1,10 +1,10 @@
 import datetime
 import logging
 import os
-from typing import ClassVar, Mapping, Any, List, TextIO
+from typing import ClassVar, Mapping, Any, TextIO
 
 import settings
-from BaseClasses import MultiWorld, Tutorial, Item, Location, Region
+from BaseClasses import MultiWorld, Tutorial, Region
 from Options import Option
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
@@ -147,6 +147,7 @@ class PokemonBWWorld(World):
 
         self.strength_species: set[str] = set()
         self.cut_species: set[str] = set()
+        self.fly_species: set[str] = set()
         self.surf_species: set[str] = set()
         self.dive_species: set[str] = set()
         self.waterfall_species: set[str] = set()
@@ -279,16 +280,6 @@ class PokemonBWWorld(World):
         items.place_locked_items(self, item_pool)
         plugins_create_items(self, item_pool)
         self.multiworld.itempool.extend(item_pool)
-
-    def fill_hook(self,
-                  progitempool: List[Item],
-                  usefulitempool: List[Item],
-                  filleritempool: List[Item],
-                  fill_locations: List[Location]) -> None:
-        from .generate.locked_placement import place_tm_hm_fill, place_badges_fill
-
-        place_badges_fill(self, progitempool, usefulitempool, filleritempool, fill_locations)
-        place_tm_hm_fill(self, progitempool, usefulitempool, filleritempool, fill_locations)
 
     def extend_hint_information(self, hint_data: dict[int, dict[int, str]]):
         hint_data[self.player] = {}

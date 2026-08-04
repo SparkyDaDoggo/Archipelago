@@ -67,60 +67,6 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             raise Exception(f"Bad shuffle_badges option value for player {world.player_name}")
 
 
-def place_badges_fill(world: "PokemonBWWorld",
-                      progitempool: list[Item],
-                      usefulitempool: list[Item],
-                      filleritempool: list[Item],
-                      fill_locations: list[Location]) -> None:
-    match world.options.shuffle_badges.current_key:
-        case "vanilla":
-            pass
-        case "shuffle":
-            pass
-        case "any_badge":
-            from Fill import fill_restrictive
-            from ..data.locations.ingame_items import special
-
-            badge_items: list[Item] = []
-            badge_item_indices: list[tuple[int, list[Item]]] = []
-            for pool in (progitempool, usefulitempool, filleritempool):
-                for index, item in enumerate(pool):
-                    if (
-                        "badge" in pool[index].name.lower()
-                        and (item.player == world.player or
-                             item.name not in world.multiworld.worlds[item.player].options.local_items)
-                    ):
-                        badge_items.append(item)
-                        badge_item_indices.append((index, pool))
-            for index, pool in reversed(badge_item_indices):  # reversed because else the pop index shifts
-                pool.pop(index)
-            world.random.shuffle(badge_items)
-            badge_locs: list[Location] = [
-                loc
-                for loc in fill_locations
-                if loc.player == world.player and loc.name in special.gym_badges
-            ]
-            for b_loc in badge_locs:
-                fill_locations.remove(b_loc)
-
-            fill_restrictive(world.multiworld, world.multiworld.get_all_state(allow_partial_entrances=True),
-                             badge_locs, badge_items, lock=True, allow_partial=True,
-                             name=f"PokemonBW_{world.player_name}_any_badge")
-
-            for badge_item in badge_items:
-                if badge_item.advancement:
-                    progitempool.append(badge_item)
-                elif badge_item.useful:
-                    usefulitempool.append(badge_item)
-                else:
-                    filleritempool.append(badge_item)
-
-        case "anything":
-            pass
-        case _:
-            raise Exception(f"Bad shuffle_badges option value for player {world.player_name}")
-
-
 def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
     from ..data.locations.ingame_items.special import tm_hm_ncps, gym_tms
     from ..data.locations import all_tm_locations
@@ -204,61 +150,6 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                         break
         case "any_tm_hm":
             pass
-        case "anything":
-            pass
-        case _:
-            raise Exception(f"Bad shuffle_tm_hm option value for player {world.player_name}")
-
-
-def place_tm_hm_fill(world: "PokemonBWWorld",
-                     progitempool: list[Item],
-                     usefulitempool: list[Item],
-                     filleritempool: list[Item],
-                     fill_locations: list[Location]) -> None:
-    from ..data.locations import all_tm_locations
-
-    match world.options.shuffle_tm_hm.current_key:
-        case "shuffle":
-            pass
-        case "hm_with_badge":
-            pass
-        case "any_tm_hm":
-            from Fill import fill_restrictive
-
-            tm_hm_items: list[Item] = []
-            tm_hm_item_indices: list[tuple[int, list[Item]]] = []
-            for pool in (progitempool, usefulitempool, filleritempool):
-                for index, item in enumerate(pool):
-                    if (
-                        len(item.name) > 2 and item.name[:2].lower() in ("tm", "hm") and item.name[2].isdigit()
-                        and (item.player == world.player or
-                             item.name not in world.multiworld.worlds[item.player].options.local_items)
-                    ):
-                        tm_hm_items.append(item)
-                        tm_hm_item_indices.append((index, pool))
-            for index, pool in reversed(tm_hm_item_indices):  # reversed because else the pop index shifts
-                pool.pop(index)
-            world.random.shuffle(tm_hm_items)
-            tm_hm_locs: list[Location] = [
-                loc
-                for loc in fill_locations
-                if loc.player == world.player and loc.name in all_tm_locations
-            ]
-            for b_loc in tm_hm_locs:
-                fill_locations.remove(b_loc)
-
-            fill_restrictive(world.multiworld, world.multiworld.get_all_state(allow_partial_entrances=True),
-                             tm_hm_locs, tm_hm_items, lock=True, allow_partial=True,
-                             name=f"PokemonBW_{world.player_name}_any_badge")
-
-            for tm_hm_item in tm_hm_items:
-                if tm_hm_item.advancement:
-                    progitempool.append(tm_hm_item)
-                elif tm_hm_item.useful:
-                    usefulitempool.append(tm_hm_item)
-                else:
-                    filleritempool.append(tm_hm_item)
-
         case "anything":
             pass
         case _:

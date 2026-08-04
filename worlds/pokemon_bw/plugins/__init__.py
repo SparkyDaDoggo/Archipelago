@@ -188,8 +188,7 @@ class OverrideProtocol(PluginProtocol):
     @staticmethod
     def modify_rule(old: "ExtendedRule", new: "ModifiedExtendedRule"):
         if not getattr(old, "_is_modified", False):
-            from ..data.locations.rules import _g
-            old_code_function = FunctionType(old.__code__, _g)
+            old_code_function = FunctionType(old.__code__, old.__globals__)
             def wrapper(state: CollectionState, world: "PokemonBWWorld",
                         _old: "ExtendedRule", _new: tuple["ModifiedExtendedRule", ...]):
                 current = _old

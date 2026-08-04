@@ -1,4 +1,4 @@
-from typing import NamedTuple, Callable, Literal, TYPE_CHECKING, TypeVar, Any, Union
+from typing import NamedTuple, Callable, Literal, TYPE_CHECKING, TypeVar, Any, Union, Self
 
 from BaseClasses import ItemClassification, LocationProgressType, CollectionState
 
@@ -38,6 +38,49 @@ class SeasonItemData(NamedTuple):
     flag_id: int
     var_value: int
     classification: ClassificationMethod
+
+
+class ExtRulesTuple(tuple[ExtendedRule | InclusionRule | "ExtRulesTuple", ...]):
+
+    def __new__(cls, *args, **kwargs):
+        return super().__new__(cls, args)
+
+    def resolve(self: Self | ExtendedRule, world: "PokemonBWWorld") -> AccessRule:
+        if isinstance(self, ExtRulesTuple):
+            return self.resolve(world)
+        return lambda state: self(state, world)
+
+
+class AndExtRules(ExtRulesTuple):
+
+    def resolve(self, world: "PokemonBWWorld") -> AccessRule:
+        resolved = tuple(ExtRulesTuple.resolve(exrule, world) for exrule in self)
+
+        def f(state: CollectionState) -> bool:
+            for rule in resolved:
+                if not rule(state):
+                    return False
+            return True
+        return f
+
+
+class OrExtRules(ExtRulesTuple):
+
+    def resolve(self, world: "PokemonBWWorld") -> AccessRule:
+        resolved = tuple(ExtRulesTuple.resolve(exrule, world) for exrule in self)
+
+        def f(state: CollectionState) -> bool:
+            for rule in resolved:
+                if rule(state):
+                    return True
+            return False
+        return f
+
+
+class IfExtRules(ExtRulesTuple):
+
+    def resolve(self, world: "PokemonBWWorld") -> AccessRule:
+        return None if not self[0](world) else ExtRulesTuple.resolve(self[1], world)
 
 
 class FlagLocationData(NamedTuple):
@@ -138,9 +181,36 @@ class RegionData(NamedTuple):
 
 
 class RegionConnectionData(NamedTuple):
-    exiting_region: str
-    entering_region: str
-    rule: ExtendedRule | None
+    region_1: str
+    region_2: str
+    type: Literal[
+        "Door", "Gate", "Trees", "Stairs", "Cave", "Open transition", "Warp",
+        "Adjacent maps",
+        "Elevator", "Quicksand",
+        "Other script",
+        "Virtual"
+    ]
+    """
+    - Actual warps
+    - Really just walking from one map to another, never shuffled
+    - Controlled by a script, but can be shuffled amongst each other
+    - Controlled by a script, never shuffled
+    - Between non-full maps or with virtual maps involved, never shuffled
+    """
+    warp_id: tuple[int | tuple[int, ...], int | tuple[int, ...]] | tuple  #
+    """
+    empty tuple for non-warp connections
+    tuple instead of int for places where a long warp is split into multiple ones, first ID is the preferred destination
+    """
+    event_names: str | None
+    """
+    "##" will be replaced with with r1, "#2#" with r2
+    None is replaced by "r1 -> r2" (AP default)
+    """
+    rule: ExtendedRule | ExtRulesTuple | None = None
+    rule_2: ExtendedRule | ExtRulesTuple | None | Literal[False] = False  # for r2->r1 connection, False means copy the rules above
+    one_way: bool = False  # r1->r2 only
+    fixed: bool = False  # flag for warp/elevator connections that should not be shuffled
 
 
 class EncounterRegionConnectionData(NamedTuple):
@@ -148,6 +218,13 @@ class EncounterRegionConnectionData(NamedTuple):
     entering_region: str
     rules: tuple[ExtendedRule, ...] | ExtendedRule | None
     inclusion_rule: InclusionRule | None  # None means always included
+
+
+class EventData(NamedTuple):
+    name: str
+    region: str
+    inclusion_rule: InclusionRule | None
+    access_rule: ExtendedRule | ExtRulesTuple | None
 
 
 class SpeciesData(NamedTuple):
