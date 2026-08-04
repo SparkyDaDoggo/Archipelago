@@ -1,8 +1,7 @@
 import io
-from typing import NamedTuple, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from zipfile import ZipFile
 
-from settings import get_settings
 from ...ndspy.code import saveOverlayTable
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.narc import NARC
@@ -12,12 +11,6 @@ from .. import otpp
 
 if TYPE_CHECKING:
     from ...rom import PokemonBWPatch
-
-
-class PatchProcedure(NamedTuple):
-    otpp_patches: list[int, bytes]
-    narc: NARC
-    narc_filename: str
 
 
 def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
@@ -94,24 +87,6 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     # rom.arm9 = bytes(arm9)
     # files_dump["arm9"] = rom.arm9
 
-    if get_settings()["pokemon_bw_settings"]["enable_arm7_expansion_test"]:
-        expansion_test(rom, world_package, bw_patch_instance, files_dump)
-
-
-def expansion_test(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
-                   files_dump: dict[str, bytes | bytearray]):
-
-    is_white = rom.name[8:9] == b'W'
-
-    overlay_table = rom.loadArm9Overlays()
-    ov93 = overlay_table[93]
-    ov93_data = bytearray(ov93.data)
-    ov93_data[0x1543a:0x1543a+4] = b'\xde\xf1\x51\xfd'
-    ov93.data = bytes(ov93_data)
-    rom.files[ov93.fileID] = ov93.save(compress=True)
-    files_dump["ov93"] = rom.files[ov93.fileID]
-    rom.arm9OverlayTable = saveOverlayTable(overlay_table)
-
-    expansion = pkgutil.get_data(world_package, "patch/expansion_test_arm7.bin")
-    rom.arm7 = rom.arm7 + bytes((0x2a000 if is_white else 0x29fe0) - len(rom.arm7)) + expansion
+    expansion = pkgutil.get_data(world_package, "patch/arm7_expansion.bin")
+    rom.arm7 = rom.arm7 + bytes((0x2a000 if rom.name[8:9] == b'W' else 0x29fe0) - len(rom.arm7)) + expansion
     files_dump["arm7"] = rom.arm7

@@ -40,23 +40,26 @@ class PokemonBWSettings(settings.Group):
 
     class EnableEncounterPlando(settings.Bool):
         """Toggles whether Encounter Plando is enabled for players in generation.
-        If disabled, yamls that use Encounter Plando do not raise OptionErrors, but display a warning."""
+        If disabled, yamls that use Encounter Plando do not raise OptionErrors, but
+        display a warning."""
 
     class EnableStatsPlando(settings.Bool):
         """Toggles whether Stats Plando is enabled for players in generation.
-        If disabled, yamls that use Stats Plando do not raise OptionErrors, but display a warning."""
+        If disabled, yamls that use Stats Plando do not raise OptionErrors, but display
+        a warning."""
 
     class EnableMoveDataPlando(settings.Bool):
         """Toggles whether Move Data Plando is enabled for players in generation.
-        If disabled, yamls that use Move Data Plando do not raise OptionErrors, but display a warning."""
+        If disabled, yamls that use Move Data Plando do not raise OptionErrors, but
+        display a warning."""
 
     class DumpPatchedFiles(settings.Bool):
-        """If enabled, files inside the rom that are changed as part of the patching process (except for base patches)
-        will be dumped into a zip file next to the patched rom (for debug purposes)."""
+        """If enabled, files inside the rom that are changed as part of the patching
+        process (except for base patches) will be dumped into a zip file next to the
+        patched rom (for debug purposes)."""
 
     class EnableArm7ExpansionTest(settings.Bool):
-        """If enabled, the arm7 code file inside the rom gets expanded with dummy code. This is purely for testing
-        purposes and will be deprecated later."""
+        """Deprecated setting, originally used for testing purposes."""
 
     class PluginSettings(dict[str, Any]):
         """This can be used to define certain settings that are used by plugins.
@@ -162,11 +165,6 @@ class PokemonBWWorld(World):
         self.regions: dict[str, Region] | None = None
         self.prepare_text = None
         self.rules_dict: RulesDict | None = None
-        """IMPORTANT: Always do
-        `lambda state: rule(state, world)`
-        for single rules and
-        `lambda state: rule_1(state, world) and rule_2(state, world) and ...`
-        for multiple rules"""
         self.master_ball_seller_cost: int = 0
         self.filler_nested: list[str | list] | None = None
         self.slot_data_cache: dict[str, Any] | None = None

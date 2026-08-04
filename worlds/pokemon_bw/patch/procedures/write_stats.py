@@ -89,3 +89,8 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             files_dump[f"a016/{i}"] = narc.files[i]
 
     rom.setFileByName("a/0/1/6", narc.save())
+
+    # 021c37a4 07 9b 0d 2b
+    # 021c37aa 08 9a 0d 2a
+    # 021c37b6 0d 2b
+    # 021c37ba 08 9a 0d 2a
