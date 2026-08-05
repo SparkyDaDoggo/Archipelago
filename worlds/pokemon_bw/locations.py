@@ -13,7 +13,8 @@ class PokemonBWLocation(Location):
 
 
 def get_location_lookup_table() -> dict[str, int]:
-    from .generate.locations import overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity
+    from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity,
+                                     dexcountsanity)
 
     return {
         **overworld_items.lookup(100000),
@@ -22,6 +23,7 @@ def get_location_lookup_table() -> dict[str, int]:
         **badge_rewards.lookup(400000),
         **tm_hm.lookup(500000),
         **dexsanity.lookup(600000),
+        **dexcountsanity.lookup(602000),
     }
 
 
@@ -60,7 +62,8 @@ def create_and_place_event_locations(world: "PokemonBWWorld") -> dict[str, "Spec
 
 
 def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
-    from .generate.locations import overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity
+    from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity,
+                                     dexcountsanity)
 
     overworld_items.create(world)
     hidden_items.create(world)
@@ -68,6 +71,7 @@ def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: 
     badge_rewards.create(world)
     tm_hm.create(world)
     dexsanity.create(world, catchable_species_data)
+    dexcountsanity.create(world, catchable_species_data)
 
 
 def connect_regions(world: "PokemonBWWorld") -> None:

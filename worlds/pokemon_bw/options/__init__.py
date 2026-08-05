@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError,
                      OptionCounter, StartInventoryPool, OptionDict, ItemSet)
+from .dexsanitysanity import Dexsanity, Dexcountsanity
 from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTradePokemon, RandomizeStarterPokemon,
                         RandomizeLegendaryPokemon, RandomizeStaticPokemon, RandomizeTrainerPokemon,
                         WildRandomizationBlacklist, TrainerRandomizationBlacklist, PokemonRandomizationAdjustments,
@@ -175,77 +176,6 @@ class AdditionalRoadblocks(Choice):
     option_some = 1
     option_many = 2
     default = 0
-
-
-class Dexsanity(Range):
-    """
-    Adds a number of locations that can be checked by catching a certain pokemon species
-    and registering it in the pokedex. The actual maximum number of added checks depends
-    on what pokemon species are actually obtainable in the wild.
-
-    If you want to have all 649 possible checks, then you need to randomize wild
-    encounters and add the **Ensure all obtainable** modifier.
-
-    Alternatively, you can put in a list of dex numbers in order to plando what pokemon
-    you want to have locations for:
-    ```
-      dexsanity:
-        - [50, 51, 52, 53, 54, 460, 461, 500]
-    ```
-    See the options guides for more information.
-    """
-    display_name = "Dexsanity"
-    value: int | list[int]
-    default = 0
-    range_start = 0
-    range_end = 649
-
-    def __init__(self, value: typing.Any):
-        if isinstance(value, typing.Iterable):
-            for val in value:
-                if not type(val) is int:
-                    raise Exception(f"Option {self.__class__.__name__} as a list expects integers, found {type(val)}")
-                if val < 1:
-                    raise Exception(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                    f"which is lower than minimum 1")
-                elif val > self.range_end:
-                    raise Exception(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                    f"which is higher than maximum {self.range_end}")
-            self.value = list(set(value))  # Get rid of duplicates
-            self.value.sort()  # Very important to not make it non-deterministic
-        else:
-            super().__init__(value)
-
-    @classmethod
-    def from_any(cls, data: typing.Any) -> Range:
-        if type(data) is int or isinstance(data, typing.Iterable):
-            return cls(data)
-        return cls.from_text(str(data))
-
-
-class Trainersanity(Range):
-    """
-    Adds a number of locations that can be checked by defeating a regular trainer.
-    """
-    display_name = "Trainersanity"
-    default = 0
-    range_start = 0
-    range_end = 1
-
-
-class Seensanity(Range):
-    """
-    Adds a number of locations that can be checked by seeing a certain Pokemon species,
-    which is marked in the pokedex. The actual maximum number of added checks depends on
-    what pokemon species are actually observable in the wild or in trainer battles.
-
-    If you want to have all 649 possible checks, then you need to randomize wild
-    encounters and add the **Ensure all obtainable** modifier.
-    """
-    display_name = "Seensanity"
-    default = 0
-    range_start = 0
-    range_end = 649
 
 
 class DoorShuffle(ToggleSet):
@@ -1032,6 +962,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     # shuffle_roadblock_reqs: ShuffleRoadblockReqs
     # additional_roadblocks: AdditionalRoadblocks
     dexsanity: Dexsanity
+    dexcountsanity: Dexcountsanity
     # trainersanity: Trainersanity
     # seensanity: Seensanity
     # formsanity: Formsanity

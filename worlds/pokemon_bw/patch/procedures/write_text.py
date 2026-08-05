@@ -157,6 +157,10 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         info44 += f"- {len(slotdata['options']['dexsanity'])} fixed Dexsanity checks[Scroll][NextLine]"
     else:
         info44 += f"- {slotdata['options']['dexsanity']} random Dexsanity checks[Scroll][NextLine]"
+    if slotdata['options']['dexcountsanity']["Maximum"]:
+        info44 += (f"- Dexcountsanity checks with maximum {slotdata['options']['dexsanity']['Maximum']}, "
+                   f"steps {slotdata['options']['dexsanity']['Steps']}, "
+                   f"and leniency {slotdata['options']['dexsanity']['Leniency']}[Scroll][NextLine]")
     if slotdata["options"]["replace_evo_methods"]:
         info44 += "- Replaced evolution methods:[Scroll][NextLine]"
         for mod in slotdata["options"]["replace_evo_methods"]:

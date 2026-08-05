@@ -18,7 +18,7 @@ async def early_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") ->
     )
     client.save_data_address = int.from_bytes(read[0], "little")
 
-    if ctx.slot_data["options"]["dexsanity"] == 0:
+    if ctx.slot_data["options"]["dexsanity"] == ctx.slot_data["options"]["dexcountsanity"]["Maximum"] == 0:
         client.dexsanity_included = False
 
 

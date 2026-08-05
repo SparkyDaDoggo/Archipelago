@@ -23,6 +23,7 @@ def get_location_groups() -> dict[str, set[str]]:
 
     return {
         "Dexsanity": set(dexsanity.location_table),
+        "Dexcountsanity": set(dexcountsanity.location_table),
         "Overworld items": {*overworld_items.table, *overworld_items.abyssal_ruins, *overworld_items.seasonal},
         "Abyssal Ruins items": set(overworld_items.abyssal_ruins),
         "Hidden items": {*hidden_items.table, *hidden_items.seasonal},

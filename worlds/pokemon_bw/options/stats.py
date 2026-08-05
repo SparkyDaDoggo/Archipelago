@@ -144,11 +144,18 @@ class RandomizeGenderRatio(ToggleSet):
     - **Follow evolutions** - Evolved species will have the same gender ratio as (one of)
         their pre-evolution(s). Not including this can lead to some pokémon changing
         their gender when evolved.
+    - **Keep fixed** - Keeps all male-only, female-only, and unknown gender ratios.
+    - **Force split** - Prevents all species from becoming unknown gender-only.
+
+    Male-only and female-only ratios can be prevented using the
+    **Stats Randomization Adjustments** option.
     """
     display_name = "Randomize Gender Ratio"
     is_shuffle = False
     is_randomize = False
     is_follow_evolutions = False
+    is_keep_fixed = False
+    is_prevent_unknown_gender = False
     auto_add_if_any = "Shuffle"
 
 
@@ -241,7 +248,7 @@ class RandomizeHeldItems(ToggleSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeEggGroups(ToggleSet):
+class RandomizeEggGroups(ToggleSet):  # TODO custom egg groups possible?
     """
     Randomizes the egg groups of every pokemon species.
     You can add as many of the following modifiers as you want.
@@ -287,10 +294,10 @@ class RandomizeEggSpecies(ToggleSet):
     non-standard egg species (e.g. baby stages, Nidoran, ...) will be removed.
     You can add as many of the following modifiers as you want.
 
-    - **Fix evolutions** - Makes all species have an unevolved species of their evolution
-        line as their egg species. Intended for evolution randomization and plando.
-        Looping evolution lines with no unevolved species will result in the same egg
-        species as the breeding species.
+    - **Fix evolutions** - Makes all species have an unevolved pre-evolution as their
+        egg species. Intended for evolution randomization and plando. Looping evolution
+        lines with no unevolved species will result in the same egg species as the
+        breeding species.
     - **Randomize** - Toggles egg species being randomized. Automatically added if any
         other of the modifiers below is added. Supersedes **Fix evolutions**.
     - **Base stages only** - Only allows species with no pre-evolutions to be egg species.
@@ -348,7 +355,7 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Catch rates minimum": 3,
         "Catch rates maximum": 255,
         # "Gender ratio minimum": 0,
-        # "Gender ratio maximum": 255,
+        # "Gender ratio maximum": 254,
         "Levelup moves amount minimum": 10,
         "Levelup moves amount maximum": 20,
         # "No held item chance": 90,
@@ -361,8 +368,8 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Maximum evo level": (10, 100),
         "Catch rates minimum": (3, 255),
         "Catch rates maximum": (3, 255),
-        # "Gender ratio minimum": (0, 255),
-        # "Gender ratio maximum": (0, 255),
+        # "Gender ratio minimum": (0, 254),
+        # "Gender ratio maximum": (0, 254),
         "Levelup moves amount minimum": (1, 100),
         "Levelup moves amount maximum": (1, 100),
         # "No held item chance": (0, 100),

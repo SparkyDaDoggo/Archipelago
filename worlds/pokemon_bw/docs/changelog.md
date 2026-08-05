@@ -160,6 +160,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - `category`
     - `pp`
   - Type effectiveness, currently only with the `effectiveness` key for every type combination
+- Added `Dexcountsanity` option with the `Maximum`, `Steps`, and `Leniency` keys
 
 ### Bug fixes and technical stuff
 

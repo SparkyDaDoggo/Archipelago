@@ -66,9 +66,11 @@ class PokemonBWClient(BizHawkClient):
         self.statics_bitmap: int = 0
         self.trades_bitmap: int = 0
         self.dexsanity_included: bool = True
+        self.dexsanity_count: int = 0
         self.player_name: str | None = None
         self.missing_flag_loc_ids: list[list[int]] = [[] for _ in range(self.flags_amount)]
         self.missing_dex_flag_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
+        self.missing_dexcount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.save_data_address = 0
         self.current_map = -1
         self.game_version = -1  # 0 for black, 1 for white
@@ -117,13 +119,15 @@ class PokemonBWClient(BizHawkClient):
         """For handling packages from the server. Called from `BizHawkClientContext.on_package`."""
 
         if cmd == 'Connected':
-            from .data.locations import all_item_locations, dexsanity
+            from .data.locations import all_item_locations, dexsanity, dexcountsanity
             for loc_id in ctx.missing_locations:
                 loc_name = ctx.location_names.lookup_in_game(loc_id)
                 if loc_name in all_item_locations:
                     self.missing_flag_loc_ids[all_item_locations[loc_name].flag_id].append(loc_id)
                 elif loc_name in dexsanity.location_table:
                     self.missing_dex_flag_loc_ids[dexsanity.location_table[loc_name].dex_number].append(loc_id)
+                elif loc_name in dexcountsanity.location_table:
+                    self.missing_dexcount_loc_ids[dexcountsanity.location_table[loc_name]].append(loc_id)
                 else:
                     self.logger.warning(f"Missing location \"{loc_name}\" neither flag nor dex location")
         elif cmd == "RoomInfo":

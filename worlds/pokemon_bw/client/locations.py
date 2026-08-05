@@ -40,12 +40,19 @@ async def check_dex_locations(client: "PokemonBWClient", ctx: "BizHawkClientCont
     )
     dex_buffer = read[0]
     for eight_flags in range(client.dex_bytes_amount):
-        if client.dex_cache[eight_flags] != dex_buffer[eight_flags]:
-            merge = client.dex_cache[eight_flags] | dex_buffer[eight_flags]
-            if client.dex_cache[eight_flags] != merge:
-                for bit in range(8):
-                    if merge & (2 ** bit):
-                        for loc_id in client.missing_dex_flag_loc_ids[eight_flags * 8 + bit + 1]:
-                            locations_to_check.append(loc_id)
-            client.dex_cache[eight_flags] = merge
+        if client.dex_cache[eight_flags] == dex_buffer[eight_flags]:
+            continue
+        merge = client.dex_cache[eight_flags] | dex_buffer[eight_flags]
+        if client.dex_cache[eight_flags] != merge:
+            new = merge - client.dex_cache[eight_flags]
+            for bit in range(8):
+                if new & (1 << bit):
+                    client.dexsanity_count += 1
+                    missing_ids = client.missing_dex_flag_loc_ids[eight_flags * 8 + bit + 1]
+                    for loc_id in missing_ids.copy():
+                        locations_to_check.append(loc_id)
+                    missing_ids = client.missing_dexcount_loc_ids[client.dexsanity_count]
+                    for loc_id in missing_ids.copy():
+                        locations_to_check.append(loc_id)
+        client.dex_cache[eight_flags] = merge
     return locations_to_check
