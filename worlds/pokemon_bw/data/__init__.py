@@ -120,8 +120,9 @@ class TrainerLocationData(NamedTuple):
 class EncounterData(NamedTuple):
     species_black: tuple[int, int]
     species_white: tuple[int, int]
-    encounter_region: str
     file_index: tuple[int, int, int]
+    min_level: int
+    max_level: int
 
 
 class StaticEncounterData(NamedTuple):
@@ -213,11 +214,19 @@ class RegionConnectionData(NamedTuple):
     fixed: bool = False  # flag for warp/elevator connections that should not be shuffled
 
 
+class EncounterRegionData(NamedTuple):
+    file: int
+    seasons: bool
+    methods: tuple[str, ...] = ()
+    spring_methods: tuple[str, ...] = ()
+    summer_methods: tuple[str, ...] = ()
+    autumn_methods: tuple[str, ...] = ()
+    winter_methods: tuple[str, ...] = ()
+
+
 class EncounterRegionConnectionData(NamedTuple):
-    exiting_region: str
-    entering_region: str
-    rules: tuple[ExtendedRule, ...] | ExtendedRule | None
-    inclusion_rule: InclusionRule | None  # None means always included
+    entering_region: tuple[str, str, str]
+    exiting_region: tuple[str, ...]
 
 
 class EventData(NamedTuple):

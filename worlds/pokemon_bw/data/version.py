@@ -141,6 +141,8 @@ if __name__ == "__main__":
             for file in files:
                 if file == "_dev.py":
                     continue
+                if "_temp." in file:
+                    continue
                 zipf2.write(os.path.join(root, file),
                             os.path.relpath(os.path.join(root, file),
                                             "../../"))

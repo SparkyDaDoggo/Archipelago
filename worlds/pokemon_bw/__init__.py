@@ -343,6 +343,7 @@ class PokemonBWWorld(World):
                     "shuffle_badges": self.options.shuffle_badges.current_key,
                     "shuffle_tm_hm": self.options.shuffle_tm_hm.current_key,
                     "dexsanity": self.options.dexsanity.value,
+                    "dexcountsanity": self.options.dexcountsanity.value,
                     "season_control": self.options.season_control.current_key,
                     "adjust_levels": self.options.adjust_levels.value,
                     "modify_levels": self.options.modify_levels.value,
