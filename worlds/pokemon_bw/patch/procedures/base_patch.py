@@ -2,6 +2,7 @@ import io
 from typing import TYPE_CHECKING
 from zipfile import ZipFile
 
+from ...ndspy import codeCompression
 from ...ndspy.code import saveOverlayTable
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.narc import NARC
@@ -56,7 +57,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         # write patched narc to rom
         rom.setFileByName(narc_filename, source_narc.save())
 
+    # Unpack overlays and arm9
     overlay_table = rom.loadArm9Overlays()
+    arm9 = bytearray(codeCompression.decompress(rom.arm9))
 
     # Apply Exp multiplier patch
     exp_code = (b'\x05\x49\x09\x68\x03\x48\x09\x5a\x7e\x43\xa8\x59\x01\x31'
@@ -77,16 +80,23 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     rom.files[ov91.fileID] = ov91.save(compress=True)
     files_dump["ov91"] = rom.files[ov91.fileID]
 
-    rom.arm9OverlayTable = saveOverlayTable(overlay_table)
-
     # Apply forgettable HMs patch
-    # arm9 = bytearray(codeCompression.decompress(rom.arm9))
     # arm9[0x1d310] = 0
-    # arm9 = bytearray(codeCompression.compress(arm9, True))
-    # arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")
-    # rom.arm9 = bytes(arm9)
-    # files_dump["arm9"] = rom.arm9
 
+    # Shiny rate branch
+    if rom.name[8:9] == b'W':
+        arm9[0x13f0c:0x13f14] = b'\x00\xb5\x92\xf3\x77\xf8\x00\xbd'
+    else:
+        arm9[0x13ef0:0x13ef8] = b'\x00\xb5\x92\xf3\x75\xf8\x00\xbd'
+
+    # Repack overlays and arm9
+    rom.arm9OverlayTable = saveOverlayTable(overlay_table)
+    arm9 = bytearray(codeCompression.compress(arm9, True))
+    arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")
+    rom.arm9 = bytes(arm9)
+    files_dump["arm9"] = rom.arm9
+
+    # arm7 expansion
     expansion = pkgutil.get_data(world_package, "patch/arm7_expansion.bin")
     rom.arm7 = rom.arm7 + bytes((0x2a000 if rom.name[8:9] == b'W' else 0x29fe0) - len(rom.arm7)) + expansion
     files_dump["arm7"] = rom.arm7
