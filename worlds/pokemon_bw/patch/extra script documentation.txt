@@ -1,0 +1,26 @@
+0: None, end of script and 4 bytes alignment ?
+1: Repeated conditional script call? (scene)
+2: On map load 1, use for object change and flag/work setting ? (zone)
+3: ? (recover)
+4: On map load 2, used for actorsetgpos ? (init)
+
+# Repeated conditional script call
+1 (short), offset to data after command (long)
+
+# Repeated conditional script call data
+work id (short), value (short), script id (short)
+
+# On map load 1
+2 (short), script id (short), 0 (short)
+
+# Recover
+3 (short), script id (short), 0 (short)
+
+# On map load 2
+4 (short), script id (short), 0 (short)
+
+# End of extra scripts
+0 (short)
+
+# End of conditional script call data
+0 (short)

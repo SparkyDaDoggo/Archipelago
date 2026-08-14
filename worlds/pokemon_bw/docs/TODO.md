@@ -1,24 +1,28 @@
 # Important stuff
 
-- copy exp curves in evo rando
+- specialized unittests for rando modifiers
 - `increasing stats` in evo rando not working?
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- `Evolve when possible` and `Force fully evolved` in trainer rando not working?
 - Accumula Town Cutscene empty text boxes
-- fill more funny dialog
+- pad ROM to power of 2
+- send plugin options over slot data as string (only in 0.4.0, breaks backwards compatibility)
+- fighting driftveil gym locks first clay-cheren scene locking fly unlock
+- opelucid city fly flag only set after ghetsis scene
+- TMHM hunt NPC
+- rom script changes to comply with regions rework
+- unittests update with new options
 
 # Not urgent
 
-- change rules dict to being filled on the way
 - rename slot methods to cave/dust cloud/etc everywhere
 - gym leader scripts control traded obedience level?
 - wingull grams overworld items not disappearing
 - extended location hint for challenge rock
 - a way to check whether map or fly menu is opened, used for switching to ow map in UT
 - Running shoes as an item, making mom cutscene on route 2 a check
-- opelucid city fly flag only set after ghetsis scene
 - Make event locations more distinguishable in spoiler from normal locations
 - text extraction starts all lines with [Terminate]
+- fill more funny dialog
 
 # Single reports, cannot recreate, need to wait for more reports
 

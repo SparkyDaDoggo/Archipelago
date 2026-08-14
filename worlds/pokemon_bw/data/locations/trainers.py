@@ -1,7 +1,7 @@
 from .. import TrainerLocationData as TLData
 from .rules import *
 
-table: dict[str, TLData] = {
+table: dict[str, TLData] = {  # TODO regions rework
     "Nuvema Town - Defeat Cheren": TLData((53, 54, 55), "Nuvema Town", None, None),
     "Nuvema Town - Defeat Bianca": TLData((59, 60, 61), "Nuvema Town", None, None),
     "Nuvema Town - Defeat Bianca (Post-Hall of Fame)": TLData((594, 595, 596), "Nuvema Town", None, can_beat_alder),
@@ -154,10 +154,10 @@ table: dict[str, TLData] = {
     "Relic Castle - Defeat Plasma Grunt #7": TLData(227, "Relic Castle Lower Floors", None, None),
     "Relic Castle Basement - Defeat Plasma Grunt": TLData(598, "Relic Castle Basement", None, None),
     "Nimbasa City - Defeat Daily Ferris Wheel Trainer": TLData((285, 537, 535, 281, 96, 538, 536, 284), "Nimbasa City", vanilla_seasons, None),
-    "Nimbasa City - Defeat Daily Ferris Wheel Trainer (Spring)": TLData((285, 537), "Nimbasa City", changeable_seasons, can_set_spring),
-    "Nimbasa City - Defeat Daily Ferris Wheel Trainer (Summer)": TLData((535, 281), "Nimbasa City", changeable_seasons, can_set_summer),
-    "Nimbasa City - Defeat Daily Ferris Wheel Trainer (Autumn)": TLData((96, 538), "Nimbasa City", changeable_seasons, can_set_autumn),
-    "Nimbasa City - Defeat Daily Ferris Wheel Trainer (Winter)": TLData((536, 284), "Nimbasa City", changeable_seasons, can_set_winter),
+    "Nimbasa City - Defeat Lass Maya or Dancer Dirk": TLData((285, 537), "Nimbasa City", changeable_seasons, can_set_spring),
+    "Nimbasa City - Defeat Hiker Andy or Ace Trainer Austin": TLData((535, 281), "Nimbasa City", changeable_seasons, can_set_summer),
+    "Nimbasa City - Defeat Clerk Trisha or Waitress Aurora": TLData((96, 538), "Nimbasa City", changeable_seasons, can_set_autumn),
+    "Nimbasa City - Defeat Preschooler Winter or Rich Boy Martin": TLData((536, 284), "Nimbasa City", changeable_seasons, can_set_winter),
     "Nimbasa City - Defeat Lass Maya": TLData(285, "Nimbasa City", disabled, None),
     "Nimbasa City - Defeat Hiker Andy": TLData(535, "Nimbasa City", disabled, None),
     "Nimbasa City - Defeat Clerk Trisha": TLData(96, "Nimbasa City", disabled, None),
