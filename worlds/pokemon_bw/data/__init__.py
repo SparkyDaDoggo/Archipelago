@@ -8,7 +8,6 @@ if not TYPE_CHECKING:
     ClassificationMethod: type = Any
     ProgressTypeMethod: type = Any
     InclusionRule: type = Any
-    RulesDict: type = Any
 else:
     from .. import PokemonBWWorld
     AccessRule: type = Callable[[CollectionState], bool]
@@ -16,7 +15,6 @@ else:
     ClassificationMethod: type = Callable[[PokemonBWWorld, str], ItemClassification]
     ProgressTypeMethod: type = Callable[[PokemonBWWorld], LocationProgressType]
     InclusionRule: type = Callable[[PokemonBWWorld], bool]
-    RulesDict: type = dict[ExtendedRule | tuple[ExtendedRule, ...], AccessRule]
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -40,7 +38,7 @@ class SeasonItemData(NamedTuple):
     classification: ClassificationMethod
 
 
-class ExtRulesTuple(tuple[ExtendedRule | InclusionRule | "ExtRulesTuple", ...]):
+class ExtRulesTuple(tuple[ExtendedRule | InclusionRule | Self, ...]):
 
     def __new__(cls, *args, **kwargs):
         return super().__new__(cls, args)
@@ -81,6 +79,18 @@ class IfExtRules(ExtRulesTuple):
 
     def resolve(self, world: "PokemonBWWorld") -> AccessRule:
         return None if not self[0](world) else ExtRulesTuple.resolve(self[1], world)
+
+
+class RulesDict(dict[ExtendedRule | ExtRulesTuple | None, AccessRule | None]):
+
+    def __init__(self, seq=None, world: "PokemonBWWorld" = None, **kwargs):
+        super().__init__(seq, **kwargs)
+        self.world = world
+
+    def get_or_add(self, item: ExtendedRule | ExtRulesTuple | None) -> AccessRule:
+        if item not in self:
+            self[item] = None if item is None else ExtRulesTuple.resolve(item, self.world)
+        return self[item]
 
 
 class FlagLocationData(NamedTuple):
@@ -154,10 +164,12 @@ class TrainerData(NamedTuple):
     held_items: bool
     unique_moves: bool
     pokemon_entry_length: int
-    gym: tuple[str, str, bool] | None  # (City name (without the "City") or League, vanilla type, is leader)
+    gym: tuple[str, str, bool] | None
+    """(City name (without the "City") or "League", vanilla type, is leader)"""
     rival: int  # 0 no rival, 1 Bianca, 2 Cheren, 3 N
+    do_not_adjust: bool = False
+    inclusion_rule: InclusionRule | None = None
     # early: bool
-    # region: str
     # nearby_maps: tuple[int, ...]
 
 
@@ -203,7 +215,7 @@ class RegionConnectionData(NamedTuple):
     empty tuple for non-warp connections
     tuple instead of int for places where a long warp is split into multiple ones, first ID is the preferred destination
     """
-    event_names: str | None
+    entrance_name: str | None
     """
     "##" will be replaced with with r1, "#2#" with r2
     None is replaced by "r1 -> r2" (AP default)
@@ -226,7 +238,11 @@ class EncounterRegionData(NamedTuple):
 
 class EncounterRegionConnectionData(NamedTuple):
     entering_region: tuple[str, str, str]
-    exiting_region: tuple[str, ...]
+    exiting_regions: tuple[str, ...]
+
+    def build_name(self) -> str:
+        season = '' if not self.entering_region[1] else f" ({self.entering_region[1]})"
+        return f"{self.entering_region[0]}{season} - {self.entering_region[2]}"
 
 
 class EventData(NamedTuple):
@@ -288,7 +304,7 @@ class EvolutionMethodData(NamedTuple):
     id: int
     has_level_value: bool
     # Takes value from evolution data and returns the access rule for that evolution
-    rule: Callable[[int, str, "PokemonBWWorld"], ExtendedRule] | None
+    rule: Callable[[int, str, "PokemonBWWorld"], ExtendedRule | ExtRulesTuple | None] | None
 
 
 class TypeData(NamedTuple):
@@ -297,6 +313,7 @@ class TypeData(NamedTuple):
 
 class EggGroupData(NamedTuple):
     id: int
+    vanilla: bool
     compatible_types: tuple[str, ...] | None
 
 

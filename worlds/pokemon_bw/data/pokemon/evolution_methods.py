@@ -1,7 +1,8 @@
-from typing import Callable, TYPE_CHECKING
+from typing import Callable
 
-from .. import EvolutionMethodData, ExtendedRule
+from .. import EvolutionMethodData, ExtRulesTuple, AndExtRules as AND
 from . import moves as move_tables, species
+from ..locations.rules import *
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -11,137 +12,93 @@ def has_item(name: str) -> ExtendedRule:
     return lambda state, world: state.has(name, world.player)
 
 
-always_possible: ExtendedRule = lambda state, world: True
-can_reach_magnetic_area: ExtendedRule = lambda state, world: state.can_reach_region("Chargestone Cave", world.player)
-can_reach_moss_rock: ExtendedRule = lambda state, world: state.can_reach_region("Pinwheel Forest West", world.player)
-can_reach_ice_rock: ExtendedRule = lambda state, world: state.can_reach_region("Twist Mountain", world.player)
-can_reach_nacrene_city: ExtendedRule = lambda state, world: state.can_reach_region("Nacrene City", world.player)
-can_reach_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton City", world.player)
-
-can_buy_item_castelia: ExtendedRule = lambda state, world: state.can_reach_region("Castelia City", world.player)
-can_get_item_chargestone: ExtendedRule = lambda state, world: state.can_reach_region("Chargestone Cave", world.player)
-can_buy_item_twist: ExtendedRule = lambda state, world: state.can_reach_region("Twist Mountain", world.player)
-can_buy_item_mall: ExtendedRule = lambda state, world: state.can_reach_region("Route 9", world.player)
-can_get_item_r10: ExtendedRule = lambda state, world: state.can_reach_region("Route 10", world.player)
-can_buy_item_undella: ExtendedRule = lambda state, world: state.can_reach_region("Undella Town", world.player)
-can_get_item_chasm: ExtendedRule = lambda state, world: state.can_reach_region("Giant Chasm Entrance Cave", world.player)
 can_buy_item: dict[int, ExtendedRule] = {
-    0x002E: can_buy_item_mall,  # Protein
-    0x002F: can_buy_item_mall,  # Iron
-    0x0030: can_buy_item_mall,  # Carbos
-    80: can_buy_item_twist,  # Sun Stone
-    81: can_buy_item_twist,  # Moon Stone
-    82: can_buy_item_castelia,  # Fire Stone
-    83: can_get_item_chargestone,  # Thunder Stone
-    84: can_buy_item_castelia,  # Water Stone
-    85: can_buy_item_castelia,  # Leaf Stone
-    107: can_get_item_r10,  # Shiny Stone
-    108: can_get_item_r10,  # Dusk Stone
-    109: can_get_item_r10,  # Dawn Stone
-    110: can_buy_item_mall,  # Oval Stone
-    221: can_buy_item_mall,  # King's Rock
-    226: can_buy_item_undella,  # Deep Sea Tooth
-    227: can_buy_item_undella,  # Deep Sea Scale
-    233: can_get_item_chargestone,  # Metal Coat
-    235: can_buy_item_mall,  # Dragon Scale
-    252: can_buy_item_undella,  # Up-Grade
-    321: can_buy_item_mall,  # Protector
-    322: can_buy_item_undella,  # Electirizer
-    323: can_buy_item_undella,  # Magmarizer
-    324: can_buy_item_undella,  # Dubious Disc
-    325: can_buy_item_mall,  # Reaper Cloth
-    326: can_get_item_chasm,  # Razor Claw
-    327: can_get_item_chasm,  # Razor Fang
-    537: can_buy_item_undella,  # Prism Scale
+    0x002E: has_access_mall_evo_items,  # Protein
+    0x002F: has_access_mall_evo_items,  # Iron
+    0x0030: has_access_mall_evo_items,  # Carbos
+    80: has_access_twist_evo_items,  # Sun Stone
+    81: has_access_twist_evo_items,  # Moon Stone
+    82: has_access_castelia_evo_items,  # Fire Stone
+    83: has_access_chargestone_evo_items,  # Thunder Stone
+    84: has_access_castelia_evo_items,  # Water Stone
+    85: has_access_castelia_evo_items,  # Leaf Stone
+    107: has_access_r10_evo_items,  # Shiny Stone
+    108: has_access_r10_evo_items,  # Dusk Stone
+    109: has_access_r10_evo_items,  # Dawn Stone
+    110: has_access_mall_evo_items,  # Oval Stone
+    221: has_access_mall_evo_items,  # King's Rock
+    226: has_access_undella_evo_items,  # Deep Sea Tooth
+    227: has_access_undella_evo_items,  # Deep Sea Scale
+    233: has_access_chargestone_evo_items,  # Metal Coat
+    235: has_access_mall_evo_items,  # Dragon Scale
+    252: has_access_undella_evo_items,  # Up-Grade
+    321: has_access_mall_evo_items,  # Protector
+    322: has_access_undella_evo_items,  # Electirizer
+    323: has_access_undella_evo_items,  # Magmarizer
+    324: has_access_undella_evo_items,  # Dubious Disc
+    325: has_access_mall_evo_items,  # Reaper Cloth
+    326: has_access_chasm_evo_items,  # Razor Claw
+    327: has_access_chasm_evo_items,  # Razor Fang
+    537: has_access_undella_evo_items,  # Prism Scale
 }
 
 stone_items = (80, 81, 82, 83, 84, 85, 107, 108, 109)
 hold_items = (0x002E, 0x002F, 0x0030, 110, 221, 226, 227, 233, 235, 252, 321, 322, 323, 324, 325, 326, 327, 537)
 
-in_vanilla_east: ExtendedRule = lambda state, world: (
-    state.can_reach_region("Route 15", world.player)
-    and not world.options.adjust_levels.is_wild
-)
-can_challenge_alder: ExtendedRule = lambda state, world: state.can_reach_region("N's Castle", world.player)
-between_ghetsis_and_alder: ExtendedRule = lambda state, world: (
-    in_vanilla_east(state, world)
-    or can_challenge_alder(state, world)
-)
-is_in_appropriate_region: dict[int, ExtendedRule] = {  # Artificial logic so that you're not expected to evolve Larvesta in Striaton City
-    0: always_possible,
-    1: always_possible,
-    2: always_possible,
-    3: lambda state, world: state.can_reach_region("Pinwheel Forest Outside", world.player),
-    4: lambda state, world: state.can_reach_region("Castelia City", world.player),
-    5: lambda state, world: state.can_reach_region("Desert Resort", world.player),
-    6: lambda state, world: state.can_reach_region("Undella Town", world.player) or  # Includes in_vanilla_east
-                            state.can_reach_region("Mistralton Cave Inner", world.player) or
-                            state.can_reach_region("Chargestone Cave", world.player),
-    7: lambda state, world: state.can_reach_region("Route 13", world.player) or  # Includes in_vanilla_east
-                            state.can_reach_region("Twist Mountain", world.player),
-    8: lambda state, world: in_vanilla_east(state, world) or state.can_reach_region("Opelucid City", world.player),
-    9: lambda state, world: in_vanilla_east(state, world) or state.can_reach_region("Victory Road", world.player),
-    10: lambda state, world: in_vanilla_east(state, world) or state.can_reach_region("Pokémon League", world.player),
-    11: between_ghetsis_and_alder,
-    12: between_ghetsis_and_alder,
-    13: between_ghetsis_and_alder,
-    14: between_ghetsis_and_alder,
-    15: can_challenge_alder,
-    16: can_challenge_alder,
-    17: can_challenge_alder,
-    18: can_challenge_alder,
-    19: can_challenge_alder,
-    20: can_challenge_alder,
-}
+
+def build_lvlup_ext_rule(divided: int) -> ExtendedRule:
+    return lambda state, world: any(state.pokemon_bw_lvl[world.player][i] for i in range(divided, 21))
 
 
-def stats_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:
-    return lambda state, world: (is_in_appropriate_region[value//5](state, world)
-                                 and can_buy_item_mall(state, world))
+lvlup_ext_rule_cache = [build_lvlup_ext_rule(d) for d in range(21)]
 
 
-def move_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:
+def move_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule | ExtRulesTuple:
+    # if move in levelup moveset, then level and access to move relearner
     for lvl_move in world.species_entries[spec].level_up_moves.level_up_moves:
         if world.move_entries[lvl_move[1]].id == value:
-            return lambda state, world: (is_in_appropriate_region[lvl_move[0]//5](state, world)
-                                         and can_reach_mistralton_city(state, world))
+            return AND(lvlup_ext_rule_cache[lvl_move[0] // 5], has_access_move_relearner)
+    # if move in tmhm moveset, then corresponding tmhm
     for tm_move in world.species_entries[spec].tm_hm_moves.tm_hm_moves:
         if world.move_entries[move_tables.tm_hm[tm_move].move].id == value:
             return has_item(tm_move)
-    return can_reach_mistralton_city
+    # cannot learn, bad plando, so just move relearner access
+    return has_access_move_relearner
 
 
-appropriate_region: Callable[[int, str, "PokemonBWWorld"], ExtendedRule] = lambda value, species, world: is_in_appropriate_region[value//5]
-item_evo: Callable[[int, str, "PokemonBWWorld"], ExtendedRule] = lambda value, species, world: can_buy_item[value]
+EvoExtRule: type = Callable[[int, str, "PokemonBWWorld"], ExtendedRule | ExtRulesTuple | None]
+specific_lvlup: EvoExtRule = lambda value, species, world: lvlup_ext_rule_cache[value // 5]
+item_evo: EvoExtRule = lambda value, species, world: can_buy_item[value]
+stats_lvlup: EvoExtRule = lambda value, species, world: AND(lvlup_ext_rule_cache[value // 5], has_access_mall_evo_items)
 
 methods: dict[str, EvolutionMethodData] = {
-    "Level up": EvolutionMethodData(4, True, appropriate_region),
+    "Level up": EvolutionMethodData(4, True, specific_lvlup),
     "Stone": EvolutionMethodData(8, False, item_evo),
     "Stone male": EvolutionMethodData(17, False, item_evo),  # Repeatable encounters, including static, are ensured
     "Stone female": EvolutionMethodData(18, False, item_evo),  # Repeatable encounters, including static, are ensured
-    "Friendship": EvolutionMethodData(1, False, lambda value, species, world: can_reach_nacrene_city),  # Artificial logic because there's the friendship checker
-    "Friendship (Day)": EvolutionMethodData(2, False, lambda value, species, world: can_reach_nacrene_city),  # Only in plando
-    "Friendship (Night)": EvolutionMethodData(3, False, lambda value, species, world: can_reach_nacrene_city),  # Only in plando
-    "Trade": EvolutionMethodData(5, False, lambda value, species, world: always_possible),  # Only in plando
+    "Friendship": EvolutionMethodData(1, False, lambda value, species, world: has_access_friendship_checker),  # Artificial logic because there's the friendship checker
+    "Friendship (Day)": EvolutionMethodData(2, False, lambda value, species, world: has_access_friendship_checker),  # Only in plando
+    "Friendship (Night)": EvolutionMethodData(3, False, lambda value, species, world: has_access_friendship_checker),  # Only in plando
+    "Trade": EvolutionMethodData(5, False, None),  # Only in plando
     "Trade with item": EvolutionMethodData(6, False, item_evo),  # Only in plando
-    "Trade Karrablast Shelmet": EvolutionMethodData(7, False, lambda value, species, world: always_possible),  # Only in plando
-    "Magnetic area": EvolutionMethodData(25, False, lambda value, species, world: can_reach_magnetic_area),
-    "Unused area": EvolutionMethodData(28, False, lambda value, species, world: can_reach_magnetic_area),  # Only in plando, unless used for custom area
+    "Trade Karrablast Shelmet": EvolutionMethodData(7, False, None),  # Only in plando
+    "Magnetic area": EvolutionMethodData(25, False, lambda value, species, world: has_access_magnetic_area),
+    "Unused area": EvolutionMethodData(28, False, lambda value, species, world: has_access_magnetic_area),  # Only in plando, unless used for custom area
     "Level up with move": EvolutionMethodData(21, False, move_lvlup),
-    "Level up moss rock": EvolutionMethodData(26, False, lambda value, species, world: can_reach_moss_rock),
-    "Level up ice rock": EvolutionMethodData(27, False, lambda value, species, world: can_reach_ice_rock),
+    "Level up moss rock": EvolutionMethodData(26, False, lambda value, species, world: has_access_moss_rock),
+    "Level up ice rock": EvolutionMethodData(27, False, lambda value, species, world: has_access_ice_rock),
     "Level up item day": EvolutionMethodData(19, False, item_evo),  # Always paired with night
     "Level up item night": EvolutionMethodData(20, False, item_evo),  # Always paired with day
     "Level up higher defense": EvolutionMethodData(11, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
     "Level up higher attack": EvolutionMethodData(9, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
     "Level up equal physical": EvolutionMethodData(10, True, stats_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up Silcoon": EvolutionMethodData(12, True, appropriate_region),  # Repeatable encounters, including static, are ensured
-    "Level up Cascoon": EvolutionMethodData(13, True, appropriate_region),  # Repeatable encounters, including static, are ensured
-    "Level up Ninjask": EvolutionMethodData(14, True, appropriate_region),
-    "Level up Shedinja": EvolutionMethodData(15, True, appropriate_region),
-    "Level up high beauty": EvolutionMethodData(16, False, lambda value, species, world: always_possible),  # Only in plando
-    "Level up (female)": EvolutionMethodData(23, True, appropriate_region),  # Repeatable encounters, including static, are ensured
-    "Level up (male)": EvolutionMethodData(24, True, appropriate_region),  # Repeatable encounters, including static, are ensured
+    "Level up Silcoon": EvolutionMethodData(12, True, specific_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up Cascoon": EvolutionMethodData(13, True, specific_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up Ninjask": EvolutionMethodData(14, True, specific_lvlup),
+    "Level up Shedinja": EvolutionMethodData(15, True, specific_lvlup),
+    "Level up high beauty": EvolutionMethodData(16, False, None),  # Only in plando
+    "Level up (female)": EvolutionMethodData(23, True, specific_lvlup),  # Repeatable encounters, including static, are ensured
+    "Level up (male)": EvolutionMethodData(24, True, specific_lvlup),  # Repeatable encounters, including static, are ensured
     "Level up with party member": EvolutionMethodData(22, False, lambda value, spec, world: has_item(species.by_id[value, 0].species_name)),
 }
 

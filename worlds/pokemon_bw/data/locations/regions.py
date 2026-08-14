@@ -53,8 +53,6 @@ region_list: dict[str, RegionData] = {
     "Dreamyard Entrance": RegionData("Dungeon", 152, True, full_map=False),
     "Dreamyard North West": RegionData("Dungeon", 152, True, full_map=False),  # behind cuttable tree
     "Dreamyard North East": RegionData("Dungeon", 152, True, full_map=False),  # behind traffic cone
-    # TODO Gonna tweak encounter region connections
-    # "Dreamyard Grass North": RegionData("AAAAAAAAAA", 00000, False),  # reachable from either cuttable tree or basement key
     "Dreamyard Basement": RegionData("Dungeon", 153, True, full_map=False),
     "Dreamyard Basement North West": RegionData("Dungeon", 153, True, full_map=False),
     "Dreamyard South": RegionData("Dungeon", 152, True, full_map=False),  # only accessible from basement

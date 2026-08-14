@@ -4,7 +4,7 @@ import os
 from typing import ClassVar, Mapping, Any, TextIO
 
 import settings
-from BaseClasses import MultiWorld, Tutorial, Region
+from BaseClasses import MultiWorld, Tutorial, Region, Item, CollectionState
 from Options import Option
 from worlds.AutoWorld import World, WebWorld
 from . import items, locations, options, bizhawk_client, rom, groups, tracker
@@ -119,6 +119,9 @@ class PokemonBWWorld(World):
     item_name_groups = groups.get_item_groups()
     location_name_groups = groups.get_location_groups()
 
+    distances_by_sphere: ClassVar[dict[int, dict[str, int]]] = {}
+    max_distance_by_sphere: ClassVar[int] = 0
+
     ut_can_gen_without_yaml = True
     glitches_item_name = "Out of logic"
     tracker_world = {
@@ -156,7 +159,7 @@ class PokemonBWWorld(World):
         self.to_be_filled_locations: int = 0
         self.seed: int = 0
         self.to_be_locked_items: dict[str, list[items.PokemonBWItem] | dict[str, items.PokemonBWItem]] = {}
-        self.wild_encounter: dict[str, EncounterEntry] = {}
+        self.wild_encounter: dict[tuple[int, int, int], EncounterEntry] = {}
         self.static_encounter: dict[str, StaticEncounterEntry] | None = None
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
@@ -164,6 +167,8 @@ class PokemonBWWorld(World):
         self.trade_data: dict[str, tuple[int, int]] = {}
         self.dexsanity_numbers: list[int] = []
         self.regions: dict[str, Region] | None = None
+        self.region_distances: dict[str, int] | None = None
+        self.max_distance: int = 0
         self.prepare_text = None
         self.rules_dict: RulesDict | None = None
         self.master_ball_seller_cost: int = 0
@@ -183,14 +188,13 @@ class PokemonBWWorld(World):
         self.location_id_to_alias: dict[int, str] = {}
 
     def generate_early(self) -> None:
-        from .generate.encounter import wild, checklist, static, plando
         from .generate.pokemon import species
         from .generate.move_data.randomize import generate_move_data
-        from .generate import trainers
+        from .generate.encounter.randomize import create_encounter
+        from .generate.encounter.wild import organize_by_method, organize_trades
         from .data import version
         from .plugins import load_plugins
-        from .plugins.generate import plugins_generate_early, plugins_generate_encounters
-        from .plugins.generate import plugins_generate_early, plugins_generate_encounters, plugins_fill_rules
+        from .plugins.generate import plugins_generate_early, plugins_fill_rules, plugins_generate_encounters
 
         # Load values from UT if this is a regenerated world
         if hasattr(self.multiworld, "re_gen_passthrough"):
@@ -230,25 +234,16 @@ class PokemonBWWorld(World):
 
         self.regions = locations.get_regions(self)
         self.prepare_text = version.revert
-        self.rules_dict = locations.create_rule_dict(self)
+        self.rules_dict = RulesDict(world=self)
         plugins_fill_rules(self)
         locations.connect_regions(self)
         locations.cleanup_regions(self.regions)
         self.move_entries, self.type_chart = generate_move_data(self)
         self.species_entries, self.species_entries_by_id = species.generate_species_data(self)
-        species_checklist = checklist.get_species_checklist(self)
-        slots_checklist = checklist.get_slots_checklist(self)
-        # Static and trade encounter generation also remove and add species from/to checklist
-        self.wild_encounter |= plando.generate_wild(self, species_checklist, slots_checklist)  # only removes species and slots
-        self.trade_encounter = static.generate_trade_encounters(self, species_checklist)  # removes and adds species
-        self.static_encounter = static.generate_static_encounters(self, species_checklist)  # only removes species
-        self.wild_encounter |= wild.generate_wild_encounters(  # only removes species
-            self, species_checklist, slots_checklist
-        )
+        create_encounter(self)
         plugins_generate_encounters(self)
-        self.encounter_by_method = wild.organize_by_method(self)
-        self.trade_data = wild.organize_trades(self)
-        self.trainer_teams = trainers.generate_trainer_teams(self)
+        self.encounter_by_method = organize_by_method(self)
+        self.trade_data = organize_trades(self)
 
     def create_item(self, name: str) -> items.PokemonBWItem:
         return items.generate_item(name, self)
@@ -297,6 +292,33 @@ class PokemonBWWorld(World):
         spoiler.write_spoiler_move_data(self, spoiler_handle)
         spoiler.write_spoiler_type_chart(self, spoiler_handle)
 
+    def collect(self, state: CollectionState | locations.PokemonBWMixin, item: Item) -> bool:
+        change = super().collect(state, item)
+        if change and item.name.startswith("[Lvl]"):
+            state.pokemon_bw_lvl[self.player][int(item.name[8:]) // 5] += 1
+        return change
+
+    def remove(self, state: CollectionState | locations.PokemonBWMixin, item: Item) -> bool:
+        change = super().remove(state, item)
+        if change and item.name.startswith("[Lvl]"):
+            state.pokemon_bw_lvl[self.player][int(item.name[8:]) // 5] -= 1
+        return change
+
+    def calculate_distances_by_sphere(self):
+        distances = PokemonBWWorld.distances_by_sphere  # already initialized on class definition
+        for player in self.multiworld.get_game_players("Pokemon Black and White"):
+            distances[player] = {}
+        dist = 1
+        for sphere in self.multiworld.get_spheres():
+            for loc in sphere:
+                if loc.player not in distances:
+                    continue
+                reg = loc.parent_region
+                if reg and reg.name not in distances[loc.player]:
+                    distances[loc.player][reg.name] = dist
+            dist += 1
+        PokemonBWWorld.max_distance_by_sphere = dist - 1
+
     def generate_output(self, output_directory: str) -> None:
         if self.options.version == "black":
             rom.PokemonBlackPatch(
@@ -312,6 +334,10 @@ class PokemonBWWorld(World):
                     self.multiworld.get_out_file_name_base(self.player) + rom.PokemonWhitePatch.patch_file_ending
                 ), world=self, player=self.player, player_name=self.player_name
             ).write()
+        # Prevent memory leaks
+        for entry in self.species_entries.values():
+            entry.pre_evolutions.clear()
+            entry.evolutions.clear()
 
     def part_slot_data(self) -> dict[str, Any]:
         """Earliest to call, plugins get this"""  # though they actually don't need it in this form?
@@ -344,6 +370,8 @@ class PokemonBWWorld(World):
                     "shuffle_tm_hm": self.options.shuffle_tm_hm.current_key,
                     "dexsanity": self.options.dexsanity.value,
                     "dexcountsanity": self.options.dexcountsanity.value,
+                    "shinysanity": self.options.shinysanity.value,
+                    "shinycountsanity": self.options.shinycountsanity.value,
                     "season_control": self.options.season_control.current_key,
                     "adjust_levels": self.options.adjust_levels.value,
                     "modify_levels": self.options.modify_levels.value,

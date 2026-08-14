@@ -1,4 +1,4 @@
-from ... import FlagLocationData, AndExtRules as AND, OrExtRules as OR, IfExtRules as IF
+from ... import FlagLocationData, OrExtRules as OR, IfExtRules as IF
 from ..rules import *
 from ..progress_type import *
 

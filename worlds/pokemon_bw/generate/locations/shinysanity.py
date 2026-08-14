@@ -11,13 +11,13 @@ if TYPE_CHECKING:
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ...data.locations.dexsanity import location_table
+    from ...data.locations.shinysanity import location_table
 
     return {name: data.dex_number + domain for name, data in location_table.items()}
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
-    from ...data.locations.dexsanity import location_table
+    from ...data.locations.shinysanity import location_table
     from ...data.pokemon.pokedex import by_number
 
     # These lambdas have to be created from functions, because else they would all use the same 'name' variable
@@ -31,14 +31,12 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
 
     r: "Region" = world.regions["Pokédex"]
     catchable_dex: list[str] = []
-    dexsanity_numbers: list[int] = []
     for data in catchable_species_data.values():
         if data.dex_name not in catchable_dex:
             catchable_dex.append(data.dex_name)
 
     def create_location(loc_name: str) -> None:
         data = location_table[loc_name]
-        dexsanity_numbers.append(data.dex_number)
         l: PokemonBWLocation = PokemonBWLocation(world.player, loc_name, world.location_name_to_id[loc_name], r)
         l.progress_type = LocationProgressType.DEFAULT
         if data.special_rule is not None:
@@ -49,18 +47,16 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             world.location_id_to_alias[world.location_name_to_id[loc_name]] = data.ut_alias
         r.locations.append(l)
 
-    if isinstance(world.options.dexsanity.value, list):
-        for dex_num in world.options.dexsanity.value:
+    if isinstance(world.options.shinysanity.value, list):
+        for dex_num in world.options.shinysanity.value:
             dex_num: int
             pokemon = by_number[dex_num]
             if pokemon in catchable_dex:
-                name = f"Pokédex - {pokemon}"
+                name = f"Pokédex - Find a shiny {pokemon}"
                 create_location(name)
     else:
         world.random.shuffle(catchable_dex)
-        count = min(world.options.dexsanity.value, len(catchable_dex))
+        count = min(world.options.shinysanity.value, len(catchable_dex))
         for _ in range(count):
-            name = f"Pokédex - {catchable_dex.pop()}"
+            name = f"Pokédex - Find a shiny {catchable_dex.pop()}"
             create_location(name)
-
-    world.dexsanity_numbers.extend(dexsanity_numbers)

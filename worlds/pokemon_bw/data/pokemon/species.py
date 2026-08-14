@@ -1,4 +1,5 @@
 from random import Random
+from typing import TypeVar
 
 from .. import SpeciesData as SD
 
@@ -771,11 +772,15 @@ by_id: dict[tuple[int, int], SD] = {
 }
 
 forms_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}
+forms_seen_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}
 for spe, data in by_name.items():
     forms_by_dex[data.dex_number].append(spe)
+    forms_seen_by_dex[data.dex_number].extend((spe, "[Seen] "+spe))
+
+T = TypeVar("T")
 
 
-def get_weighted_random_species(random: Random, fbd: dict[int, list[str]]) -> str:
+def get_weighted_random_species(random: Random, fbd: dict[int, list[T]]) -> T:
     forms = fbd[random.choice(tuple(fbd))]
     if len(forms) == 1:
         return forms[0]

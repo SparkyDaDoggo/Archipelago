@@ -1,6 +1,6 @@
 
 from typing import TYPE_CHECKING
-from .. import EncounterEntry
+from .. import SpeciesChecklist, CopyChecklist
 import logging
 
 if TYPE_CHECKING:
@@ -8,14 +8,9 @@ if TYPE_CHECKING:
     from .. import SpeciesChecklist
 
 
-def generate_wild(world: "PokemonBWWorld",
-                  species_checklist: "SpeciesChecklist",
-                  slots_checklist: dict[str, str | None]) -> dict[str, EncounterEntry]:
+def generate_wild(world: "PokemonBWWorld", species_checklist: SpeciesChecklist):
     from ...data.plando.encounter_maps import maps, multiple_seasons
     from ...data.locations.encounters.regions import region_list
-
-    ret: dict[str, EncounterEntry] = {}
-    warned = False
 
     method_abbr = {
         "Grass": "G",
@@ -34,13 +29,13 @@ def generate_wild(world: "PokemonBWWorld",
         "(Winter) ": 3,
     }
     method_shifting = {
-        "Grass": 0,
-        "Dark grass": 12,
-        "Rustling grass": 24,
-        "Surfing": 36,
-        "Surfing rippling": 41,
-        "Fishing": 46,
-        "Fishing rippling": 51,
+        "Grass": (0, 11),
+        "Dark grass": (12, 23),
+        "Rustling grass": (24, 35),
+        "Surfing": (36, 40),
+        "Surfing rippling": (41, 45),
+        "Fishing": (46, 50),
+        "Fishing rippling": (51, 55),
     }
 
     for plando in world.options.encounter_plando:
@@ -51,9 +46,7 @@ def generate_wild(world: "PokemonBWWorld",
         if species.casefold() == "none":
             continue
         species_data = world.species_entries[species]
-        species_id = (species_data.dex_number, species_data.form)
-        map_abbr = maps[plando.map][0]
-        file_index = maps[plando.map][1]
+        map_abbr, file_index = maps[plando.map]
         if not plando.seasons:
             if plando.map in multiple_seasons:
                 seasons = ["(Spring) ", "(Summer) ", "(Autumn) ", "(Winter) "]
@@ -63,8 +56,15 @@ def generate_wild(world: "PokemonBWWorld",
             seasons = [f"({season}) " for season in plando.seasons]
         for season in seasons:
             season_id = season_index[season]
-            region = f"{map_abbr} {season}- {method_abbr[plando.method]}"
-            if region not in region_list:
+            method = method_abbr[plando.method]
+            region = f"{map_abbr} {season}- {method}"
+            er_data = region_list[map_abbr]
+            if (
+                (season_id == 0 and method not in (er_data.methods + er_data.spring_methods))
+                or (season_id == 1 and method not in er_data.summer_methods)
+                or (season_id == 2 and method not in er_data.autumn_methods)
+                or (season_id == 3 and method not in er_data.winter_methods)
+            ):
                 logging.warning(f"Player {world.player_name} defined an Encounter Plando on a non-existent slot "
                                 f"({region}).")
                 continue
@@ -74,19 +74,10 @@ def generate_wild(world: "PokemonBWWorld",
                 else list(range(5))
             )
             for slot in slots:
-                slot_in_file = method_shifting[plando.method] + slot
-                slot_name = f"{region} {slot}"
-                if slot_name in ret:
-                    if not warned:
-                        logging.warning(f"Player {world.player_name} defined multiple Encounter Plandos on the same "
-                                        f"slot(s). Only the first entry/entries will be included.")
-                        warned = True
-                    continue
-                ret[slot_name] = EncounterEntry(
-                    species_id, region, (file_index, season_id, slot_in_file), True
-                )
-                if region in world.regions:
-                    species_checklist.check(species)
-                slots_checklist[slot_name] = "FILLED"
-
-    return ret
+                slot_in_file = method_shifting[plando.method][0] + slot
+                entry = world.wild_encounter[file_index, season_id, slot_in_file]
+                entry.species_id = (species_data.dex_number, species_data.form)
+                entry.write |= 2
+                if entry.region in world.regions:
+                    # Seasonal encounter regions (while vanilla seasons) were removed in a previous step
+                    species_checklist.check(species_data)

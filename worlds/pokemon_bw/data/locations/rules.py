@@ -1,6 +1,12 @@
-from .. import ExtendedRule, InclusionRule
-from ..pokemon import species
+from typing import TYPE_CHECKING
 
+from BaseClasses import CollectionState
+from .. import ExtendedRule, InclusionRule, AccessRule
+from ..pokemon.species import forms_by_dex
+from ..items import tm_hm
+
+if TYPE_CHECKING:
+    from ... import PokemonBWWorld
 
 # Item requirements
 
@@ -36,8 +42,9 @@ can_use_flash: ExtendedRule = lambda state, world: (
     and state.has_any(world.flash_species, world.player)
 )
 
-can_use_surf_or_strength: ExtendedRule = lambda state, world: (
-    can_use_surf(state, world) or can_use_strength(state, world)
+can_use_fly: ExtendedRule = lambda state, world: (
+    state.has("HM02 Fly", world.player)
+    and state.has_any(world.fly_species, world.player)
 )
 
 can_fish: ExtendedRule = lambda state, world: state.has("Super Rod", world.player)
@@ -56,6 +63,8 @@ has_red_chain: ExtendedRule = lambda state, world: state.has("Red Chain", world.
 has_any_legendary_stone: ExtendedRule = lambda state, world: state.has_any(("Light Stone", "Dark Stone"), world.player)
 has_lock_capsule: ExtendedRule = lambda state, world: state.has("Lock Capsule", world.player)
 has_all_grams: ExtendedRule = lambda state, world: state.has_all(("Wingull Gram 1", "Wingull Gram 2", "Wingull Gram 3"), world.player)
+has_gb_player: ExtendedRule = lambda state, world: state.has("GB Sounds", world.player)
+has_all_tms_hms: ExtendedRule = lambda state, world: state.has_all(tm_hm.tm, world.player) and state.has_all(tm_hm.hm, world.player)
 
 has_root_fossil: ExtendedRule = lambda state, world: state.has("Root Fossil", world.player)
 has_claw_fossil: ExtendedRule = lambda state, world: state.has("Claw Fossil", world.player)
@@ -132,10 +141,6 @@ can_catch_all_deerlings: ExtendedRule = lambda state, world: (
     ), world.player)
 )
 
-can_use_surf_or_set_other_than_winter: ExtendedRule = lambda state, world: (
-    can_use_surf(state, world) or can_set_other_than_winter(state, world)
-)
-
 encounter_can_set_spring: ExtendedRule = lambda state, world: (
     state.can_reach_region("Nimbasa City", world.player) and (
         world.options.season_control == "changeable" or state.has("Spring", world.player)
@@ -160,33 +165,122 @@ encounter_can_set_winter: ExtendedRule = lambda state, world: (
     )
 )
 
+# Event requirements
 
-# Region requirements
+has_visited_biancas_house: ExtendedRule = lambda state, world: state.has("[Event] Argument in Bianca's house", world.player)
+has_seen_accumula_speech: ExtendedRule = lambda state, world: state.has("[Event] Accumula Town Ghetsis speech", world.player)
+has_fought_cheren_trainerschool: ExtendedRule = lambda state, world: state.has("[Event] Trainers' School Cheren fight", world.player)
+has_fought_plasma_wellspring: ExtendedRule = lambda state, world: state.has("[Event] Wellspring Cave Plasma fight", world.player)
+has_helped_man_nimbasa: ExtendedRule = lambda state, world: state.has("[Event] Helping old man in Nimbasa", world.player)
+has_encountered_cobalion: ExtendedRule = lambda state, world: state.has("[Event] Encounter Cobalion", world.player)
+has_confronted_plasma_castelia: ExtendedRule = lambda state, world: state.has("[Event] Castelia Plasma Hideout confrontation", world.player)
+has_confronted_plasma_cold_storage: ExtendedRule = lambda state, world: state.has("[Event] Cold Storage Plasma confrontation", world.player)
+has_battled_n_chargestone: ExtendedRule = lambda state, world: state.has("[Event] Defeating N Chargestone", world.player)
+has_rung_bell_celestial: ExtendedRule = lambda state, world: state.has("[Event] Ring bell Celestial Tower", world.player)
+has_talked_drayden_iris: ExtendedRule = lambda state, world: state.has("[Event] Talk with Iris and Drayden", world.player)
+has_released_roamer: ExtendedRule = lambda state, world: state.has("[Event] Released roamer", world.player)
+has_introduced_junipers_lab: ExtendedRule = lambda state, world: state.has("[Event] Introduction in Juniper's Lab", world.player)
+has_fought_plasma_dreamyard: ExtendedRule = lambda state, world: state.has("[Event] Dreamyard North Plasma fight", world.player)
+has_confronted_ghetsis_relic_castle: ExtendedRule = lambda state, world: state.has("[Event] Relic Castle Ghetsis confrontation", world.player)
+has_fought_castelia_dancers: ExtendedRule = lambda state, world: state.has_all((
+    "[Event] Defeating Catelia Dancer Mickey", "[Event] Defeating Catelia Dancer Raymond", "[Event] Defeating Catelia Dancer Edmond", ), world.player)
+has_found_woman_on_village_bridge: ExtendedRule = lambda state, world: state.has("[Event] Talking to Patrat woman Village Bridge", world.player)
+has_talked_wingull_route_13: ExtendedRule = lambda state, world: state.has("[Event] Talked to girl next to Wingull Route 13", world.player)
+has_heard_weather_route_10: ExtendedRule = lambda state, world: state.has("[Event] Heard weather warning route 10 gate", world.player)
+has_talked_to_kids_mistralton: ExtendedRule = lambda state, world: state.has("[Event] Talked with kids Mistralton", world.player)
 
-can_beat_ghetsis: ExtendedRule = lambda state, world: state.can_reach_region("N's Castle", world.player)
-can_beat_alder: ExtendedRule = lambda state, world: state.can_reach_region("Pokémon League", world.player)
-can_encounter_swords_of_justice: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton Cave Inner", world.player)
-can_cut_dreamyard_tree: ExtendedRule = lambda state, world: state.can_reach_region("Dreamyard North", world.player)
-can_go_deeper_into_relic_castle: ExtendedRule = lambda state, world: state.can_reach_region("Relic Castle Lower Floors", world.player)
-can_go_to_relic_castle_basement: ExtendedRule = lambda state, world: state.can_reach_region("Relic Castle Tower Lower Floors", world.player)
-can_find_woman_on_village_bridge: ExtendedRule = lambda state, world: state.can_reach_region("Village Bridge", world.player)
-can_go_to_nimbasa_city: ExtendedRule = lambda state, world: state.can_reach_region("Nimbasa City", world.player)
-can_go_to_mistralton_city: ExtendedRule = lambda state, world: state.can_reach_region("Mistralton City", world.player)
-can_spawn_roamer: ExtendedRule = lambda state, world: state.can_reach_region("Route 10", world.player)
+has_defeated_striaton_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating Leader Cilan/Chili/Cress", world.player)
+has_defeated_nacrene_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Lenora", world.player)
+has_defeated_driftveil_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Clay", world.player)
+has_defeated_mistralton_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Skyla", world.player)
+has_defeated_icirrus_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Brycen", world.player)
+has_defeated_opelucid_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Iris/Drayden", world.player)
+has_defeated_elite_four: ExtendedRule = lambda state, world: state.has_all((
+    "[Event] Defeating elite four Shauntal", "[Event] Defeating elite four Marshal",
+    "[Event] Defeating elite four Grimsley", "[Event] Defeating elite four Caitlin", ), world.player)
+has_beaten_ghetsis: ExtendedRule = lambda state, world: state.has("[Event] Defeating Ghetsis", world.player)
+
+has_access_magnetic_area: ExtendedRule = lambda state, world: state.has("[Event] Magnetic Area", world.player)
+has_access_moss_rock: ExtendedRule = lambda state, world: state.has("[Event] Moss Rock", world.player)
+has_access_ice_rock: ExtendedRule = lambda state, world: state.has("[Event] Ice Rock", world.player)
+has_access_move_relearner: ExtendedRule = lambda state, world: state.has("[Event] Access to move relearner", world.player)
+has_access_friendship_checker: ExtendedRule = lambda state, world: state.has("[Event] Access to friendship checker", world.player)
+has_access_castelia_evo_items: ExtendedRule = lambda state, world: state.has("[Event] Castelia evo items", world.player)
+has_access_chargestone_evo_items: ExtendedRule = lambda state, world: state.has("[Event] Chargestone evo items", world.player)
+has_access_twist_evo_items: ExtendedRule = lambda state, world: state.has("[Event] Twist Mountain evo items", world.player)
+has_access_mall_evo_items: ExtendedRule = lambda state, world: state.has("[Event] Shopping Mall Nine evo items", world.player)
+has_access_r10_evo_items: ExtendedRule = lambda state, world: state.has("[Event] Route 10 evo items", world.player)
+has_access_undella_evo_items: ExtendedRule = lambda state, world: state.has("[Event] Undella evo items", world.player)
+has_access_chasm_evo_items: ExtendedRule = lambda state, world: state.has("[Event] Giant Chasm evo items", world.player)
+
+# has_aaaaaaaaaaaaa: ExtendedRule = lambda state, world: state.has("[Event] AAAAAAAAAAAAAAA", world.player)
+# has_aaaaaaaaaaaaa: ExtendedRule = lambda state, world: state.has("[Event] AAAAAAAAAAAAAAA", world.player)
+# has_aaaaaaaaaaaaa: ExtendedRule = lambda state, world: state.has("[Event] AAAAAAAAAAAAAAA", world.player)
+# has_aaaaaaaaaaaaa: ExtendedRule = lambda state, world: state.has("[Event] AAAAAAAAAAAAAAA", world.player)
 
 
 # Encounter requirements
 
+def build_caught_ext_rule(x: int) -> ExtendedRule:
+    def r(state: CollectionState, world: "PokemonBWWorld") -> bool:
+        found: int = 0
+        prog_items = state.prog_items[world.player]
+        for forms_list in forms_by_dex.values():
+            for form in forms_list:
+                if prog_items[form]:
+                    found += 1
+                    break
+            if found >= x:
+                return True
+        return False
+
+    return r
+
+
+def build_caught_rule(x: int, world: "PokemonBWWorld") -> AccessRule:
+    def r(state: CollectionState) -> bool:
+        found: int = 0
+        prog_items = state.prog_items[world.player]
+        for forms_list in forms_by_dex.values():
+            for form in forms_list:
+                if prog_items[form]:
+                    found += 1
+                    break
+            if found >= x:
+                return True
+        return False
+
+    return r
+
+
+def build_seen_ext_rule(x: int) -> ExtendedRule:
+    def r(state: CollectionState, world: "PokemonBWWorld") -> bool:
+        if world.options.all_pokemon_seen:
+            return True
+        found: int = 0
+        prog_items = state.prog_items[world.player]
+        for forms_list in forms_by_dex.values():
+            for form in forms_list:
+                if prog_items[form]:
+                    found += 1
+                    break
+            if found >= x:
+                return True
+        return False
+
+    return r
+
+
 has_forces_of_nature: ExtendedRule = lambda state, world: state.has_all(("Thundurus", "Tornadus"), world.player)
 has_celebi: ExtendedRule = lambda state, world: state.has("Celebi", world.player)
 has_legendary_beasts: ExtendedRule = lambda state, world: state.has_all(("Entei", "Raikou", "Suicune"), world.player)
-has_genesect: ExtendedRule = lambda state, world: state.has("Genesect", world.player) or not world.options.randomize_wild_pokemon.is_randomize
-has_shaymin: ExtendedRule = lambda state, world: state.has("Shaymin", world.player) or not world.options.randomize_wild_pokemon.is_randomize
+has_genesect: ExtendedRule = lambda state, world: state.has("Genesect", world.player)
+has_shaymin: ExtendedRule = lambda state, world: state.has("Shaymin", world.player)
 has_other_locations_species: ExtendedRule = lambda state, world: state.has(world.other_locations_species, world.player)
-has_25_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 25
-has_51_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 51
-has_60_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 60
-has_115_species: ExtendedRule = lambda state, world: world.options.all_pokemon_seen or state.count_from_list_unique(species.by_name, world.player) >= 115
+has_25_species: ExtendedRule = build_seen_ext_rule(25)
+has_51_species: ExtendedRule = build_seen_ext_rule(51)
+has_60_species: ExtendedRule = build_seen_ext_rule(60)
+has_115_species_seen: ExtendedRule = build_seen_ext_rule(115)
 
 
 # Miscellaneous/mixed requirements
@@ -195,54 +289,19 @@ has_fighting_type_species: ExtendedRule = lambda state, world: (
     state.has_any(world.fighting_type_species, world.player)
 )
 
-striaton_hidden_item: ExtendedRule = lambda state, world: (
-    state.can_reach_region("Route 3", world.player) or can_use_surf(state, world)
-)
 dark_cave: ExtendedRule = lambda state, world: (
     not world.options.modify_logic.is_require_flash or can_use_flash(state, world)
     or state.has("Out of logic", world.player)
 )
-challengers_cave: ExtendedRule = lambda state, world: has_red_chain(state, world) and dark_cave(state, world)
-mistralton_cave: ExtendedRule = lambda state, world: can_use_surf(state, world) and dark_cave(state, world)
-trial_chamber: ExtendedRule = lambda state, world: (
-    can_encounter_swords_of_justice(state, world) and can_use_strength(state, world)
-)
-moor_of_icirrus: ExtendedRule = lambda state, world: can_use_surf(state, world) or (
-    state.can_reach_region("Nimbasa City", world.player) and (
-        world.options.season_control == "changeable" or state.has_any(("Spring", "Summer", "Autumn"), world.player)
-    )
-)
 driftveil_random_tm: ExtendedRule = lambda state, world: (
     state.has_all((world.driftveil_random_tm, world.other_locations_species), world.player)
 )
-
-extended_rules_list: tuple = (
-    can_use_strength, can_use_surf, can_use_cut, can_use_waterfall, can_use_dive, can_use_flash,
-    can_use_surf_or_strength,
-
-    can_fish, has_rage_candy_bar, has_basement_key, has_parcel, has_loot_sack, has_dragon_skull, has_liberty_pass,
-    has_machine_part, has_explorer_kit, has_tidal_bell, has_oaks_letter, has_blue_card, has_red_chain,
-    has_any_legendary_stone, has_lock_capsule, has_all_grams,
-
-    has_root_fossil, has_claw_fossil, has_helix_fossil, has_dome_fossil, has_old_amber,
-    has_armor_fossil, has_skull_fossil, has_cover_fossil, has_plume_fossil,
-
-    has_trio_badge, has_basic_badge, has_insect_badge, has_bolt_badge,
-    has_quake_badge, has_jet_badge, has_freeze_badge, has_legend_badge,
-
-    can_set_winter, can_set_autumn, can_set_summer, can_set_spring,
-    can_set_other_than_winter, can_catch_all_deerlings, can_use_surf_or_set_other_than_winter,
-    encounter_can_set_spring, encounter_can_set_summer, encounter_can_set_autumn, encounter_can_set_winter,
-
-    can_beat_ghetsis, can_beat_alder, can_encounter_swords_of_justice, can_cut_dreamyard_tree,
-    can_go_deeper_into_relic_castle, can_go_to_relic_castle_basement, can_find_woman_on_village_bridge,
-    can_go_to_nimbasa_city, can_go_to_mistralton_city, can_spawn_roamer,
-
-    has_forces_of_nature, has_celebi, has_legendary_beasts, has_genesect, has_shaymin, has_other_locations_species,
-    has_25_species, has_51_species, has_60_species, has_115_species,
-
-    has_fighting_type_species, striaton_hidden_item, dark_cave,
-    challengers_cave, mistralton_cave, trial_chamber, moor_of_icirrus, driftveil_random_tm,
+route_8_logic: ExtendedRule = lambda state, world: (
+    can_use_surf(state, world) or (
+        state.can_reach_region("Nimbasa City", world.player) and (
+            world.options.season_control == "changeable" or state.has_any(("Spring", "Summer", "Autumn"), world.player)
+        )
+    )
 )
 
 
@@ -252,7 +311,7 @@ vanilla_seasons: InclusionRule = lambda world: world.options.season_control == "
 changeable_seasons: InclusionRule = lambda world: world.options.season_control != "vanilla"
 disabled: InclusionRule = lambda world: False
 randomized_wild: InclusionRule = lambda world: world.options.randomize_wild_pokemon.is_randomize
-
-# Technical stuff
-
-_g = globals()
+tm_hm_hunt_goal: InclusionRule = lambda world: "tmhm_hunt" in (world.options.goal.combined or (world.options.goal.current_key, ))
+# TODO properly implement when door shuffle
+shuffled_doors: InclusionRule = lambda world: False and world.options.door_shuffle.any_shuffled()
+vanilla_doors: InclusionRule = lambda world: True or not world.options.door_shuffle.any_shuffled()

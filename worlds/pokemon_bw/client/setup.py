@@ -21,6 +21,12 @@ async def early_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") ->
     if ctx.slot_data["options"]["dexsanity"] == ctx.slot_data["options"]["dexcountsanity"]["Maximum"] == 0:
         client.dexsanity_included = False
 
+    shcosanity = ctx.slot_data["options"].get("shinycountsanity", 0)
+    is_shsanity = ctx.slot_data["options"].get("shinysanity", 0)
+    is_shcosanity = shcosanity == 1 or (isinstance(shcosanity, dict) and shcosanity["Maximum"])
+    if not is_shsanity and not is_shcosanity:
+        client.seensanity_included = False
+
 
 async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> None:
     from ..data.items import seasons
@@ -56,6 +62,10 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
         await client.write_set_flag(ctx, 0x1D0)
     else:
         await client.write_unset_flag(ctx, 0x1D0)
+
+    shcosanity = ctx.slot_data["options"].get("shinycountsanity", 0)
+    if ctx.slot_data["options"].get("shinysanity", 0) or shcosanity == 1 or (isinstance(shcosanity, dict) and shcosanity["Maximum"]):
+        await client.write_set_flag(ctx, 0x1E8)
 
     await client.write_var(ctx, 0xF7, ReusableTMs._by_name[ctx.slot_data["options"].get("reusable_tms", "on")])
     await client.write_var(ctx, 0x137, types.by_name[ctx.slot_data["studio_castelia_type"]])

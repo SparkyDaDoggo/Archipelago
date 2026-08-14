@@ -1,22 +1,20 @@
 from typing import TYPE_CHECKING, Callable
 
 from Options import OptionError
-from .. import SpeciesChecklist
+from .. import SpeciesChecklist, CopyChecklist, SpeciesEntry, EncounterEntry
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from .. import SpeciesEntry
 
 
 def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
-    # Returns ({to be checked species}, {already checked species})
     # Species needed for trade are added in generate_trade_encounters()
     from ...data.pokemon.species import by_id
 
     if not world.options.randomize_wild_pokemon.is_randomize:
         return SpeciesChecklist([], world)
     elif world.options.randomize_wild_pokemon.is_ensure_all:
-        return SpeciesChecklist([species for species, data in world.species_entries.items() if data.form < 6], world)
+        return SpeciesChecklist([data for data in world.species_entries.values() if data.form < 6], world)
     else:  # Just "Randomize"
         always_required = [
             "Celebi",
@@ -40,8 +38,14 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                 if spec not in always_required:
                     always_required.append(spec)
 
+        if isinstance(world.options.shinysanity.value, list):
+            for dex_num in world.options.shinysanity.value:
+                spec = by_id[(dex_num, 0)]
+                if spec not in always_required:
+                    always_required.append(spec)
+
         # Ensure one fighting type for challenge rock
-        both_types: Callable[["SpeciesEntry"], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
+        both_types: Callable[[SpeciesEntry], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
         for spec, data in world.species_entries.items():
             if "Fighting" in both_types(data) and spec not in blacklist:
                 if spec not in always_required:
@@ -65,13 +69,9 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             # Remove overpowered stuff and save it in case of not enough non-overpowered
             underpowered, overpowered = [], []
             if world.options.randomize_wild_pokemon.is_prevent_overpowered:
-                stats_total: Callable[["SpeciesEntry"], int] = lambda data: (
-                    data.base_hp + data.base_attack + data.base_defense +
-                    data.base_sp_attack + data.base_sp_defense + data.base_speed
-                )
                 threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
                 for spec_tup in pool_115:
-                    (underpowered if stats_total(spec_tup[1]) <= threshold else overpowered).append(spec_tup)
+                    (underpowered if sum(spec_tup[1].base_stats) <= threshold else overpowered).append(spec_tup)
                 pool_115 = underpowered
             # Fill with random to get 115 total
             always_required += (pool_115[i][0] for i in range(min(115-len(always_required), len(pool_115))))
@@ -105,13 +105,9 @@ def track_down_copy_from(copy_from: dict[str, str | None], slot: str) -> str:
     return current
 
 
-def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
-    from ...data.locations.encounters.slots import table
+def get_copy_checklist(world: "PokemonBWWorld") -> CopyChecklist | None:
     from ...data.locations.encounters import rates
 
-    # {slot: to copy from}
-    copy_from: dict[str, str | None] = {slot: None for slot in table}
-    # Important: make copies of lists afterwards
     if world.options.modify_encounter_rates.current_key == "plando":
         plando = world.options.modify_encounter_rates.value
         encounter_rates = (
@@ -131,82 +127,110 @@ def get_slots_checklist(world: "PokemonBWWorld") -> dict[str, str | None]:
         encounter_rates = rates.tables[world.options.modify_encounter_rates.current_key]
 
     if not world.options.randomize_wild_pokemon.is_randomize:
-        return copy_from
+        return None
 
-    merge_phenomenons = world.options.randomize_wild_pokemon.is_merge_phenomena
-    area_1_to_1 = world.options.randomize_wild_pokemon.is_area_1_to_1
-    prevent_rare_encounters = world.options.randomize_wild_pokemon.is_prevent_rare
-    versioned_species = (
-        (lambda d: d.species_white)
-        if world.options.version == "white"
-        else (lambda d: d.species_black)
-    )
+    copy_list = CopyChecklist()
+    mods = world.options.randomize_wild_pokemon
+    rates_by_global_slot: tuple[int, ...] = (*encounter_rates[0], *encounter_rates[0], *encounter_rates[0],
+                                             *encounter_rates[1], *encounter_rates[1],
+                                             *encounter_rates[2], *encounter_rates[2])
 
-    if merge_phenomenons:
-        # Assumes a fresh copy_from dict without any modifier applied
-        for slot in copy_from:
-            file_index = table[slot].file_index
-            if 24 < file_index[2] < 34 or 41 < file_index[2] < 46 or 51 < file_index[2]:
-                copy_from[slot] = slot[:-1] + "0"
-            elif file_index[2] in (34, 35):
-                copy_from[slot] = slot[:-2] + "0"
-
-    if area_1_to_1:
-        # {area: {(dex_num, form): slot}}
-        first_slot: dict[int, dict[tuple[int, int], str]] = {}
-        for slot in copy_from:
-            if copy_from[slot] is None:
-                area = table[slot].file_index[0]
-                species: tuple[int, int] = versioned_species(table[slot])
-                if area not in first_slot:
-                    first_slot[area] = {}
-                if species not in first_slot[area]:
-                    first_slot[area][species] = slot
+    if mods.is_merge_phenomena:
+        first_phen: dict[tuple[str, str, str], EncounterEntry] = {}
+        for slot in world.wild_encounter.values():
+            if slot.encounter_region[2] in ("RG", "SR", "FR"):
+                if slot.encounter_region not in first_phen:
+                    first_phen[slot.encounter_region] = slot
                 else:
-                    copy_from[slot] = first_slot[area][species]
+                    f_slot = first_phen[slot.encounter_region]
+                    copy_list.merge(f_slot, slot,
+                                    rates_by_global_slot[f_slot.file_index[2]],
+                                    rates_by_global_slot[slot.file_index[2]])
 
-    if prevent_rare_encounters:
-        # {region: [slot1 rate, slot2 rate, ...]}
+    if mods.is_global_1_to_1 and not mods.is_ensure_all:
+        first_global: dict[tuple[int, int], EncounterEntry] = {}
+        for slot in world.wild_encounter.values():
+            group = copy_list[slot.file_index]
+            if group is None:
+                continue
+            group = group.search()
+            if group.head != slot:
+                continue
+            if slot.species_id not in first_global:
+                first_global[slot.species_id] = slot
+            else:
+                f_slot = first_global[slot.species_id]
+                copy_list.merge(f_slot, slot,
+                                rates_by_global_slot[f_slot.file_index[2]],
+                                rates_by_global_slot[slot.file_index[2]])
+    elif mods.is_dungeon_1_to_1:
+        first_dungeon: dict[tuple[str, tuple[int, int]], EncounterEntry] = {}
+        for slot in world.wild_encounter.values():
+            group = copy_list[slot.file_index]
+            if group is None:
+                continue
+            group = group.search()
+            if group.head != slot:
+                continue
+            dungeon_name = slot.encounter_region[0]
+            if " " in dungeon_name:
+                dungeon_name = dungeon_name[:dungeon_name.index(" ")]
+            g_key = dungeon_name, slot.species_id
+            if g_key not in first_dungeon:
+                first_dungeon[g_key] = slot
+            else:
+                f_slot = first_dungeon[g_key]
+                copy_list.merge(f_slot, slot,
+                                rates_by_global_slot[f_slot.file_index[2]],
+                                rates_by_global_slot[slot.file_index[2]])
+    elif mods.is_area_1_to_1:
+        first_area: dict[tuple[str, tuple[int, int]], EncounterEntry] = {}
+        for slot in world.wild_encounter.values():
+            group = copy_list[slot.file_index]
+            if group is None:
+                continue
+            group = group.search()
+            if group.head != slot:
+                continue
+            g_key = slot.encounter_region[0], slot.species_id
+            if g_key not in first_area:
+                first_area[g_key] = slot
+            else:
+                f_slot = first_area[g_key]
+                copy_list.merge(f_slot, slot,
+                                rates_by_global_slot[f_slot.file_index[2]],
+                                rates_by_global_slot[slot.file_index[2]])
+
+    if mods.is_prevent_rare:
         threshold = world.options.pokemon_randomization_adjustments["Rare encounters threshold"]
-        region_added_rates: dict[str, list[int]] = {}
-        for slot in copy_from:
-            region = table[slot].encounter_region
-            method_index = int(slot[-2:])
-            if region not in region_added_rates:
-                if "G" in region[-2:]:
-                    region_added_rates[region] = list(encounter_rates[0])
-                elif "S" in region[-2:]:
-                    region_added_rates[region] = list(encounter_rates[1])
-                elif "F" in region[-2:]:
-                    region_added_rates[region] = list(encounter_rates[2])
-            if copy_from[slot] is not None:
-                to_copy = track_down_copy_from(copy_from, slot)
-                region_added_rates[region][int(to_copy[-2:])] += region_added_rates[region][method_index]
-                region_added_rates[region][method_index] = 0
-        for slot in copy_from:  # StrCity - FR 0, 1, ...11
-            region = table[slot].encounter_region  # StrCity - FR
-            added_rates = region_added_rates[region]
-            method_index = int(slot[-2:])  # 0, 1, ..., 11
-            is_grass = region[-2:] in (" G", "DG", "RG")
-            if copy_from[slot] is None and added_rates[method_index] < threshold:
-                # combined threshold that gradually increases, so that merges are distributed more evenly
+        for file_index, slot in world.wild_encounter.items():
+            group = copy_list[file_index]
+            if group:
+                group = group.search()
+                chance = group.chances[slot.encounter_region]
+            else:
+                chance = rates_by_global_slot[file_index[2]]
+            is_grass = "G" in slot.encounter_region[2]
+            method_index = (file_index[2] % 12) if is_grass else ((file_index[2] - 36) % 5)
+            if not (group and group.head != slot) and chance < threshold:
                 for combined_threshold in (threshold * step // 2 for step in range(1, 201)):
                     for next_index_down in range(12 if is_grass else 5):
-                        if next_index_down == method_index:
+                        if next_index_down == method_index:  # cannot be merged with itself
                             continue
-                        next_slot = table[slot].encounter_region + f" {next_index_down}"
-                        tracked_slot = track_down_copy_from(copy_from, next_slot)
-                        tracked_index = int(tracked_slot[-2:])
-                        if (
-                            tracked_slot != slot and
-                            added_rates[tracked_index] + added_rates[method_index] <= combined_threshold
-                        ):
-                            copy_from[slot] = next_slot
-                            added_rates[tracked_index] += added_rates[method_index]
-                            added_rates[method_index] = 0
+                        next_slot = world.wild_encounter[file_index[0], file_index[1], next_index_down]
+                        next_group = copy_list[next_slot.file_index]
+                        if next_group:
+                            next_group = next_group.search()
+                            if group == next_group:  # already merged
+                                continue
+                            next_chance = next_group.chances[next_slot.encounter_region]
+                        else:
+                            next_chance = rates_by_global_slot[next_slot.file_index[2]]
+                        if chance + next_chance <= combined_threshold:
+                            copy_list.merge(slot, next_slot, chance, next_chance)
                             break
                     else:
                         continue
                     break
 
-    return copy_from
+    return copy_list

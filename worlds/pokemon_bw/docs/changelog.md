@@ -1,7 +1,7 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
-## 0.4.0
+## 0.4.0: Advanced Dataplandosanity
 
 ### Content and QoL
 
@@ -26,6 +26,10 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Adjustable threshold (`Overpowered threshold` in `Pokémon Randomization Adjustments`)
   - `Prevent bad early pokemon`
     - Prevents Wonder Guard and fixed HP attacks before Castelia City
+  - `Dungeon 1 to 1`
+    - Same as `Area 1 to 1`, but also merges slots between areas of the same dungeon
+  - `Global 1 to 1`
+    - Same as `Area 1 to 1`, but merges slots across all areas
 - Added more modifiers for `Randomize Trainer Pokémon`:
   - `Prevent overpowered pokemon`
     - Takes priority over most other modifiers, except `Rivals take from box`
@@ -88,6 +92,19 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Randomize`
   - `Follow evolutions`
   - `Correlate with base stats`
+- Added `Randomize Egg Groups` option with the following modifiers:
+  - `Randomize`
+  - `Mono only`
+  - `Dual only`
+  - `Correlate with types`
+  - `Follow evolutions`
+  - `Allow baby stages`
+- Added `Randomize Egg Species` option with the following modifiers:
+  - `Fix evolutions`
+  - `Randomize`
+  - `Base stages only`
+  - `Common type`
+  - `Follow evolutions`
 - Added `Stats Randomization Adjustments` option, currently with the following parameters:
   - `Stats total minimum`
   - `Stats total maximum`
@@ -110,6 +127,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `levelup_moveset`
   - `override_levelup_moveset`
   - `types`
+  - `egg_groups`
+  - `egg_species`
 - Added `Replace Evolution Methods` option with the following modifiers:
   - `Locations`
   - `Friendship`
@@ -161,25 +180,43 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - `pp`
   - Type effectiveness, currently only with the `effectiveness` key for every type combination
 - Added `Dexcountsanity` option with the `Maximum`, `Steps`, and `Leniency` keys
+- Added `Shinysanity` option
+  - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexsanity`
+  - Contains plando capabilities like `Dexsanity`
+- Added `Shinycountsanity` option
+  - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
+- Added an ingame option to change the shiny rate
+  - Possible values are 0 (never) to 65535 (almost guaranteed)
+  - Only appears when `Shinysanity` or `Shinycountsanity` is enabled
+- Added `Wild by spheres` and `Trainers by spheres` modifiers to `Adjust levels`
+  - Also renamed `Wild` and `Trainers` to `Wild by distance` and `Trainers by distance` (respectively)
 
 ### Bug fixes and technical stuff
 
 - Changed some locations' names
 - Added a missing hidden item location in Chargestone Cave B2F
-- Fixed "Striaton City - TM from Fennel" not being able to contain an HM with certain options
+- Fixed "Striaton City - TM from Fennel" falsely not being able to contain an HM with certain options
 - Reduced frequency of different forms of the same pokémon in randomization
 - Wrote down levelup moveset data
 - Fixed small error with encounter plando
 - Tweaked many option descriptions
 - Made wild randomization not having to ensure 115 different obtainable pokémon if `All Pokémon Seen` is enabled
-- Made the Gracidea also accept non-event Shaymins
+- Made the Gracidea also accept non-event Shaymins (+ updated logic accordingly)
 - Fixed logic of move evolutions
 - Wrote down move IDs
-- Enhanced spoiler output by adding trainers + base stats + catch rates + levelup movesets and organizing evolutions
+- Enhanced spoiler output by adding trainers + newly randomizable stuff and organizing evolutions
 - Fixed legendary hunt flags being reset after defeating Ghetsis/Alder and resetting statics
 - Fixed `Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)` not showing up on the UT map tracker
 - Added option groups
 - Merged both Aha quiz locations into one
+- Randomizing or plandoing evolutions will make all species of an evolution line have the same experience curve
+- Filled trainer names and regions
+- Fixed incorrect logic of multiple locations related to Moor of Icirrus
+- Reworked all regions and their logic and added story events to logic
+- Fully integrated arm7 expansion and deprecated the testing setting
+- Fixed evolution-related rules not being modifiable by Plugins
+- Changed rules dict to being filled on the way
+- Reworked wild and trainer pokemon randomization
 
 ### Is this version compatible with older multiworld slots and save files?
 No

@@ -38,24 +38,31 @@ class RandomizeWildPokemon(ToggleSet):
     - **Prevent overpowered pokemon** - Tries to prevent pokemon with a base stat total
         over an adjustable threshold being randomized into wild encounter slots. Other
         modifiers (except for **Similar base stats**) take priority in case of conflicts.
-    - **Prevent bad early pokemon** - Prevents encountering Wonder Guard and fixed HP
-        attacks in regions that don't have at least level 20 encounters. Might not be
-        fully ensured depending on other options.
+    - **Prevent bad early pokemon** - Prevents encountering pokemon with Wonder Guard or
+        fixed HP attacks in areas that are not that far from home. This includes all
+        areas before Castelia City. Might not be fully ensured depending on other options.
     - **Type themed areas** - Tries to make every pokemon in an area have a certain same
         type. Might not be fully ensured depending on RNG.
     - **Area 1 to 1** - Keeps the amount of different encounters and their encounter rate
         in every area.
+    - **Dungeon 1 to 1** - Keeps the amount of different encounters and their encounter
+        rate across all areas (and if it's part of a dungeon, then across all areas of
+        that dungeon). Supersedes **Area 1 to 1**.
+    - **Global 1 to 1** - Keeps the amount of different encounters and their encounter
+        rate across all areas in the game. Supersedes **Area 1 to 1** and
+        **Dungeon 1 to 1**. Ignored when **Ensure all obtainable** is added.
     - **Merge phenomena** - Makes rustling grass, rippling water spots, dust clouds,
         and flying shadows in the same area have only one encounter. Takes priority over
-        **Area 1 to 1**.
+        **Area 1 to 1** and alike.
     - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance
-        in each area to the same pokemon. Takes priority over **Area 1-to-1**.
+        in each area to the same pokemon. Takes priority over **Area 1-to-1** and alike.
 
     It is **highly recommended** to include **Prevent rare encounters** if you want to
-    randomize wild pokemon, else you might find yourself searching for two 1% encounters
-    on every route.
+    randomize wild pokemon, else you might find yourself searching for multiple
+    1% encounters on every route.
     """
     # **Ensure all obtainable** -  ... This is automatically checked if **National pokedex** is chosen as the goal.
+    # **Prevent bad early pokemon** - ... Without door shuffle, this includes...
     display_name = "Randomize Wild Pokemon"
     is_randomize = False
     is_ensure_all = False, "Ensure all obtainable"
@@ -64,6 +71,8 @@ class RandomizeWildPokemon(ToggleSet):
     is_prevent_bad_early = False, "Prevent bad early pokemon"
     is_type_themed_areas = False
     is_area_1_to_1 = False
+    is_dungeon_1_to_1 = False
+    is_global_1_to_1 = False
     is_merge_phenomena = False
     is_prevent_rare = False, "Prevent rare encounters"
     auto_add_if_any = "Randomize"
@@ -89,11 +98,11 @@ class RandomizeTrainerPokemon(ToggleSet):
         their level). Pokémon that evolve independently of their level are evolved at level 25.
     - **Force fully evolved** - Always fully evolves pokemon above a certain (adjustable) level.
     - **Type themed** - All pokemon of a trainer will share at least one randomly chosen type.
-    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned
-        to their gym leader.
     - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader
         and elite 4 member instead of using their vanilla type. Do note that they always
         have type themed teams.
+    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned
+        to their gym leader.
     - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon in
         common, which will always evolve when possible.
 
@@ -107,8 +116,8 @@ class RandomizeTrainerPokemon(ToggleSet):
     is_evolve_possible = False, "Evolve when possible"
     is_force_evolved = False, "Force fully evolved"
     is_type_themed = False
-    is_themed_gym_trainers = False
     is_shuffle_gym_types = False, "Shuffle gym leader types"
+    is_themed_gym_trainers = False
     is_rivals_keep_starter = False
     # Not sure whether I really want to implement these:
     # is_randomize_abilities = False

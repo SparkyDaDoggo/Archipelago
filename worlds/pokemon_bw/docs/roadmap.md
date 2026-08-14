@@ -66,7 +66,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Plugin system (added in patch)
 - UT auto-tabbing (added in patch)
 
-### 0.4.0: Advanced Plandosanity
+### 0.4.0: Advanced Dataplandosanity
 
 - Modify Levels option
   - Simple method, shown on Webhost
@@ -81,6 +81,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Randomize Wild Pokémon
     - Prevent overpowered pokémon
     - Prevent bad early pokemon
+    - Dungeon 1 to 1
+    - Global 1 to 1
   - Randomize Trainer Pokémon 
     - Prevent overpowered pokémon
     - Evolve when possible
@@ -115,15 +117,15 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Type effectiveness chart
 - Move data plando (with all randomizable data at that time)
 - Dexcountsanity
+- Shinysanity
+- Shinycountsanity
+- arm7 expansion (required for advanced assembly)
+- Shiny rate ingame option
 
 ### Other stuff required for 1.0.0
 
 - Scripting system (required for many other features)
-- arm7 expansion (required for advanced assembly)
 - Options
-  - More wild pokémon randomization modifiers
-    - Dungeon 1 to 1
-    - Global 1 to 1
   - More trainer pokémon randomization modifiers
     - Prevent bad early pokemon
     - Rivals take from box
@@ -133,7 +135,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Seensanity (Only accounting for wild pokémon at first, trainer teams later; has impact on All Pokémon Seen)
   - Trainersanity
   - Formsanity (not that many checks)
-  - Shinysanity
   - Gendersanity
   - All combinations of Dex/Seen/Form/Shiny/Gender/Count-sanities ("Dexsanitysanity")
     - Will be hidden from template, simple webhost, and options creator, instead explained in options guide
@@ -171,7 +172,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Post goal locations
   - Ingame options (things changeable in PC, moving Experience modifier here)
     - Season control (only when vanilla or changeable, not randomized)
-    - Shiny chance modifier (Only activated if Shinysanity not off)
 - Dowsing Machine as a hard requirement for hidden items (with option)
 - Reducing encounter slots in Modify Encounter Rates
 - Trainer rebattling
@@ -206,6 +206,9 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Trainer randomization (i.e. what trainer you're actually battling against)
     - With plando capabilities
   - Trashsanity
+  - MetLocationsanity
+  - Visitsanity
+  - TMHMCountsanity
   - Boss fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame)) (?)
   - Story fight Plando (Cheren, Bianca, N, ...) (?)
   - DeathLink

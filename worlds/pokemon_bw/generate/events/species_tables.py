@@ -9,18 +9,18 @@ def populate(world: "PokemonBWWorld", catchable_species_data: dict[str, "Species
 
     for species_name, data in catchable_species_data.items():
         moveset = data.tm_hm_moves.tm_hm_moves
-        if "HM04" in moveset:
-            world.strength_species.add(species_name)
         if "HM01" in moveset:
             world.cut_species.add(species_name)
         if "HM02" in moveset:
             world.fly_species.add(species_name)
         if "HM03" in moveset:
             world.surf_species.add(species_name)
-        if "HM06" in moveset:
-            world.dive_species.add(species_name)
+        if "HM04" in moveset:
+            world.strength_species.add(species_name)
         if "HM05" in moveset:
             world.waterfall_species.add(species_name)
+        if "HM06" in moveset:
+            world.dive_species.add(species_name)
         if "TM70" in moveset:
             world.flash_species.add(species_name)
         if "Fighting" in data.types:

@@ -12,6 +12,7 @@ vr_o = vr_+" Outside"
 
 connections: list[RCData] = [
     RCData("Menu", "Pokédex", "Virtual", (), None, one_way=True),
+    RCData("Menu", "Map Visits", "Virtual", (), None, one_way=True),
     RCData("Menu", "Evolutions", "Virtual", (), None, one_way=True),  # No actual locations, only events
     RCData("Menu", "Form Change", "Virtual", (), None, one_way=True),  # No actual locations, only events
     RCData("Menu", "Player's Bedroom", "Virtual", (), "Starting the game", one_way=True),
@@ -454,7 +455,8 @@ connections: list[RCData] = [
     RCData("Route 14 West", "Route 14", "Virtual", (), "## [ledge]", rule=can_use_surf, one_way=True),
     RCData("Route 14 West", "Abundant Shrine", "Trees", (0, 0), "#2# [trees entrance]"),
     RCData("Abundant Shrine", "Abundant Shrine House", "Door", (1, 0), "#2# [door]"),
-    RCData("Black City/White Forest North Gate Upper Side", "Black City/White Forest North Gate Lower Side", "Virtual", (), "Black City/White Forest North Gate [blocking line of people]", rule=has_gb_player),
+    RCData("Black City/White Forest North Gate Upper Side", "Black City/White Forest North Gate Lower Side", "Virtual",
+           (), "Black City/White Forest North Gate [blocking line of people]", rule=has_gb_player),
     RCData("Black City/White Forest North Gate Lower Side", "Black City", "Gate", (0, 2), "Black City/White Forest North Gate [south entrance]", fixed=True),
     RCData("Black City/White Forest North Gate Lower Side", "White Forest", "Gate", (0, 2), "Black City/White Forest North Gate [south entrance]", fixed=True),
     RCData("Black City", "Black City/White Forest West Gate", "Gate", (0, 1), "#2# [east entrance]", fixed=True),
@@ -467,7 +469,7 @@ connections: list[RCData] = [
     RCData("Marvelous Bridge", "Marvelous Bridge West Gate", "Gate", (0, 1), "#2# [bridge entrance]"),
     RCData("Marvelous Bridge West Gate", "Route 16 Near East Gate", "Gate", (0, 0), "## [west entrance]"),
     RCData("Route 16 Near East Gate", "Route 16", "Virtual", (), "#2# [blocking workers]", rule=has_blue_card),
-    RCData("Route 16", "Route 16 Behind Boulder", "Virtual", (), "## [blocking strength boulder]", rule=can_use_strength, one_way=true),
+    RCData("Route 16", "Route 16 Behind Boulder", "Virtual", (), "## [blocking strength boulder]", rule=can_use_strength, one_way=True),
     RCData("Route 16", "Nimbasa East Gate", "Gate", (1, 0), "#2# [east entrance]"),
     RCData("Route 16", "Lostlorn Forest", "Trees", (2, 0), "#2# [trees entrance]"),
     RCData("Lostlorn Forest", "Lostlorn Forest Upper Platform", "Virtual", (), "## [up the waterfall]", rule=can_use_waterfall, one_way=True),
@@ -491,7 +493,7 @@ connections: list[RCData] = [
     RCData("Opelucid City Drayden's House 1F", "Opelucid City Drayden's House 2F", "Stairs", (1, 0), "#2# [stairs]"),
     RCData("Opelucid City North Gate", "Route 10", "Gate", (1, 0), "## [north entrance]"),
     RCData("Route 10", "Badge Gate 1", "Door", (1, 0), "Door to Badge Gates"),
-    # TODO add triggers to all bdage gates that move you down if you happen to enter from the closed gate
+    # TODO add triggers to all badge gates that move you down if you happen to enter from the closed gate
     RCData("Badge Gate 1", "Behind Badge Gate 1", "Virtual", (), "## [badge condition]", rule=has_trio_badge, rule_2=None),
     RCData("Behind Badge Gate 1", "Badge Gate 2", "Door", (1, 0), "Badge Gate [1 to 2 transition]"),
     RCData("Badge Gate 2", "Behind Badge Gate 2", "Virtual", (), "## [badge condition]", rule=has_basic_badge, rule_2=None),

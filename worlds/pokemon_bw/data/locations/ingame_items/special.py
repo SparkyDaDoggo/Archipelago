@@ -34,7 +34,7 @@ gym_tms: dict[str, TMLocationData] = {
 tm_hm_ncps: dict[str, TMLocationData] = {
     "Nuvema Town - TM from Professor Juniper for seeing 25 species": TMLocationData(174, always_default, "Juniper's Lab", None, None, has_25_species),
     "Nuvema Town - TM from Professor Juniper for seeing 60 species": TMLocationData(175, always_default, "Juniper's Lab", None, None, has_60_species),
-    "Nuvema Town - TM from Professor Juniper for seeing 115 species": TMLocationData(176, always_default, "Juniper's Lab", None, None, has_115_species),
+    "Nuvema Town - TM from Professor Juniper for seeing 115 species": TMLocationData(176, always_default, "Juniper's Lab", None, None, has_115_species_seen),
     "Route 18 - TM from sage Rood": TMLocationData(0x186, always_default, "Route 18", None, no_surf, has_beaten_ghetsis),
     "Striaton City - TM from Fennel": TMLocationData(0x18D, always_default, "Striaton City East Upper House 2F", None, None, None),
     "Dreamyard - TM from sage Gorm": TMLocationData(0x19A, always_default, "Dreamyard South", None, None, None),

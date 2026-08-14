@@ -37,7 +37,7 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
             return first, world.random.choice(pool)
 
     def roll_groups(data: SpeciesEntry) -> tuple[str, str]:
-        pool = list(groups) if not mods.is_correlate_with_types \
+        pool = allowed if not mods.is_correlate_with_types \
             else list(g for g in allowed if
                       groups[g].compatible_types is None or any(t in data.types for t in groups[g].compatible_types))
         if mods.is_mono_only and not mods.is_dual_only:
@@ -78,7 +78,7 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
                     pre_evo_data.egg_groups = pre
                     do_evos(pre_evo_data, pre)
 
-    allowed = list(groups)
+    allowed = list(g for g, d in groups.items() if d.vanilla) if not mods.is_allow_custom_groups else list(groups)
     keep_ditto = True  # Needs assembly changes
     if keep_ditto:
         allowed.remove("Ditto")

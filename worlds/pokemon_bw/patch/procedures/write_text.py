@@ -158,9 +158,20 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     else:
         info44 += f"- {slotdata['options']['dexsanity']} random Dexsanity checks[Scroll][NextLine]"
     if slotdata['options']['dexcountsanity']["Maximum"]:
-        info44 += (f"- Dexcountsanity checks with maximum {slotdata['options']['dexsanity']['Maximum']}, "
-                   f"steps {slotdata['options']['dexsanity']['Steps']}, "
-                   f"and leniency {slotdata['options']['dexsanity']['Leniency']}[Scroll][NextLine]")
+        info44 += (f"- Dexcountsanity checks with maximum {slotdata['options']['dexcountsanity']['Maximum']}, "
+                   f"steps {slotdata['options']['dexcountsanity']['Steps']}, "
+                   f"and leniency {slotdata['options']['dexcountsanity']['Leniency']}[Scroll][NextLine]")
+    if isinstance(slotdata['options']['shinysanity'], list):
+        info44 += f"- {len(slotdata['options']['shinysanity'])} fixed Shinysanity checks[Scroll][NextLine]"
+    else:
+        info44 += f"- {slotdata['options']['shinysanity']} random Shinysanity checks[Scroll][NextLine]"
+    shcosanity = slotdata['options']['shinycountsanity']
+    if isinstance(shcosanity, int):
+        shcosanity = {"Maximum": shcosanity, "Steps": 1, "Leniency": 0}
+    if shcosanity["Maximum"]:
+        info44 += (f"- Shinycountsanity checks with maximum {shcosanity['Maximum']}, "
+                   f"steps {shcosanity['Steps']}, "
+                   f"and leniency {shcosanity['Leniency']}[Scroll][NextLine]")
     if slotdata["options"]["replace_evo_methods"]:
         info44 += "- Replaced evolution methods:[Scroll][NextLine]"
         for mod in slotdata["options"]["replace_evo_methods"]:

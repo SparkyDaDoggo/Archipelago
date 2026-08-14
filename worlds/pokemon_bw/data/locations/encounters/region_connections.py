@@ -1,7 +1,5 @@
 from ... import EncounterRegionConnectionData as ERCData
-from ..rules import *
 
-# TODO can_use_surf, can_fish, has_trio_badge, and encounter_can_set_X will be added in generation
 connections: list[ERCData] = [
     ERCData(("StCity", "", "S"), ("Striaton City", )),
     ERCData(("StCity", "", "SR"), ("Striaton City", )),

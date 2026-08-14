@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError,
                      OptionCounter, StartInventoryPool, OptionDict, ItemSet)
-from .dexsanitysanity import Dexsanity, Dexcountsanity
+from .sanity import Dexsanity, Dexcountsanity, Shinysanity, Shinycountsanity
 from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTradePokemon, RandomizeStarterPokemon,
                         RandomizeLegendaryPokemon, RandomizeStaticPokemon, RandomizeTrainerPokemon,
                         WildRandomizationBlacklist, TrainerRandomizationBlacklist, PokemonRandomizationAdjustments,
@@ -247,17 +247,40 @@ class SeasonControl(Choice):
 
 class AdjustLevels(ToggleSet):
     """
-    Adjusts the levels of wild and trainer pokemon in areas that are in AP earlier
-    accessible than in vanilla to not be significantly higher than in surrounding areas
-    (regardless of randomization).
+    Adjusts the levels of wild and trainer pokemon to have a consistent level curve in
+    all areas, including vanilla post-game areas (regardless of randomization).
     You can add as many of the following modifiers as you want.
 
-    - **Wild** - Normalizes wild pokemon levels, including surfing and fishing encounters.
-    - **Trainer** - Normalizes trainer pokemon levels, excluding Cynthia.
+    - **Wild by distance** - Normalizes wild pokemon levels by distance from home,
+        including all encounter methods.
+    - **Trainer by distance** - Normalizes trainer pokemon levels by distance from home,
+        excluding Elite Four rematches, Alder, and Cynthia.
+    - **Wild by sphere** - Normalizes wild pokemon levels by the spheres in multiworld
+        generation, including all encounter methods. This is ignored by logic, only
+        applied in patching, and only raises the levels that are used in logic.
+    - **Trainer by sphere** - Normalizes trainer pokemon levels by the spheres in
+        multiworld generation, excluding Elite Four rematches, Alder, and Cynthia. This
+        is ignored by logic, only applied in patching, and only raises the levels that
+        are used in logic.
+    """
+    _ = """
+    - **Static by distance** - Normalizes static, gift, fossil, and legendary pokemon 
+        levels by distance from home, excluding starters and the boxart legendaries.
+    - **Static by sphere** - Normalizes static, gift, fossil, and legendary pokemon 
+        levels by the spheres in multiworld generation, excluding starters and the boxart 
+        legendaries.
     """
     display_name = "Adjust levels"
-    is_wild = True
-    is_trainer = True
+    is_wild_by_distance = True
+    is_trainer_by_distance = True
+    # is_static_by_distance = True
+    is_wild_by_sphere = False
+    is_trainer_by_sphere = False
+    # is_static_by_sphere = True
+    aliases_convert = [
+        ("Wild", "Wild by distance"),
+        ("Trainer", "Trainer by distance"),
+    ]
 
 
 class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much plando
@@ -267,17 +290,17 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
 
     The mode decides how to apply the value to every pokemon. You can write either the
     name of the mode or the corresponding number:
-    - **Multiply** or **0** - Multiply each level with value being seen as a percentage,
-        i.e. 100 means no modifying. Allowed values are in range 1 to 10000.
+    - **Multiply** or **0** - Multiply each level with the value being seen as a
+        percentage, i.e. 100 means no modifying. Allowed values are in range 1 to 10000.
     - **Add** or **1** - Add the value directly to each level (with negative values being
         allowed), i.e. 0 means no modifying. Allowed values are in range -99 to 99.
     - **Power** or **2** - Raise each level to the power of the value (which is seen as a
         percentage), i.e. 100 means no modifying. Allowed values are in range 1 to 700.
 
     An alternative way with more capabilities is to write this as a list with multiple
-    key names (similar to most plando options). Every entry must include the keys `type`,
+    entries (similar to most plando options). Every entry must include the keys `type`,
     `mode`, and `value`. All entries are individual calculations that are applied one
-    after another. Be aware of rounding errors.
+    after another, rounding down floating numbers after each step.
     Here is an example of how an entry can look like:
     ```
     - type: Either "Trainer" or "Wild"
@@ -393,40 +416,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
 
     @staticmethod
     def is_modified(mode: int, value: int) -> bool:
-        match mode:
-            case 0:
-                return value != 100
-            case 1:
-                return value != 0
-            case 2:
-                return value != 100
-            case _:
-                raise Exception(f"Bad mode {mode} in Modify Levels option")
-
-    def is_trainer_modified(self) -> bool:
-        if isinstance(self.value, dict):
-            return self.is_modified(self.value["Trainer mode"], self.value["Trainer value"])
-        elif isinstance(self.value, list):
-            for entry in self.value:
-                if entry["type"] == "Trainer" and self.is_modified(entry["mode"], entry["value"]):
-                    return True
-            return False
-        else:
-            raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(self.value)}")
-
-    def is_wild_modified(self) -> bool:
-        if isinstance(self.value, dict):
-            return self.is_modified(self.value["Wild mode"], self.value["Wild value"])
-        elif isinstance(self.value, list):
-            for entry in self.value:
-                if entry["type"] == "Wild" and self.is_modified(entry["mode"], entry["value"]):
-                    return True
-            return False
-        else:
-            raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(self.value)}")
-
-    def is_any_modified(self) -> bool:
-        return self.is_wild_modified() or self.is_trainer_modified()
+        return {0: 100, 1: 0, 2: 100}[mode] != value
 
     @staticmethod
     def cap(level: int):
@@ -963,10 +953,11 @@ class PokemonBWOptions(PerGameCommonOptions):
     # additional_roadblocks: AdditionalRoadblocks
     dexsanity: Dexsanity
     dexcountsanity: Dexcountsanity
+    shinysanity: Shinysanity
+    shinycountsanity: Shinycountsanity
     # trainersanity: Trainersanity
     # seensanity: Seensanity
     # formsanity: Formsanity
-    # shinysanity: Shinysanity
     # door_shuffle: DoorShuffle
     season_control: SeasonControl
     modify_item_pool: ModifyItemPool

@@ -1,7 +1,7 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from ...locations import PokemonBWLocation
-from BaseClasses import ItemClassification, CollectionState
+from BaseClasses import ItemClassification
 from ...items import PokemonBWItem
 
 if TYPE_CHECKING:
@@ -9,51 +9,16 @@ if TYPE_CHECKING:
 
 
 def create(world: "PokemonBWWorld") -> None:
+    from ...data.locations.story_events import table
 
-    events: list[tuple[str, str, Callable[[CollectionState], bool] | None]] = [
-        ("Striaton City", "[Event] Striaton Gym", None),
-        ("Dreamyard North", "[Event] Team Plasma Dreamyard", None),
-        ("Dreamyard South", "[Event] Find sage Gorm", None),
-        ("Nacrene City", "[Event] Nacrene Gym", None),
-        ("Pinwheel Forest West", "[Event] Team Plasma Pinwheel Forest", None),
-        ("Castelia City", "[Event] Team Plasma Castelia City", None),
-        ("Castelia City", "[Event] Castelia Gym",
-         lambda state: state.has("[Event] Team Plasma Castelia City", world.player)),
-        ("Relic Castle Lower Floors", "[Event] Team Plasma Relic Castle", None),
-        ("Relic Castle Basement", "[Event] Find sage Ryoku", None),
-        ("Nimbasa City", "[Event] Team Plasma Nimbasa City", None),
-        ("Nimbasa City", "[Event] Nimbasa Gym", None),
-        ("Driftveil City", "[Event] Driftveil Gym",
-         lambda state: state.has("[Event] Team Plasma Cold Storage", world.player)),
-        ("Cold Storage", "[Event] Team Plasma Cold Storage", None),
-        ("Cold Storage", "[Event] Find sage Zinzolin", None),
-        ("Mistralton Cave Inner", "[Event] Encounter Cobalion", None),
-        ("Chargestone Cave", "[Event] Team Plasma Chargestone Cave", None),
-        ("Chargestone Cave", "[Event] Find sage Bronius", None),
-        ("Mistralton City", "[Event] Mistralton Gym",
-         lambda state: state.has("[Event] Skyla Celestial Tower", world.player)),
-        ("Celestial Tower", "[Event] Skyla Celestial Tower", None),
-        ("Icirrus City", "[Event] Icirrus Gym", None),
-        ("Dragonspiral Tower", "[Event] Team Plasma Dragonspiral Tower", None),
-        ("Route 8", "[Event] Bianca Route 8", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-        ("AAAAAAAAAAAAA", "[Event] AAAAAAAAAAAAA", None),
-    ]
-
-    for region, name, rule in events:
-        loc = PokemonBWLocation(world.player, name, None, world.regions[region])
-        world.regions[region].locations.append(loc)
+    for data in table:
+        if data.inclusion_rule and not data.inclusion_rule(world):
+            continue
+        name = "[Event] " + data.name
+        loc = PokemonBWLocation(world.player, name, None, world.regions[data.region])
+        world.regions[data.region].locations.append(loc)
         loc.place_locked_item(
             PokemonBWItem(name, ItemClassification.progression, None, world.player)
         )
-        if rule is not None:
-            loc.access_rule = rule
+        if data.access_rule is not None:
+            loc.access_rule = world.rules_dict.get_or_add(data.access_rule)

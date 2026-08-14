@@ -49,10 +49,50 @@ async def check_dex_locations(client: "PokemonBWClient", ctx: "BizHawkClientCont
                 if new & (1 << bit):
                     client.dexsanity_count += 1
                     missing_ids = client.missing_dex_flag_loc_ids[eight_flags * 8 + bit + 1]
-                    for loc_id in missing_ids.copy():
+                    for loc_id in missing_ids:
                         locations_to_check.append(loc_id)
                     missing_ids = client.missing_dexcount_loc_ids[client.dexsanity_count]
-                    for loc_id in missing_ids.copy():
+                    for loc_id in missing_ids:
                         locations_to_check.append(loc_id)
         client.dex_cache[eight_flags] = merge
+    return locations_to_check
+
+
+async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> list[int]:
+
+    if not client.seensanity_included:
+        return []
+
+    read = await bizhawk.read(
+        ctx.bizhawk_ctx, (  # TODO add reads for non-shiny seen
+            (client.save_data_address + client.dex_seen_offsets[2], client.dex_bytes_amount, client.ram_read_write_domain),
+            (client.save_data_address + client.dex_seen_offsets[3], client.dex_bytes_amount, client.ram_read_write_domain),
+        )
+    )
+    seen_male_buffer, seen_female_buffer, shiny_male_buffer, shiny_female_buffer = seen_buffers = b'', b'', read[0], read[1]
+    cache0, cache1, cache2, cache3 = client.dex_seen_caches
+    # Seen flags should never be unchecked
+
+    if all(seen_buffers[i][eight_flags] == client.dex_seen_caches[i][eight_flags]
+           for i in range(4) for eight_flags in range(client.dex_bytes_amount)):
+        return []
+
+    locations_to_check: list[int] = []
+    shiny_dex_nums = set()
+    for eight_flags in range(client.dex_bytes_amount):
+        cache2[eight_flags] = shiny_male_buffer[eight_flags]
+        cache3[eight_flags] = shiny_female_buffer[eight_flags]
+        for bit in range(8):
+            # shiny male
+            if cache2[eight_flags] & (1 << bit):
+                shiny_dex_nums.add(eight_flags * 8 + bit + 1)
+            # shiny female
+            if cache3[eight_flags] & (1 << bit):
+                shiny_dex_nums.add(eight_flags * 8 + bit + 1)
+    for dex_num in shiny_dex_nums:
+        locations_to_check += client.missing_shiny_loc_ids[dex_num]
+        client.missing_shiny_loc_ids[dex_num].clear()
+    for count in range(len(shiny_dex_nums)):
+        locations_to_check += client.missing_shinycount_loc_ids[count]
+        client.missing_shinycount_loc_ids[count].clear()
     return locations_to_check

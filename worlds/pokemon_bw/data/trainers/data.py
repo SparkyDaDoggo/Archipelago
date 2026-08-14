@@ -618,3 +618,10 @@ table: list[TrainerData] = [
     TrainerData(614, "Emmet", "Gear Station", "Subway Boss", 1, None, False, False, 8, None, 0),
     TrainerData(615, "Johnny", "Black City", "Roughneck", 3, None, False, False, 8, None, 0),
 ]
+
+_i = 0
+for _t in table:
+    if _t.id != _i:
+        raise Exception("Trainer data table is not sorted")
+    _i += 1
+del _i, _t

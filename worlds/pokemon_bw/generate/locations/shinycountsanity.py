@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ...data.locations.countsanity import dexcountsanity
+    from ...data.locations.countsanity import shinycountsanity
 
-    return {name: number + domain for name, number in dexcountsanity.items()}
+    return {name: number + domain for name, number in shinycountsanity.items()}
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
@@ -28,22 +28,28 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         return build_caught_rule(x, world)
 
     r: "Region" = world.regions["Pokédex"]
-    option = world.options.dexcountsanity
+    option_value = world.options.shinycountsanity.value
+    if isinstance(option_value, int):
+        option_value = {
+            "Maximum": option_value,
+            "Steps": 1,
+            "Leniency": 0,
+        }
     catchable_dex = set()  # Only for counting
     for data in catchable_species_data.values():
         catchable_dex.add(data.dex_number)
-    maximum = min(len(catchable_dex), option["Maximum"])
+    maximum = min(len(catchable_dex), option_value["Maximum"])
 
     def create_location(count: int) -> None:
-        loc_name = f"Pokédex - Catch {count} Pokémon"
+        loc_name = f"Pokédex - See {count} shiny Pokémon"
         l: PokemonBWLocation = PokemonBWLocation(world.player, loc_name, world.location_name_to_id[loc_name], r)
         l.progress_type = LocationProgressType.DEFAULT
-        l.access_rule = get_rule(count + option["Leniency"])
+        l.access_rule = get_rule(count + option_value["Leniency"])
         r.locations.append(l)
 
     for c in range(1, maximum+1):
-        if c % option["Steps"]:
+        if c % option_value["Steps"]:
             continue
         create_location(c)
-    if maximum == option["Maximum"] and maximum % option["Steps"]:
+    if maximum == option_value["Maximum"] and maximum % option_value["Steps"]:
         create_location(maximum)

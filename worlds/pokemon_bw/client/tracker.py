@@ -218,7 +218,7 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
                     "operation": "default",
                     "value": 0,
                 }, {
-                    "operation": "replace",  # TODO bandaid fix until flags rework in 0.4
+                    "operation": "replace",
                     "value": bitmap,
                 }
             ]

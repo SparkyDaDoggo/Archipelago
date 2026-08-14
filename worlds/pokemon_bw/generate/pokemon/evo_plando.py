@@ -111,6 +111,8 @@ def plando_evolutions_override(world: "PokemonBWWorld", all_species: dict[str, S
         if not plando_stat.override_evolutions or plando_stat.evolutions is False:
             continue
         data = all_species[spec_name]
+        if data.form:  # Custom forms actually can't have their own evolutions
+            continue
         new_evos = generate_plando_evolutions(world, all_species, by_id, plando_stat.evolutions, data)
         for evo_tup in new_evos:
             for evo_entry in evo_tup[2]:
@@ -145,6 +147,8 @@ def plando_evolutions_append(world: "PokemonBWWorld", all_species: dict[str, Spe
         if plando_stat.override_evolutions or plando_stat.evolutions is False:
             continue
         data = all_species[poke]
+        if data.form:  # Custom forms actually can't have their own evolutions
+            continue
         new_evos = generate_plando_evolutions(world, all_species, by_id, plando_stat.evolutions, data)
         if len(data.evolutions) + len(new_evos) > 7:
             raise OptionError(f"{world.player_name}: Evolution plando tries to add {len(new_evos)} new evolutions to "

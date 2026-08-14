@@ -1,6 +1,5 @@
 from ... import EncounterRegionData
 
-# TODO 16 regions from Menu are considered early
 region_list: dict[str, EncounterRegionData] = {
     "StCity": EncounterRegionData(0, False, methods=("S", "SR", "F", "FR", )),
     "DrCity": EncounterRegionData(1, False, methods=("S", "SR", "F", "FR", )),
@@ -151,3 +150,18 @@ region_list: dict[str, EncounterRegionData] = {
     "UnTown": EncounterRegionData(110, False, methods=("S", "SR", "F", "FR", )),
     "r17": EncounterRegionData(111, False, methods=("S", "SR", "F", "FR", )),
 }
+
+method_by_slot = ({i: "G" for i in range(12)} | {i: "DG" for i in range(12, 24)} | {i: "RG" for i in range(24, 36)} |
+                  {i: "S" for i in range(36, 41)} | {i: "SR" for i in range(41, 46)} |
+                  {i: "F" for i in range(46, 51)} | {i: "FR" for i in range(51, 56)})
+
+region_season_by_id: dict[tuple[int, int], tuple[str, str]] = {
+    (data.file, s[1]): (r, s[0])
+    for r, data in region_list.items()
+    for s in ((("", 0), ) if not data.seasons else (("Spring", 0), ("Summer", 1), ("Autumn", 2), ("Winter", 3)))
+}
+
+
+def region_tup_by_file_tup(file_tup: tuple[int, int, int]) -> tuple[str, str, str]:
+    r, s = region_season_by_id[file_tup[0], file_tup[1]]
+    return r, s, method_by_slot[file_tup[2]]

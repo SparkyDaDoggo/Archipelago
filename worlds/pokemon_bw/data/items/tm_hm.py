@@ -101,7 +101,7 @@ tm: dict[str, ItemData] = {
 
 hm: dict[str, ItemData] = {
     "HM01 Cut": ItemData(0x01A4, always_progression),
-    "HM02 Fly": ItemData(0x01A5, tm_hm_hunt),
+    "HM02 Fly": ItemData(0x01A5, always_progression),
     "HM03 Surf": ItemData(0x01A6, always_progression),
     "HM04 Strength": ItemData(0x01A7, always_progression),
     "HM05 Waterfall": ItemData(0x01A8, always_progression),

@@ -1,12 +1,11 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
-from BaseClasses import ItemClassification, CollectionState
+from BaseClasses import ItemClassification, Region
+from ...data import AccessRule
+from .. import SpeciesEntry
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from BaseClasses import Region
-    from ...data import EvolutionMethodData, ExtendedRule
-    from .. import SpeciesEntry
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
@@ -25,18 +24,22 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
     # "species" is the pokédex name that includes a description of the form
     # "speciesdata" are the values in species.by_name
     # "evodata" is the evolution tuple of a species in species.by_name
-    #           it consists of (evo_method, evo_value, evo_species)
+    #           it consists of (evo_method, evo_value, all evo_species_data)
     # "evoid" is the combination of species and index of one of its evodata
     # "base" (prefix) is the to-be-evolved species
     # "evo" (prefix) is the result of evolving the base species
 
     region: "Region" = world.regions["Evolutions"]
 
-    def get_rule(f_evodata: tuple[str, int, int], f_base_species: str) -> Callable[[CollectionState], bool]:
+    def get_rule(f_evodata: tuple[str, int, ...], f_base_species: str) -> AccessRule | None:
         # helper function to prevent lambdas in for loops
-        method: "EvolutionMethodData" = evolution_methods.methods[f_evodata[0]]
-        ext_rule: "ExtendedRule" = method.rule(f_evodata[1], f_base_species, world)
-        return lambda state: ext_rule(state, world) and state.has(f_base_species, world.player)
+        method = evolution_methods.methods[f_evodata[0]]
+        if method is None:
+            return None
+        f_rule = world.rules_dict[method.rule(f_evodata[1], f_base_species, world)]
+        if f_rule is None:
+            return None
+        return lambda state: f_rule(state) and state.has(f_base_species, world.player)
 
     # Dict instead of set to make it deterministic
     noted_evoid_set: dict[tuple[str, int], None] = {}
@@ -57,15 +60,11 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         for current_evoid in current_evoid_set:
             current_base_data = world.species_entries[current_evoid[0]]
             current_evodata = current_base_data.evolutions[current_evoid[1]]
-            # Level up item night is always paired with Level up item day
-            # and always has the same evolved species and item, so skip if it's that method
-            if current_evodata[0] == "Level up item night":
-                continue
             # Check for the evolution being possible if it requires a party member
             if current_evodata[0] == "Level up with party member":
                 # Go through catchable and check whether the required team member
                 # (or any of its forms) is already catchable
-                for catchable_species, catchable_data in catchable_species_data.items():
+                for catchable_data in catchable_species_data.values():
                     # If evolution possible, jump to creating event
                     if catchable_data.dex_number == current_evodata[1]:
                         break
@@ -73,8 +72,8 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
                     # If required team member not found, add this evoid to next iteration and skip adding event
                     next_evoid_set[current_evoid] = None
                     continue
-            evo_id_tup = (current_evodata[2], current_base_data.form)
-            current_evoname = species.by_id[evo_id_tup if evo_id_tup in species.by_id else (current_evodata[2], 0)]
+            evo_id_tup = (current_evodata[2][0].dex_number, current_base_data.form)
+            current_evoname = species.by_id[evo_id_tup if evo_id_tup in species.by_id else (current_evodata[2][0].dex_number, 0)].species_name
             # Creating event
             location_name = f"Evolving {current_evoid[0]} #{current_evoid[1]+1}"
             location = PokemonBWLocation(world.player, location_name, None, region)

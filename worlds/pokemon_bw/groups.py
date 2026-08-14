@@ -18,12 +18,14 @@ def get_item_groups() -> dict[str, set[str]]:
 
 
 def get_location_groups() -> dict[str, set[str]]:
-    from .data.locations import dexsanity
+    from .data.locations import dexsanity, countsanity, shinysanity
     from .data.locations.ingame_items import overworld_items, hidden_items, other, special
 
     return {
         "Dexsanity": set(dexsanity.location_table),
-        "Dexcountsanity": set(dexcountsanity.location_table),
+        "Dexcountsanity": set(countsanity.dexcountsanity),
+        "Shinysanity": set(shinysanity.location_table),
+        "Shinycountsanity": set(countsanity.shinycountsanity),
         "Overworld items": {*overworld_items.table, *overworld_items.abyssal_ruins, *overworld_items.seasonal},
         "Abyssal Ruins items": set(overworld_items.abyssal_ruins),
         "Hidden items": {*hidden_items.table, *hidden_items.seasonal},

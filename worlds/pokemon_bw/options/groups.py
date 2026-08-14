@@ -33,6 +33,8 @@ option_groups = [
         ShuffleTMRewards,
         Dexsanity,
         Dexcountsanity,
+        Shinysanity,
+        Shinycountsanity,
         SeasonControl,
         ModifyItemPool,
         ModifyLogic,

@@ -79,7 +79,7 @@ class PatchMethods:
 
     @staticmethod
     def write_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile) -> None:
-        from .patch.procedures import (write_text, write_wild_pokemon, write_trainer_pokemon, level_adjustments,
+        from .patch.procedures import (write_text, write_wild_pokemon, write_trainer_pokemon,
                                        modify_rates, write_evolutions, write_stats, write_levelup_movesets,
                                        write_move_data, write_type_chart, write_egg_species)
         from .plugins.generate import plugins_write_patch
@@ -88,24 +88,14 @@ class PatchMethods:
         write_text.write_plando(patch, opened_zipfile)
         if patch.world.options.season_control != "vanilla":
             procedures.append("season_patch")
-        if patch.world.options.reusable_tms.current_key in ("no", "off_please", "im_serious_no", "im_a_masochist"):
-            procedures.append("tms_patch")
+        # if patch.world.options.reusable_tms.current_key in ("no", "off_please", "im_serious_no", "im_a_masochist"):
+        #     procedures.append("tms_patch")
         if any(encounter.write for encounter in patch.world.wild_encounter.values()):
             procedures.append("write_wild_pokemon")
             write_wild_pokemon.write_patch(patch, opened_zipfile)
         if patch.world.options.randomize_trainer_pokemon.is_randomize:
             procedures.append("write_trainer_pokemon")
             write_trainer_pokemon.write_species(patch, opened_zipfile)
-        if patch.world.options.adjust_levels.is_wild:
-            procedures.append("adjust_wild_levels")
-        if patch.world.options.adjust_levels.is_trainer:
-            procedures.append("adjust_trainer_levels")
-        if patch.world.options.modify_levels.is_any_modified():
-            level_adjustments.write_modifiers(patch, opened_zipfile)
-            if patch.world.options.modify_levels.is_trainer_modified():
-                procedures.append("modify_trainer_levels")
-            if patch.world.options.modify_levels.is_wild_modified():
-                procedures.append("modify_wild_levels")
         if patch.world.options.modify_encounter_rates != "vanilla":
             procedures.append("modify_rates")
             modify_rates.write_patch(patch, opened_zipfile)
@@ -159,8 +149,8 @@ class PatchMethods:
 
         from .ndspy.rom import NintendoDSRom
         from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
-                                       level_adjustments, write_text, modify_rates, write_evolutions, write_stats,
-                                       write_levelup_movesets, tms_patch, write_move_data, write_type_chart, write_egg_species)
+                                       write_text, modify_rates, write_evolutions, write_stats, write_levelup_movesets,
+                                       tms_patch, write_move_data, write_type_chart, write_egg_species)
         from .plugins.patch import plugins_patch
 
         patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch,
@@ -170,11 +160,7 @@ class PatchMethods:
             "tms_patch": tms_patch.patch,
             "write_wild_pokemon": write_wild_pokemon.patch,
             "write_trainer_pokemon": write_trainer_pokemon.patch_species,
-            "adjust_wild_levels": level_adjustments.patch_wild,
-            "adjust_trainer_levels": level_adjustments.patch_trainer,
             "modify_rates": modify_rates.patch,
-            "modify_wild_levels": level_adjustments.modify_wild,
-            "modify_trainer_levels": level_adjustments.modify_trainers,
             "write_text": write_text.patch,
             "write_evolutions": write_evolutions.patch,
             "write_stats": write_stats.patch,

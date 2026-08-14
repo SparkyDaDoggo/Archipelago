@@ -264,9 +264,12 @@ class RandomizeEggGroups(ToggleSet):  # TODO custom egg groups possible?
     - **Allow baby stages** - If **Follow evolutions** is included, pre-evolutions of
         non-Unknown pokemon are allowed to have the Unknown egg group (which is the case
         for most vanilla baby pokemon).
+    - **Allow baby stages** - Allows custom, player-submitted groups to be used in
+        multiworld generation. Those can also be used in plando without having this
+        modifier included.
 
     **Mono only** and **Dual only** will cancel each other out.
-    Note that Ditto its egg group cannot be randomized at the moment.
+    Note that Ditto and its egg group cannot be randomized at the moment.
     """
     _ = """
     - **Keep Ditto** - Keeps Ditto's egg group and gives no other pokemon that same egg
@@ -281,6 +284,7 @@ class RandomizeEggGroups(ToggleSet):  # TODO custom egg groups possible?
     is_correlate_with_types = False
     is_follow_evolutions = False
     is_allow_baby_stages = False
+    is_allow_custom_groups = False
     # is_keep_ditto = False
     # is_keep_unknown = False
     auto_add_if_any = "Randomize"

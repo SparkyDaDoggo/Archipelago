@@ -1,6 +1,6 @@
 from ..rules import *
 from ..progress_type import *
-from ... import FlagLocationData, AndExtRules as AND, IfExtRules as IF
+from ... import FlagLocationData, IfExtRules as IF
 
 # How I decided the progress types:
 # I set always_default by default (pun not intended)
@@ -76,9 +76,11 @@ table: dict[str, FlagLocationData] = {
     # Asks for random pokémon type
     "Castelia City - Item from harlequin in Studio Castelia": FlagLocationData(0x1BA, always_default, "Studio Castelia", None, has_other_locations_species),
     "Castelia City - Item from manager in Café Sonata": FlagLocationData(164, always_default, "Café Sonata", None, None),
-    "Castelia City - Item from Iris in Plasma hideout": FlagLocationData(0x199, always_default, "Castelia City Plasma Hideout 1F", None, IF(shuffled_doors, has_confronted_plasma_castelia)),
+    "Castelia City - Item from Iris in Plasma hideout": FlagLocationData(
+        0x199, always_default, "Castelia City Plasma Hideout 1F", None, IF(shuffled_doors, has_confronted_plasma_castelia)),
     "Castelia City - Item from dancers": FlagLocationData(0x196, always_default, "Castelia City", None, IF(shuffled_doors, has_fought_castelia_dancers)),
-    "Castelia City - Item from scientist in northern street for seeing 20 species": FlagLocationData(328, always_default, "Castelia City Northern Street East Upper Building 1F", None, has_25_species),
+    "Castelia City - Item from scientist in northern street for seeing 20 species": FlagLocationData(
+        328, always_default, "Castelia City Northern Street East Upper Building 1F", None, has_25_species),
     # The rom editor cannot decompile the script for the Passerby Analytics HQ properly
     # "Passerby Analytics HQ - Item for answering all questionnaires": FlagLocationData(0000000, always_default, "Castelia City", None, None),
     # I think this one requires connecting with other save files too
@@ -100,7 +102,7 @@ table: dict[str, FlagLocationData] = {
     "Desert Resort - Item from man in black": FlagLocationData(276, always_default, "Desert Resort", None, None),
     "Desert Resort - Item from ranger Mylene": FlagLocationData(1420+549, always_default, "Desert Resort", None, None),
     "Desert Resort - Item from ranger Jaden": FlagLocationData(1420+550, always_default, "Desert Resort", None, None),
-    "Desert Resort - Item from Professor Juniper": FlagLocationData(0x19C, always_default, "Desert Resort", None, can_beat_ghetsis),
+    "Desert Resort - Item from Professor Juniper": FlagLocationData(0x19C, always_default, "Desert Resort", None, has_beaten_ghetsis),
     "Relic Castle - 1F castleside item from backpacker": FlagLocationData(145, always_default, "Relic Castle Castleside 1F", None, None),
     "Nimbasa City - Item from Day-Care man": FlagLocationData(153, always_default, "Nimbasa City", None, None),
     "Nimbasa City - Item from socialite in western building": FlagLocationData(366, always_default, "Nimbasa City North West House 2F", None, None),
@@ -136,13 +138,15 @@ table: dict[str, FlagLocationData] = {
     # "Battle Subway - Item from ace trainer on super platforms for 203 consecutive wins": FlagLocationData(0000000, always_excluded, "Nimbasa City", None, None),
     "Nimbasa City - Item from Musical Theater owner": FlagLocationData(0x19F, always_default, "Musical Theater", None, None),
     "Anville Town - Item from depot agent on first visit": FlagLocationData(323, always_default, "Anville Town South East House", None, None),
-    "Driftveil City - Item from man for seeing more than 50 pokémon": FlagLocationData(264, always_default, "Driftveil City Upper Right House East of Market", None, has_51_species),
+    "Driftveil City - Item from man for seeing more than 50 pokémon": FlagLocationData(
+        264, always_default, "Driftveil City Upper Right House East of Market", None, has_51_species),
     "Driftveil City - Item from girl in pokémon center #1": FlagLocationData(147, always_default, "Driftveil City Pokémon Center", None, None),
     "Driftveil City - Item from girl in pokémon center #2": FlagLocationData(147, always_default, "Driftveil City Pokémon Center", None, None),
     "Driftveil City - Item from girl in pokémon center #3": FlagLocationData(147, always_default, "Driftveil City Pokémon Center", None, None),
     "Driftveil City - Item from man in black in market": FlagLocationData(365, always_default, "Driftveil Market", None, None),
     # That lady is asking for a random TM move every day
-    "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move": FlagLocationData(0x1BC, always_default, "Driftveil City House North of Market", None, driftveil_random_tm),
+    "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move": FlagLocationData(
+        0x1BC, always_default, "Driftveil City House North of Market", None, driftveil_random_tm),
     "Driftveil Gym - Gym guide item": FlagLocationData(122, always_default, "Driftveil Gym", None, None),
     "Cold Storage - Item from worker": FlagLocationData(316, always_default, "Cold Storage", None, None),
     "Route 6 - Item from ranger Shanti": FlagLocationData(1420+186, always_default, "Route 6", None, None),
@@ -155,15 +159,18 @@ table: dict[str, FlagLocationData] = {
     "Mistralton Gym - Gym guide item": FlagLocationData(123, always_default, "Mistralton Gym", None, None),
     "Route 7 - Item from ranger Mary": FlagLocationData(1420+187, always_default, "Route 7", None, None),
     "Route 7 - Item from ranger Pedro": FlagLocationData(1420+183, always_default, "Route 7", None, None),
-    "Twist Mountain - Item from worker near ice rock cave": FlagLocationData(0x1BF, always_default, "Twist Mountain 1F South West", None, can_beat_ghetsis),
+    "Twist Mountain - Item from worker near ice rock cave": FlagLocationData(0x1BF, always_default, "Twist Mountain 1F South West", None, has_beaten_ghetsis),
     "Icirrus City - Item from Aha if answer was correct": FlagLocationData(0x1A7, always_default, "Icirrus City Aha's House", disabled, None),
     "Icirrus City - Item from Aha if answer was incorrect": FlagLocationData(0x1A6, always_default, "Icirrus City Aha's House", disabled, None),
     "Icirrus City - Item from Aha for any answer": FlagLocationData(0x1E7, always_default, "Icirrus City Aha's House", None, None),
-    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 25 levels": FlagLocationData(251, always_default, "Icirrus City Pokémon Fan Club", None, None),
+    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 25 levels": FlagLocationData(
+        251, always_default, "Icirrus City Pokémon Fan Club", None, None),
     # Leveling up your starter from level 5 to 55 happens in vanilla when you can fight Ghetsis, so lets keep logic simple
-    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels": FlagLocationData(252, always_default, "Icirrus City Pokémon Fan Club", None, can_beat_ghetsis),
+    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels": FlagLocationData(
+        252, always_default, "Icirrus City Pokémon Fan Club", None, has_beaten_ghetsis),
     # This is not only unreasonable, but also has an astronomically low softlock chance if we don't document breeding data and consider it during generation
-    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 99 levels": FlagLocationData(253, always_excluded, "Icirrus City Pokémon Fan Club", disabled, can_beat_ghetsis),
+    "Icirrus City - Item from Pokémon Fan Club chairman for gaining 99 levels": FlagLocationData(
+        253, always_excluded, "Icirrus City Pokémon Fan Club", disabled, has_beaten_ghetsis),
     "Icirrus City - Item from the former Team Rocket member's wife (Winter)": FlagLocationData(134, season_dependant, "Icirrus City South House", None, None),
     "Icirrus Gym - Gym guide item": FlagLocationData(124, always_default, "Icirrus Gym", None, None),
     "Dragonspiral Tower - Item from Cedric Juniper": FlagLocationData(310, always_default, "Dragonspiral Tower Entrance", None, has_defeated_icirrus_gym),
@@ -195,11 +202,16 @@ table: dict[str, FlagLocationData] = {
     "Route 12 - Item from breeder Eustace": FlagLocationData(1420+451, always_default, "Route 12", None, None),
     "Village Bridge - Item from baker Chris": FlagLocationData(0x1AF, always_default, "Village Bridge", None, None),
     # Following 5 items require a random pokémon every day
-    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #1": FlagLocationData(0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
-    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #2": FlagLocationData(0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
-    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #3": FlagLocationData(0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
-    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #4": FlagLocationData(0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
-    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #5": FlagLocationData(0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #1": FlagLocationData(
+        0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #2": FlagLocationData(
+        0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #3": FlagLocationData(
+        0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #4": FlagLocationData(
+        0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
+    "Village Bridge - Item from fisherman for showing a certain pokémon caught today #5": FlagLocationData(
+        0x1B0, always_default, "Village Bridge Left House on Right Side", None, has_other_locations_species),
     "Route 11 - Item from ranger Thalia": FlagLocationData(1420+453, always_default, "Route 11", None, None),
     "Route 11 - Item from ranger Crofton": FlagLocationData(1420+455, always_default, "Route 11 Ravine", None, None),
     "Opelucid City - Item from female NPC in northern house": FlagLocationData(312, always_default, "Opelucid City House Next to Gym 1F", None, None),

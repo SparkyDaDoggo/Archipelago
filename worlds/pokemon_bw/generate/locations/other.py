@@ -32,12 +32,12 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
                 l: PokemonBWLocation = PokemonBWLocation(world.player, name, world.location_name_to_id[name], r)
                 l.progress_type = data.progress_type(world)
                 if data.rule is not None:
-                    l.access_rule = world.rules_dict[data.rule]
+                    l.access_rule = world.rules_dict.get_or_add(data.rule)
                 r.locations.append(l)
 
     chosen = world.random.choice(tuple(a for a in catchable_species_data.items() if a[1].tm_hm_moves.tm_hm_moves))
     world.other_locations_species = chosen[0]
-    world.studio_castelia_type = world.random.choice((chosen[1].type_1, chosen[1].type_2))
+    world.studio_castelia_type = world.random.choice(chosen[1].types)
     chosen_tms = list(chosen[1].tm_hm_moves.tm_hm_moves)
     chosen_tms.sort()
     chosen_tm = world.random.choice(chosen_tms)

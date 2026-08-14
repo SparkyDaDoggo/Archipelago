@@ -261,6 +261,8 @@ You can ensure your dex numbers to have checks by either plando'ing those specie
 somewhere in the world or enabling wild pokémon randomization with 
 `Ensure all obtainable` included.
 
+This explanation also applies to `Shinysanity`.
+
 ## How do I use it?
 
 Instead of writing a single number, you can write a list of multiple dex numbers 
@@ -304,7 +306,9 @@ Every entry belongs to a specific pokémon species and contains multiple keys fo
 The specified species can either be the standard pokémon name (i.e. without any form suffix) or the form's name 
 found in the [species names list](plando%20lists.md#all-species-names) (note that adding an entry for the standard name **and** base form name, e.g. 
 `Deerling`&`Deerling (Spring)`, is not allowed). However, non-base forms that are not at the bottom of that list 
-don't have separate data in the game's files and are thereby not allowed in this context. 
+don't have separate data in the game's files and are thereby not allowed in this context. Also, even custom forms 
+can't have their own evolutions.
+
 Every entry (currently) consists of the following keys (with all of them being optional):
 - `base_hp`, `base_attack`, `base_defense`, `base_sp_attack`, `base_sp_defense`, and `base_speed` set the 
   corresponding base stat. Allowed values are in range 1-255. Setting them to 0 will use the vanilla stat instead.

@@ -1551,18 +1551,21 @@ Some of them have been changed in later games, so look twice if you're not entir
 
 # Egg group names
 
-- Monster
-- Water 1
-- Water 2
-- Water 3
-- Bug
-- Flying
-- Field
-- Fairy
-- Grass
-- Human-Like (note that you always have to put this group in quotation marks (`"`))
-- Mineral
-- Amorphous
-- Dragon
-- Ditto (Doesn't have an effect currently)
-- Unknown
+- Vanilla groups:
+  - Monster
+  - Water 1
+  - Water 2
+  - Water 3
+  - Bug
+  - Flying
+  - Field
+  - Fairy
+  - Grass
+  - Human-Like (note that you always have to put this group in quotation marks (`"`))
+  - Mineral
+  - Amorphous
+  - Dragon
+  - Ditto (Doesn't have an effect currently)
+  - Unknown
+- Custom groups (can always be used in plando regardless of randomization):
+  - Static

@@ -32,7 +32,7 @@ def create(world: "PokemonBWWorld") -> None:
             l: PokemonBWLocation = PokemonBWLocation(world.player, name, world.location_name_to_id[name], r)
             l.progress_type = data.progress_type(world)
             if data.rule is not None:
-                l.access_rule = world.rules_dict[data.rule]
+                l.access_rule = world.rules_dict.get_or_add(data.rule)
             r.locations.append(l)
     for name, data in gym_tms.items():
         if data.inclusion_rule is None or data.inclusion_rule(world):
@@ -40,5 +40,5 @@ def create(world: "PokemonBWWorld") -> None:
             l: PokemonBWLocation = PokemonBWLocation(world.player, name, world.location_name_to_id[name], r)
             l.progress_type = data.progress_type(world)
             if data.rule is not None:
-                l.access_rule = world.rules_dict[data.rule]
+                l.access_rule = world.rules_dict.get_or_add(data.rule)
             r.locations.append(l)

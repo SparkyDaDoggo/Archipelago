@@ -1,29 +1,34 @@
 from typing import TextIO, TYPE_CHECKING
 
+from ..options.moves import PlandoTypeEffect, PlandoMoveData
+
 if TYPE_CHECKING:
     from .. import PokemonBWWorld
 
 
 def write_spoiler_encounter(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
-    from ..data.locations.encounters.region_connections import connections, connection_by_region
+    from ..data.locations.encounters.region_connections import connections
     from ..data.pokemon.species import by_id
     from ..data.pokemon.pokedex import by_number
 
     if world.options.randomize_wild_pokemon.is_randomize or world.options.encounter_plando:
 
-        methods: dict[str, list[str]] = {name: [] for name in connections}
-        for name, data in world.wild_encounter.items():
-            region = name[:name.rfind(" ")]
-            methods[connection_by_region[region]].append(by_id[data.species_id])
+        methods: dict[tuple[str, str, str], list[str]] = {con.entering_region: [] for con in connections}
+        for data in world.wild_encounter.values():
+            methods[data.encounter_region].append(by_id[data.species_id].species_name)
 
         spoiler_handle.write(f"\n\nPokemon locations ({world.player_name}):\n\n")
         for method, species in methods.items():
-            spoiler_handle.write(method+": "+(", ".join(species))+"\n")
+            m_name = f"{method[0]}"
+            if method[1]:
+                m_name += f" ({method[1]})"
+            m_name += " - " + method[2]
+            spoiler_handle.write(m_name+": "+(", ".join(species))+"\n")
 
         for name, data in world.static_encounter.items():
-            spoiler_handle.write(name+": "+by_id[data.species_id]+"\n")
+            spoiler_handle.write(name+": "+by_id[data.species_id].species_name+"\n")
         for name, data in world.trade_encounter.items():
-            spoiler_handle.write(name+": "+by_id[data.species_id]+" for "+by_number[data.wanted_dex_number]+"\n")
+            spoiler_handle.write(name+": "+by_id[data.species_id].species_name+" for "+by_number[data.wanted_dex_number]+"\n")
 
 
 def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
@@ -42,7 +47,6 @@ def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> No
 
 
 def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
-    from ..data.pokemon.pokedex import by_number
 
     if world.options.randomize_evolutions.is_randomize or any(data.evolutions is not False
                                                               for data in world.options.stats_plando.value.values()):
@@ -50,7 +54,7 @@ def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) ->
         spoiler_handle.write(f"\n\nEvolutions ({world.player_name}, each entry in the format "
                              f"<method, value, species>):\n\n")
         for name, data in world.species_entries.items():
-            spoiler_handle.write(f"{name}: "+(" | ".join(f"{evo[0]}, {evo[1]}, {by_number[evo[2]]}"
+            spoiler_handle.write(f"{name}: "+(" | ".join(f"{evo[0]}, {evo[1]}, {evo[2][0].dex_name}"
                                                          for evo in data.evolutions))+"\n")
 
 

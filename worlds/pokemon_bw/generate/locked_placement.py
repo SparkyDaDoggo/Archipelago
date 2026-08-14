@@ -42,7 +42,7 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                 if is_excluded(world, badge_locations[loc]):
                     continue
                 badge_locations[loc].place_locked_item(badge_items[it])
-                items.remove(badge_items[it])  # list.remove() save here because badges only exist once in local pool
+                items.remove(badge_items[it])  # list.remove() safe here because badges only exist once in local pool
         case "shuffle":
             # Priority locations are ignored here because of no badges being filler
             # Shuffle items because of some locations potentially being skipped
@@ -59,8 +59,6 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                 item = badge_items.pop()
                 location.place_locked_item(item)
                 items.remove(item)  # list.remove() save here because badges only exist once in local pool
-        case "any_badge":
-            pass
         case "anything":
             pass
         case _:
@@ -148,8 +146,6 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                         location.place_locked_item(item)
                         items.remove(item)  # list.remove() save here because tms/hms only exist once in local pool
                         break
-        case "any_tm_hm":
-            pass
         case "anything":
             pass
         case _:

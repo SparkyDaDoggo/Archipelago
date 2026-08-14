@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
 
 from ...locations import PokemonBWLocation
+from ...data import AccessRule, ExtendedRule
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
     from BaseClasses import Region
-    from ...data import AccessRule, FlagLocationData
 
 
 def lookup(domain: int) -> dict[str, int]:
@@ -18,9 +18,12 @@ def create(world: "PokemonBWWorld") -> None:
     from ...data.locations.ingame_items.hidden_items import table, seasonal
 
     dowsing_machine_rule: "AccessRule" = lambda state: state.has_any(("Dowsing Machine", "Out of logic"), world.player)
+    f_cache = {}
 
-    def f(loc_data: "FlagLocationData") -> "AccessRule":
-        return lambda state: loc_data.rule(state, world) and dowsing_machine_rule(state)
+    def f(rule: ExtendedRule) -> "AccessRule":
+        if rule not in f_cache:
+            f_cache[rule] = lambda state: rule(state, world) and dowsing_machine_rule(state)
+        return f_cache[rule]
 
     for tab in (table, seasonal):
         for name, data in tab.items():
@@ -30,10 +33,10 @@ def create(world: "PokemonBWWorld") -> None:
                 l.progress_type = data.progress_type(world)
                 if world.options.modify_logic.is_require_dowsing:
                     if data.rule is not None:
-                        l.access_rule = f(data)
+                        l.access_rule = f(data.rule)
                     else:
                         l.access_rule = dowsing_machine_rule
                 else:
                     if data.rule is not None:
-                        l.access_rule = world.rules_dict[data.rule]
+                        l.access_rule = world.rules_dict.get_or_add(data.rule)
                 r.locations.append(l)

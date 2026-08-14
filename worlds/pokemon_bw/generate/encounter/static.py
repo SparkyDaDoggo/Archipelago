@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 def generate_static_encounters(world: "PokemonBWWorld",
                                species_checklist: SpeciesChecklist) -> dict[str, StaticEncounterEntry]:
     from ...data.locations.encounters.static import static, legendary, fossils, gift
-    from ...data.pokemon.species import by_id
 
     versioned_species = (
         (lambda d: d.species_white)
@@ -26,7 +25,7 @@ def generate_static_encounters(world: "PokemonBWWorld",
                 (data.inclusion_rule is None or data.inclusion_rule(world))
                 and world.options.modify_logic.is_consider_static
             ):
-                species_checklist.check(by_id[versioned_species(data)])
+                species_checklist.check(world.species_entries_by_id[versioned_species(data)])
 
     return encounters
 
@@ -34,7 +33,6 @@ def generate_static_encounters(world: "PokemonBWWorld",
 def generate_trade_encounters(world: "PokemonBWWorld",
                               species_checklist: SpeciesChecklist) -> dict[str, TradeEncounterEntry]:
     from ...data.locations.encounters.static import trade
-    from ...data.pokemon.species import by_id
 
     is_black = world.options.version == "black"
     versioned_species = (
@@ -57,7 +55,7 @@ def generate_trade_encounters(world: "PokemonBWWorld",
         )
         if (world.options.modify_logic.is_consider_trades and (world.options.modify_logic.is_consider_static
                                                                or world.options.randomize_wild_pokemon.is_randomize)):
-            species_checklist.check(by_id[versioned_species(data)])
-            species_checklist.add(by_id[(versioned_wanted(data), 0)])
+            species_checklist.check(world.species_entries_by_id[versioned_species(data)])
+            species_checklist.add(world.species_entries_by_id[(versioned_wanted(data), 0)])
 
     return encounters
