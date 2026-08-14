@@ -11,79 +11,40 @@ if TYPE_CHECKING:
 def create(world: "PokemonBWWorld") -> None:
 
     all_goals = world.options.goal.combined or [world.options.goal.current_key]
+    needed_goals = []
+    possible_goals = {
+        "ghetsis": ("[Event] Defeating Ghetsis", ),
+        "champion": ("[Event] Defeating champ Alder", ),
+        "cynthia": ("[Event] Defeating Cynthia", ),
+        "cobalion": ("[Event] Encounter Cobalion", ),
+        "tmhm_hunt": ("[Event] Verifying TMs/HMs Castelia", ),
+        # "regional_pokedex": (),
+        # "national_pokedex": (),
+        # "custom_pokedex": (),
+        "seven_sages_hunt": (
+            "[Event] Catching sage Rood",
+            "[Event] Catching sage Gorm",
+            "[Event] Catching sage Ryoku",
+            "[Event] Catching sage Zinzolin",
+            "[Event] Catching sage Bronius",
+            "[Event] Catching sage Giallo",
+            "[Event] Defeating Ghetsis",
+        ),
+        "legendary_hunt": (
+            "[Event] Encounter Virizion",
+            "[Event] Encounter Victini",
+            "[Event] Encounter Volcarona",
+            "[Event] Encounter Cobalion",
+            "[Event] Encounter Kyurem",
+            "[Event] Encounter Terrakion",
+            "[Event] Encounter Reshiram/Zekrom",
+        ),
+    }
     for goal in all_goals:
-        location: PokemonBWLocation
-        regions = world.regions
-        match goal:
-            case "ghetsis":
-                location = PokemonBWLocation(world.player, "Defeat Ghetsis", None, regions["N's Castle"])
-                regions["N's Castle"].locations.append(location)
-            case "champion":
-                location = PokemonBWLocation(world.player, "Defeat Alder", None, regions["Pokémon League"])
-                regions["Pokémon League"].locations.append(location)
-            case "cynthia":
-                location = PokemonBWLocation(world.player, "Defeat Cynthia", None, regions["Undella Town"])
-                regions["Undella Town"].locations.append(location)
-            case "cobalion":
-                location = PokemonBWLocation(world.player, "Defeat or catch Cobalion", None, regions["Mistralton Cave Inner"])
-                regions["Mistralton Cave Inner"].locations.append(location)
-            # case "regional_pokedex":
-            # case "national_pokedex":
-            # case "custom_pokedex":
-            case "tmhm_hunt":
-                from ...data.items.tm_hm import tm as tm_items, hm as hm_items
-                location = PokemonBWLocation(world.player, "Verify TMs/HMs", None, regions["Castelia City"])
-                regions["Castelia City"].locations.append(location)
-                location.access_rule = lambda state: state.has_all(tm_items, world.player) and state.has_all(hm_items, world.player)
-            case "seven_sages_hunt":
-                location = PokemonBWLocation(world.player, "Find all seven sages", None, regions["N's Castle"])
-                regions["N's Castle"].locations.append(location)
-                location.access_rule = lambda state: (
-                    # Finding Ghetsis is checked by setting N's Castle as the region
-                    state.can_reach_location("Route 18 - TM from sage Rood", world.player) and
-                    state.can_reach_location("Dreamyard - TM from sage Gorm", world.player) and
-                    state.can_reach_location("Relic Castle - TM from sage Ryoku", world.player) and
-                    state.can_reach_location("Cold Storage - TM from sage Zinzolin", world.player) and
-                    state.can_reach_location("Chargestone Cave - TM from sage Bronius", world.player) and
-                    state.can_reach_location("Route 14 - TM from sage Giallo", world.player)
-                )
-            case "legendary_hunt":
-                location = PokemonBWLocation(world.player, "Defeat or catch all legendaries", None, regions["N's Castle"])
-                regions["N's Castle"].locations.append(location)
-                location.access_rule = lambda state: (
-                    state.can_reach_region("Mistralton Cave Inner", world.player) and  # Cobalion AND Virizion
-                    state.can_reach_region("Trial Chamber", world.player) and
-                    state.can_reach_region("Giant Chasm Inner Cave", world.player) and
-                    state.can_reach_region("Liberty Garden", world.player) and
-                    state.can_reach_region("Relic Castle Basement", world.player)
-                )
-            case "pokemon_master":
-                from ...data.items.tm_hm import tm, hm
-                # N's Castle includes Ghetsis and Champion
-                location = PokemonBWLocation(world.player, "Become the very best like no one ever was", None, regions["N's Castle"])
-                regions["N's Castle"].locations.append(location)
-                location.access_rule = lambda state: (
-                    # Legendary hunt, including Cobalion
-                    state.can_reach_region("Mistralton Cave Inner", world.player) and  # Cobalion AND Virizion
-                    state.can_reach_region("Trial Chamber", world.player) and
-                    state.can_reach_region("Giant Chasm Inner Cave", world.player) and
-                    state.can_reach_region("Liberty Garden", world.player) and
-                    state.can_reach_region("Relic Castle Basement", world.player) and
-                    # Cynthia
-                    state.can_reach_region("Undella Town", world.player) and
-                    # TM/HM hunt
-                    state.has_all(tm, world.player) and
-                    state.has_all(hm, world.player) and
-                    # Seven sages hunt
-                    state.can_reach_location("Route 18 - TM from sage Rood", world.player) and
-                    state.can_reach_location("Dreamyard - TM from sage Gorm", world.player) and
-                    state.can_reach_location("Relic Castle - TM from sage Ryoku", world.player) and
-                    state.can_reach_location("Cold Storage - TM from sage Zinzolin", world.player) and
-                    state.can_reach_location("Chargestone Cave - TM from sage Bronius", world.player) and
-                    state.can_reach_location("Route 14 - TM from sage Giallo", world.player)
-                )
-            case _:
-                raise Exception(f"Bad goal option: {world.options.goal.current_key}")
-        item: PokemonBWItem = PokemonBWItem("Goal", ItemClassification.progression, None, world.player)
-        location.place_locked_item(item)
-    world.multiworld.completion_condition[world.player] = lambda state: state.has("Goal", world.player, len(all_goals))
+        if goal == "pokemon_master":
+            needed_goals += (g for gevents in possible_goals.values() for g in gevents)
+        elif goal in possible_goals:
+            needed_goals += possible_goals[goal]
+        else:
+            raise Exception(f"Bad goal option: {goal}")
+    world.multiworld.completion_condition[world.player] = lambda state: state.has_all(needed_goals, world.player)

@@ -20,6 +20,27 @@ by_name: dict[str, int] = {
     # "Fairy": 17,
 }
 
+shorten: dict[str, str] = {
+    "Normal": "Nrm",
+    "Fighting": "Ftn",
+    "Flying": "Fly",
+    "Poison": "Psn",
+    "Ground": "Gnd",
+    "Rock": "Rck",
+    "Bug": "Bug",
+    "Ghost": "Ghs",
+    "Steel": "Stl",
+    "Fire": "Fir",
+    "Water": "Wtr",
+    "Grass": "Grs",
+    "Electric": "Elc",
+    "Psychic": "Psy",
+    "Ice": "Ice",
+    "Dragon": "Drg",
+    "Dark": "Drk",
+    # "Fairy": "Fry",
+}
+
 by_id = {index: name for name, index in by_name.items()}
 
 chart: dict[tuple[str, str], int] = {

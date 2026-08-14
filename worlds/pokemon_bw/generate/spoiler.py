@@ -109,8 +109,41 @@ def write_spoiler_tm_hm_compat(world: "PokemonBWWorld", spoiler_handle: TextIO) 
 
 
 def write_spoiler_move_data(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
-    pass  # TODO
+
+    if world.options.randomize_move_data.value or any(isinstance(plando, PlandoMoveData)
+                                                      for plando in world.options.move_data_plando.value.values()):
+
+        spoiler_handle.write(f"\n\nMove data ({world.player_name}, the format is <power, accuracy, type, category, "
+                             f"pp>):\n\n")
+        for name, data in world.move_entries.items():
+            spoiler_handle.write(f"{name}: {data.power}, {data.accuracy}, {data.type}, {data.category}, {data.pp}\n")
 
 
 def write_spoiler_type_chart(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
-    pass  # TODO
+    from ..data.pokemon.types import chart, shorten
+
+    if (
+        world.options.randomize_type_chart.is_shuffle or
+        any(isinstance(plando, PlandoTypeEffect) for plando in world.options.move_data_plando.value.values())
+    ):
+
+        spoiler_handle.write(f"\n\nType chart ({world.player_name}, types names are abbreviated):\n\n")
+        spoiler_handle.write(f"    │ {' │ '.join(shorten.values())}")
+        for att, short in shorten.items():
+            spoiler_handle.write(short)
+            for defe in shorten:
+                spoiler_handle.write("────┼─" * 17 + "───\n")
+                val = world.type_chart[att, defe]  # world.type_chart has all combinations
+                if val == 0xff:  # 0xff means no change from vanilla
+                    val = chart.get((att, defe), 4)  # Neutral matchups are not in that dict
+                if val == 4:
+                    spoiler_handle.write(" │    ")
+                elif val == 8:
+                    spoiler_handle.write(" │  + ")
+                elif val == 2:
+                    spoiler_handle.write(" │  - ")
+                elif val == 0:
+                    spoiler_handle.write(" │  x ")
+                else:
+                    spoiler_handle.write(f" │ {val:^3}")
+            spoiler_handle.write("\n")

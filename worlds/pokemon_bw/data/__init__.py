@@ -127,6 +127,12 @@ class TrainerLocationData(NamedTuple):
     rule: ExtendedRule | None
 
 
+class VisitLocationData(NamedTuple):
+    map_id: int
+    regions: tuple[str, ...]
+    inclusion_rule: InclusionRule | None
+
+
 class EncounterData(NamedTuple):
     species_black: tuple[int, int]
     species_white: tuple[int, int]

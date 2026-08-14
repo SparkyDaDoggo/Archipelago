@@ -4,6 +4,7 @@ from .. import RegionData
 region_list: dict[str, RegionData] = {
     "Menu": RegionData("Virtual", -1, False),
     "Pokédex": RegionData("Virtual", -1, False),
+    "Map Visits": RegionData("Virtual", -1, False),
     "Evolutions": RegionData("Virtual", -1, False),
     "Form Change": RegionData("Virtual", -1, False),
     # Southern Unova
