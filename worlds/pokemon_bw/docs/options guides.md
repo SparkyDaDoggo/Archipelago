@@ -249,6 +249,8 @@ Pokemon Black and White:
 
 # Dexsanity Plando guide (coming in 0.4.0)
 
+(This guide also applies to `Shinysanity`.)
+
 ## How does this work?
 
 Instead of writing a single number to determine the amount of random Dexsanity checks you 
@@ -261,12 +263,10 @@ You can ensure your dex numbers to have checks by either plando'ing those specie
 somewhere in the world or enabling wild pokémon randomization with 
 `Ensure all obtainable` included.
 
-This explanation also applies to `Shinysanity`.
-
 ## How do I use it?
 
-Instead of writing a single number, you can write a list of multiple dex numbers 
-**as an entry**, i.e. as a list inside a list. 
+Instead of writing a single number, you can write a list of multiple dex numbers or dex 
+number ranges **as an entry**, i.e. as a list inside a list. 
 Writing a simple list (e.g. `dexsanity: [1, 4, 7]`) will be interpreted by AP 
 as a list to pick a random entry from, i.e. you will end up with one of the numbers as 
 the amount of random checks.
@@ -281,6 +281,7 @@ Pokemon Black and White:
     - [50, 51, 52, 53, 54]
     - [100, 200, 300, 400]
     - 5  # A single number (which is then the amount of random checks again) can also be added as a possible value
+    - [494-649]  # (All Unova pokémon btw.)
 ```
 
 # Stats Plando guide (coming in 0.4.0)

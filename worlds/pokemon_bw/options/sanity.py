@@ -14,11 +14,11 @@ class Dexsanity(Range):
     If you want to have all 649 possible checks, then you need to randomize wild
     encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of dex numbers in order to plando what pokemon
-    you want to have locations for:
+    Alternatively, you can put in a list of dex numbers and dex number ranges in order to
+    plando what pokemon you want to have locations for:
     ```
       dexsanity:
-        - [50, 51, 52, 53, 54, 460, 461, 500]
+        - [50, 51, 52, 53, 54, 460-469, 500]
     ```
     See the options guides for more information.
     """
@@ -30,17 +30,28 @@ class Dexsanity(Range):
 
     def __init__(self, value: Any):
         if isinstance(value, Iterable):
+            resolved = []
             for val in value:
-                if not type(val) is int:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers, found {type(val)}")
-                if val < 1:
-                    raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                      f"which is lower than minimum 1")
-                elif val > self.range_end:
-                    raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                      f"which is higher than maximum {self.range_end}")
-            self.value = list(set(value))  # Get rid of duplicates
-            self.value.sort()  # Very important to not make it non-deterministic
+                if isinstance(val, str):
+                    split = val.split("-")
+                    if len(split) != 2 or not split[0].isnumeric() or not split[1].isnumeric():
+                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
+                    rang = int(split[0]), int(split[1])
+                    if not (1 < rang[0] <= self.range_end) or not (1 < rang[1] <= self.range_end):
+                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
+                    resolved.extend(range(rang[0], rang[1]+1))
+                elif isinstance(val, int):
+                    if val < 1:
+                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
+                                          f"which is lower than minimum 1")
+                    elif val > self.range_end:
+                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
+                                          f"which is higher than maximum {self.range_end}")
+                    resolved.append(val)
+                else:
+                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers and integer "
+                                      f"ranges, found {type(val)}")
+            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
         else:
             super().__init__(value)
 
@@ -141,13 +152,28 @@ class Shinysanity(Toggle):
 
     def __init__(self, value: Any):
         if isinstance(value, Iterable):
+            resolved = []
             for val in value:
-                if not type(val) is int:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers, found {type(val)}")
-                if not 1 < val <= 649:
-                    raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                      f"which is not in range 1-649")
-            self.value = sorted(set(value))  # Get rid of duplicates and stay deterministic
+                if isinstance(val, str):
+                    split = val.split("-")
+                    if len(split) != 2 or not split[0].isnumeric() or not split[1].isnumeric():
+                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
+                    rang = int(split[0]), int(split[1])
+                    if not (1 < rang[0] <= 649) or not (1 < rang[1] <= 649):
+                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
+                    resolved.extend(range(rang[0], rang[1]+1))
+                elif isinstance(val, int):
+                    if val < 1:
+                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
+                                          f"which is lower than minimum 1")
+                    elif val > 649:
+                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
+                                          f"which is higher than maximum 649")
+                    resolved.append(val)
+                else:
+                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers and integer "
+                                      f"ranges, found {type(val)}")
+            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
         elif isinstance(value, int):
             if not 1 < value <= 649:
                 raise OptionError(f"Option {self.__class__.__name__}'s value {value} is not in range 0-649")

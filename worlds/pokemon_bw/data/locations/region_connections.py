@@ -26,7 +26,7 @@ connections: list[RCData] = [
     RCData("Nuvema Town", "Nuvema Town Near Lab", "Virtual", (), "## [blocking Cheren]",
            rule=IF(shuffled_doors, has_visited_biancas_house), rule_2=OR(IF(shuffled_doors, has_visited_biancas_house), can_use_fly)),
     RCData("Nuvema Town Near Lab", "Juniper's Lab", "Door", (3, 0), "#2# [door]"),
-    RCData("Nuvema Town", "Route 1 East", "Adjacent maps", (), None),
+    RCData("Nuvema Town", "Route 1 East", "Adjacent maps", (), None, rule=has_introduced_junipers_lab),
     RCData("Route 1 East", "Route 1 West", "Virtual", (), "Route 1 [over water]", rule=can_use_surf),
     RCData("Route 1 West", "Route 1 Gate", "Gate", (0, 0), "#2# [east entrance]"),
     RCData("Route 1 Gate", "Route 17 Shore", "Gate", (1, 0), "## [west entrance]"),
@@ -73,7 +73,6 @@ connections: list[RCData] = [
     RCData("Dreamyard Basement", "Dreamyard South", "Stairs", (1, 1), "Dreamyard [south east stairs]"),
     RCData("Dreamyard South", "Dreamyard Basement North West", "Stairs", (3, 2), "Dreamyard [south west stairs]"),
     RCData("Dreamyard South", "Dreamyard Entrance", "Virtual", (), "## [strength boulder]", rule=can_use_strength, one_way=True),
-    # TODO add line of blocking pokémon that vanishes after wellspring cave events
     RCData("Route 3 North", "Route 3 South", "Virtual", (), "Route 3 [blocking line of pokemon]", rule=IF(shuffled_doors, has_fought_plasma_wellspring)),
     RCData("Route 3 North", "Route 3 Pokémon Day Care", "Door", (2, (2, 1, 0)), "#2# [door]"),
     RCData("Route 3 North", "Route 3 Kindergarten", "Door", (1, (2, 1, 0)), "#2# [door]"),
@@ -98,7 +97,6 @@ connections: list[RCData] = [
     RCData("Nacrene City", "Nacrene City North East House", "Door", (9, 1), "#2# [2F door]"),
     RCData("Nacrene Museum", "Nacrene Gym", "Door", (1, 0), "#2# [entrance]"),
     RCData("Pinwheel Forest Outside", "Pinwheel Forest South", "Trees", (0, 0), "#2# [trees]"),
-    # TODO turn into loot sack or gym
     RCData("Pinwheel Forest South", "Pinwheel Forest West", "Virtual", (), "Pinwheel Forest [blocking grunts]", rule=has_loot_sack),
     RCData("Pinwheel Forest West", "Pinwheel Forest North", "Virtual", (), "Pinwheel Forest [blocking shadow triad member]", rule=has_dragon_skull),
     RCData("Pinwheel Forest West", "Pinwheel Forest East", "Virtual", (), "Pinwheel Forest [blocking old man]",
@@ -363,7 +361,6 @@ connections: list[RCData] = [
     RCData("Icirrus City South", "Icirrus City South House", "Door", (6, (1, 0, 2)), "#2# [door]"),
     RCData("Dragonspiral Tower Entrance", "Dragonspiral Tower Outside West", "Trees", (0, 0), "Dragonspiral Tower [entrance trees]"),
     RCData("Dragonspiral Tower Outside West", "Dragonspiral Tower Outside East", "Virtual", (), "Dragonspiral Tower Outside [over water]", rule=AND(has_defeated_icirrus_gym, can_use_surf), one_way=True),
-    # TODO add rock inside that's cleared when Brycen is defeated, warp will never be shuffled
     RCData("Dragonspiral Tower Outside West", "Dragonspiral Tower 1F", "Door", (1, 0), "#2# [door]", rule=has_defeated_icirrus_gym, fixed=True),
     RCData("Dragonspiral Tower 1F", "Dragonspiral Tower 2F", "Stairs", (1, 0), "Dragonspiral Tower [1F-2F stairs]"),
     RCData("Dragonspiral Tower 2F", "Dragonspiral Tower 3F", "Door", (1, 0), "Dragonspiral Tower [2F-3F door]"),
@@ -426,7 +423,7 @@ connections: list[RCData] = [
     RCData("Giant Chasm Crater North East", "Giant Chasm Crater", "Virtual", (), "## [ledge]", one_way=True),
     RCData("Giant Chasm Crater North East", "Giant Chasm Inner Cave", "Cave", (1, (1, 0)), "#2# [entrance]"),
     RCData("Giant Chasm Crater", "Giant Chasm Crater Snow", "Other script", (), "## [center pond]", one_way=True),
-    # both get linked to the same maps like the non-snow maps, TODO remove warps from caves to snowy crater
+    # both get linked to the same maps like the non-snow maps
     RCData("Giant Chasm Crater Snow", "Giant Chasm Inner Cave", "Cave", (1, 1), "## [south cave entrance]", one_way=True, fixed=True),
     RCData("Giant Chasm Crater Snow", "Giant Chasm Entrance Cave Inner", "Cave", (0, 1), "## [north cave entrance]", one_way=True, fixed=True),
     RCData("Undella Town Gate", "Undella Town", "Gate", (1, 4), "## [south entrance]"),
@@ -565,7 +562,6 @@ connections: list[RCData] = [
     RCData(vr_+" 4F Right Cave", vr_+" 7F Cave", "Stairs", (1, 2), vr_+" [4F-7F stairs]"),
     RCData("Pokémon League Outside", "Pokémon League Pokémon Center", "Door", (2, 0), "#2# [door]"),
     RCData("Pokémon League Outside", "Pokémon League Main Hall", "Door", (1, 0), "#2# [front entrance]", one_way=True, fixed=True),
-    # TODO remove being blocked from going in after defeating elite four member
     RCData("Pokémon League Main Hall", "Pokémon League Shauntal's Room", "Door", (1, 0), "#2# [door]"),
     RCData("Pokémon League Shauntal's Room", "Pokémon League Main Hall", "Other script", (), "## [warp back to main hall]", one_way=True),
     RCData("Pokémon League Main Hall", "Pokémon League Marshal's Room", "Door", (2, 0), "#2# [door]"),
@@ -578,7 +574,7 @@ connections: list[RCData] = [
     RCData("Pokémon League Staircase", "Pokémon League Champion's Room", "Door", (0, 0), "#2# [door]"),
     RCData("Pokémon League Champion's Room", "Hall of Fame", "Other script", (), "## [HOF warp]", rule=has_beaten_ghetsis, one_way=True),
     # TODO add some failsafe for when ghetsis is beaten, i.e. room is back to normal
-    RCData("Pokémon League Champion's Room", "Landing Stage to N's Castle", "Door", (1, 1), "#2# [Pokémon League entrance]"),
+    RCData("Pokémon League Champion's Room", "Landing Stage to N's Castle", "Door", (1, 1), "#2# [Pokémon League entrance]", one_way=True, fixed=True),
     RCData("Landing Stage to N's Castle", "N's Castle 1F", "Door", (0, 1), "#2# [N's Castle entrance]"),
     RCData("N's Castle 1F", "N's Castle 2F", "Stairs", (0, 0), "N's Castle [1F-2F stairs]"),
     RCData("N's Castle 2F", "N's Castle 2F Left Room", "Door", (2, 0), "#2# [door]"),
