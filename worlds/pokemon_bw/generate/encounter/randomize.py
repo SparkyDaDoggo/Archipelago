@@ -10,6 +10,7 @@ def create_encounter(world: "PokemonBWWorld") -> None:
     from ...data.locations.encounters import slots
     from ...data.locations.encounters import regions as enc_regions
     from ...data.trainers.pokemon import table as trainer_pokemon_table
+    from ...data.trainers.data import table as trainers_table
 
     versioned_species = (
         (lambda d: d.species_white)
@@ -24,7 +25,7 @@ def create_encounter(world: "PokemonBWWorld") -> None:
     }
     world.trainer_teams = [
         TrainerPokemonEntry(data.trainer_id, data.team_number, data.species, data.level, 0)
-        for data in trainer_pokemon_table
+        for data in trainer_pokemon_table if trainers_table[data.trainer_id - 1].region
     ]
 
     levels.adjust_and_modify(world)

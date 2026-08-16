@@ -16,6 +16,7 @@
   - move rumination field rocks a bit
   - make liberty garden grunts not disappearing
   - relic castle 1f worker send both ways
+  - relic castle back room rock until cleared with silver wing
   - relic castle chased grunt running towards all entrances
   - driftveil cheren and clay scene talking as alternate trigger
   - add more clerks to driftveil gym entrance
@@ -31,6 +32,7 @@
   - triggers in badge gates that push you down
   - remove closing doors in league
   - add rock on landing stage that is cleared exactly when champion room is messed up
+  - some way to still get back to landing stage from champion room after champion room is repaired
 - unittests update with new options
 
 # Not urgent

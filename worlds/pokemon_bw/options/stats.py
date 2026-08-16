@@ -563,7 +563,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                     if value in spec_by_name:
                         plando_egg_species = value
                     elif value in dex_by_name:
-                        plando_egg_species = by_id[dex_by_name[value], 0].species_name
+                        plando_egg_species = by_id[dex_by_name[value], 0]
                     elif value is not None:
                         raise OptionError(f"Expected value of egg_species key to be a dex or form name, got {type(value)}")
             plando["evolutions"] = plando_evolutions
@@ -574,7 +574,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
             if spec not in spec_by_name:
                 if spec not in dex_by_name:
                     raise OptionError(f"{spec} is neither a dex name, nor a form name")
-                spec = by_id[dex_by_name[spec], 0].species_name
+                spec = by_id[dex_by_name[spec], 0]
             if spec in plandos:
                 raise OptionError(f"Species {spec} is added twice, likely by dex name and base form name")
             plandos[spec] = PlandoStat(**plando)

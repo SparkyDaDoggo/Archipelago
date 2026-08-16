@@ -622,9 +622,9 @@ table: list[TrainerData] = [
     TrainerData(615, "Johnny", "Black City", "Roughneck", 3, None, False, False, 8, None, 0, inclusion_rule=Noneee),
 ]
 
-_i = 0
+_i = 1
 for _t in table:
     if _t.id != _i:
-        raise Exception("Trainer data table is not sorted")
+        raise Exception(f"Trainer data table is not sorted: {_t.id} != {_i}")
     _i += 1
 del _i, _t

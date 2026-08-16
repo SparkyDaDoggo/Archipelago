@@ -237,7 +237,7 @@ class PokemonBWWorld(World):
         self.rules_dict = RulesDict(world=self)
         plugins_fill_rules(self)
         locations.connect_regions(self)
-        locations.cleanup_regions(self.regions)
+        # locations.cleanup_regions(self.regions)
         self.move_entries, self.type_chart = generate_move_data(self)
         self.species_entries, self.species_entries_by_id = species.generate_species_data(self)
         create_encounter(self)
@@ -258,6 +258,7 @@ class PokemonBWWorld(World):
         locations.create_and_place_locations(self, catchable_species_data)
         self.to_be_filled_locations = locations.count_to_be_filled_locations(self.regions)
         plugins_create_regions(self, catchable_species_data)
+        locations.temporary_debugging(self)
         self.multiworld.regions.extend(self.regions.values())
 
     def create_items(self) -> None:
@@ -295,13 +296,13 @@ class PokemonBWWorld(World):
     def collect(self, state: CollectionState | locations.PokemonBWMixin, item: Item) -> bool:
         change = super().collect(state, item)
         if change and item.name.startswith("[Lvl]"):
-            state.pokemon_bw_lvl[self.player][int(item.name[8:]) // 5] += 1
+            state.pokemon_bw_lvl[self.player][int(item.name[6:]) // 5] += 1
         return change
 
     def remove(self, state: CollectionState | locations.PokemonBWMixin, item: Item) -> bool:
         change = super().remove(state, item)
         if change and item.name.startswith("[Lvl]"):
-            state.pokemon_bw_lvl[self.player][int(item.name[8:]) // 5] -= 1
+            state.pokemon_bw_lvl[self.player][int(item.name[6:]) // 5] -= 1
         return change
 
     def calculate_distances_by_sphere(self):

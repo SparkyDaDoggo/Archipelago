@@ -66,6 +66,11 @@ def move_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule |
     return has_access_move_relearner
 
 
+def party_member_lvlup(value: int, spec: str, world: "PokemonBWWorld") -> ExtendedRule:
+    spec_name = species.by_id[value, 0]
+    return has_item(spec_name)
+
+
 EvoExtRule: type = Callable[[int, str, "PokemonBWWorld"], ExtendedRule | ExtRulesTuple | None]
 specific_lvlup: EvoExtRule = lambda value, species, world: lvlup_ext_rule_cache[value // 5]
 item_evo: EvoExtRule = lambda value, species, world: can_buy_item[value]
@@ -99,7 +104,7 @@ methods: dict[str, EvolutionMethodData] = {
     "Level up high beauty": EvolutionMethodData(16, False, None),  # Only in plando
     "Level up (female)": EvolutionMethodData(23, True, specific_lvlup),  # Repeatable encounters, including static, are ensured
     "Level up (male)": EvolutionMethodData(24, True, specific_lvlup),  # Repeatable encounters, including static, are ensured
-    "Level up with party member": EvolutionMethodData(22, False, lambda value, spec, world: has_item(species.by_id[value, 0].species_name)),
+    "Level up with party member": EvolutionMethodData(22, False, party_member_lvlup),
 }
 
 

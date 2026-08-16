@@ -23,7 +23,7 @@ tm: dict[str, ItemData] = {
     "TM19 Telekinesis": ItemData(0x015A, tm_hm_hunt),
     "TM20 Safeguard": ItemData(0x015B, tm_hm_hunt),
     "TM21 Frustration": ItemData(0x015C, tm_hm_hunt),
-    "TM22 Solar Beam": ItemData(0x015D, tm_hm_hunt),
+    "TM22 SolarBeam": ItemData(0x015D, tm_hm_hunt),
     "TM23 Smack Down": ItemData(0x015E, tm_hm_hunt),
     "TM24 Thunderbolt": ItemData(0x015F, tm_hm_hunt),
     "TM25 Thunder": ItemData(0x0160, tm_hm_hunt),

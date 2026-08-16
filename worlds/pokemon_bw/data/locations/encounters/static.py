@@ -8,7 +8,7 @@ legendary: dict[str, StaticEncounterData] = {
     "Abundant Shrine Static Encounter": StaticEncounterData((645, 0), (645, 0), "Abundant Shrine", randomized_wild, has_forces_of_nature),
     "Giant Chasm Static Encounter": StaticEncounterData((646, 0), (646, 0), "Giant Chasm Inner Cave", None, None),
     "Liberty Garden Static Encounter": StaticEncounterData((494, 0), (494, 0), "Liberty Garden Basement", None, None),
-    "Dragonspiral Tower Static Encounter": StaticEncounterData((643, 0), (644, 0), "Dragonspiral Tower", None, has_beaten_ghetsis),
+    "Dragonspiral Tower Static Encounter": StaticEncounterData((643, 0), (644, 0), "Dragonspiral Tower 7F", None, has_beaten_ghetsis),
     "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", vanilla_doors, has_released_roamer),
 }
 

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from ...locations import PokemonBWLocation
-from ...data import AccessRule, ExtendedRule
+from ...data import AccessRule, ExtendedRule, ExtRulesTuple, AndExtRules as AND
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -20,9 +20,10 @@ def create(world: "PokemonBWWorld") -> None:
     dowsing_machine_rule: "AccessRule" = lambda state: state.has_any(("Dowsing Machine", "Out of logic"), world.player)
     f_cache = {}
 
-    def f(rule: ExtendedRule) -> "AccessRule":
+    def f(ext_rule: ExtendedRule | ExtRulesTuple) -> "AccessRule":
+        rule = world.rules_dict.get_or_add(ext_rule)
         if rule not in f_cache:
-            f_cache[rule] = lambda state: rule(state, world) and dowsing_machine_rule(state)
+            f_cache[rule] = lambda state: rule(state) and dowsing_machine_rule(state)
         return f_cache[rule]
 
     for tab in (table, seasonal):

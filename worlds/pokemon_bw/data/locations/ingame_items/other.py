@@ -197,7 +197,8 @@ table: dict[str, FlagLocationData] = {
     "Route 13 - Random item from man in black": FlagLocationData(279, always_default, "Route 13 North", None, None),
     "Lacunosa Town - Item from executive": FlagLocationData(0x1CA, always_default, "Lacunosa Town North East House", None, None),
     # Requires pokémon being randomized
-    "Lacunosa Town - Item from girl for showing a Shaymin": FlagLocationData(329, wild_rando_dependant, "Lacunosa Town Pokémon Center", None, has_shaymin),
+    "Lacunosa Town - Item from girl for showing a Shaymin": FlagLocationData(
+        329, wild_rando_dependant, "Lacunosa Town Pokémon Center", None, IF(randomized_wild, has_shaymin)),
     "Route 12 - Item from breeder Ethel": FlagLocationData(1420+452, always_default, "Route 12", None, None),
     "Route 12 - Item from breeder Eustace": FlagLocationData(1420+451, always_default, "Route 12", None, None),
     "Village Bridge - Item from baker Chris": FlagLocationData(0x1AF, always_default, "Village Bridge", None, None),

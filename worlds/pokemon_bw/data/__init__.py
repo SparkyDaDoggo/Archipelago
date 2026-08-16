@@ -78,18 +78,19 @@ class OrExtRules(ExtRulesTuple):
 class IfExtRules(ExtRulesTuple):
 
     def resolve(self, world: "PokemonBWWorld") -> AccessRule:
-        return None if not self[0](world) else ExtRulesTuple.resolve(self[1], world)
+        return world.rules_dict[None] if not self[0](world) else ExtRulesTuple.resolve(self[1], world)
 
 
-class RulesDict(dict[ExtendedRule | ExtRulesTuple | None, AccessRule | None]):
+class RulesDict(dict[ExtendedRule | ExtRulesTuple | None, AccessRule]):
 
-    def __init__(self, seq=None, world: "PokemonBWWorld" = None, **kwargs):
-        super().__init__(seq, **kwargs)
+    def __init__(self, world: "PokemonBWWorld" = None):
+        super().__init__()
         self.world = world
+        self[None] = lambda state: True
 
-    def get_or_add(self, item: ExtendedRule | ExtRulesTuple | None) -> AccessRule:
+    def get_or_add(self, item: ExtendedRule | ExtRulesTuple) -> AccessRule:
         if item not in self:
-            self[item] = None if item is None else ExtRulesTuple.resolve(item, self.world)
+            self[item] = ExtRulesTuple.resolve(item, self.world)
         return self[item]
 
 
@@ -99,7 +100,7 @@ class FlagLocationData(NamedTuple):
     progress_type: ProgressTypeMethod
     region: str
     inclusion_rule: InclusionRule | None
-    rule: ExtendedRule | None
+    rule: ExtendedRule | ExtRulesTuple | None
 
 
 class TMLocationData(NamedTuple):
@@ -108,7 +109,7 @@ class TMLocationData(NamedTuple):
     region: str
     inclusion_rule: InclusionRule | None
     hm_rule: Callable[[str], bool] | None
-    rule: ExtendedRule | None
+    rule: ExtendedRule | ExtRulesTuple | None
 
 
 class DexLocationData(NamedTuple):
@@ -124,7 +125,7 @@ class TrainerLocationData(NamedTuple):
     region: str
     # common_script: bool
     inclusion_rule: InclusionRule | None
-    rule: ExtendedRule | None
+    rule: ExtendedRule | ExtRulesTuple | None
 
 
 class VisitLocationData(NamedTuple):

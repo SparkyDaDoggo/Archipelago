@@ -61,13 +61,14 @@ def get_regions(world: "PokemonBWWorld") -> dict[str, Region]:
 
 def create_and_place_event_locations(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
     """Returns a dict of species that are actually catchable in this world."""
-    from .generate.events import wild, static, evolutions, goal, species_tables, form_change, levels
+    from .generate.events import wild, static, evolutions, goal, species_tables, form_change, levels, story
 
     catchable_species_data: dict[str, "SpeciesEntry"] = wild.create(world) | static.create(world)
     evolutions.create(world, catchable_species_data)
     form_change.create(world, catchable_species_data)
     levels.create(world)
     species_tables.populate(world, catchable_species_data)
+    story.create(world)
     goal.create(world)
     return catchable_species_data
 
@@ -90,6 +91,7 @@ def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: 
 def connect_regions(world: "PokemonBWWorld") -> None:
     from .data.locations import region_connections as gameplay_connections, rules
     from .data.locations.encounters import region_connections as encounter_connections
+    from .data import AndExtRules as AND
 
     for connection in gameplay_connections.connections:
         reg1 = world.regions[connection.region_1]
@@ -103,16 +105,13 @@ def connect_regions(world: "PokemonBWWorld") -> None:
         if not connection.one_way:
             reg2.connect(reg1, name + "[back]" if name else None, rule2)
 
-    is_vanilla_seasons = rules.vanilla_seasons(world)
     by_season = {
-        "Spring": rules.encounter_can_set_spring,
-        "Summer": rules.encounter_can_set_summer,
-        "Autumn": rules.encounter_can_set_autumn,
-        "Winter": rules.encounter_can_set_winter,
+        "Spring": rules.can_set_spring,
+        "Summer": rules.can_set_summer,
+        "Autumn": rules.can_set_autumn,
+        "Winter": rules.can_set_winter,
     }
     for data in encounter_connections.connections:
-        if data.entering_region[1] and is_vanilla_seasons:
-            continue
         current_rules = []
         if "S" in data.entering_region[2]:
             current_rules.append(rules.can_use_surf)
@@ -120,11 +119,11 @@ def connect_regions(world: "PokemonBWWorld") -> None:
             current_rules.append(rules.can_fish)
         if "R" in data.entering_region[2]:
             current_rules.append(rules.has_trio_badge)
-        if data.entering_region[2]:
-            current_rules.append(by_season[data.entering_region[2]])
+        if data.entering_region[1]:
+            current_rules.append(by_season[data.entering_region[1]])
         reg = world.regions[data.build_name()]
         for parent in data.exiting_regions:
-            world.regions[parent].connect(reg)
+            world.regions[parent].connect(reg, rule=world.rules_dict.get_or_add(AND(*current_rules)))
 
     distances: dict[str, int] = {}
     current_regions = [world.regions["Menu"]]
@@ -239,6 +238,10 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
 
     deerling_npc_id = world.location_name_to_id["Route 6 - Item from scientist for all Deerling forms"]
     hint_data[world.player][deerling_npc_id] = build_string(585)
+
+
+def temporary_debugging(world: "PokemonBWWorld"):
+    print(f"IcCity (Spring) - G has {len(world.regions['IcCity (Spring) - G'].entrances)} entrances")
 
 
 class PokemonBWMixin(LogicMixin):

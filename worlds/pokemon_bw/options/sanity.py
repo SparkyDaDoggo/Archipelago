@@ -175,7 +175,7 @@ class Shinysanity(Toggle):
                                       f"ranges, found {type(val)}")
             self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
         elif isinstance(value, int):
-            if not 1 < value <= 649:
+            if not 0 <= value <= 649:
                 raise OptionError(f"Option {self.__class__.__name__}'s value {value} is not in range 0-649")
             self.value = value
         else:
@@ -210,11 +210,20 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
     A combination of **Shinysanity** and **Dexcountsanity**.
     This can, like with **Shinysanity**, be edited in a text editor to work like the
     regular **Dexcountsanity** option. Otherwise, it will be shown as a toggle.
+    However, using this like **Dexcountsanity** requires you to put the key-value pairs
+    as a list entry, i.e.:
+    ```
+    shinycountsanity:
+    - Maximum: 10
+      Steps: 2
+      Leniency: 5
+    ```
     """
     display_name = "Shinycountsanity"
-    value: int | dict[str, int]
+    value: dict[str, int]
     default = 0
     fill_defaults = True
+    supports_weighting = True
     individual_min_max = {
         "Maximum": (0, 649),
         "Steps": (1, 649),
@@ -223,9 +232,13 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
 
     def __init__(self, value: int | dict[str, int]) -> None:
         if isinstance(value, dict):
-            super(ExtendedOptionCounter, self.__class__).__init__(value)
+            self.value = {key: val for key, val in value.items()}
         elif isinstance(value, int):
-            super().__init__(value)
+            self.value = {
+                "Maximum": value,
+                "Steps": 1,
+                "Leniency": 0,
+            }
         else:
             raise OptionError(f"Option {self.__class__.__name__} does not support a value of type {type(value)}")
 
@@ -245,19 +258,18 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
             return cls.from_text(data)
         elif isinstance(data, int):
             return cls(data)
-        elif isinstance(data, dict):
-            data = data.copy()
-            if cls.fill_defaults:
-                for key in valid_keys:
-                    if key not in data:
-                        if key in default:
-                            data[key] = default[key]
-                        else:
-                            data[key] = 0
-                    data[key] = cls.resolve_value(data[key], key)
-            return super
-        else:
+        if not isinstance(data, dict):
             raise OptionError(f"Option {cls.__name__} does not support a value of type {type(data)}")
+        data = data.copy()
+        if cls.fill_defaults:
+            for key in valid_keys:
+                if key not in data:
+                    if key in default:
+                        data[key] = default[key]
+                    else:
+                        data[key] = 0
+                data[key] = cls.resolve_value(data[key], key)
+        return cls(data)
 
     @classmethod
     def get_option_name(cls, value):

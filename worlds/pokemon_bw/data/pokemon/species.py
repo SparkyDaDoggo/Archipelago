@@ -767,8 +767,8 @@ by_name: dict[str, SD] = {
     "Meloetta (Pirouette)": SD("Meloetta", "Meloetta (Pirouette)", 648, 1, ("Normal", "Fighting"), (100, 128, 90, 77, 77, 128), 3, 255, 5, 3, ("Serene Grace", "", ""), [], is_custom_form=True, custom_form_file=667),
 }
 
-by_id: dict[tuple[int, int], SD] = {
-    (data.dex_number, data.form): data for data in by_name.values()
+by_id: dict[tuple[int, int], str] = {
+    (data.dex_number, data.form): name for name, data in by_name.items()
 }
 
 forms_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}

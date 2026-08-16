@@ -13,7 +13,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
     if not world.options.modify_logic.is_consider_evos:
         return
 
-    from ...data.pokemon import species, evolution_methods
+    from ...data.pokemon import evolution_methods
     from ...locations import PokemonBWLocation
     from ...items import PokemonBWItem
     # Keywords to describe var names:
@@ -31,14 +31,12 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
 
     region: "Region" = world.regions["Evolutions"]
 
-    def get_rule(f_evodata: tuple[str, int, ...], f_base_species: str) -> AccessRule | None:
+    def get_rule(f_evodata: tuple[str, int, ...], f_base_species: str) -> AccessRule:
         # helper function to prevent lambdas in for loops
         method = evolution_methods.methods[f_evodata[0]]
         if method is None:
-            return None
-        f_rule = world.rules_dict[method.rule(f_evodata[1], f_base_species, world)]
-        if f_rule is None:
-            return None
+            return world.rules_dict[None]
+        f_rule = world.rules_dict.get_or_add(method.rule(f_evodata[1], f_base_species, world))
         return lambda state: f_rule(state) and state.has(f_base_species, world.player)
 
     # Dict instead of set to make it deterministic
@@ -73,7 +71,9 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
                     next_evoid_set[current_evoid] = None
                     continue
             evo_id_tup = (current_evodata[2][0].dex_number, current_base_data.form)
-            current_evoname = species.by_id[evo_id_tup if evo_id_tup in species.by_id else (current_evodata[2][0].dex_number, 0)].species_name
+            if evo_id_tup not in world.species_entries_by_id:
+                evo_id_tup = (evo_id_tup[0], 0)
+            current_evoname = world.species_entries_by_id[evo_id_tup].species_name
             # Creating event
             location_name = f"Evolving {current_evoid[0]} #{current_evoid[1]+1}"
             location = PokemonBWLocation(world.player, location_name, None, region)

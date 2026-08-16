@@ -204,7 +204,7 @@ class OverrideProtocol(PluginProtocol):
     def modify_local_rule(self, old: "ExtendedRule", new: "ModifiedExtendedRule", apply_combined=True):
         assert self.world.rules_dict is not None, "Trying to modify local rules before being initialized"
         if old in self.world.rules_dict:
-            old_acc = self.world.rules_dict[old]
+            old_acc = self.world.rules_dict.get_or_add(old)
             self.world.rules_dict[old] = lambda state: new(old_acc, state, self.world)
         else:
             self.world.rules_dict[old] = lambda state: new(old, state, self.world)
@@ -213,7 +213,7 @@ class OverrideProtocol(PluginProtocol):
                 return lambda state: new(_old, state, self.world)
             for rules in tuple(self.world.rules_dict):
                 if isinstance(rules, tuple) and old in rules:
-                    self.world.rules_dict[rules] = mod(self.world.rules_dict[rules])
+                    self.world.rules_dict[rules] = mod(self.world.rules_dict.get_or_add(rules))
 
     def new_item(self, name: str, classification: ItemClassification = None):
         from ..items import PokemonBWItem

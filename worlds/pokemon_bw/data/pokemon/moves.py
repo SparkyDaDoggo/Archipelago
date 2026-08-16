@@ -587,7 +587,7 @@ tm_hm: dict[str, TMHMData] = {
     "TM19": TMHMData("Telekinesis", False, 18),
     "TM20": TMHMData("Safeguard", False, 19),
     "TM21": TMHMData("Frustration", False, 20),
-    "TM22": TMHMData("Solar Beam", False, 21),
+    "TM22": TMHMData("SolarBeam", False, 21),
     "TM23": TMHMData("Smack Down", False, 22),
     "TM24": TMHMData("Thunderbolt", False, 23),
     "TM25": TMHMData("Thunder", False, 24),

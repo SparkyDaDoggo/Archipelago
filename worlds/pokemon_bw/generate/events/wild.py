@@ -11,27 +11,30 @@ if TYPE_CHECKING:
 
 
 def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
-    from ...data.pokemon.species import by_id as species_by_id
+    from ...data.locations import rules
 
     catchable_species_data: dict[str, "SpeciesEntry"] = {}
     # To remove duplicates
     available_in_region: dict[str, set[str]] = {}
+    is_changeable_seasons = rules.changeable_seasons(world)
+    method_offset = lambda x: (x % 12) if x < 36 else ((x - 12) % 5)
 
     for data in world.wild_encounter.values():
-        if data.encounter_region in world.regions:
+        if not data.encounter_region[1] or is_changeable_seasons:
             if data.region not in available_in_region:
                 available_in_region[data.region] = set()
             r: "Region" = world.regions[data.region]
-            species_name: str = species_by_id[data.species_id].species_name
+            species_data: "SpeciesEntry" = world.species_entries_by_id[data.species_id]
+            species_name: str = species_data.species_name
             if species_name in available_in_region[data.region]:
                 continue
-            l: PokemonBWLocation = PokemonBWLocation(world.player, data.region + f" {data.file_index[2]}", None, r)
+            l: PokemonBWLocation = PokemonBWLocation(
+                world.player, data.region + f" {method_offset(data.file_index[2])}", None, r)
             item: PokemonBWItem = PokemonBWItem(species_name, ItemClassification.progression, None, world.player)
             l.place_locked_item(item)
             l.show_in_spoiler = False
             r.locations.append(l)
 
-            species_data: "SpeciesEntry" = world.species_entries[species_name]
             catchable_species_data[species_name] = species_data
             available_in_region[data.region].add(species_name)
 

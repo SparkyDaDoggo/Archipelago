@@ -168,29 +168,29 @@ encounter_can_set_winter: ExtendedRule = lambda state, world: (
 
 # Event requirements
 
-has_visited_biancas_house: ExtendedRule = lambda state, world: state.has("[Event] Argument in Bianca's house", world.player)
-has_seen_accumula_speech: ExtendedRule = lambda state, world: state.has("[Event] Accumula Town Ghetsis speech", world.player)
-has_fought_cheren_trainerschool: ExtendedRule = lambda state, world: state.has("[Event] Trainers' School Cheren fight", world.player)
-has_fought_plasma_wellspring: ExtendedRule = lambda state, world: state.has("[Event] Wellspring Cave Plasma fight", world.player)
+has_visited_biancas_house: ExtendedRule = lambda state, world: state.has("[Event] Argument in Bianca's house", world.player)  # Requires door shuffle
+has_seen_accumula_speech: ExtendedRule = lambda state, world: state.has("[Event] Accumula Town Ghetsis speech", world.player)  # Requires door shuffle
+has_fought_cheren_trainerschool: ExtendedRule = lambda state, world: state.has("[Event] Trainers' School Cheren fight", world.player)  # Requires door shuffle
+has_fought_plasma_wellspring: ExtendedRule = lambda state, world: state.has("[Event] Wellspring Cave Plasma fight", world.player)  # Requires door shuffle
 has_helped_man_nimbasa: ExtendedRule = lambda state, world: state.has("[Event] Helping old man in Nimbasa", world.player)
 has_encountered_cobalion: ExtendedRule = lambda state, world: state.has("[Event] Encounter Cobalion", world.player)
-has_confronted_plasma_castelia: ExtendedRule = lambda state, world: state.has("[Event] Castelia Plasma Hideout confrontation", world.player)
+has_confronted_plasma_castelia: ExtendedRule = lambda state, world: state.has("[Event] Castelia Plasma Hideout confrontation", world.player)  # Requires door shuffle
 has_confronted_plasma_cold_storage: ExtendedRule = lambda state, world: state.has("[Event] Cold Storage Plasma confrontation", world.player)
 has_battled_n_chargestone: ExtendedRule = lambda state, world: state.has("[Event] Defeating N Chargestone", world.player)
 has_rung_bell_celestial: ExtendedRule = lambda state, world: state.has("[Event] Ring bell Celestial Tower", world.player)
 has_talked_drayden_iris: ExtendedRule = lambda state, world: state.has("[Event] Talk with Iris and Drayden", world.player)
 has_released_roamer: ExtendedRule = lambda state, world: state.has("[Event] Released roamer", world.player)
-has_introduced_junipers_lab: ExtendedRule = lambda state, world: state.has("[Event] Introduction in Juniper's Lab", world.player)
-has_fought_plasma_dreamyard: ExtendedRule = lambda state, world: state.has("[Event] Dreamyard North Plasma fight", world.player)
+has_introduced_junipers_lab: ExtendedRule = lambda state, world: state.has("[Event] Introduction in Juniper's Lab", world.player)  # Requires door shuffle
+has_fought_plasma_dreamyard: ExtendedRule = lambda state, world: state.has("[Event] Dreamyard North Plasma fight", world.player)  # Requires door shuffle
 has_confronted_ghetsis_relic_castle: ExtendedRule = lambda state, world: state.has("[Event] Relic Castle Ghetsis confrontation", world.player)
 has_fought_castelia_dancers: ExtendedRule = lambda state, world: state.has_all((
-    "[Event] Defeating Catelia Dancer Mickey", "[Event] Defeating Catelia Dancer Raymond", "[Event] Defeating Catelia Dancer Edmond", ), world.player)
+    "[Event] Defeating Catelia Dancer Mickey", "[Event] Defeating Catelia Dancer Raymond", "[Event] Defeating Catelia Dancer Edmond", ), world.player)  # Requires door shuffle
 has_found_woman_on_village_bridge: ExtendedRule = lambda state, world: state.has("[Event] Talking to Patrat woman Village Bridge", world.player)
 has_talked_wingull_route_13: ExtendedRule = lambda state, world: state.has("[Event] Talked to girl next to Wingull Route 13", world.player)
 has_heard_weather_route_10: ExtendedRule = lambda state, world: state.has("[Event] Heard weather warning route 10 gate", world.player)
 has_talked_to_kids_mistralton: ExtendedRule = lambda state, world: state.has("[Event] Talked with kids Mistralton", world.player)
 
-has_defeated_striaton_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating Leader Cilan/Chili/Cress", world.player)
+has_defeated_striaton_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Cilan/Chili/Cress", world.player)
 has_defeated_nacrene_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Lenora", world.player)
 has_defeated_driftveil_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Clay", world.player)
 has_defeated_mistralton_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Skyla", world.player)

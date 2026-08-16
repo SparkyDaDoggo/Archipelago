@@ -35,6 +35,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                              copy_checklist: CopyChecklist):
     from ...data.pokemon.species import forms_by_dex, get_weighted_random_species
     from ...data.pokemon.types import by_name as types_by_name
+    from ...data.locations import rules
 
     if not world.options.randomize_wild_pokemon.is_randomize:
         return
@@ -42,16 +43,17 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     logic_slots: list[EncounterEntry] = []
     other_slots: list[EncounterEntry] = []
     copy_slots: list[EncounterEntry] = []
+    is_vanilla_seasons = rules.vanilla_seasons(world)
     for entry in world.wild_encounter.values():
         if entry.write & 2:
             continue
         group = copy_checklist[entry.file_index]
         if group and group.search().head != entry:
             copy_slots.append(entry)
-        elif entry.region in world.regions:
-            logic_slots.append(entry)
-        else:
+        elif entry.encounter_region[1] and is_vanilla_seasons:
             other_slots.append(entry)
+        else:
+            logic_slots.append(entry)
     world.random.shuffle(logic_slots)
     world.random.shuffle(other_slots)
 

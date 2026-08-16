@@ -23,11 +23,11 @@ def adjust_and_modify(world: "PokemonBWWorld"):
             for data in world.wild_encounter.values():
                 dist = distances[data.region]
                 if data.region not in first_level:
-                    lvl, _ = first_level[data.region] = (50 * dist // max_distance, data.max_level)
+                    lvl, _ = first_level[data.region] = (48 * dist // max_distance, data.max_level)
                 else:
                     first, first_orig = first_level[data.region]
                     lvl = first * data.max_level // first_orig
-                new_level = max(min(lvl * data.min_level // data.max_level, 100), 1), max(min(lvl, 100), 1)
+                new_level = max(min(lvl * data.min_level // data.max_level + 2, 100), 1), max(min(lvl, 100), 1)
                 if new_level[0] != data.min_level or new_level[1] != data.max_level:
                     data.min_level, data.max_level = new_level
                     data.write |= 1
@@ -40,11 +40,11 @@ def adjust_and_modify(world: "PokemonBWWorld"):
                 reg_name = t_data.region
                 dist = distances[reg_name]
                 if reg_name not in first_level:
-                    lvl, _ = first_level[reg_name] = (50 * dist // max_distance, t_entry.level)
+                    lvl, _ = first_level[reg_name] = (48 * dist // max_distance, t_entry.level)
                 else:
                     first, first_orig = first_level[reg_name]
                     lvl = first * t_entry.level // first_orig
-                new_level = max(min(lvl + 2, 100), 1)
+                new_level = max(min(lvl + 4, 100), 1)
                 if new_level != t_entry.level:
                     t_entry.level = new_level
                     t_entry.write |= 1

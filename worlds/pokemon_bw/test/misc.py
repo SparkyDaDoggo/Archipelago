@@ -33,20 +33,20 @@ class TestGoalLegendaryHunt(PokemonBWTestBase):
 class TestGoalPokemonMaster(PokemonBWTestBase):
     options = {"goal": "pokemon_master"}
 class TestCombinedGoal(PokemonBWTestBase):
-    options = {"randomize_base_stats": random_combination(all_goals)}
+    options = {"goal": random_combination(all_goals)}
     def setUp(self) -> None:
         print("Modifiers: "+", ".join(self.options["randomize_base_stats"]))
         super().setUp()
 class TestCombinedGoal1(TestCombinedGoal):
-    options = {"randomize_base_stats": random_combination(all_goals)}
+    options = {"goal": random_combination(all_goals)}
 class TestCombinedGoal2(TestCombinedGoal):
-    options = {"randomize_base_stats": random_combination(all_goals)}
+    options = {"goal": random_combination(all_goals)}
 class TestCombinedGoal3(TestCombinedGoal):
-    options = {"randomize_base_stats": random_combination(all_goals)}
+    options = {"goal": random_combination(all_goals)}
 class TestCombinedGoal4(TestCombinedGoal):
-    options = {"randomize_base_stats": random_combination(all_goals)}
+    options = {"goal": random_combination(all_goals)}
 class TestCombinedGoal5(TestCombinedGoal):
-    options = {"randomize_base_stats": random_combination(all_goals)}
+    options = {"goal": random_combination(all_goals)}
 
 
 ###################################################
