@@ -64,6 +64,7 @@ has_any_legendary_stone: ExtendedRule = lambda state, world: state.has_any(("Lig
 has_lock_capsule: ExtendedRule = lambda state, world: state.has("Lock Capsule", world.player)
 has_all_grams: ExtendedRule = lambda state, world: state.has_all(("Wingull Gram 1", "Wingull Gram 2", "Wingull Gram 3"), world.player)
 has_gb_player: ExtendedRule = lambda state, world: state.has("GB Sounds", world.player)
+has_silver_wing: ExtendedRule = lambda state, world: state.has("Silver Wing", world.player)
 has_all_tms_hms: ExtendedRule = lambda state, world: state.has_all(tm_hm.tm, world.player) and state.has_all(tm_hm.hm, world.player)
 
 has_root_fossil: ExtendedRule = lambda state, world: state.has("Root Fossil", world.player)

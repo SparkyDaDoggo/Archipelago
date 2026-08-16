@@ -4,8 +4,8 @@ from .classification import *
 special: dict[str, ItemData] = {
     "Light Stone": ItemData(0x0268, always_progression),
     "Dark Stone": ItemData(0x0269, always_progression),
-    "Xtransceiver (Blue)": ItemData(0x026D, always_useful),
-    "Xtransceiver (Red)": ItemData(0x0272, always_useful),
+    "Xtransceiver (Blue)": ItemData(0x026D, always_filler),
+    "Xtransceiver (Red)": ItemData(0x0272, always_filler),
 }
 
 progression: dict[str, ItemData] = {
@@ -25,15 +25,17 @@ progression: dict[str, ItemData] = {
     "Wingull Gram 1": ItemData(0x026F, always_progression),
     "Wingull Gram 2": ItemData(0x0270, always_progression),
     "Wingull Gram 3": ItemData(0x0271, always_progression),
+    "GB Sounds": ItemData(0x01F6, always_progression),
+    "Silver Wing": ItemData(0x01E2, always_progression),
 }
 
 vanilla: dict[str, ItemData] = {
-    "Pal Pad": ItemData(0x01B5, always_useful),
+    "Pal Pad": ItemData(0x01B5, always_filler),
     "Bicycle": ItemData(0x01C2, always_useful),
-    "Vs. Recorder": ItemData(0x01D1, always_useful),
+    "Vs. Recorder": ItemData(0x01D1, always_filler),
     "Gracidea": ItemData(0x01D2, always_progression),
     "Dowsing Machine": ItemData(0x01D7, dowsing_machine_logic),
-    "Prop Case": ItemData(0x0242, always_useful),
+    "Prop Case": ItemData(0x0242, always_filler),
     "Town Map": ItemData(0x01BA, always_useful),
 }
 
@@ -77,11 +79,9 @@ useless: dict[str, ItemData] = {
     "Red Scale": ItemData(0x01DE, always_filler),
     "Lost Item": ItemData(0x01DF, always_filler),
     "Maglev Pass": ItemData(0x01E0, always_filler),
-    "Silver Wing": ItemData(0x01E2, always_filler),
     "Rainbow Wing": ItemData(0x01E3, always_filler),
     "Mystery Egg": ItemData(0x01E4, always_filler),
     "Photo Album": ItemData(0x01F5, always_filler),
-    "GB Sounds": ItemData(0x01F6, always_filler),
     "Jade Orb": ItemData(0x0214, always_filler),
     "Red Orb": ItemData(0x0216, always_filler),
     "Blue Orb": ItemData(0x0217, always_filler),

@@ -57,9 +57,48 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         # write patched narc to rom
         rom.setFileByName(narc_filename, source_narc.save())
 
+    # ###########################################################################
     # Unpack overlays and arm9
+    # ###########################################################################
     overlay_table = rom.loadArm9Overlays()
     arm9 = bytearray(codeCompression.decompress(rom.arm9))
+
+    # Apply forgettable HMs patch
+    # arm9[0x1d310] = 0
+
+    # Shiny rate branch
+    if rom.name[8:9] == b'W':
+        arm9[0x13f0c:0x13f14] = b'\x00\xb5\x92\xf3\x77\xf8\x00\xbd'
+    else:
+        arm9[0x13ef0:0x13ef8] = b'\x00\xb5\x92\xf3\x75\xf8\x00\xbd'
+
+    # Enable missing auto fly flags
+    ov10 = overlay_table[10]
+    ov10_data = bytearray(ov10.data)
+    ov10_data[0x1beca] = 3  # Nacrene City
+    ov10_data[0x1bef2] = 3  # Nimbasa City
+    ov10_data[0x1bf06] = 3  # Driftveil City
+    ov10_data[0x1bf42] = 3  # Opelucid City
+    ov10.data = bytes(ov10_data)
+    rom.files[ov10.fileID] = ov10.save(compress=True)
+    files_dump["ov10"] = rom.files[ov10.fileID]
+
+    # Apply portable AP menu
+    ov21 = overlay_table[21]
+    ov21_data = bytearray(ov21.data)
+    ov21_data[0x241e:0x241e+4] = b'\x1f\xf2\x6f\xfe'
+    ov21_data[0x1eda:0x1eda+4] = b'\x20\xf2\x19\xf9'
+    ov21.data = bytes(ov21_data)
+    rom.files[ov21.fileID] = ov21.save(compress=True)
+    files_dump["ov21"] = rom.files[ov21.fileID]
+
+    # Gracidea without event flag
+    ov91 = overlay_table[91]
+    ov91_data = bytearray(ov91.data)
+    ov91_data[0x7ac0:0x7ac0+2] = b'\x02\xe0'
+    ov91.data = bytes(ov91_data)
+    rom.files[ov91.fileID] = ov91.save(compress=True)
+    files_dump["ov91"] = rom.files[ov91.fileID]
 
     # Apply Exp multiplier patch
     exp_code = (b'\x05\x49\x09\x68\x03\x48\x09\x5a\x7e\x43\xa8\x59\x01\x31'
@@ -72,24 +111,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     rom.files[ov93.fileID] = ov93.save(compress=True)
     files_dump["ov93"] = rom.files[ov93.fileID]
 
-    # Gracidea without event flag
-    ov91 = overlay_table[91]
-    ov91_data = bytearray(ov91.data)
-    ov91_data[0x7ac0:0x7ac0+2] = b'\x02\xe0'
-    ov91.data = bytes(ov91_data)
-    rom.files[ov91.fileID] = ov91.save(compress=True)
-    files_dump["ov91"] = rom.files[ov91.fileID]
-
-    # Apply forgettable HMs patch
-    # arm9[0x1d310] = 0
-
-    # Shiny rate branch
-    if rom.name[8:9] == b'W':
-        arm9[0x13f0c:0x13f14] = b'\x00\xb5\x92\xf3\x77\xf8\x00\xbd'
-    else:
-        arm9[0x13ef0:0x13ef8] = b'\x00\xb5\x92\xf3\x75\xf8\x00\xbd'
-
+    # ###########################################################################
     # Repack overlays and arm9
+    # ###########################################################################
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
     arm9 = bytearray(codeCompression.compress(arm9, True))
     arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")

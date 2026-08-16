@@ -4,12 +4,33 @@
 - `increasing stats` in evo rando not working?
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
 - Accumula Town Cutscene empty text boxes
-- pad ROM to power of 2
-- send plugin options over slot data as string (only in 0.4.0, breaks backwards compatibility)
-- fighting driftveil gym locks first clay-cheren scene locking fly unlock
-- opelucid city fly flag only set after ghetsis scene
-- TMHM hunt NPC
-- rom script changes to comply with regions rework
+- rom script changes to comply with regions rework:
+  - master ball seller overhaul
+  - ############################
+  - accumula guards send you both ways
+  - move striaton gym guide a bit south
+  - striaton parcel man send both ways
+  - route 3 line of pokemon, cleared after wellspring cave events
+  - make n in nacrene trigger independently of nacrene stuff, but together with cheren
+  - pinwheel shadow triad member send both ways
+  - move rumination field rocks a bit
+  - make liberty garden grunts not disappearing
+  - relic castle 1f worker send both ways
+  - relic castle chased grunt running towards all entrances
+  - driftveil cheren and clay scene talking as alternate trigger
+  - add more clerks to driftveil gym entrance
+  - cold storage container blocking line of new grunts until triggering cheren in building near container
+  - add traffic cones to mistralton gym entrance
+  - both icirrus city scenes by trigger
+  - dragonspiral rocks inside, cleared after bryce fight
+  - make dragonspiral grunt trainers not disappear
+  - fix route 9 infielder script
+  - add rocks to challengers cave entrance
+  - remove giant chasm warps to snow
+  - opelucid juniper by trigger
+  - triggers in badge gates that push you down
+  - remove closing doors in league
+  - add rock on landing stage that is cleared exactly when champion room is messed up
 - unittests update with new options
 
 # Not urgent
@@ -23,6 +44,8 @@
 - Make event locations more distinguishable in spoiler from normal locations
 - text extraction starts all lines with [Terminate]
 - fill more funny dialog
+- pad ROM to power of 2
+- send plugin options over slot data as string (breaks backwards compatibility)
 
 # Single reports, cannot recreate, need to wait for more reports
 

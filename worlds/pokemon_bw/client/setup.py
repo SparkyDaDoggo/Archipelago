@@ -43,6 +43,12 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     else:
         await client.write_set_flag(ctx, 0x192)
 
+    if "legendary_hunt" in ctx.slot_data["options"]["goal"] or "pokemon_master" in ctx.slot_data["options"]["goal"]:
+        # "name **in** goal" works for both single goal strings and combined goals lists
+        await client.write_unset_flag(ctx, 0x1EA)
+    else:
+        await client.write_set_flag(ctx, 0x1EA)
+
     master_ball_cost: int = ctx.slot_data["master_ball_seller_cost"]
     seller_modifiers = [mod.casefold() for mod in ctx.slot_data["options"]["master_ball_seller"]]
     await client.write_var(ctx, 0xF2, master_ball_cost)

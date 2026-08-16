@@ -190,6 +190,16 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - Only appears when `Shinysanity` or `Shinycountsanity` is enabled
 - Added `Wild by spheres` and `Trainers by spheres` modifiers to `Adjust levels`
   - Also renamed `Wild` and `Trainers` to `Wild by distance` and `Trainers by distance` (respectively)
+- Added and changed some roadblocks:
+  - The grunts in Pinwheel Forest now also disappear after defeating Lenora
+  - The sand in the lower room in Relic Castle now gets whirled up by showing a `Silver Wing` to a worker NPC
+  - A line of dancing is now blocking the gate between Black City/White Forest and Route 14 until you obtain a `GB Sounds`
+  - A line of Wingull now blocks a part of the shore of Route 13, thereby requiring you to surf around them
+- Added a portable AP menu that can be accessed by pressing the Start button, with the following content:
+  - Portable PC
+  - AP stuff (moved here from PC)
+  - APhone
+    - For now only to be able to call the Season Lady
 
 ### Bug fixes and technical stuff
 
@@ -213,10 +223,14 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Filled trainer names and regions
 - Fixed incorrect logic of multiple locations related to Moor of Icirrus
 - Reworked all regions and their logic and added story events to logic
+  - This includes some smaller ROM changes
 - Fully integrated arm7 expansion and deprecated the testing setting
 - Fixed evolution-related rules not being modifiable by Plugins
 - Changed rules dict to being filled on the way
 - Reworked wild and trainer pokemon randomization
+  - This also fixes a bug where `Area 1 to 1` and `Prevent rare encounters` had a conflict
+- Made all fly flags being automatically set upon entering the city
+  - This also fixes potentially getting locked out of the Driftveil City fly flag
 
 ### Is this version compatible with older multiworld slots and save files?
 No

@@ -75,15 +75,7 @@ async def find_seven_sages(client: "PokemonBWClient", ctx: "BizHawkClientContext
 
 
 async def encounter_legendaries(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> bool:
-    return (
-        client.get_flag(0x1E1) and  # Cobalion
-        client.get_flag(0x1E2) and  # Terrakion
-        client.get_flag(0x1E3) and  # Virizion
-        client.get_flag(0x1E4) and  # Kyurem
-        client.get_flag(0x1E5) and  # Victini
-        client.get_flag(0x1E6) and  # Volcarona
-        client.get_flag(0x1CE)  # Reshiram/Zekrom
-    )
+    return client.get_flag(0x1EA)
 
 
 async def do_everything(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> bool:
