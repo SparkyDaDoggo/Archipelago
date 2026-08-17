@@ -52,7 +52,7 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
     moves_amount_max = world.options.stats_randomization_adjustments["Levelup moves amount maximum"]
 
     def roll(data: SpeciesEntry, extra: list[tuple[str, "MoveEntry"]]):
-        this_plando = plando_append.get(data.species_name, ())
+        this_plando = plando_append.get(data.species_name, [])
         if mods.is_keep_amount:
             amount = data.vanilla_moves_count
         else:

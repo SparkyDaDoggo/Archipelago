@@ -58,10 +58,11 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         rom.setFileByName(narc_filename, source_narc.save())
 
     # ###########################################################################
-    # Unpack overlays and arm9
+    # Unpack overlays and arm9/arm7
     # ###########################################################################
     overlay_table = rom.loadArm9Overlays()
     arm9 = bytearray(codeCompression.decompress(rom.arm9))
+    arm7 = bytearray(rom.arm7)
 
     # Apply forgettable HMs patch
     # arm9[0x1d310] = 0
@@ -111,16 +112,21 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     rom.files[ov93.fileID] = ov93.save(compress=True)
     files_dump["ov93"] = rom.files[ov93.fileID]
 
+    # arm7 expansion, tailored to white version
+    expansion = bytearray(pkgutil.get_data(world_package, "patch/arm7_expansion.bin"))
+    if rom.name[8:9] != b'W':  # Fix portable AP menu branch links to arm9 for black version
+        expansion[0x24] = 0x78
+        expansion[0x34] = 0x70
+    arm7.extend(bytes((0x2a000 if rom.name[8:9] == b'W' else 0x29fe0) - len(rom.arm7)))
+    arm7.extend(expansion)
+
     # ###########################################################################
-    # Repack overlays and arm9
+    # Repack overlays and arm9/arm7
     # ###########################################################################
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
     arm9 = bytearray(codeCompression.compress(arm9, True))
     arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")
     rom.arm9 = bytes(arm9)
+    rom.arm7 = bytes(arm7)
     files_dump["arm9"] = rom.arm9
-
-    # arm7 expansion
-    expansion = pkgutil.get_data(world_package, "patch/arm7_expansion.bin")
-    rom.arm7 = rom.arm7 + bytes((0x2a000 if rom.name[8:9] == b'W' else 0x29fe0) - len(rom.arm7)) + expansion
     files_dump["arm7"] = rom.arm7

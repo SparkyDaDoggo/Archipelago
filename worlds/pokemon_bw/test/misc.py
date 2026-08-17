@@ -35,7 +35,7 @@ class TestGoalPokemonMaster(PokemonBWTestBase):
 class TestCombinedGoal(PokemonBWTestBase):
     options = {"goal": random_combination(all_goals)}
     def setUp(self) -> None:
-        print("Modifiers: "+", ".join(self.options["randomize_base_stats"]))
+        print("Modifiers: "+", ".join(self.options["goal"]))
         super().setUp()
 class TestCombinedGoal1(TestCombinedGoal):
     options = {"goal": random_combination(all_goals)}

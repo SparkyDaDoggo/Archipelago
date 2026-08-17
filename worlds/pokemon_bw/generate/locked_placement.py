@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
-from BaseClasses import Item, Location, LocationProgressType as LocProgType
+from BaseClasses import Item, Location, LocationProgressType as LocProgType, CollectionState
+from Fill import fill_restrictive
 
 if TYPE_CHECKING:
     from .. import PokemonBWWorld
@@ -47,18 +48,25 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             # Priority locations are ignored here because of no badges being filler
             # Shuffle items because of some locations potentially being skipped
             badge_items: list[Item] = [item for item in items if item.name in badges.table]
+            for item in badge_items:
+                items.remove(item)  # list.remove() safe here because badges only exist once in local pool
             world.random.shuffle(badge_items)
             # Locations not shuffled since items are shuffled
+            locations = list(world.get_locations())
+            filled_locations = [loc for loc in locations if loc.item]
             badge_locations: list[Location] = [
                 loc
-                for loc in world.get_locations()
+                for loc in locations
                 if loc.name in special.gym_badges
                 if not is_excluded(world, loc)
             ]
-            for location in badge_locations:
-                item = badge_items.pop()
-                location.place_locked_item(item)
-                items.remove(item)  # list.remove() save here because badges only exist once in local pool
+            state = CollectionState(world.multiworld)
+            state.sweep_for_advancements(filled_locations)  # In case something in the future will be force-placed before badges
+            for item in items:
+                state.collect(item, True)
+            fill_restrictive(world.multiworld, state, badge_locations, badge_items,
+                             single_player_placement=True, lock=True, allow_partial=True, name="Badges shuffle")
+            items.extend(badge_items)  # Re-add unplaced to item pool
         case "anything":
             pass
         case _:
@@ -75,77 +83,60 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             # Priority locations are ignored here because of no TMs/HMs being filler
             # Get TMs and HMs shuffled
             tm_hm_items: list[Item] = [item for item in items if item.name in all_tm_hm]
+            for item in tm_hm_items:
+                items.remove(item)  # list.remove() safe here because badges only exist once in local pool
             world.random.shuffle(tm_hm_items)
             # Shuffle locations to prevent always having all HMs in the same few spots
+            locations = list(world.get_locations())
+            filled_locations = [loc for loc in locations if loc.item]
             tm_hm_locs: list[Location] = [
                 loc
-                for loc in world.get_locations()
+                for loc in locations
                 if loc.name in all_tm_locations
                 if not is_excluded(world, loc)
             ]
             world.random.shuffle(tm_hm_locs)
-            # Take only a slice of items and sort included HMs to front to prevent problems with HM rules
-            tm_hm_items = tm_hm_items[:len(tm_hm_locs)]
-            to_place = 0
-            for to_check in range(1, len(tm_hm_items)):
-                if tm_hm_items[to_check].name in tm_hm.hm:
-                    tm_hm_items[to_check], tm_hm_items[to_place] = tm_hm_items[to_place], tm_hm_items[to_check]
-                    to_place += 1
-            for item in tm_hm_items:
-                for location in tm_hm_locs:
-                    hm_rule = all_tm_locations[location.name].hm_rule
-                    if hm_rule is None or hm_rule(item.name):
-                        tm_hm_locs.remove(location)
-                        location.place_locked_item(item)
-                        items.remove(item)  # list.remove() save here because tms/hms only exist once in local pool
-                        break
+            state = CollectionState(world.multiworld)
+            state.sweep_for_advancements(filled_locations)  # Consider already placed badges, which has been a problem before
+            for item in items:
+                state.collect(item, True)
+            fill_restrictive(world.multiworld, state, tm_hm_locs, tm_hm_items,
+                             single_player_placement=True, lock=True, allow_partial=True, name="TM/HM shuffle")
+            items.extend(tm_hm_items)  # Re-add unplaced to item pool
+            # TODO what to do with HM rules now?
         case "hm_with_badge":
             tm_items = [item for item in items if item.name in tm_hm.tm and "TM70" not in item.name]
             hm_items = [item for item in items if item.name in tm_hm.hm or "TM70" in item.name]
+            for item in tm_items:
+                items.remove(item)  # list.remove() safe here because badges only exist once in local pool
+            for item in hm_items:
+                items.remove(item)  # list.remove() safe here because badges only exist once in local pool
+            locations = list(world.get_locations())
+            filled_locations = [loc for loc in locations if loc.item]
             other_tm_locations: list[Location] = [
                 loc
-                for loc in world.get_locations()
+                for loc in locations
                 if loc.name in tm_hm_ncps
                 if not is_excluded(world, loc)
             ]
             gym_tm_locations: list[Location] = [
                 loc
-                for loc in world.get_locations()
+                for loc in locations
                 if loc.name in gym_tms
                 if not is_excluded(world, loc)
             ]
-            # Shuffle everything
-            # If no gym location is excluded, add one random TM to HMs
-            if len(gym_tm_locations) == 8:
-                rand_tm = world.random.choice(tm_items)
-                hm_items.append(rand_tm)
-                tm_items.remove(rand_tm)  # list.remove() save here because tms/hms only exist once in local pool
-            world.random.shuffle(hm_items)
-            world.random.shuffle(other_tm_locations)
-            world.random.shuffle(gym_tm_locations)
-            # Place HMs into gym locations first
-            for loc in gym_tm_locations:
-                item = hm_items.pop()
-                loc.place_locked_item(item)
-                items.remove(item)  # list.remove() save here because tms/hms only exist once in local pool
-            # If more than one gym location was excluded, add remaining HMs to TM list and shuffle that
-            tm_items.extend(hm_items)
-            world.random.shuffle(tm_items)
-            # Take only a slice of items and sort included HMs to front to prevent problems with HM rules
-            tm_items = tm_items[:len(other_tm_locations)]
-            to_place = 0
-            for to_check in range(1, len(tm_items)):
-                if tm_items[to_check].name in tm_hm.hm:
-                    tm_items[to_check], tm_items[to_place] = tm_items[to_place], tm_items[to_check]
-                    to_place += 1
-            for item in tm_items:
-                for location in other_tm_locations:
-                    hm_rule = all_tm_locations[location.name].hm_rule
-                    if hm_rule is None or hm_rule(item.name):
-                        other_tm_locations.remove(location)
-                        location.place_locked_item(item)
-                        items.remove(item)  # list.remove() save here because tms/hms only exist once in local pool
-                        break
+            gym_locs_copy = gym_tm_locations.copy()
+            state = CollectionState(world.multiworld)
+            state.sweep_for_advancements(filled_locations)  # Consider already placed badges, which has been a problem before
+            for item in items:
+                state.collect(item, True)
+            fill_restrictive(world.multiworld, state, gym_tm_locations, hm_items,
+                             single_player_placement=True, lock=True, allow_partial=True, name="Gym HMs shuffle")
+            state.sweep_for_advancements([loc for loc in gym_locs_copy if loc.item])  # Consider now-placed HMs
+            tm_items.extend(hm_items)  # fill_restrictive already removed placed HMs
+            fill_restrictive(world.multiworld, state, gym_tm_locations + other_tm_locations, tm_items,
+                             single_player_placement=True, lock=True, allow_partial=True, name="Non-gym TMs shuffle")
+            items.extend(tm_items)
         case "anything":
             pass
         case _:

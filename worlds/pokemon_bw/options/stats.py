@@ -504,44 +504,46 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                     raise OptionError(f"Unknown Stats Plando entry key: {plando_key}")
                 if plando_key == "evolutions":
                     plando_evolutions = []
-                    if not (isinstance(value, list) or value is False):
+                    if isinstance(value, list):
+                        for evo_entry in value:
+                            if isinstance(evo_entry, PlandoEvolution):
+                                plando_evolutions.append(evo_entry)
+                                continue
+                            if not isinstance(evo_entry, dict):
+                                raise OptionError(f"Expected evolution entry to be a dictionary, got {type(evo_entry)}")
+                            if "species" not in evo_entry:
+                                raise OptionError(f"An evolution entry for species {spec} is missing the 'species' key")
+                            for evo_entry_key in evo_entry:
+                                if not isinstance(evo_entry_key, str):
+                                    raise OptionError(
+                                        f"Evolution entry key expected to be a string, got {type(evo_entry_key)}")
+                                if evo_entry_key not in PlandoEvolution._fields:
+                                    raise OptionError(f"Unknown evolution entry key: {evo_entry_key}")
+                            plando_evolutions.append(PlandoEvolution(**evo_entry))
+                    elif value is not False:
                         raise OptionError(f"Expected value of evolutions key to be a list or 'false', got {type(value)}")
-                    for evo_entry in value:
-                        if isinstance(evo_entry, PlandoEvolution):
-                            plando_evolutions.append(evo_entry)
-                            continue
-                        if not isinstance(evo_entry, dict):
-                            raise OptionError(f"Expected evolution entry to be a dictionary, got {type(evo_entry)}")
-                        if "species" not in evo_entry:
-                            raise OptionError(f"An evolution entry for species {spec} is missing the 'species' key")
-                        for evo_entry_key in evo_entry:
-                            if not isinstance(evo_entry_key, str):
-                                raise OptionError(
-                                    f"Evolution entry key expected to be a string, got {type(evo_entry_key)}")
-                            if evo_entry_key not in PlandoEvolution._fields:
-                                raise OptionError(f"Unknown evolution entry key: {evo_entry_key}")
-                        plando_evolutions.append(PlandoEvolution(**evo_entry))
                 if plando_key == "levelup_moveset":
                     plando_levelup_moves = []
                     if not (isinstance(value, list) or value is False):
                         raise OptionError(f"Expected value of levelup_moveset key to be a list or 'false', got {type(value)}")
-                    for move_entry in value:
-                        if isinstance(move_entry, PlandoLevelupMove):
-                            plando_levelup_moves.append(move_entry)
-                            continue
-                        if not isinstance(move_entry, dict):
-                            raise OptionError(f"Expected levelup move entry to be a dictionary, got {type(move_entry)}")
-                        if "move" not in move_entry:
-                            raise OptionError(f"A levelup move entry for species {spec} is missing the 'move' key")
-                        if "level" not in move_entry:
-                            raise OptionError(f"A levelup move entry for species {spec} is missing the 'level' key")
-                        for move_entry_key in move_entry:
-                            if not isinstance(move_entry_key, str):
-                                raise OptionError(
-                                    f"Levelup move entry key expected to be a string, got {type(move_entry_key)}")
-                            if move_entry_key not in PlandoLevelupMove._fields:
-                                raise OptionError(f"Unknown levelup move entry key: {move_entry_key}")
-                        plando_levelup_moves.append(PlandoLevelupMove(**move_entry))
+                    if value is not False:
+                        for move_entry in value:
+                            if isinstance(move_entry, PlandoLevelupMove):
+                                plando_levelup_moves.append(move_entry)
+                                continue
+                            if not isinstance(move_entry, dict):
+                                raise OptionError(f"Expected levelup move entry to be a dictionary, got {type(move_entry)}")
+                            if "move" not in move_entry:
+                                raise OptionError(f"A levelup move entry for species {spec} is missing the 'move' key")
+                            if "level" not in move_entry:
+                                raise OptionError(f"A levelup move entry for species {spec} is missing the 'level' key")
+                            for move_entry_key in move_entry:
+                                if not isinstance(move_entry_key, str):
+                                    raise OptionError(
+                                        f"Levelup move entry key expected to be a string, got {type(move_entry_key)}")
+                                if move_entry_key not in PlandoLevelupMove._fields:
+                                    raise OptionError(f"Unknown levelup move entry key: {move_entry_key}")
+                            plando_levelup_moves.append(PlandoLevelupMove(**move_entry))
                 if plando_key == "types":
                     if isinstance(value, list) or isinstance(value, tuple):
                         plando_types = list(value)

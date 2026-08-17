@@ -241,7 +241,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
 
 
 def temporary_debugging(world: "PokemonBWWorld"):
-    print(f"IcCity (Spring) - G has {len(world.regions['IcCity (Spring) - G'].entrances)} entrances")
+    pass
 
 
 class PokemonBWMixin(LogicMixin):

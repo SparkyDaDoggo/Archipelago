@@ -44,9 +44,8 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                     always_required.append(spec)
 
         # Ensure one fighting type for challenge rock
-        both_types: Callable[[SpeciesEntry], tuple[str, str]] = lambda data: (data.type_1, data.type_2)
         for spec_name, data in world.species_entries.items():
-            if "Fighting" in both_types(data) and spec_name not in blacklist:
+            if "Fighting" in data.types and spec_name not in blacklist:
                 if data not in always_required:
                     always_required.append(data)
                 break

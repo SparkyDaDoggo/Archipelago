@@ -42,9 +42,10 @@ def create(world: "PokemonBWWorld") -> None:
     }
     for goal in all_goals:
         if goal == "pokemon_master":
-            needed_goals += (g for gevents in possible_goals.values() for g in gevents)
+            needed_goals.extend(g for gevents in possible_goals.values() for g in gevents)
         elif goal in possible_goals:
             needed_goals += possible_goals[goal]
         else:
             raise Exception(f"Bad goal option: {goal}")
+    needed_goals = sorted(set(needed_goals))
     world.multiworld.completion_condition[world.player] = lambda state: state.has_all(needed_goals, world.player)
