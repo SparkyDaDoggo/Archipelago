@@ -56,7 +56,7 @@ def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Z
 
     for file in range(1, 616):
         data = bytes(slots[file])
-        while data[-4:] == b'\0\0\0':
+        while data[-4:] == b'\0\0\0\0':
             data = data[:-4]
         opened_zipfile.writestr(f"trainer/{file}_pokemon", data)
 
@@ -77,7 +77,7 @@ def patch_species(rom: NintendoDSRom, world_package: str, bw_patch_instance: "Po
         entry_length = 8 + (8 if unique_moves else 0) + (2 if held_items else 0)
         remove_unique_moves = False
 
-        for team_slot in range(len(patch_file)//3):
+        for team_slot in range(len(patch_file)//4):
 
             patch_address = team_slot * 4
             file_address = team_slot * entry_length + 4
