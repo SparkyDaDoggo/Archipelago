@@ -22,7 +22,8 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     rivals_starter: tuple[list[SpeciesEntry], ...] | None = ([], []) if mods.is_rivals_keep_starter else None
     rivals_slots: tuple[list[TrainerPokemonEntry], ...] | None = ([], []) if mods.is_rivals_keep_starter else None
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
-    force_threshold: int = world.options.pokemon_randomization_adjustments["Force evolutions threshold"]
+    underpowered_threshold: int = world.options.pokemon_randomization_adjustments["Underpowered threshold"]
+    force_threshold: int = world.options.pokemon_randomization_adjustments["Force threshold"]
     blacklist = world.options.trainer_randomization_blacklist.value
 
     any_species_by_type: dict[str, dict[int, list[SpeciesEntry]]] = {t: {} for t in types_by_name}
@@ -129,7 +130,13 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
             if mods.is_prevent_overpowered and op_skipped < 10 and sum(spec.base_stats) > stats_threshold:
                 op_skipped += 1
                 continue
-            if mods.is_force_evolved and force_skipped < 10 and spec.evolutions and sum(spec.base_stats) > force_threshold:
+            if mods.is_force_evolved and force_skipped < 15 and spec.evolutions and slot.level > force_threshold:
+                force_skipped += 1
+                continue
+            if (
+                mods.is_force_not_underpowered and force_skipped < 15 and slot.level > force_threshold
+                and sum(spec.base_stats) < underpowered_threshold
+            ):
                 force_skipped += 1
                 continue
             if mods.is_similar_stats:

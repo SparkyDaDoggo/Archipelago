@@ -97,6 +97,8 @@ class RandomizeTrainerPokemon(ToggleSet):
     - **Evolve when possible** - Tries to evolve pokemon if they are able to (based on
         their level). Pokémon that evolve independently of their level are evolved at level 25.
     - **Force fully evolved** - Always fully evolves pokemon above a certain (adjustable) level.
+    - **Force not underpowered** - Prevents pokemon above a certain (adjustable) level from
+        having base stats below a certain (adjustable) total.
     - **Type themed** - All pokemon of a trainer will share at least one randomly chosen type.
     - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader
         and elite 4 member instead of using their vanilla type. Do note that they always
@@ -116,6 +118,7 @@ class RandomizeTrainerPokemon(ToggleSet):
     is_prevent_overpowered = False, "Prevent overpowered pokemon"
     is_evolve_possible = False, "Evolve when possible"
     is_force_evolved = False, "Force fully evolved"
+    is_force_not_underpowered = False
     is_type_themed = False
     is_shuffle_gym_types = False, "Shuffle gym leader types"
     is_themed_gym_trainers = False
@@ -269,8 +272,11 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
         this will be the minimum encounter chance (in percent) for each species.
     - **Overpowered threshold** (200, 1530) - The maximum base stat total (for options
         with **Prevent overpowered pokemon** activated).
-    - **Force evolutions threshold** (1, 100) - The minimum level at which trainer
-        pokemon are forced to be fully evolved (if **Force fully evolved** is included).
+    - **Underpowered threshold** (200, 1530) - The minimum base stat total (for options
+        with **Force not underpowered** activated).
+    - **Force threshold** (1, 100) - The minimum level at which trainer
+        pokemon are forced to be fully evolved (if **Force fully evolved** is included)
+        or not be underpowered (if **Force not underpowered** is included).
     """
     display_name = "Pokemon Randomization Adjustments"
     fill_defaults = True
@@ -278,19 +284,22 @@ class PokemonRandomizationAdjustments(ExtendedOptionCounter):
         "Stats leniency",
         "Rare encounters threshold",
         "Overpowered threshold",
-        "Force evolutions threshold",
+        "Underpowered threshold",
+        "Force threshold",
     ]
     default = {
         "Stats leniency": 10,
         "Rare encounters threshold": 8,
         "Overpowered threshold": 500,
-        "Force evolutions threshold": 40,
+        "Underpowered threshold": 400,
+        "Force threshold": 40,
     }
     individual_min_max = {
         "Stats leniency": (0, 1530),
         "Rare encounters threshold": (1, 100),
         "Overpowered threshold": (200, 1530),
-        "Force evolutions threshold": (1, 100),
+        "Underpowered threshold": (200, 1530),
+        "Force threshold": (1, 100),
     }
 
 

@@ -36,13 +36,16 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Adjustable threshold (`Overpowered threshold` in `Pokémon Randomization Adjustments`)
   - `Evolve when possible`
   - `Force fully evolved`
-    - Adjustable threshold (`Force evolutions threshold` in `Pokémon Randomization Adjustments`)
+    - Adjustable threshold (`Force threshold` in `Pokémon Randomization Adjustments`)
+  - `Force not underpowered`
+    - Adjustable thresholds (`Force threshold` and `Underpowered threshold` in `Pokémon Randomization Adjustments`)
   - `Type themed`
   - `Themed gym trainers`
   - `Shuffle gym leader types`
     - Gym leaders now always have vanilla-type themed teams by default
   - `Rivals keep starter`
     - They also always evolve when possible
+- Added `Underpowered threshold` parameter to `Pokémon Randomization Adjustments`
 - Added `Wild Randomization Blacklist` and `Trainer Randomization Blacklist` options
   - The wild blacklist might not prevent some pokémon for various reasons (including other options)
   - Ignored by `Encounter Plando`
