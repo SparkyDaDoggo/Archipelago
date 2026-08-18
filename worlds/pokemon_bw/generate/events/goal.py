@@ -1,9 +1,5 @@
 from typing import TYPE_CHECKING
 
-from ...locations import PokemonBWLocation
-from BaseClasses import ItemClassification
-from ...items import PokemonBWItem
-
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
 

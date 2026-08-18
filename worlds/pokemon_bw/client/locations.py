@@ -74,7 +74,7 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
     # Seen flags should never be unchecked
 
     if all(seen_buffers[i][eight_flags] == client.dex_seen_caches[i][eight_flags]
-           for i in range(4) for eight_flags in range(client.dex_bytes_amount)):
+           for i in range(4) for eight_flags in range(len(seen_buffers[i]))):
         return []
 
     locations_to_check: list[int] = []
