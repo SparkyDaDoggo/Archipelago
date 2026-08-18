@@ -20,13 +20,13 @@ class RandomizeWildPokemon(ToggleSet):
     The following is an example for how options like this can look like (when edited in a yaml):
     ```
     randomize_wild_pokemon:
-        ["Randomize", "Prevent rare encounters"]
+      ["Randomize", "Prevent rare encounters"]
     ```
     Here is an alternative way to format it:
     ```
     randomize_wild_pokemon:
-        - Randomize
-        - Prevent rare encounters
+    - Randomize
+    - Prevent rare encounters
     ```
 
     - **Randomize** - Toggles wild pokemon being randomized. Automatically added if any
@@ -107,7 +107,8 @@ class RandomizeTrainerPokemon(ToggleSet):
         common, which will always evolve when possible.
 
     Combining multiple modifiers that affect all trainer pokémon (i.e. not just gym
-    trainers, ...) might massively increase generation time.
+    trainers, ...) might massively increase generation time. Also in that case, most
+    options tend to be more lenient in order to reduce generation time.
     """
     display_name = "Randomize Trainer Pokemon"
     is_randomize = False

@@ -1,7 +1,7 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from Options import OptionError
-from .. import SpeciesChecklist, CopyChecklist, SpeciesEntry, EncounterEntry
+from .. import SpeciesChecklist, CopyChecklist, EncounterEntry
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -210,12 +210,13 @@ def get_copy_checklist(world: "PokemonBWWorld") -> CopyChecklist | None:
                 chance = rates_by_global_slot[file_index[2]]
             is_grass = "G" in slot.encounter_region[2]
             method_index = (file_index[2] % 12) if is_grass else ((file_index[2] - 36) % 5)
+            method_start = file_index[2] - method_index
             if not (group and group.head != slot) and chance < threshold:
                 for combined_threshold in (threshold * step // 2 for step in range(1, 201)):
                     for next_index_down in range(12 if is_grass else 5):
                         if next_index_down == method_index:  # cannot be merged with itself
                             continue
-                        next_slot = world.wild_encounter[file_index[0], file_index[1], next_index_down]
+                        next_slot = world.wild_encounter[file_index[0], file_index[1], method_start + next_index_down]
                         next_group = copy_list[next_slot.file_index]
                         if next_group:
                             next_group = next_group.search()

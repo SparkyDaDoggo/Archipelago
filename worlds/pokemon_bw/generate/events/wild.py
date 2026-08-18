@@ -20,7 +20,7 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
     method_offset = lambda x: (x % 12) if x < 36 else ((x - 12) % 5)
 
     for data in world.wild_encounter.values():
-        if not data.encounter_region[1] or is_changeable_seasons:
+        if is_changeable_seasons or not data.encounter_region[1]:
             if data.region not in available_in_region:
                 available_in_region[data.region] = set()
             r: "Region" = world.regions[data.region]

@@ -118,13 +118,14 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
                     if typ else get_weighted_random_species(world.random, any_species))
             if mods.is_evolve_possible:
                 evo_spec = can_evolve(spec, slot.level)
-                if evo_spec and possible_skipped < 10:
-                    possible_skipped += 1
-                    continue
-                if typ not in evo_spec.types and possible_skipped < 20:
-                    possible_skipped += 1
-                    continue
-                spec = evo_spec  # Not repeating can_evolve because too much spaghetti
+                if evo_spec:
+                    if possible_skipped < 10:
+                        possible_skipped += 1
+                        continue
+                    if typ not in evo_spec.types and possible_skipped < 20:
+                        possible_skipped += 1
+                        continue
+                    spec = evo_spec  # Not repeating can_evolve because too much spaghetti
             if mods.is_prevent_overpowered and op_skipped < 10 and sum(spec.base_stats) > stats_threshold:
                 op_skipped += 1
                 continue
@@ -162,8 +163,8 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     rivals_slots[1].sort(key=lambda _slot: _slot.level)
     # TODO need to distinguish between three version of rivals
     for next_slot in rivals_slots[0]:
-        next_slot.species = get_rival_last(next_slot)
+        next_slot.species = get_rival_last(next_slot).species_name
         next_slot.write |= 2
     for next_slot in rivals_slots[1]:
-        next_slot.species = get_rival_last(next_slot)
+        next_slot.species = get_rival_last(next_slot).species_name
         next_slot.write |= 2

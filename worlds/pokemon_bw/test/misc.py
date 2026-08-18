@@ -10,7 +10,8 @@ class PokemonBWTestBase(WorldTestBase):
     game = "Pokemon Black and White"
 
 
-all_goals = tuple(Goal.options)
+all_goals = list(Goal.options)
+# all_goals.remove("pokemon_master")
 
 
 ###################################################

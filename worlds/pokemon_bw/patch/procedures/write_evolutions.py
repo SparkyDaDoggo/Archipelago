@@ -15,7 +15,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         if data.write & 1 and (not data.form or data.is_custom_form):
             byt = bytes()
             for evo_tup in data.evolutions:
-                byt += methods[evo_tup[0]].id.to_bytes(2, "little") + evo_tup[1].to_bytes(2, "little") + evo_tup[2].to_bytes(2, "little")
+                byt += methods[evo_tup[0]].id.to_bytes(2, "little") + evo_tup[1].to_bytes(2, "little") + evo_tup[2][0].dex_number.to_bytes(2, "little")
             byt += b'\0' * (42 - len(byt))
             opened_zipfile.writestr(f"evo/{max(data.dex_number, data.custom_form_file)}", bytes(byt))
 
