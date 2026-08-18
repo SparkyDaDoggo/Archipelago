@@ -281,18 +281,6 @@ class PokemonBWWorld(World):
         hint_data[self.player] = {}
         locations.extend_species_hints(self, hint_data)
 
-    def write_spoiler(self, spoiler_handle: TextIO) -> None:
-        from .generate import spoiler
-
-        spoiler.write_spoiler_encounter(self, spoiler_handle)
-        spoiler.write_spoiler_trainer(self, spoiler_handle)
-        spoiler.write_spoiler_stats(self, spoiler_handle)
-        spoiler.write_spoiler_evolutions(self, spoiler_handle)
-        spoiler.write_spoiler_levelup_movesets(self, spoiler_handle)
-        spoiler.write_spoiler_tm_hm_compat(self, spoiler_handle)
-        spoiler.write_spoiler_move_data(self, spoiler_handle)
-        spoiler.write_spoiler_type_chart(self, spoiler_handle)
-
     def collect(self, state: CollectionState | locations.PokemonBWMixin, item: Item) -> bool:
         change = super().collect(state, item)
         if change and item.name.startswith("[Lvl]"):
@@ -335,6 +323,18 @@ class PokemonBWWorld(World):
                     self.multiworld.get_out_file_name_base(self.player) + rom.PokemonWhitePatch.patch_file_ending
                 ), world=self, player=self.player, player_name=self.player_name
             ).write()
+
+    def write_spoiler(self, spoiler_handle: TextIO) -> None:
+        from .generate import spoiler
+
+        spoiler.write_spoiler_encounter(self, spoiler_handle)
+        spoiler.write_spoiler_trainer(self, spoiler_handle)
+        spoiler.write_spoiler_stats(self, spoiler_handle)
+        spoiler.write_spoiler_evolutions(self, spoiler_handle)
+        spoiler.write_spoiler_levelup_movesets(self, spoiler_handle)
+        spoiler.write_spoiler_tm_hm_compat(self, spoiler_handle)
+        spoiler.write_spoiler_move_data(self, spoiler_handle)
+        spoiler.write_spoiler_type_chart(self, spoiler_handle)
         # Prevent memory leaks
         for entry in self.species_entries.values():
             entry.pre_evolutions.clear()
