@@ -3,9 +3,11 @@
 - specialized unittests for rando modifiers
 - `increasing stats` in evo rando not working?
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- Accumula Town Cutscene empty text boxes
+- Accumula Town NPCs empty text boxes
+- `Dungeon 1 to 1` + `Prevent rare encounters` + `dexsanity_friendly` + 12% threshold give too many different species
 - rom script changes to comply with regions rework:
   - master ball seller overhaul
+  - Max & Reset options for shiny rate modifier & Exp multiplier
   - ############################
   - accumula guards send you both ways
   - move striaton gym guide a bit south

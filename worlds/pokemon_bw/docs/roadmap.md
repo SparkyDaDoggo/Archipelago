@@ -178,6 +178,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Xtransceiver being required to see certain story sequences (with some of them giving items)
   - Also, dynamic Xtransceiver item that automatically adds the correctly gendered version to the game
 - Make HMs forgettable
+- Castelia badge info NPC giving hints to in which game the badges are
+- Use portable AP menu code to make on-screen item receiving possible
 - Expand plugins to client
 
 ## Post-1.0.0 stuff
