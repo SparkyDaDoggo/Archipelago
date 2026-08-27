@@ -64,14 +64,17 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     arm9 = bytearray(codeCompression.decompress(rom.arm9))
     arm7 = bytearray(rom.arm7)
 
-    # Apply forgettable HMs patch
-    # arm9[0x1d310] = 0
-
-    # Shiny rate branch
     if rom.name[8:9] == b'W':
+        # Apply forgettable HMs patch
+        arm9[0x1d310] = 0
+        # Shiny rate branch
         arm9[0x13f0c:0x13f14] = b'\x00\xb5\x92\xf3\x77\xf8\x00\xbd'
+        # Game data pointer setup branch
+        arm9[0xe6ee:0xe6f4] = b'\x20\x1c\x97\xf3\xb3\xfc'
     else:
+        arm9[0x1d2f4] = 0
         arm9[0x13ef0:0x13ef8] = b'\x00\xb5\x92\xf3\x75\xf8\x00\xbd'
+        arm9[0xe6ee:0xe6f4] = b'\x20\x1c\x97\xf3\xa3\xfc'
 
     # Enable missing auto fly flags
     ov10 = overlay_table[10]
