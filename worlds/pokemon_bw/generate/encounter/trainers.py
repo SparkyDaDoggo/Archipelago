@@ -19,8 +19,8 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     mods = world.options.randomize_trainer_pokemon
     gym_types: dict[str, str] = {}
     t_types: list[str | None] | None = None if not mods.is_type_themed else [None] * len(trainer_table)
-    rivals_starter: tuple[list[SpeciesEntry], ...] | None = ([], []) if mods.is_rivals_keep_starter else None
-    rivals_slots: tuple[list[TrainerPokemonEntry], ...] | None = ([], []) if mods.is_rivals_keep_starter else None
+    rivals_starter: tuple[list[SpeciesEntry], ...] | None = ([], [], [], [], [], []) if mods.is_rivals_keep_starter else None
+    rivals_slots: tuple[list[TrainerPokemonEntry], ...] | None = ([], [], [], [], [], []) if mods.is_rivals_keep_starter else None
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
     underpowered_threshold: int = world.options.pokemon_randomization_adjustments["Underpowered threshold"]
     force_threshold: int = world.options.pokemon_randomization_adjustments["Force threshold"]
@@ -143,7 +143,7 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     for next_slot in world.trainer_teams:
         trainer = trainer_table[next_slot.trainer_id - 1]
         # Sort out rivals' last pokémon
-        if rivals_starter and trainer.rival in (1, 2) and next_slot.team_number == trainer.pokemon_count - 1:
+        if rivals_starter and trainer.rival not in (0, 7) and next_slot.team_number == trainer.pokemon_count - 1:
             rivals_slots[trainer.rival - 1].append(next_slot)
             continue
         # Get type if type themed or gym
@@ -161,12 +161,9 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
         next_slot.species = get_random(next_slot, this_type).species_name
         next_slot.write |= 2
     # fill rivals' last pokémon
-    rivals_slots[0].sort(key=lambda _slot: _slot.level)
-    rivals_slots[1].sort(key=lambda _slot: _slot.level)
-    # TODO need to distinguish between three version of rivals
-    for next_slot in rivals_slots[0]:
-        next_slot.species = get_rival_last(next_slot).species_name
-        next_slot.write |= 2
-    for next_slot in rivals_slots[1]:
-        next_slot.species = get_rival_last(next_slot).species_name
-        next_slot.write |= 2
+    for r_slot in rivals_slots:
+        r_slot.sort(key=lambda _slot: _slot.level)
+    for r_slot in rivals_slots:
+        for next_slot in r_slot:
+            next_slot.species = get_rival_last(next_slot).species_name
+            next_slot.write |= 2

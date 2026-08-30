@@ -10,6 +10,7 @@ if not TYPE_CHECKING:
     InclusionRule: type = Any
 else:
     from .. import PokemonBWWorld
+    from ..generate import SpeciesEntry
     AccessRule: type = Callable[[CollectionState], bool]
     ExtendedRule: type = Callable[[CollectionState, PokemonBWWorld], bool]
     ClassificationMethod: type = Callable[[PokemonBWWorld, str], ItemClassification]
@@ -115,8 +116,6 @@ class TMLocationData(NamedTuple):
 class DexLocationData(NamedTuple):
     # caught flags are stored at 0x23D1B4 (B) or 0x23D1D4 (W)
     dex_number: int
-    # Use special rule if there are more than one species for a dex entry (e.g. Wormadam, Deoxys, Castform, ...)
-    special_rule: ExtendedRule | None = None
     ut_alias: str | None = None
 
 
@@ -173,7 +172,9 @@ class TrainerData(NamedTuple):
     pokemon_entry_length: int
     gym: tuple[str, str, bool] | None
     """(City name (without the "City") or "League", vanilla type, is leader)"""
-    rival: int  # 0 no rival, 1 Bianca, 2 Cheren, 3 N
+    rival: int
+    """0 no rival, 1-3 Bianca, 4-6 Cheren, 7 N
+    rival order is Snivy/Tepig/Oshawott chosen by player"""
     do_not_adjust: bool = False
     inclusion_rule: InclusionRule | None = None
     # early: bool
@@ -310,8 +311,10 @@ class TMHMData(NamedTuple):
 class EvolutionMethodData(NamedTuple):
     id: int
     has_level_value: bool
+    priority: int
+    allow_multiple: bool  # multiple of that method per species
     # Takes value from evolution data and returns the access rule for that evolution
-    rule: Callable[[int, str, "PokemonBWWorld"], ExtendedRule | ExtRulesTuple | None] | None
+    rule: Callable[[int, "SpeciesEntry", "PokemonBWWorld"], ExtendedRule | ExtRulesTuple | None] | None
 
 
 class TypeData(NamedTuple):

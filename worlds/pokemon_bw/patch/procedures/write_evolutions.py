@@ -14,7 +14,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
     for species, data in bw_patch_instance.world.species_entries.items():
         if data.write & 1 and (not data.form or data.is_custom_form):
             byt = bytes()
-            for evo_tup in data.evolutions:  # TODO
+            for evo_tup in data.evolutions:
                 byt += (methods[evo_tup.method].id.to_bytes(2, "little")
                         + evo_tup.value.to_bytes(2, "little")
                         + evo_tup.species.dex_number.to_bytes(2, "little"))
