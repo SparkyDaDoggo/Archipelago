@@ -5,8 +5,13 @@ if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
-def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry],
-                         by_id: dict[tuple[int, int], SpeciesEntry]):
+def set_value(data: SpeciesEntry, egg_groups: tuple):
+    for form_data in data.all_forms:
+        if form_data.egg_groups is None:
+            form_data.egg_groups = egg_groups
+
+
+def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
     from ...data.pokemon.egg_groups import groups
 
     mods = world.options.randomize_egg_groups
@@ -16,6 +21,8 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
         if plando_stat.egg_groups:
             dat = all_species[species]
             dat.egg_groups = tuple(plando_stat.egg_groups) * (3 - len(plando_stat.egg_groups))
+            if not dat.is_custom_form:
+                set_value(dat, dat.egg_groups)
             dat.write |= 0b100000000
             all_plandod.append(dat)
 
@@ -51,7 +58,7 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
 
     def roll(data: SpeciesEntry):
         chosen = roll_groups(data)
-        data.egg_groups = chosen
+        set_value(data, chosen)
         if mods.is_follow_evolutions:
             do_evos(data, chosen)
 
@@ -62,28 +69,26 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
         ):
             pre = roll_groups(data)
         for evo_tup in data.evolutions:
-            for evo_data in evo_tup[2]:
-                if evo_data.egg_groups is None:
-                    evo_data.egg_groups = pre
-                    do_evos(evo_data, pre)
+            if evo_tup.species.egg_groups is None:
+                set_value(evo_tup.species, pre)
+                do_evos(evo_tup.species, pre)
         for pre_evo_data in data.pre_evolutions:
-            if pre_evo_data.egg_groups is None and (not pre_evo_data.form or pre_evo_data.is_custom_form):
+            if pre_evo_data.egg_groups is None:
+                new_pre = pre
                 if (
                     mods.is_allow_baby_stages and not pre_evo_data.pre_evolutions
                     and pre[0] != "Unknown" and world.random.random() < 0.0625
                 ):
-                    pre_evo_data.egg_groups = ("Unknown", "Unknown")
-                    do_evos(pre_evo_data, pre)
-                else:
-                    pre_evo_data.egg_groups = pre
-                    do_evos(pre_evo_data, pre)
+                    new_pre = ("Unknown", "Unknown")
+                set_value(pre_evo_data, new_pre)
+                do_evos(pre_evo_data, pre)
 
     allowed = list(g for g, d in groups.items() if d.vanilla) if not mods.is_allow_custom_groups else list(groups)
     keep_ditto = True  # Needs assembly changes
     if keep_ditto:
         allowed.remove("Ditto")
         dat = all_species["Ditto"]
-        dat.egg_groups = ("Ditto", "Ditto")
+        set_value(dat, ("Ditto", "Ditto"))
         if mods.is_follow_evolutions:
             # do_evos(dat, ("Ditto", "Ditto"))
             do_evos(dat, roll_groups(dat))
@@ -91,9 +96,5 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
         for dat in all_plandod:
             do_evos(dat, dat.egg_groups)
     for dat in all_species.values():
-        if dat.egg_groups is None and (not dat.form or dat.is_custom_form):
+        if dat.egg_groups is None and not dat.form:
             roll(dat)
-    for dat in all_species.values():
-        if dat.form and not dat.is_custom_form:
-            base_data = by_id[dat.dex_number, 0]
-            dat.egg_groups = base_data.egg_groups

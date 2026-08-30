@@ -202,14 +202,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Murkrow": DexLocationData(198),
     "Pokédex - Find a shiny Slowking": DexLocationData(199),
     "Pokédex - Find a shiny Misdreavus": DexLocationData(200),
-    "Pokédex - Find a shiny Unown": DexLocationData(
-        201, lambda state, world: state.has_any(
-            ("Unown (A)", "Unown (B)", "Unown (C)", "Unown (D)", "Unown (E)", "Unown (F)", "Unown (G)", "Unown (H)",
-             "Unown (I)", "Unown (J)", "Unown (K)", "Unown (L)", "Unown (M)", "Unown (N)", "Unown (O)", "Unown (P)",
-             "Unown (Q)", "Unown (R)", "Unown (S)", "Unown (T)", "Unown (U)", "Unown (V)", "Unown (W)", "Unown (X)",
-             "Unown (Y)", "Unown (Z)", "Unown (Exclamation Mark)", "Unown (Question Mark)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Unown": DexLocationData(201),
     "Pokédex - Find a shiny Wobbuffet": DexLocationData(202),
     "Pokédex - Find a shiny Girafarig": DexLocationData(203),
     "Pokédex - Find a shiny Pineco": DexLocationData(204),
@@ -359,11 +352,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Armaldo": DexLocationData(348),
     "Pokédex - Find a shiny Feebas": DexLocationData(349),
     "Pokédex - Find a shiny Milotic": DexLocationData(350),
-    "Pokédex - Find a shiny Castform": DexLocationData(
-        351, lambda state, world: state.has_any(
-            ("Castform", "Castform (Sunny)", "Castform (Rainy)", "Castform (Snowy)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Castform": DexLocationData(351),
     "Pokédex - Find a shiny Kecleon": DexLocationData(352),
     "Pokédex - Find a shiny Shuppet": DexLocationData(353),
     "Pokédex - Find a shiny Banette": DexLocationData(354),
@@ -398,11 +387,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Groudon": DexLocationData(383),
     "Pokédex - Find a shiny Rayquaza": DexLocationData(384),
     "Pokédex - Find a shiny Jirachi": DexLocationData(385),
-    "Pokédex - Find a shiny Deoxys": DexLocationData(
-        386, lambda state, world: state.has_any(
-            ("Deoxys", "Deoxys (Attack)", "Deoxys (Defense)", "Deoxys (Speed)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Deoxys": DexLocationData(386),
     "Pokédex - Find a shiny Turtwig": DexLocationData(387),
     "Pokédex - Find a shiny Grotle": DexLocationData(388),
     "Pokédex - Find a shiny Torterra": DexLocationData(389),
@@ -428,16 +413,8 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Rampardos": DexLocationData(409),
     "Pokédex - Find a shiny Shieldon": DexLocationData(410),
     "Pokédex - Find a shiny Bastiodon": DexLocationData(411),
-    "Pokédex - Find a shiny Burmy": DexLocationData(
-        412, lambda state, world: state.has_any(
-            ("Burmy (Plant)", "Burmy (Sandy)", "Burmy (Trash)"), world.player
-        )
-    ),
-    "Pokédex - Find a shiny Wormadam": DexLocationData(
-        413, lambda state, world: state.has_any(
-            ("Wormadam (Plant)", "Wormadam (Sandy)", "Wormadam (Trash)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Burmy": DexLocationData(412),
+    "Pokédex - Find a shiny Wormadam": DexLocationData(413),
     "Pokédex - Find a shiny Mothim": DexLocationData(414),
     "Pokédex - Find a shiny Combee": DexLocationData(415),
     "Pokédex - Find a shiny Vespiquen": DexLocationData(416),
@@ -445,21 +422,9 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Buizel": DexLocationData(418),
     "Pokédex - Find a shiny Floatzel": DexLocationData(419),
     "Pokédex - Find a shiny Cherubi": DexLocationData(420),
-    "Pokédex - Find a shiny Cherrim": DexLocationData(
-        421, lambda state, world: state.has_any(
-            ("Cherrim (Overcast)", "Cherrim (Sunshine)"), world.player
-        )
-    ),
-    "Pokédex - Find a shiny Shellos": DexLocationData(
-        422, lambda state, world: state.has_any(
-            ("Shellos (West)", "Shellos (East)"), world.player
-        )
-    ),
-    "Pokédex - Find a shiny Gastrodon": DexLocationData(
-        423, lambda state, world: state.has_any(
-            ("Gastrodon (West)", "Gastrodon (East)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Cherrim": DexLocationData(421),
+    "Pokédex - Find a shiny Shellos": DexLocationData(422),
+    "Pokédex - Find a shiny Gastrodon": DexLocationData(423),
     "Pokédex - Find a shiny Ambipom": DexLocationData(424),
     "Pokédex - Find a shiny Drifloon": DexLocationData(425),
     "Pokédex - Find a shiny Drifblim": DexLocationData(426),
@@ -515,11 +480,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Probopass": DexLocationData(476),
     "Pokédex - Find a shiny Dusknoir": DexLocationData(477),
     "Pokédex - Find a shiny Froslass": DexLocationData(478),
-    "Pokédex - Find a shiny Rotom": DexLocationData(
-        479, lambda state, world: state.has_any(
-            ("Rotom", "Rotom (Heat)", "Rotom (Wash)", "Rotom (Frost)", "Rotom (Fan)", "Rotom (Mow)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Rotom": DexLocationData(479),
     "Pokédex - Find a shiny Uxie": DexLocationData(480),
     "Pokédex - Find a shiny Mesprit": DexLocationData(481),
     "Pokédex - Find a shiny Azelf": DexLocationData(482),
@@ -527,20 +488,12 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Palkia": DexLocationData(484),
     "Pokédex - Find a shiny Heatran": DexLocationData(485),
     "Pokédex - Find a shiny Regigigas": DexLocationData(486),
-    "Pokédex - Find a shiny Giratina": DexLocationData(
-        487, lambda state, world: state.has_any(
-            ("Giratina", "Giratina (Origin)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Giratina": DexLocationData(487),
     "Pokédex - Find a shiny Cresselia": DexLocationData(488),
     "Pokédex - Find a shiny Phione": DexLocationData(489),
     "Pokédex - Find a shiny Manaphy": DexLocationData(490),
     "Pokédex - Find a shiny Darkrai": DexLocationData(491),
-    "Pokédex - Find a shiny Shaymin": DexLocationData(
-        492, lambda state, world: state.has_any(
-            ("Shaymin", "Shaymin (Sky)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Shaymin": DexLocationData(492),
     "Pokédex - Find a shiny Arceus": DexLocationData(493),
     "Pokédex - Find a shiny Victini": DexLocationData(494),
     "Pokédex - Find a shiny Snivy": DexLocationData(495),
@@ -598,20 +551,12 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Whimsicott": DexLocationData(547),
     "Pokédex - Find a shiny Petilil": DexLocationData(548),
     "Pokédex - Find a shiny Lilligant": DexLocationData(549),
-    "Pokédex - Find a shiny Basculin": DexLocationData(
-        550, lambda state, world: state.has_any(
-            ("Basculin (Red-Striped)", "Basculin (Blue-Striped)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Basculin": DexLocationData(550),
     "Pokédex - Find a shiny Sandile": DexLocationData(551),
     "Pokédex - Find a shiny Krokorok": DexLocationData(552),
     "Pokédex - Find a shiny Krookodile": DexLocationData(553),
     "Pokédex - Find a shiny Darumaka": DexLocationData(554),
-    "Pokédex - Find a shiny Darmanitan": DexLocationData(
-        555, lambda state, world: state.has_any(
-            ("Darmanitan", "Darmanitan (Zen)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Darmanitan": DexLocationData(555),
     "Pokédex - Find a shiny Maractus": DexLocationData(556),
     "Pokédex - Find a shiny Dwebble": DexLocationData(557),
     "Pokédex - Find a shiny Crustle": DexLocationData(558),
@@ -641,16 +586,8 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Vanillite": DexLocationData(582),
     "Pokédex - Find a shiny Vanillish": DexLocationData(583),
     "Pokédex - Find a shiny Vanilluxe": DexLocationData(584),
-    "Pokédex - Find a shiny Deerling": DexLocationData(
-        585, lambda state, world: state.has_any(
-            ("Deerling (Spring)", "Deerling (Summer)", "Deerling (Autumn)", "Deerling (Winter)"), world.player
-        )
-    ),
-    "Pokédex - Find a shiny Sawsbuck": DexLocationData(
-        586, lambda state, world: state.has_any(
-            ("Sawsbuck (Spring)", "Sawsbuck (Summer)", "Sawsbuck (Autumn)", "Sawsbuck (Winter)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Deerling": DexLocationData(585),
+    "Pokédex - Find a shiny Sawsbuck": DexLocationData(586),
     "Pokédex - Find a shiny Emolga": DexLocationData(587),
     "Pokédex - Find a shiny Karrablast": DexLocationData(588),
     "Pokédex - Find a shiny Escavalier": DexLocationData(589),
@@ -712,10 +649,6 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Find a shiny Landorus": DexLocationData(645),
     "Pokédex - Find a shiny Kyurem": DexLocationData(646),
     "Pokédex - Find a shiny Keldeo": DexLocationData(647),
-    "Pokédex - Find a shiny Meloetta": DexLocationData(
-        648, lambda state, world: state.has_any(
-            ("Meloetta", "Meloetta (Pirouette)"), world.player
-        )
-    ),
+    "Pokédex - Find a shiny Meloetta": DexLocationData(648),
     "Pokédex - Find a shiny Genesect": DexLocationData(649),
 }

@@ -5,8 +5,15 @@ if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
-def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry],
-                          by_id: dict[tuple[int, int], SpeciesEntry]):
+def set_value(data: SpeciesEntry, rate: int):
+    data.catch_rate = rate
+    if not data.is_custom_form:
+        for form_data in data.all_forms:
+            if not form_data.is_custom_form:
+                form_data.catch_rate = data.catch_rate
+
+
+def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
 
     mods = world.options.randomize_catch_rates
     min_rate = world.options.stats_randomization_adjustments["Catch rates minimum"]
@@ -21,7 +28,7 @@ def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, Specie
     for species, plando_stat in world.options.stats_plando:
         if plando_stat.catch_rate:
             dat = all_species[species]
-            dat.catch_rate = plando_stat.catch_rate
+            set_value(dat, plando_stat.catch_rate)
             dat.write |= 0b1000
             all_plandod.append(dat)
 
@@ -47,22 +54,22 @@ def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, Specie
                     chosen = world.random.randrange(chosen + 1)
                 else:
                     chosen = world.random.randrange(chosen, max_index + 1)
-        data.catch_rate = possible[chosen]
+        set_value(data, possible[chosen])
         if mods.is_follow_evolutions:
             do_evos(data, possible[chosen])
 
     def downgrade(data: SpeciesEntry, maximum: int):
         if data.catch_rate > maximum:
-            data.catch_rate = maximum
+            set_value(data, maximum)
             do_evos(data, maximum)
 
     def do_evos(data: SpeciesEntry, maximum: int):
         for evo_tup in data.evolutions:
-            for evo_data in evo_tup[2]:
-                if not evo_data.catch_rate:
-                    roll(evo_data, maximum)
-                else:
-                    downgrade(evo_data, maximum)
+            evo_spec = evo_tup.species.by_form(data.form)
+            if not evo_spec.catch_rate:
+                roll(evo_spec, maximum)
+            else:
+                downgrade(evo_spec, maximum)
 
     if mods.is_follow_evolutions:
         for dat in all_plandod:
@@ -70,7 +77,3 @@ def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, Specie
     for dat in all_species.values():
         if not dat.catch_rate and (not dat.form or dat.is_custom_form):
             roll(dat, max_rate)
-    for dat in all_species.values():
-        if dat.form and not dat.is_custom_form:
-            base_data = by_id[dat.dex_number, 0]
-            dat.catch_rate = base_data.catch_rate

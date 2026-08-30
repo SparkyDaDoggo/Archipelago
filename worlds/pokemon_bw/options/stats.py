@@ -46,14 +46,13 @@ class RandomizeEvolutions(ToggleSet):
     - **Follow type** - Whole evolution lines will share at least one type.
     - **Multiple pre-evolutions** - Different pokemon species can evolve into the same species.
     - **More or less branches** - Allows all species to be able to evolve into more or
-        less different species than before.
+        less different species than before. Requires **Random methods** to be included
+        as well.
     - **Looping evolution lines** - Allows all species to evolve into one of their
         pre-evolutions.
-    - **Every level** - Makes all species only have a levelup evolution that triggers on
-        any levelup. Including **More or less branches** will only ensure at least one
-        method is levelup. This potentially ignores **Multiple pre-evolutions**,
-        **Looping evolution lines**, and **Follow type** being excluded and
-        **Random methods** being included.
+    - **Every level** - Makes all species have a levelup evolution that triggers on
+        any levelup. Including **More or less branches** will ensure at least one method
+        is levelup. This potentially ignores some other modifiers being excluded/included.
     - **Pair stats** - Always makes the stats-dependent methods of Tyrogue be randomized together.
     - **Pair 50 50** - Always makes the PID-dependent methods of Wurmple be randomized together.
     - **Increasing stats** - Evolved pokemon will always have an equal or higher base

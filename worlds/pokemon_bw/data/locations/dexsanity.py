@@ -202,14 +202,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Murkrow": DexLocationData(198),
     "Pokédex - Slowking": DexLocationData(199),
     "Pokédex - Misdreavus": DexLocationData(200),
-    "Pokédex - Unown": DexLocationData(
-        201, lambda state, world: state.has_any(
-            ("Unown (A)", "Unown (B)", "Unown (C)", "Unown (D)", "Unown (E)", "Unown (F)", "Unown (G)", "Unown (H)",
-             "Unown (I)", "Unown (J)", "Unown (K)", "Unown (L)", "Unown (M)", "Unown (N)", "Unown (O)", "Unown (P)",
-             "Unown (Q)", "Unown (R)", "Unown (S)", "Unown (T)", "Unown (U)", "Unown (V)", "Unown (W)", "Unown (X)",
-             "Unown (Y)", "Unown (Z)", "Unown (Exclamation Mark)", "Unown (Question Mark)"), world.player
-        )
-    ),
+    "Pokédex - Unown": DexLocationData(201),
     "Pokédex - Wobbuffet": DexLocationData(202),
     "Pokédex - Girafarig": DexLocationData(203),
     "Pokédex - Pineco": DexLocationData(204),
@@ -359,11 +352,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Armaldo": DexLocationData(348),
     "Pokédex - Feebas": DexLocationData(349),
     "Pokédex - Milotic": DexLocationData(350),
-    "Pokédex - Castform": DexLocationData(
-        351, lambda state, world: state.has_any(
-            ("Castform", "Castform (Sunny)", "Castform (Rainy)", "Castform (Snowy)"), world.player
-        )
-    ),
+    "Pokédex - Castform": DexLocationData(351),
     "Pokédex - Kecleon": DexLocationData(352),
     "Pokédex - Shuppet": DexLocationData(353),
     "Pokédex - Banette": DexLocationData(354),
@@ -398,11 +387,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Groudon": DexLocationData(383),
     "Pokédex - Rayquaza": DexLocationData(384),
     "Pokédex - Jirachi": DexLocationData(385),
-    "Pokédex - Deoxys": DexLocationData(
-        386, lambda state, world: state.has_any(
-            ("Deoxys", "Deoxys (Attack)", "Deoxys (Defense)", "Deoxys (Speed)"), world.player
-        )
-    ),
+    "Pokédex - Deoxys": DexLocationData(386),
     "Pokédex - Turtwig": DexLocationData(387),
     "Pokédex - Grotle": DexLocationData(388),
     "Pokédex - Torterra": DexLocationData(389),
@@ -428,16 +413,8 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Rampardos": DexLocationData(409),
     "Pokédex - Shieldon": DexLocationData(410),
     "Pokédex - Bastiodon": DexLocationData(411),
-    "Pokédex - Burmy": DexLocationData(
-        412, lambda state, world: state.has_any(
-            ("Burmy (Plant)", "Burmy (Sandy)", "Burmy (Trash)"), world.player
-        )
-    ),
-    "Pokédex - Wormadam": DexLocationData(
-        413, lambda state, world: state.has_any(
-            ("Wormadam (Plant)", "Wormadam (Sandy)", "Wormadam (Trash)"), world.player
-        )
-    ),
+    "Pokédex - Burmy": DexLocationData(412),
+    "Pokédex - Wormadam": DexLocationData(413),
     "Pokédex - Mothim": DexLocationData(414),
     "Pokédex - Combee": DexLocationData(415),
     "Pokédex - Vespiquen": DexLocationData(416),
@@ -445,21 +422,9 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Buizel": DexLocationData(418),
     "Pokédex - Floatzel": DexLocationData(419),
     "Pokédex - Cherubi": DexLocationData(420),
-    "Pokédex - Cherrim": DexLocationData(
-        421, lambda state, world: state.has_any(
-            ("Cherrim (Overcast)", "Cherrim (Sunshine)"), world.player
-        )
-    ),
-    "Pokédex - Shellos": DexLocationData(
-        422, lambda state, world: state.has_any(
-            ("Shellos (West)", "Shellos (East)"), world.player
-        )
-    ),
-    "Pokédex - Gastrodon": DexLocationData(
-        423, lambda state, world: state.has_any(
-            ("Gastrodon (West)", "Gastrodon (East)"), world.player
-        )
-    ),
+    "Pokédex - Cherrim": DexLocationData(421),
+    "Pokédex - Shellos": DexLocationData(422),
+    "Pokédex - Gastrodon": DexLocationData(423),
     "Pokédex - Ambipom": DexLocationData(424),
     "Pokédex - Drifloon": DexLocationData(425),
     "Pokédex - Drifblim": DexLocationData(426),
@@ -515,11 +480,7 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Probopass": DexLocationData(476),
     "Pokédex - Dusknoir": DexLocationData(477),
     "Pokédex - Froslass": DexLocationData(478),
-    "Pokédex - Rotom": DexLocationData(
-        479, lambda state, world: state.has_any(
-            ("Rotom", "Rotom (Heat)", "Rotom (Wash)", "Rotom (Frost)", "Rotom (Fan)", "Rotom (Mow)"), world.player
-        )
-    ),
+    "Pokédex - Rotom": DexLocationData(479),
     "Pokédex - Uxie": DexLocationData(480),
     "Pokédex - Mesprit": DexLocationData(481),
     "Pokédex - Azelf": DexLocationData(482),
@@ -527,20 +488,12 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Palkia": DexLocationData(484),
     "Pokédex - Heatran": DexLocationData(485),
     "Pokédex - Regigigas": DexLocationData(486),
-    "Pokédex - Giratina": DexLocationData(
-        487, lambda state, world: state.has_any(
-            ("Giratina", "Giratina (Origin)"), world.player
-        )
-    ),
+    "Pokédex - Giratina": DexLocationData(487),
     "Pokédex - Cresselia": DexLocationData(488),
     "Pokédex - Phione": DexLocationData(489),
     "Pokédex - Manaphy": DexLocationData(490),
     "Pokédex - Darkrai": DexLocationData(491),
-    "Pokédex - Shaymin": DexLocationData(
-        492, lambda state, world: state.has_any(
-            ("Shaymin", "Shaymin (Sky)"), world.player
-        )
-    ),
+    "Pokédex - Shaymin": DexLocationData(492),
     "Pokédex - Arceus": DexLocationData(493),
     "Pokédex - Victini": DexLocationData(494),
     "Pokédex - Snivy": DexLocationData(495),
@@ -598,20 +551,12 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Whimsicott": DexLocationData(547),
     "Pokédex - Petilil": DexLocationData(548),
     "Pokédex - Lilligant": DexLocationData(549),
-    "Pokédex - Basculin": DexLocationData(
-        550, lambda state, world: state.has_any(
-            ("Basculin (Red-Striped)", "Basculin (Blue-Striped)"), world.player
-        )
-    ),
+    "Pokédex - Basculin": DexLocationData(550),
     "Pokédex - Sandile": DexLocationData(551),
     "Pokédex - Krokorok": DexLocationData(552),
     "Pokédex - Krookodile": DexLocationData(553),
     "Pokédex - Darumaka": DexLocationData(554),
-    "Pokédex - Darmanitan": DexLocationData(
-        555, lambda state, world: state.has_any(
-            ("Darmanitan", "Darmanitan (Zen)"), world.player
-        )
-    ),
+    "Pokédex - Darmanitan": DexLocationData(555),
     "Pokédex - Maractus": DexLocationData(556),
     "Pokédex - Dwebble": DexLocationData(557),
     "Pokédex - Crustle": DexLocationData(558),
@@ -641,16 +586,8 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Vanillite": DexLocationData(582),
     "Pokédex - Vanillish": DexLocationData(583),
     "Pokédex - Vanilluxe": DexLocationData(584),
-    "Pokédex - Deerling": DexLocationData(
-        585, lambda state, world: state.has_any(
-            ("Deerling (Spring)", "Deerling (Summer)", "Deerling (Autumn)", "Deerling (Winter)"), world.player
-        )
-    ),
-    "Pokédex - Sawsbuck": DexLocationData(
-        586, lambda state, world: state.has_any(
-            ("Sawsbuck (Spring)", "Sawsbuck (Summer)", "Sawsbuck (Autumn)", "Sawsbuck (Winter)"), world.player
-        )
-    ),
+    "Pokédex - Deerling": DexLocationData(585),
+    "Pokédex - Sawsbuck": DexLocationData(586),
     "Pokédex - Emolga": DexLocationData(587),
     "Pokédex - Karrablast": DexLocationData(588),
     "Pokédex - Escavalier": DexLocationData(589),
@@ -712,10 +649,6 @@ location_table: dict[str, DexLocationData] = {
     "Pokédex - Landorus": DexLocationData(645),
     "Pokédex - Kyurem": DexLocationData(646),
     "Pokédex - Keldeo": DexLocationData(647),
-    "Pokédex - Meloetta": DexLocationData(
-        648, lambda state, world: state.has_any(
-            ("Meloetta", "Meloetta (Pirouette)"), world.player
-        )
-    ),
+    "Pokédex - Meloetta": DexLocationData(648),
     "Pokédex - Genesect": DexLocationData(649),
 }

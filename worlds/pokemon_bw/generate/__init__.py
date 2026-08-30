@@ -24,7 +24,7 @@ class EvoLine:
     def merge(self, other: Self):
         this, other = self.search(), other.search()
         new_line = EvoLine()
-        new_line.type, new_line.members = self.type, this.members | other.members
+        new_line.type, new_line.members = this.type, this.members | other.members
         this.members, other.members = new_line, new_line
 
 
@@ -33,32 +33,43 @@ class SpeciesEntry:
     species_name: str
     dex_number: int
     form: int
+
     types: tuple[str, str]
     base_stats: tuple[int, int, int, int, int, int]
     base_stats_copy: tuple[int, int, int, int, int, int]
     catch_rate: int
     gender_ratio: int
     exp_curve: int
-    # starts with 0 for base evolutions
-    evolution_stage: int
-    # (primary, secondary, hidden)
     abilities: tuple[str, str, str]
-    # tuple(method, parameter, evolve into)
-    evolutions: list[tuple[str, int, tuple[Self, ...]]]
-    evolutions_copy: list[tuple[str, int, int]]  # This is just for comparison
-    pre_evolutions: dict[Self, bool]
-    # tuple(level, move name)
-    level_up_moves: LevelUpMovesetData
+    """(primary, secondary, hidden)"""
+
+    evolution_stage: int
+    """starts with 1 for base evolutions"""
+    evolutions: list["EvolutionsEntry"] | None
+    """Gets filled from outside of __init__, copied to other forms"""
+    evolutions_copy: list[tuple[str, int, str]] | None
+    """This is just for comparison, copied to other forms"""
+    pre_evolutions: dict[Self, bool] | None
+    """Only contains base forms, gets filled from outside of __init__, copied to other forms"""
+    evo_line: EvoLine | None = None
+    """Only instantiated when randomized, copied to other forms"""
+    all_forms: list[Self | None] | None
+    """Gets filled from outside of __init__, copied to other forms"""
+
+    level_up_moves: LevelUpMovesetData | None
+    """tuple(level, move name)"""
     vanilla_moves_count: int
-    # TM number (internal order is TM1-95 HM1-6)
-    tm_hm_moves: TMHMMovesetData
+    tm_hm_moves: TMHMMovesetData | None
+    """TM number (internal order is TM[1-95],HM[1-6])"""
+
     egg_groups: tuple[str, str] | None
     egg_species: str | None
+
     is_custom_form: bool
     custom_form_file: int
     write: int = 0
     """b0 = evolutions
-    b1 = plando evo override
+    b1 = do not rando evo (i.e. plando with evo override)
     b2 = base stats
     b3 = catch rate
     b4 = levelup moveset
@@ -67,31 +78,62 @@ class SpeciesEntry:
     b7 = exp curve
     b8 = egg groups
     b9 = egg species"""
-    evo_line: EvoLine | None = None  # Only instantiated when randomized
 
-    def __init__(self, name: str, data: SpeciesData):
+    def __init__(self: Self, name: str, data: SpeciesData | Self, is_copy: int = 0):
+        if is_copy and data.form:
+            data = data.all_forms[0]
+
         self.dex_name = data.dex_name
-        self.species_name = data.species_name or data.dex_name
+        self.species_name = (data.species_name or data.dex_name) \
+            if not is_copy else (data.species_name + f" (internal form #{is_copy})")
         self.dex_number = data.dex_number
-        self.form = data.form
+        self.form = is_copy or data.form
         self.types = data.types
         self.base_stats = data.base_stats
-        self.base_stats_copy = data.base_stats
+        self.base_stats_copy = data.base_stats if not is_copy else data.base_stats_copy
         self.catch_rate = data.catch_rate
         self.gender_ratio = data.gender_ratio
         self.exp_curve = data.exp_curve
-        self.evolution_stage = data.evolution_stage
         self.abilities = data.abilities
-        self.evolutions = []  # Gets filled from outside of __init__
-        self.evolutions_copy = []  # Gets filled from outside of __init__
-        self.pre_evolutions = {}  # Gets filled from outside of __init__
-        self.level_up_moves = movesets_level_up.table[name]
-        self.vanilla_moves_count = len(self.level_up_moves)
-        self.tm_hm_moves = movesets_tm_hm.table[name]
-        self.egg_groups = None
-        self.egg_species = None
+        self.evolution_stage = data.evolution_stage
+        self.evolutions = None if not is_copy else data.evolutions
+        self.evolutions_copy = data.evolutions if not is_copy else data.evolutions_copy
+        self.pre_evolutions = None if not is_copy else data.pre_evolutions
+        self.all_forms = None if not is_copy else data.all_forms
+        self.level_up_moves = data.level_up_moves if is_copy else (movesets_level_up.table[name]
+                                                                   if not data.form or data.is_custom_form else None)
+        self.tm_hm_moves = data.tm_hm_moves if is_copy else (movesets_tm_hm.table[name]
+                                                             if not data.form or data.is_custom_form else None)
+        self.vanilla_moves_count = len(self.level_up_moves) if not is_copy else data.vanilla_moves_count
+        self.egg_groups = None if not is_copy else data.egg_groups
+        self.egg_species = None if not is_copy else data.egg_species
         self.is_custom_form = data.is_custom_form
         self.custom_form_file = data.custom_form_file
+
+        if is_copy:
+            if len(self.all_forms) <= is_copy:
+                self.all_forms += (None, ) * (is_copy - len(self.all_forms))
+            if self.all_forms[is_copy]:
+                raise Exception(f"Trying to add already existing form {is_copy} to {self.dex_name}")
+            self.all_forms[is_copy] = self
+
+    def by_form(self, form: int) -> Self:
+        if len(self.all_forms) <= form:
+            self.all_forms += (None,) * (form - len(self.all_forms))
+        if self.all_forms[form] is None:
+            self.all_forms[form] = SpeciesEntry(self.species_name, self, form)
+        return self.all_forms[form]
+
+    def has_form(self, form: int) -> bool:
+        return len(self.all_forms) > form and self.all_forms[form] is not None
+
+
+@dataclass
+class EvolutionsEntry:
+    method: str
+    value: int
+    species: SpeciesEntry
+    """Only contains base forms"""
 
 
 @dataclass
@@ -167,11 +209,12 @@ class MoveEntry:
 class SpeciesChecklist:
     to_check: list[SpeciesEntry]
     already_checked: set[SpeciesEntry]
+    world: "PokemonBWWorld"
 
     def __init__(self, initial: list[SpeciesEntry], world: "PokemonBWWorld"):
         self.to_check = list({entry: 0 for entry in initial})  # list->dict->list to get rid of duplicates, no sets because determinism
         self.already_checked = set()
-        self.by_id = world.species_entries_by_id
+        self.world = world
 
     def __iter__(self) -> Iterator[SpeciesEntry]:
         return self.to_check.__iter__()
@@ -189,20 +232,20 @@ class SpeciesChecklist:
             return
         self.to_check.append(species)
 
-    def check(self, species: SpeciesEntry, loop=0):
-        if species in self.to_check:
-            self.to_check.remove(species)
-        self.already_checked.add(species)
-        # Looping evolutions are possible if enabled in randomization
-        if loop >= 10:
-            return
-        for evolution in species.evolutions:
-            if evolution[0] == "Level up with party member":
-                self.add(self.by_id[(evolution[1], 0)])
-            for evo_data in evolution[2]:
-                if evo_data.form == species.form or (evo_data.form == 0 and
-                                                     (evo_data.dex_number, species.form) not in self.by_id):
-                    self.check(evo_data, loop+1)
+    def check(self, species: SpeciesEntry):
+        _to_check = [species]
+        while _to_check:
+            species = _to_check.pop()
+            if species in self.to_check:
+                self.to_check.remove(species)
+            if species not in self.already_checked:
+                self.already_checked.add(species)
+                # Looping evolutions are possible if enabled in randomization
+                if self.world.options.modify_logic.is_consider_evos:
+                    for evolution in species.evolutions:
+                        if evolution.method == "Level up with party member":
+                            self.add(self.world.species_entries_by_id[(evolution.value, 0)])
+                        _to_check.append(evolution.species.by_form(species.form))
 
 
 @dataclass

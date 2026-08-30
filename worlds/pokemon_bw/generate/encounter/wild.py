@@ -70,16 +70,17 @@ def generate_wild_encounters(world: "PokemonBWWorld",
             if stats_total <= stats_threshold:
                 return
             for pre_entry in _entry.pre_evolutions:
-                if pre_entry == _entry:  # Same species
+                if pre_entry.dex_number == _entry.dex_number:  # Same species
                     continue
                 # Same-stat pre evos not allowed because of looping evo lines with all members having same stats
-                if pre_entry.form != _entry.form or sum(pre_entry.base_stats) >= stats_total:
+                if not pre_entry.has_form(_entry.form) or sum(pre_entry.base_stats) >= stats_total:
                     continue
+                # Make sure the evolution is not Level up with party member, which we will not touch
                 for evo_tuple in pre_entry.evolutions:
-                    if _entry in evo_tuple[2] and evo_tuple[0] != "Level up with party member":
+                    if _entry.dex_number == evo_tuple.species.dex_number and evo_tuple.method != "Level up with party member":
                         break
                 else:
-                    continue  # Must be a lvlup with party member evo here, which we will not touch
+                    continue
                 species_checklist.check(_entry)
                 species_checklist.add(pre_entry)
                 try_devolve(pre_entry)
@@ -92,10 +93,9 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         if world.options.modify_logic.is_consider_evos:
             for species_data in species_checklist.copy_list():
                 for evolution in species_data.evolutions:
-                    if evolution[0] == "Level up with party member":
+                    if evolution.method == "Level up with party member":
                         continue
-                    for evo_entry in evolution[2]:
-                        species_checklist.check(evo_entry)
+                    species_checklist.check(evolution.species.by_form(species_data.form))
         if len(species_checklist) > len(logic_slots):
             raise OptionError(
                 f"More required species for randomized wild encounter than slots they could be placed in "

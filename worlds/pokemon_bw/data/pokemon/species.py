@@ -767,15 +767,19 @@ by_name: dict[str, SD] = {
     "Meloetta (Pirouette)": SD("Meloetta", "Meloetta (Pirouette)", 648, 1, ("Normal", "Fighting"), (100, 128, 90, 77, 77, 128), 3, 255, 5, 3, ("Serene Grace", "", ""), [], is_custom_form=True, custom_form_file=667),
 }
 
-by_id: dict[tuple[int, int], str] = {
-    (data.dex_number, data.form): name for name, data in by_name.items()
-}
-
+_found_base = [False] * 650
+by_id: dict[tuple[int, int], str] = {}
 forms_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}
 forms_seen_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}
-for spe, data in by_name.items():
-    forms_by_dex[data.dex_number].append(spe)
-    forms_seen_by_dex[data.dex_number].extend((spe, "[Seen] "+spe))
+for name, data in by_name.items():
+    if data.form and not _found_base[data.dex_number]:
+        raise Exception(f"Species table has base form after non-base form: {data.dex_number}")
+    if not data.form:
+        _found_base[data.dex_number] = True
+    by_id[data.dex_number, data.form] = name
+    forms_by_dex[data.dex_number].append(name)
+    forms_seen_by_dex[data.dex_number].extend((name, "[Seen] "+name))
+del _found_base
 
 T = TypeVar("T")
 

@@ -5,8 +5,7 @@ if TYPE_CHECKING:
     from .. import SpeciesEntry
 
 
-def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, "SpeciesEntry"],
-                           by_id: dict[tuple[int, int], "SpeciesEntry"]):
+def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, "SpeciesEntry"]):
     from ...data.pokemon.moves import tm_hm
     from ...data import TMHMMovesetData
 
@@ -45,18 +44,16 @@ def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, "Spec
 
     def do_evos(data: "SpeciesEntry", pre: set[str]):
         for evo_tup in data.evolutions:
-            for evo_dat in evo_tup[2]:
-                if not data.write & 0b1000000:
-                    roll(evo_dat, pre)
-                else:
-                    upgrade(evo_dat, pre)
+            evo_spec = evo_tup.species.by_form(data.form)
+            if evo_spec.form and not evo_spec.is_custom_form:
+                evo_spec = evo_spec.all_forms[0]
+            if not evo_spec.write & 0b1000000:
+                roll(evo_spec, pre)
+            else:
+                upgrade(evo_spec, pre)
 
     for dat in all_species.values():
         dat.tm_hm_moves = TMHMMovesetData(set())
     for nam, dat in all_species.items():
         if not dat.write & 0b1000000 and (not dat.form or dat.is_custom_form):
             roll(dat, set())
-    for spec, dat in all_species.items():
-        if dat.form and not dat.is_custom_form:
-            base_data = by_id[dat.dex_number, 0]
-            dat.tm_hm_moves = base_data.tm_hm_moves

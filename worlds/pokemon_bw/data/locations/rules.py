@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 from .. import ExtendedRule, InclusionRule, AccessRule
-from ..pokemon.species import forms_by_dex
 from ..items import tm_hm
 
 if TYPE_CHECKING:
@@ -226,8 +225,10 @@ def build_caught_ext_rule(x: int) -> ExtendedRule:
     def r(state: CollectionState, world: "PokemonBWWorld") -> bool:
         found: int = 0
         prog_items = state.prog_items[world.player]
-        for forms_list in forms_by_dex.values():
-            for form in forms_list:
+        for data in world.species_entries.values():
+            if data.form:
+                continue
+            for form in data.all_forms:
                 if prog_items[form]:
                     found += 1
                     break
@@ -242,8 +243,10 @@ def build_caught_rule(x: int, world: "PokemonBWWorld") -> AccessRule:
     def r(state: CollectionState) -> bool:
         found: int = 0
         prog_items = state.prog_items[world.player]
-        for forms_list in forms_by_dex.values():
-            for form in forms_list:
+        for data in world.species_entries.values():
+            if data.form:
+                continue
+            for form in data.all_forms:
                 if prog_items[form]:
                     found += 1
                     break
@@ -260,8 +263,10 @@ def build_seen_ext_rule(x: int) -> ExtendedRule:
             return True
         found: int = 0
         prog_items = state.prog_items[world.player]
-        for forms_list in forms_by_dex.values():
-            for form in forms_list:
+        for data in world.species_entries.values():
+            if data.form:
+                continue
+            for form in data.all_forms:
                 if prog_items[form]:
                     found += 1
                     break

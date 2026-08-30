@@ -5,20 +5,27 @@ if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
-def randomize_stats_pre_evo(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry],
-                            by_id: dict[tuple[int, int], SpeciesEntry]):
+def set_value(data: SpeciesEntry, stats: tuple[int, ...]):
+    data.base_stats = stats
+    if not data.is_custom_form:
+        for form_data in data.all_forms:
+            if not form_data.is_custom_form:
+                form_data.base_stats = data.base_stats
+
+
+def randomize_stats_pre_evo(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
 
     mods = world.options.randomize_base_stats
 
     if not mods.is_randomize:
         for plando_name, plando_stat in world.options.stats_plando:
             data = all_species[plando_name]
-            data.base_stats = (plando_stat.base_hp or data.base_stats[0],
-                               plando_stat.base_attack or data.base_stats[1],
-                               plando_stat.base_defense or data.base_stats[2],
-                               plando_stat.base_sp_attack or data.base_stats[3],
-                               plando_stat.base_sp_defense or data.base_stats[4],
-                               plando_stat.base_speed or data.base_stats[5])
+            set_value(data, (plando_stat.base_hp or data.base_stats[0],
+                             plando_stat.base_attack or data.base_stats[1],
+                             plando_stat.base_defense or data.base_stats[2],
+                             plando_stat.base_sp_attack or data.base_stats[3],
+                             plando_stat.base_sp_defense or data.base_stats[4],
+                             plando_stat.base_speed or data.base_stats[5]))
         return
 
     for data in all_species.values():
@@ -63,23 +70,18 @@ def randomize_stats_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
                 raise Exception(f"Error with distributing cache in base stats rando: "
                                 f"cache = {cache}, dist = {dist}, total = {total}, max_total = {max_total}, "
                                 f"min_total = {min_total}, individual = {individual}")
-        data.base_stats = tuple(dist)
+        set_value(data, tuple(dist))
         if data.species_name in world.options.stats_plando:
             plando_stat = world.options.stats_plando[data.species_name]
-            data.base_stats = (plando_stat.base_hp or data.base_stats[0],
-                               plando_stat.base_attack or data.base_stats[1],
-                               plando_stat.base_defense or data.base_stats[2],
-                               plando_stat.base_sp_attack or data.base_stats[3],
-                               plando_stat.base_sp_defense or data.base_stats[4],
-                               plando_stat.base_speed or data.base_stats[5])
-    for data in all_species.values():
-        if data.form and not data.is_custom_form:
-            base_data = by_id[data.dex_number, 0]
-            data.base_stats = base_data.base_stats
+            set_value(data, (plando_stat.base_hp or data.base_stats[0],
+                             plando_stat.base_attack or data.base_stats[1],
+                             plando_stat.base_defense or data.base_stats[2],
+                             plando_stat.base_sp_attack or data.base_stats[3],
+                             plando_stat.base_sp_defense or data.base_stats[4],
+                             plando_stat.base_speed or data.base_stats[5]))
 
 
-def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry],
-                             by_id: dict[tuple[int, int], SpeciesEntry]):
+def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
 
     mods = world.options.randomize_base_stats
 
@@ -118,39 +120,35 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
                 raise Exception(f"Error with distributing cache in base stats rando: "
                                 f"cache = {cache}, dist = {dist}, total = {total}, max_total = {max_total}, "
                                 f"min_total = {min_total}, append = {append}")
-        data.base_stats = tuple(dist)
+        set_value(data, tuple(dist))
         apply_plando(data)
         do_evos(data, dist)
 
     def apply_plando(data: SpeciesEntry):
         if data.species_name in world.options.stats_plando:
             plando_stat = world.options.stats_plando[data.species_name]
-            data.base_stats = (plando_stat.base_hp or data.base_stats[0],
-                               plando_stat.base_attack or data.base_stats[1],
-                               plando_stat.base_defense or data.base_stats[2],
-                               plando_stat.base_sp_attack or data.base_stats[3],
-                               plando_stat.base_sp_defense or data.base_stats[4],
-                               plando_stat.base_speed or data.base_stats[5])
+            set_value(data, (plando_stat.base_hp or data.base_stats[0],
+                             plando_stat.base_attack or data.base_stats[1],
+                             plando_stat.base_defense or data.base_stats[2],
+                             plando_stat.base_sp_attack or data.base_stats[3],
+                             plando_stat.base_sp_defense or data.base_stats[4],
+                             plando_stat.base_speed or data.base_stats[5]))
 
     def upgrade(data: SpeciesEntry, pre: list[int] | tuple[int, ...]):
         old = data.base_stats
-        data.base_stats = tuple(max(data.base_stats[i], pre[i]) for i in range(6))
+        set_value(data, tuple(max(data.base_stats[i], pre[i]) for i in range(6)))
         apply_plando(data)
         if data.base_stats != old:
             do_evos(data, data.base_stats)
 
     def do_evos(data: SpeciesEntry, this: tuple[int, ...] | list[int]):
         for evo_tup in data.evolutions:
-            for evo_data in evo_tup[2]:
-                if not evo_data.base_stats[0]:
-                    roll(evo_data, this)
-                else:
-                    upgrade(evo_data, this)
+            evo_spec = evo_tup.species.by_form(data.form)
+            if not evo_spec.base_stats[0]:
+                roll(evo_spec, this)
+            else:
+                upgrade(evo_spec, this)
 
     for dat in all_species.values():
         if not dat.base_stats[0] and (not dat.form or dat.is_custom_form):
             roll(dat, (0, 0, 0, 0, 0, 0))
-    for dat in all_species.values():
-        if dat.form and not dat.is_custom_form:
-            base_data = by_id[dat.dex_number, 0]
-            dat.base_stats = base_data.base_stats

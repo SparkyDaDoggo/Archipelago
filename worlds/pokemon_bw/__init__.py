@@ -339,6 +339,7 @@ class PokemonBWWorld(World):
         for entry in self.species_entries.values():
             entry.pre_evolutions.clear()
             entry.evolutions.clear()
+            entry.all_forms.clear()
 
     def part_slot_data(self) -> dict[str, Any]:
         """Earliest to call, plugins get this"""  # though they actually don't need it in this form?

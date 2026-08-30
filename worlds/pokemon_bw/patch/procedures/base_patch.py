@@ -57,9 +57,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         # write patched narc to rom
         rom.setFileByName(narc_filename, source_narc.save())
 
-    # ###########################################################################
+    ############################################################################
     # Unpack overlays and arm9/arm7
-    # ###########################################################################
+    ############################################################################
     overlay_table = rom.loadArm9Overlays()
     arm9 = bytearray(codeCompression.decompress(rom.arm9))
     arm7 = bytearray(rom.arm7)
@@ -123,9 +123,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     arm7.extend(bytes((0x2a000 if rom.name[8:9] == b'W' else 0x29fe0) - len(rom.arm7)))
     arm7.extend(expansion)
 
-    # ###########################################################################
+    ############################################################################
     # Repack overlays and arm9/arm7
-    # ###########################################################################
+    ############################################################################
     rom.arm9OverlayTable = saveOverlayTable(overlay_table)
     arm9 = bytearray(codeCompression.compress(arm9, True))
     arm9[0xfc4:0xfc7] = (len(arm9) + 0x4000).to_bytes(3, "little")

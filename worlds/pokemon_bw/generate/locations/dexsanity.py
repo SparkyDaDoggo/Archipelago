@@ -20,14 +20,9 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
     from ...data.locations.dexsanity import location_table
     from ...data.pokemon.pokedex import by_number
 
-    # These lambdas have to be created from functions, because else they would all use the same 'name' variable
-    def get_standard_rule(x: str) -> Callable[[CollectionState], bool]:
-        n = x.split(" - ")[-1]
-        return lambda state: state.has(n, world.player)
-
-    def get_special_rule(x: str) -> Callable[[CollectionState], bool]:
-        sp = location_table[x].special_rule
-        return lambda state: sp(state, world)
+    def get_rule(dex: int) -> Callable[[CollectionState], bool]:
+        all_forms = world.species_entries_by_id[dex, 0].all_forms
+        return lambda state: state.has_any(all_forms, world.player)
 
     r: "Region" = world.regions["Pokédex"]
     catchable_dex: list[str] = []
@@ -41,10 +36,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         dexsanity_numbers.append(data.dex_number)
         l: PokemonBWLocation = PokemonBWLocation(world.player, loc_name, world.location_name_to_id[loc_name], r)
         l.progress_type = LocationProgressType.DEFAULT
-        if data.special_rule is not None:
-            l.access_rule = get_special_rule(loc_name)
-        else:
-            l.access_rule = get_standard_rule(loc_name)
+        l.access_rule = get_rule(data.dex_number)
         if data.ut_alias is not None:
             world.location_id_to_alias[world.location_name_to_id[loc_name]] = data.ut_alias
         r.locations.append(l)

@@ -15,8 +15,7 @@ def sort_by_power(move: tuple[str, "MoveEntry"]) -> int:
     return move[1].power
 
 
-def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry],
-                               by_id: dict[tuple[int, int], SpeciesEntry]):
+def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
     from ...data.pokemon.moves import by_id as move_by_id
 
     mods = world.options.randomize_level_up_movesets
@@ -72,8 +71,8 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             amount += 1
         evo_moves = []
         for evo_tup in data.evolutions:
-            if evo_tup[0] == "Level up with move":
-                evo_move_name = move_by_id[evo_tup[1]]
+            if evo_tup.method == "Level up with move":
+                evo_move_name = move_by_id[evo_tup.value]
                 if not this_plando or not any(evo_move_name == t[1] for t in this_plando):
                     evo_moves.append(evo_move_name)
         if this_plando and len(this_plando) + len(evo_moves) > amount:
@@ -119,14 +118,12 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
 
     def do_evos(data: SpeciesEntry, extra: list[tuple[str, "MoveEntry"]]):
         for evo_tup in data.evolutions:
-            for evo_dat in evo_tup[2]:
-                if not evo_dat.level_up_moves.level_up_moves:
-                    roll(evo_dat, extra)
+            evo_spec = evo_tup.species.by_form(data.form)
+            if evo_spec.form and not evo_spec.is_custom_form:
+                evo_spec = evo_spec.all_forms[0]
+            if not evo_spec.level_up_moves.level_up_moves:
+                roll(evo_spec, extra)
 
     for spec, dat in all_species.items():
         if not dat.level_up_moves.level_up_moves and (not dat.form or dat.is_custom_form):
             roll(dat, [])
-    for spec, dat in all_species.items():
-        if dat.form and not dat.is_custom_form:
-            base_data = by_id[dat.dex_number, 0]
-            dat.level_up_moves = base_data.level_up_moves

@@ -207,9 +207,10 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
         for species, data in world.species_entries.items():
             for evo in data.evolutions:
                 pre_evo_dex = data.dex_number
-                if evo[2] not in places_for_location:
-                    places_for_location[evo[2][0].dex_number] = set(), [], [], StrVar()
-                places_for_location[evo[2][0].dex_number][2].append(pre_evo_dex)
+                evo_dex = evo.species.dex_number
+                if evo_dex not in places_for_location:
+                    places_for_location[evo_dex] = set(), [], [], StrVar()
+                places_for_location[evo_dex][2].append(pre_evo_dex)
 
     def build_string(_dex: int, _depth=0) -> str:
         if places_for_location[_dex][3].value:

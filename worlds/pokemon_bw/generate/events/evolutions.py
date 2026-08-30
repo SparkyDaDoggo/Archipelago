@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification, Region
 from ...data import AccessRule
-from .. import SpeciesEntry
+from .. import SpeciesEntry, EvolutionsEntry
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -31,22 +31,22 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
 
     region: "Region" = world.regions["Evolutions"]
 
-    def get_rule(f_evodata: tuple[str, int, ...], f_base_species: str) -> AccessRule:
+    def get_rule(f_evodata: EvolutionsEntry, f_base_species: SpeciesEntry) -> AccessRule:
         # helper function to prevent lambdas in for loops
-        method = evolution_methods.methods[f_evodata[0]]
+        method = evolution_methods.methods[f_evodata.method]
         if method is None:
             return world.rules_dict[None]
-        f_rule = world.rules_dict.get_or_add(method.rule(f_evodata[1], f_base_species, world))
-        return lambda state: f_rule(state) and state.has(f_base_species, world.player)
+        f_rule = world.rules_dict.get_or_add(method.rule(f_evodata.value, f_base_species, world))
+        return lambda state: f_rule(state) and state.has(f_base_species.species_name, world.player)
 
     # Dict instead of set to make it deterministic
-    noted_evoid_set: dict[tuple[str, int], None] = {}
-    current_evoid_set: dict[tuple[str, int], None] = {}
-    next_evoid_set: dict[tuple[str, int], None] = {}
+    noted_evoid_set: dict[tuple[SpeciesEntry, int], None] = {}
+    current_evoid_set: dict[tuple[SpeciesEntry, int], None] = {}
+    next_evoid_set: dict[tuple[SpeciesEntry, int], None] = {}
     # Populate initial set by adding all evolutions of every (already) catchable species
     for base_species, base_speciesdata in catchable_species_data.items():
         for evoid_index in range(len(base_speciesdata.evolutions)):
-            evoid = (base_species, evoid_index)
+            evoid = (base_speciesdata, evoid_index)
             current_evoid_set[evoid] = None
             noted_evoid_set[evoid] = None
 
@@ -56,39 +56,36 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         check_next = False
         # Iterate through all currently to-be-checked evoids
         for current_evoid in current_evoid_set:
-            current_base_data = world.species_entries[current_evoid[0]]
+            current_base_data = current_evoid[0]
             current_evodata = current_base_data.evolutions[current_evoid[1]]
             # Check for the evolution being possible if it requires a party member
-            if current_evodata[0] == "Level up with party member":
+            if current_evodata.method == "Level up with party member":
                 # Go through catchable and check whether the required team member
                 # (or any of its forms) is already catchable
                 for catchable_data in catchable_species_data.values():
                     # If evolution possible, jump to creating event
-                    if catchable_data.dex_number == current_evodata[1]:
+                    if catchable_data.dex_number == current_evodata.value:
                         break
                 else:
                     # If required team member not found, add this evoid to next iteration and skip adding event
                     next_evoid_set[current_evoid] = None
                     continue
-            evo_id_tup = (current_evodata[2][0].dex_number, current_base_data.form)
-            if evo_id_tup not in world.species_entries_by_id:
-                evo_id_tup = (evo_id_tup[0], 0)
-            current_evoname = world.species_entries_by_id[evo_id_tup].species_name
+            current_evospec = current_evodata.species.by_form(current_base_data.form)
+            current_evoname = current_evospec.species_name
             # Creating event
-            location_name = f"Evolving {current_evoid[0]} #{current_evoid[1]+1}"
+            location_name = f"Evolving {current_base_data.species_name} #{current_evoid[1]+1}"
             location = PokemonBWLocation(world.player, location_name, None, region)
             item = PokemonBWItem(current_evoname, ItemClassification.progression, None, world.player)
             location.place_locked_item(item)
             location.show_in_spoiler = False
-            location.access_rule = get_rule(current_evodata, current_evoid[0])
+            location.access_rule = get_rule(current_evodata, current_base_data)
             region.locations.append(location)
             # Add the evolution to catchable
-            evo_speciesdata = world.species_entries[current_evoname]
-            catchable_species_data[current_evoname] = evo_speciesdata
+            catchable_species_data[current_evoname] = current_evospec
             # Add evo's evodatas to noted and next evodatas
             check_next = True
-            for evo_evodata_index in range(len(evo_speciesdata.evolutions)):
-                evo_evoid = (current_evoname, evo_evodata_index)
+            for evo_evodata_index in range(len(current_evospec.evolutions)):
+                evo_evoid = (current_evospec, evo_evodata_index)
                 if evo_evoid not in noted_evoid_set:
                     noted_evoid_set[evo_evoid] = None
                     next_evoid_set[evo_evoid] = None

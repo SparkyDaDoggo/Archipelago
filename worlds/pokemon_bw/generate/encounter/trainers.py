@@ -54,21 +54,16 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
 
     def can_evolve(spec: SpeciesEntry, level: int) -> SpeciesEntry | None:
         for evo_tup in spec.evolutions:
-            first_evo_spec = evo_tup[2][0]
-            if first_evo_spec.dex_number == spec.dex_number:
+            evo_spec = evo_tup.species.by_form(spec.form)
+            if evo_spec.dex_number == spec.dex_number:
                 continue
-            if first_evo_spec.species_name in blacklist:
+            if evo_spec.species_name in blacklist:
                 continue
             if level < (evo_tup[1] if methods[evo_tup[0]].has_level_value else 25):
                 continue
-            for form in (spec.form, 0):
-                for evo_spec in evo_tup[2]:
-                    if (
-                        evo_spec.form == form
-                        and evo_spec.species_name not in blacklist
-                        and (not mods.is_prevent_overpowered or sum(evo_spec.base_stats) <= stats_threshold)
-                    ):
-                        return evo_spec
+            if mods.is_prevent_overpowered and sum(evo_spec.base_stats) > stats_threshold:
+                continue
+            return evo_spec
         return None
 
     if mods.is_rivals_keep_starter:
