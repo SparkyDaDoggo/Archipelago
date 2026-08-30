@@ -57,7 +57,7 @@ def decode(data: bytes) -> list[list[Entry]]:
             k = 0
             while k < len(decchars):
                 char = decchars[k]
-                if char == 0xFFFF:
+                if char == 0xFFFF and k not in (0, len(decchars) - 1):
                     st.line += "[Terminate]"
                 elif char == 0xFFFE:
                     st.line += "[NextLine]"  # \n in CTRMap
@@ -81,8 +81,6 @@ def decode(data: bytes) -> list[list[Entry]]:
                 else:
                     st.line += f"[{hex(char)}]"
                 k += 1
-            if st.line.endswith("[Terminate]"):
-                st.line = st.line[:-11]
 
     return texts
 
