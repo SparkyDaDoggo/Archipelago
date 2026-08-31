@@ -183,6 +183,10 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - `pp`
   - Type effectiveness, currently only with the `effectiveness` key for every type combination
 - Added `Dexcountsanity` option with the `Maximum`, `Steps`, and `Leniency` keys
+- Added `Seensanity` option
+  - Contains plando capabilities like `Dexsanity`
+- Added `Seencountsanity` option
+  - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
 - Added `Shinysanity` option
   - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexsanity`
   - Contains plando capabilities like `Dexsanity`
@@ -196,7 +200,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added and changed some roadblocks:
   - The grunts in Pinwheel Forest now also disappear after defeating Lenora
   - The sand in the lower room in Relic Castle now gets whirled up by showing a `Silver Wing` to a worker NPC
-  - A line of dancing is now blocking the gate between Black City/White Forest and Route 14 until you obtain a `GB Sounds`
+  - A line of dancing men is now blocking the gate between Black City/White Forest and Route 14 until you obtain a `GB Sounds`
   - A line of Wingull now blocks a part of the shore of Route 13, thereby requiring you to surf around them
 - Added a portable AP menu that can be accessed by pressing the Start button, with the following content:
   - Portable PC
@@ -237,6 +241,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Re-added forgettable HMs
 - Added static pointers for game data in RAM
 - Prevented plugin options from being put onto the multiserver
+- Added logic for seen trainer pokémon
 
 ### Is this version compatible with older multiworld slots and save files?
 No

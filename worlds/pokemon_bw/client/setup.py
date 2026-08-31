@@ -18,15 +18,6 @@ async def early_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") ->
     )
     client.save_data_address = int.from_bytes(read[0], "little")
 
-    if ctx.slot_data["options"]["dexsanity"] == ctx.slot_data["options"]["dexcountsanity"]["Maximum"] == 0:
-        client.dexsanity_included = False
-
-    shcosanity = ctx.slot_data["options"].get("shinycountsanity", 0)
-    is_shsanity = ctx.slot_data["options"].get("shinysanity", 0)
-    is_shcosanity = shcosanity == 1 or (isinstance(shcosanity, dict) and shcosanity["Maximum"])
-    if not is_shsanity and not is_shcosanity:
-        client.seensanity_included = False
-
 
 async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> None:
     from ..data.items import seasons

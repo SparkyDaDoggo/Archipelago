@@ -14,7 +14,7 @@ class PokemonBWLocation(Location):
 
 def get_location_lookup_table() -> dict[str, int]:
     from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity,
-                                     dexcountsanity, shinysanity, shinycountsanity)
+                                     dexcountsanity, shinysanity, shinycountsanity, seensanity, seencountsanity)
 
     return {
         **overworld_items.lookup(100000),
@@ -26,6 +26,8 @@ def get_location_lookup_table() -> dict[str, int]:
         **dexcountsanity.lookup(602000),
         **shinysanity.lookup(604000),
         **shinycountsanity.lookup(606000),
+        **seensanity.lookup(608000),
+        **seencountsanity.lookup(610000),
     }
 
 
@@ -59,23 +61,25 @@ def get_regions(world: "PokemonBWWorld") -> dict[str, Region]:
     } | enc
 
 
-def create_and_place_event_locations(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
+def create_and_place_event_locations(world: "PokemonBWWorld") -> tuple[dict[str, "SpeciesEntry"], dict[str, "SpeciesEntry"]]:
     """Returns a dict of species that are actually catchable in this world."""
-    from .generate.events import wild, static, evolutions, goal, species_tables, form_change, levels, story
+    from .generate.events import wild, static, evolutions, goal, species_tables, form_change, levels, story, trainers
 
     catchable_species_data: dict[str, "SpeciesEntry"] = wild.create(world) | static.create(world)
     evolutions.create(world, catchable_species_data)
     form_change.create(world, catchable_species_data)
+    seeable_species_data: dict[str, "SpeciesEntry"] = trainers.create(world)
     levels.create(world)
     species_tables.populate(world, catchable_species_data)
     story.create(world)
     goal.create(world)
-    return catchable_species_data
+    return catchable_species_data, seeable_species_data
 
 
-def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
+def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"],
+                               seeable_species_data: dict[str, "SpeciesEntry"]) -> None:
     from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity,
-                                     dexcountsanity, shinysanity, shinycountsanity)
+                                     dexcountsanity, seensanity, seencountsanity, shinysanity, shinycountsanity)
 
     overworld_items.create(world)
     hidden_items.create(world)
@@ -84,6 +88,8 @@ def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: 
     tm_hm.create(world)
     dexsanity.create(world, catchable_species_data)
     dexcountsanity.create(world, catchable_species_data)
+    seensanity.create(world, catchable_species_data, seeable_species_data)
+    seencountsanity.create(world, catchable_species_data, seeable_species_data)
     shinysanity.create(world, catchable_species_data)
     shinycountsanity.create(world, catchable_species_data)
 

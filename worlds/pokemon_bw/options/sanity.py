@@ -72,21 +72,6 @@ class Trainersanity(Range):
     range_end = 1
 
 
-class Seensanity(Range):
-    """
-    Adds a number of locations that can be checked by seeing a certain Pokemon species,
-    which is marked in the pokedex. The actual maximum number of added checks depends on
-    what pokemon species are actually observable in the wild or in trainer battles.
-
-    If you want to have all 649 possible checks, then you need to randomize wild
-    encounters and add the **Ensure all obtainable** modifier.
-    """
-    display_name = "Seensanity"
-    default = 0
-    range_start = 0
-    range_end = 649
-
-
 class Dexcountsanity(ExtendedOptionCounter):
     """
     Adds a number of locations that can be checked by catching a certain total number of
@@ -108,6 +93,88 @@ class Dexcountsanity(ExtendedOptionCounter):
     encounters and add the **Ensure all obtainable** modifier.
     """
     display_name = "Dexcountsanity"
+    fill_defaults = True
+    valid_keys = [
+        "Maximum",
+        "Steps",
+        "Leniency",
+    ]
+    default = {
+        "Maximum": 0,
+        "Steps": 1,
+        "Leniency": 0,
+    }
+    individual_min_max = {
+        "Maximum": (0, 649),
+        "Steps": (1, 649),
+        "Leniency": (0, 648),
+    }
+
+
+class Seensanity(Range):
+    """
+    Adds a number of locations that can be checked by seeing a certain Pokemon species,
+    which is marked in the pokedex. The actual maximum number of added checks depends on
+    what pokemon species are actually observable in the wild or in trainer battles.
+
+    If you want to have all 649 possible checks, then you need to randomize wild
+    encounters and add the **Ensure all obtainable** modifier.
+
+    Alternatively, you can put in a list of dex numbers and dex number ranges in order to
+    plando what pokemon you want to have locations for:
+    ```
+      seensanity:
+        - [50, 51, 52, 53, 54, 460-469, 500]
+    ```
+    See the options guides for more information.
+    """
+    display_name = "Seensanity"
+    value: int | list[int]
+    default = 0
+    range_start = 0
+    range_end = 649
+
+    def __init__(self, value: Any):
+        if isinstance(value, Iterable):
+            resolved = []
+            for val in value:
+                if isinstance(val, str):
+                    split = val.split("-")
+                    if len(split) != 2 or not split[0].isnumeric() or not split[1].isnumeric():
+                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
+                    rang = int(split[0]), int(split[1])
+                    if not (1 < rang[0] <= self.range_end) or not (1 < rang[1] <= self.range_end):
+                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
+                    resolved.extend(range(rang[0], rang[1]+1))
+                elif isinstance(val, int):
+                    if val < 1:
+                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
+                                          f"which is lower than minimum 1")
+                    elif val > self.range_end:
+                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
+                                          f"which is higher than maximum {self.range_end}")
+                    resolved.append(val)
+                else:
+                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers and integer "
+                                      f"ranges, found {type(val)}")
+            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
+        else:
+            super().__init__(value)
+
+    @classmethod
+    def from_any(cls, data: Any) -> Range:
+        if type(data) is int or isinstance(data, Iterable):
+            return cls(data)
+        return cls.from_text(str(data))
+
+
+class Seencountsanity(ExtendedOptionCounter):
+    """
+    A combination of Dexcountsanity and Seensanity.
+    This option can be edited like Dexcountsanity, while only requiring to see a certain
+    amount of Pokemon species.
+    """
+    display_name = "Seencountsanity"
     fill_defaults = True
     valid_keys = [
         "Maximum",

@@ -20,6 +20,16 @@ def lookup(domain: int) -> dict[str, int]:
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
     from ...data.locations.rules import build_caught_rule
 
+    option_value = world.options.shinycountsanity.value
+    if isinstance(option_value, int):
+        option_value = {
+            "Maximum": option_value,
+            "Steps": 1,
+            "Leniency": 0,
+        }
+    if not option_value["Maximum"]:
+        return
+
     capped_rule = build_caught_rule(649, world)
 
     def get_rule(x: int) -> "AccessRule":
@@ -28,13 +38,6 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         return build_caught_rule(x, world)
 
     r: "Region" = world.regions["Pokédex"]
-    option_value = world.options.shinycountsanity.value
-    if isinstance(option_value, int):
-        option_value = {
-            "Maximum": option_value,
-            "Steps": 1,
-            "Leniency": 0,
-        }
     catchable_dex = set()  # Only for counting
     for data in catchable_species_data.values():
         catchable_dex.add(data.dex_number)

@@ -18,12 +18,14 @@ def get_item_groups() -> dict[str, set[str]]:
 
 
 def get_location_groups() -> dict[str, set[str]]:
-    from .data.locations import dexsanity, countsanity, shinysanity
+    from .data.locations import dexsanity, countsanity, shinysanity, seensanity
     from .data.locations.ingame_items import overworld_items, hidden_items, other, special
 
     return {
         "Dexsanity": set(dexsanity.location_table),
         "Dexcountsanity": set(countsanity.dexcountsanity),
+        "Seensanity": set(seensanity.location_table),
+        "Seencountsanity": set(countsanity.seencountsanity),
         "Shinysanity": set(shinysanity.location_table),
         "Shinycountsanity": set(countsanity.shinycountsanity),
         "Overworld items": {*overworld_items.table, *overworld_items.abyssal_ruins, *overworld_items.seasonal},
@@ -35,10 +37,8 @@ def get_location_groups() -> dict[str, set[str]]:
         "Gym TM rewards": set(special.gym_tms),
         "TM/HM locations": {*special.gym_tms, *special.tm_hm_ncps},
         "Post-Ghetsis locations": {
-            "Relic Castle - 1F towerside item", "Relic Castle - B3F towerside hidden item",
             "Nuvema Town - Item from Looker after beating Ghetsis", "Desert Resort - Item from Professor Juniper",
             "Twist Mountain - Item from worker near ice rock cave", "Route 18 - TM from sage Rood",
-            "Relic Castle - TM from sage Ryoku", "Cold Storage - TM from sage Zinzolin",
-            "Chargestone Cave - TM from sage Bronius",
+            "Cold Storage - TM from sage Zinzolin", "Chargestone Cave - TM from sage Bronius",
         },
     }

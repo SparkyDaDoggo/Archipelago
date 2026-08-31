@@ -117,6 +117,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Type effectiveness chart
 - Move data plando (with all randomizable data at that time)
 - Dexcountsanity
+- Seensanity
+- Seencountsanity
 - Shinysanity
 - Shinycountsanity
 - arm7 expansion (required for advanced assembly)
@@ -132,7 +134,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - N uses pokemon from nearby
     - More or less per trainer
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
-  - Seensanity (Only accounting for wild pokémon at first, trainer teams later; has impact on All Pokémon Seen)
   - Trainersanity
   - Formsanity (not that many checks)
   - Gendersanity
@@ -155,10 +156,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Trainer pokémon plando
   - Decrease trainer eyesight
   - Customize roadblocks
-    - Relic castle room filling with sand unlockable via an item
     - Extra cuttable trees
     - Rock Smash rocks
-    - Roadblocks on routes 13+14
     - Something with the badge gates
     - Something needed to cross quicksand in relic castle
   - Starter/Static/Gift/Trade/Legendary pokémon randomization

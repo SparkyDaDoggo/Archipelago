@@ -37,6 +37,12 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                 if spec not in always_required:
                     always_required.append(spec)
 
+        if isinstance(world.options.seensanity.value, list):
+            for dex_num in world.options.seensanity.value:
+                spec = world.species_entries_by_id[(dex_num, 0)]
+                if spec not in always_required:
+                    always_required.append(spec)
+
         if isinstance(world.options.shinysanity.value, list):
             for dex_num in world.options.shinysanity.value:
                 spec = world.species_entries_by_id[(dex_num, 0)]

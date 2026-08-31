@@ -249,7 +249,7 @@ Pokemon Black and White:
 
 # Dexsanity Plando guide (coming in 0.4.0)
 
-(This guide also applies to `Shinysanity`.)
+(This guide also applies to `Seensanity` and `Shinysanity`.)
 
 ## How does this work?
 

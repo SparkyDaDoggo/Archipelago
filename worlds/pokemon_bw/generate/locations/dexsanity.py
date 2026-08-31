@@ -20,6 +20,9 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
     from ...data.locations.dexsanity import location_table
     from ...data.pokemon.pokedex import by_number
 
+    if not world.options.dexsanity:
+        return
+
     def get_rule(dex: int) -> Callable[[CollectionState], bool]:
         all_forms = world.species_entries_by_id[dex, 0].all_forms
         return lambda state: state.has_any(all_forms, world.player)

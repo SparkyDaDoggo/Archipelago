@@ -254,8 +254,8 @@ class PokemonBWWorld(World):
     def create_regions(self) -> None:
         from .plugins.generate import plugins_create_regions
 
-        catchable_species_data = locations.create_and_place_event_locations(self)
-        locations.create_and_place_locations(self, catchable_species_data)
+        catchable_species_data, seeable_species_data = locations.create_and_place_event_locations(self)
+        locations.create_and_place_locations(self, catchable_species_data, seeable_species_data)
         self.to_be_filled_locations = locations.count_to_be_filled_locations(self.regions)
         plugins_create_regions(self, catchable_species_data)
         locations.temporary_debugging(self)
@@ -372,6 +372,8 @@ class PokemonBWWorld(World):
                     "shuffle_tm_hm": self.options.shuffle_tm_hm.current_key,
                     "dexsanity": self.options.dexsanity.value,
                     "dexcountsanity": self.options.dexcountsanity.value,
+                    "seensanity": self.options.seensanity.value,
+                    "seencountsanity": self.options.seencountsanity.value,
                     "shinysanity": self.options.shinysanity.value,
                     "shinycountsanity": self.options.shinycountsanity.value,
                     "season_control": self.options.season_control.current_key,

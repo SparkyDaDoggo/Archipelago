@@ -67,6 +67,7 @@ class SpeciesEntry:
 
     is_custom_form: bool
     custom_form_file: int
+    virtual: bool
     write: int = 0
     """b0 = evolutions
     b1 = do not rando evo (i.e. plando with evo override)
@@ -109,6 +110,7 @@ class SpeciesEntry:
         self.egg_species = None if not is_copy else data.egg_species
         self.is_custom_form = data.is_custom_form
         self.custom_form_file = data.custom_form_file
+        self.virtual = bool(is_copy)
 
         if is_copy:
             if len(self.all_forms) <= is_copy:

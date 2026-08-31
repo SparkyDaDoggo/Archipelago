@@ -66,13 +66,13 @@ class PokemonBWClient(BizHawkClient):
         self.goal_bitmap: int = 0
         self.statics_bitmap: int = 0
         self.trades_bitmap: int = 0
-        self.dexsanity_included: bool = True
         self.dexsanity_count: int = 0
-        self.seensanity_included: bool = True
         self.player_name: str | None = None
         self.missing_flag_loc_ids: list[list[int]] = [[] for _ in range(self.flags_amount)]
         self.missing_dex_flag_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.missing_dexcount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
+        self.missing_seen_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
+        self.missing_seencount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.missing_shiny_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.missing_shinycount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.save_data_address = 0
@@ -123,7 +123,7 @@ class PokemonBWClient(BizHawkClient):
         """For handling packages from the server. Called from `BizHawkClientContext.on_package`."""
 
         if cmd == 'Connected':
-            from .data.locations import all_item_locations, dexsanity, countsanity, shinysanity
+            from .data.locations import all_item_locations, dexsanity, countsanity, shinysanity, seensanity
             for loc_id in ctx.missing_locations:
                 loc_name = ctx.location_names.lookup_in_game(loc_id)
                 if loc_name in all_item_locations:
@@ -132,6 +132,10 @@ class PokemonBWClient(BizHawkClient):
                     self.missing_dex_flag_loc_ids[dexsanity.location_table[loc_name].dex_number].append(loc_id)
                 elif loc_name in countsanity.dexcountsanity:
                     self.missing_dexcount_loc_ids[countsanity.dexcountsanity[loc_name]].append(loc_id)
+                elif loc_name in seensanity.location_table:
+                    self.missing_seen_loc_ids[seensanity.location_table[loc_name].dex_number].append(loc_id)
+                elif loc_name in countsanity.seencountsanity:
+                    self.missing_seencount_loc_ids[countsanity.seencountsanity[loc_name]].append(loc_id)
                 elif loc_name in shinysanity.location_table:
                     self.missing_shiny_loc_ids[shinysanity.location_table[loc_name].dex_number].append(loc_id)
                 elif loc_name in countsanity.shinycountsanity:

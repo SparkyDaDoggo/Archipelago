@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError,
                      OptionCounter, StartInventoryPool, OptionDict, ItemSet)
-from .sanity import Dexsanity, Dexcountsanity, Shinysanity, Shinycountsanity
+from .sanity import Dexsanity, Dexcountsanity, Shinysanity, Shinycountsanity, Seensanity, Seencountsanity
 from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTradePokemon, RandomizeStarterPokemon,
                         RandomizeLegendaryPokemon, RandomizeStaticPokemon, RandomizeTrainerPokemon,
                         WildRandomizationBlacklist, TrainerRandomizationBlacklist, PokemonRandomizationAdjustments,
@@ -953,10 +953,11 @@ class PokemonBWOptions(PerGameCommonOptions):
     # additional_roadblocks: AdditionalRoadblocks
     dexsanity: Dexsanity
     dexcountsanity: Dexcountsanity
+    seensanity: Seensanity
+    seencountsanity: Seencountsanity
     shinysanity: Shinysanity
     shinycountsanity: Shinycountsanity
     # trainersanity: Trainersanity
-    # seensanity: Seensanity
     # formsanity: Formsanity
     # door_shuffle: DoorShuffle
     season_control: SeasonControl

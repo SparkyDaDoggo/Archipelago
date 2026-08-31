@@ -3,11 +3,12 @@
 - specialized unittests for rando modifiers
 - `increasing stats` in evo rando not working?
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- Accumula Town NPCs empty text boxes
 - `Dungeon 1 to 1` + `Prevent rare encounters` + `dexsanity_friendly` + 12% threshold give too many different species
+- all pokemon seen needs to account for seensanity
 - rom script changes to comply with regions rework:
   - master ball seller overhaul
   - Max & Reset options for shiny rate modifier & Exp multiplier
+  - check whether npcs asking for event pokémon are still using the ex command
   - ############################
   - accumula guards send you both ways
   - move striaton gym guide a bit south
@@ -18,7 +19,7 @@
   - move rumination field rocks a bit
   - make liberty garden grunts not disappearing
   - relic castle 1f worker send both ways
-  - relic castle back room rock until cleared with silver wing
+  - relic castle back room rock until cleared with silver wing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   - relic castle chased grunt running towards all entrances
   - driftveil cheren and clay scene talking as alternate trigger
   - add more clerks to driftveil gym entrance
@@ -27,6 +28,7 @@
   - both icirrus city scenes by trigger
   - dragonspiral rocks inside, cleared after bryce fight
   - make dragonspiral grunt trainers not disappear
+  - remove time requirement of tubeline bridge bikers
   - fix route 9 infielder script
   - add rocks to challengers cave entrance
   - remove giant chasm warps to snow
@@ -35,6 +37,7 @@
   - remove closing doors in league
   - add rock on landing stage that is cleared exactly when champion room is messed up
   - some way to still get back to landing stage from champion room after champion room is repaired
+  - remove once-per-day access to the riches
 - unittests update with new options
 
 # Not urgent
