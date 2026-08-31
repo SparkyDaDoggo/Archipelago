@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 def create(world: "PokemonBWWorld"):
-    # from ...data.trainers.data import table as trainer_table
+    from ...data.trainers.data import table as trainer_table
 
     max_in_region: dict[str, int] = {"Hall of Fame": 100}
 
@@ -17,10 +17,13 @@ def create(world: "PokemonBWWorld"):
         lvl = (data.max_level + data.min_level) // 2
         if data.region not in max_in_region or lvl > max_in_region[data.region]:
             max_in_region[data.region] = lvl
-    # for t_data in world.trainer_teams:
-    #     reg = trainer_table[t_data.trainer_id].region
-    #     if reg and reg not in max_in_region or t_data.level > max_in_region[reg]:
-    #         max_in_region[reg] = t_data.level
+    for tp_data in world.trainer_teams:
+        t_data = trainer_table[tp_data.trainer_id]
+        if not t_data.logic_inc_rule(world):
+            continue
+        reg = t_data.region
+        if reg and reg not in max_in_region or tp_data.level > max_in_region[reg]:
+            max_in_region[reg] = tp_data.level
 
     for reg, lvl in max_in_region.items():
         r = world.regions[reg]

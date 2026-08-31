@@ -89,7 +89,7 @@ class RulesDict(dict[ExtendedRule | ExtRulesTuple | None, AccessRule]):
         self.world = world
         self[None] = lambda state: True
 
-    def get_or_add(self, item: ExtendedRule | ExtRulesTuple) -> AccessRule:
+    def get_or_add(self, item: ExtendedRule | ExtRulesTuple | None) -> AccessRule:
         if item not in self:
             self[item] = ExtRulesTuple.resolve(item, self.world)
         return self[item]
@@ -176,7 +176,8 @@ class TrainerData(NamedTuple):
     """0 no rival, 1-3 Bianca, 4-6 Cheren, 7 N
     rival order is Snivy/Tepig/Oshawott chosen by player"""
     do_not_adjust: bool = False
-    inclusion_rule: InclusionRule | None = None
+    logic_inc_rule: InclusionRule | None = None
+    access_rule: ExtendedRule | ExtRulesTuple | None = None
     # early: bool
     # nearby_maps: tuple[int, ...]
 

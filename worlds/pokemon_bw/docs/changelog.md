@@ -234,6 +234,9 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - This also fixes a bug where `Area 1 to 1` and `Prevent rare encounters` had a conflict
 - Made all fly flags being automatically set upon entering the city
   - This also fixes potentially getting locked out of the Driftveil City fly flag
+- Re-added forgettable HMs
+- Added static pointers for game data in RAM
+- Prevented plugin options from being put onto the multiserver
 
 ### Is this version compatible with older multiworld slots and save files?
 No

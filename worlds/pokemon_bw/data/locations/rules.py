@@ -170,10 +170,14 @@ encounter_can_set_winter: ExtendedRule = lambda state, world: (
 has_visited_biancas_house: ExtendedRule = lambda state, world: state.has("[Event] Argument in Bianca's house", world.player)  # Requires door shuffle
 has_seen_accumula_speech: ExtendedRule = lambda state, world: state.has("[Event] Accumula Town Ghetsis speech", world.player)  # Requires door shuffle
 has_fought_cheren_trainerschool: ExtendedRule = lambda state, world: state.has("[Event] Trainers' School Cheren fight", world.player)  # Requires door shuffle
+has_seen_plasma_route_3: ExtendedRule = lambda state, world: state.has("[Event] Grunts running on Route 3", world.player)  # Requires door shuffle
 has_fought_plasma_wellspring: ExtendedRule = lambda state, world: state.has("[Event] Wellspring Cave Plasma fight", world.player)  # Requires door shuffle
 has_helped_man_nimbasa: ExtendedRule = lambda state, world: state.has("[Event] Helping old man in Nimbasa", world.player)
 has_encountered_cobalion: ExtendedRule = lambda state, world: state.has("[Event] Encounter Cobalion", world.player)
+has_fought_plasma_castelia: ExtendedRule = lambda state, world: state.has("[Event] Castelia Plasma fight", world.player)  # Requires door shuffle
 has_confronted_plasma_castelia: ExtendedRule = lambda state, world: state.has("[Event] Castelia Plasma Hideout confrontation", world.player)  # Requires door shuffle
+has_fought_dancer_mickey: ExtendedRule = lambda state, world: state.has("[Event] Defeating Catelia Dancer Mickey", world.player)  # Requires door shuffle
+has_searched_cold_storage: ExtendedRule = lambda state, world: state.has("[Event] Search with Cheren in Cold Storage building", world.player)
 has_confronted_plasma_cold_storage: ExtendedRule = lambda state, world: state.has("[Event] Cold Storage Plasma confrontation", world.player)
 has_battled_n_chargestone: ExtendedRule = lambda state, world: state.has("[Event] Defeating N Chargestone", world.player)
 has_rung_bell_celestial: ExtendedRule = lambda state, world: state.has("[Event] Ring bell Celestial Tower", world.player)
@@ -191,6 +195,8 @@ has_talked_to_kids_mistralton: ExtendedRule = lambda state, world: state.has("[E
 
 has_defeated_striaton_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Cilan/Chili/Cress", world.player)
 has_defeated_nacrene_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Lenora", world.player)
+has_defeated_castelia_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Burgh", world.player)
+has_defeated_nimbasa_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Elesa", world.player)
 has_defeated_driftveil_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Clay", world.player)
 has_defeated_mistralton_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Skyla", world.player)
 has_defeated_icirrus_gym: ExtendedRule = lambda state, world: state.has("[Event] Defeating leader Brycen", world.player)
@@ -326,3 +332,5 @@ tm_hm_hunt_goal: InclusionRule = lambda world: (
 # TODO properly implement when door shuffle
 shuffled_doors: InclusionRule = lambda world: False and world.options.door_shuffle.any_shuffled()
 vanilla_doors: InclusionRule = lambda world: True or not world.options.door_shuffle.any_shuffled()
+black_version: InclusionRule = lambda world: world.options.version == "black"
+white_version: InclusionRule = lambda world: world.options.version == "white"

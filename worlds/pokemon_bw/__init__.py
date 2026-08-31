@@ -412,6 +412,10 @@ class PokemonBWWorld(World):
     def fill_slot_data(self) -> Mapping[str, Any]:
         from .data import version
 
+        slot_data = self.extended_slot_data()
+        slot_data["options"]["text_plando"] = []
+        slot_data["options"]["plugin_options"] = {}
+
         return self.extended_slot_data() | {
             # Needed for UT
             "ut_compatibility": version.ut(),
