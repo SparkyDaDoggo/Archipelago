@@ -185,8 +185,10 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added `Dexcountsanity` option with the `Maximum`, `Steps`, and `Leniency` keys
 - Added `Seensanity` option
   - Contains plando capabilities like `Dexsanity`
+  - Limits the effect of `All Pokémon Seen`
 - Added `Seencountsanity` option
   - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
+  - Disables `All Pokémon Seen` entirely
 - Added `Shinysanity` option
   - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexsanity`
   - Contains plando capabilities like `Dexsanity`

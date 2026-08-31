@@ -16,7 +16,8 @@ def lookup(domain: int) -> dict[str, int]:
     return {name: data.dex_number + domain for name, data in location_table.items()}
 
 
-def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"], seeable_species_data: dict[str, "SpeciesEntry"]) -> None:
+def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"],
+           seeable_species_data: dict[str, "SpeciesEntry"]) -> None:
     from ...data.locations.seensanity import location_table
     from ...data.pokemon.pokedex import by_number
 
@@ -29,6 +30,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
 
     r: "Region" = world.regions["Pokédex"]
     seeable_dex: list[str] = []
+    seen_loc_dex_numbers: list[int] = []
     for data in seeable_species_data.values():
         if data.dex_name not in seeable_dex:
             seeable_dex.append(data.dex_name)
@@ -44,6 +46,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         if loc_data.ut_alias is not None:
             world.location_id_to_alias[world.location_name_to_id[loc_name]] = loc_data.ut_alias
         r.locations.append(l)
+        seen_loc_dex_numbers.append(loc_data.dex_number)
 
     if isinstance(world.options.seensanity.value, list):
         for dex_num in sorted(set(world.options.seensanity.value)):
@@ -61,3 +64,5 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             a_an = "an" if chosen[0] in "AEIOU" and chosen != "Uxie" else "a"
             name = f"Pokédex - See {a_an} {chosen}"
             create_location(name)
+
+    world.seensanity_numbers.extend(seen_loc_dex_numbers)

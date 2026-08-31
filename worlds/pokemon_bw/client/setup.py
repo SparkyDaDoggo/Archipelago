@@ -90,12 +90,15 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
 
         # all pokemon seen: male seen, female seen, male shown, forms seen, forms shown
         # shown flags always the later ones, so setting them to male won't change it if a different form was set ingame
-        if "all_pokemon_seen" in ctx.slot_data["options"] and ctx.slot_data["options"]["all_pokemon_seen"]:
+        if ctx.slot_data["options"]["all_pokemon_seen"] and not ctx.slot_data["options"]["seencountsanity"]["Maximum"]:
+            seen_flags = bytearray(b'\xff') * 0x54
+            for dex in ctx.slot_data["seensanity_numbers"]:
+                seen_flags[dex // 8] -= 1 << (dex % 8)
             await bizhawk.write(
                 ctx.bizhawk_ctx, (
-                    (client.save_data_address + client.dex_seen_offsets[0], b'\xff' * 0x54, "Main RAM"),
-                    (client.save_data_address + client.dex_seen_offsets[1], b'\xff' * 0x54, "Main RAM"),
-                    (client.save_data_address + client.dex_display_offsets[0], b'\xff' * 0x54, "Main RAM"),
+                    (client.save_data_address + client.dex_seen_offsets[0], seen_flags, "Main RAM"),
+                    (client.save_data_address + client.dex_seen_offsets[1], seen_flags, "Main RAM"),
+                    (client.save_data_address + client.dex_display_offsets[0], seen_flags, "Main RAM"),
                     (client.save_data_address + client.dex_forms_offsets[0], b'\xff' * 9, "Main RAM"),
                     (client.save_data_address + client.dex_forms_offsets[2], b'\xff' * 9, "Main RAM"),
                 )

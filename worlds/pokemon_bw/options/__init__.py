@@ -548,6 +548,7 @@ class ModifyEncounterRates(Choice):
 class ExpMultiplier(Range):
     """
     Multiplies the experience points received from defeating wild and trainer pokemon.
+    This can also be changed ingame afterwards.
     """
     display_name = "Experience Multiplier"
     default = 1
@@ -559,6 +560,9 @@ class AllPokemonSeen(Toggle):
     """
     Start with all pokemon seen in your Pokedex.
     This allows you to see where the pokemon can be encountered in the wild.
+
+    However, pokemon species with a Seensanity location will be excluded from this option
+    and having any Seencountsanity location disables this option entirely.
     """
     display_name = "All Pokemon Seen"
     default = False
@@ -571,8 +575,8 @@ class AddFairyType(Choice):
     - **No** - Don't add the fairy type.
     - **Only randomized** - If types are randomized, this adds the fairy type to the pool
         of possible types.
-    - **Modify vanilla** - Updates the type combination of all pokemon that received the
-        fairy type in X and Y.
+    - **Modify vanilla** - Additionally updates the type combination of all pokemon that
+        received the fairy type in X and Y.
     """
     display_name = "Add Fairy Type"
     option_no = 0
