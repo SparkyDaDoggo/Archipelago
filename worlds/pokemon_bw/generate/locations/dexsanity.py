@@ -45,7 +45,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         r.locations.append(l)
 
     if isinstance(world.options.dexsanity.value, list):
-        for dex_num in world.options.dexsanity.value:
+        for dex_num in sorted(set(world.options.dexsanity.value)):
             dex_num: int
             pokemon = by_number[dex_num]
             if pokemon in catchable_dex:
