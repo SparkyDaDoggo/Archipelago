@@ -56,7 +56,10 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                     always_required.append(data)
                 break
 
-        if not world.options.all_pokemon_seen:
+        auto_seen = 649 - len(world.seensanity_numbers)
+        if world.options.seencountsanity["Maximum"] or not world.options.all_pokemon_seen:
+            auto_seen = 0
+        if auto_seen < 115:
             # Get list of ALL pokémon
             pool_115 = list(data for spec_name, data in world.species_entries.items()
                             if not data.form and spec_name not in blacklist)
@@ -65,9 +68,9 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                 if spec in pool_115:
                     pool_115.remove(spec)
             # Assert that there are actually 115 pokemon available
-            if len(always_required) + len(pool_115) < 115:
-                raise OptionError(f"Player {world.player_name}: Less than 115 pokémon available. Please either reduce "
-                                  f"the amount of blacklisted pokémon or add **Ensure all obtainable**.")
+            if len(always_required) + len(pool_115) < auto_seen:
+                raise OptionError(f"Player {world.player_name}: Less than {auto_seen} pokémon available. Please either "
+                                  f"reduce the amount of blacklisted pokémon or add **Ensure all obtainable**.")
             # Random picking begins here
             world.random.shuffle(pool_115)
             # Remove overpowered stuff and save it in case of not enough non-overpowered
@@ -78,10 +81,10 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                     (underpowered if sum(spec.base_stats) <= threshold else overpowered).append(spec)
                 pool_115 = underpowered
             # Fill with random to get 115 total
-            always_required += (pool_115[i] for i in range(min(115-len(always_required), len(pool_115))))
+            always_required += (pool_115[i] for i in range(min(auto_seen-len(always_required), len(pool_115))))
             # Add overpowered stuff in case of not enough non-overpowered
-            if len(always_required) < 115:
-                always_required += (overpowered[i] for i in range(115-len(always_required)))
+            if len(always_required) < auto_seen:
+                always_required += (overpowered[i] for i in range(auto_seen-len(always_required)))
 
         return SpeciesChecklist(always_required, world)
 

@@ -227,7 +227,7 @@ has_access_chasm_evo_items: ExtendedRule = lambda state, world: state.has("[Even
 
 # Encounter requirements
 
-caught_seen_rules_cache: dict[tuple[int, bool] | tuple[int, bool, "PokemonBWWorld"], AccessRule | ExtendedRule] = {}
+caught_seen_rules_cache: dict[tuple[int, bool] | tuple[int, bool, "PokemonBWWorld"], AccessRule | ExtendedRule | None] = {}
 
 
 def build_caught_ext_rule(x: int) -> ExtendedRule:
@@ -278,7 +278,9 @@ def build_seen_ext_rule(x: int) -> ExtendedRule:
     if (x, False) not in caught_seen_rules_cache:
 
         def r(state: CollectionState, world: "PokemonBWWorld") -> bool:
-            if world.options.all_pokemon_seen:
+            auto_seen = 649 - len(world.seensanity_numbers)
+            is_seencount = bool(world.options.seencountsanity["Maximum"])
+            if not is_seencount and world.options.all_pokemon_seen and auto_seen >= x:
                 return True
             found: int = 0
             prog_items = state.prog_items[world.player]
@@ -300,22 +302,25 @@ def build_seen_ext_rule(x: int) -> ExtendedRule:
 
 def build_seen_rule(x: int, world: "PokemonBWWorld") -> AccessRule:
     if (x, False, world) not in caught_seen_rules_cache:
+        auto_seen = 649 - len(world.seensanity_numbers)
+        is_seencount = bool(world.options.seencountsanity["Maximum"])
+        if not is_seencount and world.options.all_pokemon_seen and auto_seen >= x:
+            r = None
+        else:
 
-        def r(state: CollectionState) -> bool:
-            if world.options.all_pokemon_seen:
-                return True
-            found: int = 0
-            prog_items = state.prog_items[world.player]
-            for data in world.species_entries.values():
-                if data.form:
-                    continue
-                for form in data.all_forms:
-                    if prog_items[form.species_name] or prog_items["[Seen] " + form.species_name]:
-                        found += 1
-                        break
-                if found >= x:
-                    return True
-            return False
+            def r(state: CollectionState) -> bool:
+                found: int = 0
+                prog_items = state.prog_items[world.player]
+                for data in world.species_entries.values():
+                    if data.form:
+                        continue
+                    for form in data.all_forms:
+                        if prog_items[form.species_name] or prog_items["[Seen] " + form.species_name]:
+                            found += 1
+                            break
+                    if found >= x:
+                        return True
+                return False
 
         caught_seen_rules_cache[x, False, world] = r
 
