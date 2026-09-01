@@ -40,7 +40,8 @@ def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Z
             else:
                 first, first_orig = first_level[reg_name]
                 lvl = first * pokemon.level // first_orig
-            new_level = max(min(lvl + 2, 100), pokemon.level)
+            # ... * 4 // 5 in order to allow a little bit of lowering the level, level 0 is prevented by min(lvl + 2, 100)
+            new_level = max(min(lvl + 2, 100), pokemon.level * 4 // 5 + 1)
             if new_level != pokemon.level:
                 pokemon.level = new_level
                 pokemon.write |= 1

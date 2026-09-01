@@ -33,8 +33,9 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
                 else:
                     first, first_orig = first_level[slot.region]
                     lvl = first * slot.max_level // first_orig
-                new_levels = (max(min(lvl * slot.min_level // slot.max_level, 100), slot.min_level),
-                              max(min(lvl, 100), slot.max_level))
+                # ... * 4 // 5 in order to allow a little bit of lowering the level, ... + 1 to prevent level 0
+                new_levels = (max(min(lvl * slot.min_level // slot.max_level, 100), slot.min_level * 4 // 5 + 1),
+                              max(min(lvl, 100), slot.max_level * 4 // 5 + 1))
                 if (slot.min_level, slot.max_level) != new_levels:
                     slot.min_level, slot.max_level = new_levels
                     slot.write |= 1
