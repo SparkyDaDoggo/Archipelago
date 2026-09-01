@@ -36,9 +36,6 @@ def get_location_groups() -> dict[str, set[str]]:
         "Badge rewards": set(special.gym_badges),
         "Gym TM rewards": set(special.gym_tms),
         "TM/HM locations": {*special.gym_tms, *special.tm_hm_ncps},
-        "Post-Ghetsis locations": {
-            "Nuvema Town - Item from Looker after beating Ghetsis", "Desert Resort - Item from Professor Juniper",
-            "Twist Mountain - Item from worker near ice rock cave", "Route 18 - TM from sage Rood",
-            "Cold Storage - TM from sage Zinzolin", "Chargestone Cave - TM from sage Bronius",
-        },
+        # Leftover from before these were auto excluded, not removing it to prevent breaking old yamls
+        "Post-Ghetsis locations": {},
     }

@@ -18,7 +18,6 @@
   - move rumination field rocks a bit
   - make liberty garden grunts not disappearing
   - relic castle 1f worker send both ways
-  - relic castle back room rock until cleared with silver wing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   - relic castle chased grunt running towards all entrances
   - driftveil cheren and clay scene talking as alternate trigger
   - add more clerks to driftveil gym entrance

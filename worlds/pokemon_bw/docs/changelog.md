@@ -244,6 +244,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added static pointers for game data in RAM
 - Prevented plugin options from being put onto the multiserver
 - Added logic for seen trainer pokémon
+- Made Post-Ghetsis locations be automatically excluded if the goal is `ghetsis`
+  - The `Post-Ghetsis locations` group is now empty due to that, but not removed in order to not break older yamls
 
 ### Is this version compatible with older multiworld slots and save files?
 No

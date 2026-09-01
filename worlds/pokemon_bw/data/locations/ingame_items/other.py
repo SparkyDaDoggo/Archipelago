@@ -2,16 +2,11 @@ from ..rules import *
 from ..progress_type import *
 from ... import FlagLocationData, IfExtRules as IF
 
-# How I decided the progress types:
-# I set always_default by default (pun not intended)
-# If the npc/... gives you a progression key item, it will be key_item_location
-# If accessibility is not always given, it will be always_excluded
-
 table: dict[str, FlagLocationData] = {
     "Nuvema Town - Item from Mom after first fight": FlagLocationData(0x189, always_default, "Player's House", None, None),
     "Nuvema Town - Item #2 from Mom": FlagLocationData(0x185, always_default, "Nuvema Town", None, IF(shuffled_doors, has_introduced_junipers_lab)),
     # Vanilla location of Super Rod
-    "Nuvema Town - Item from Looker after beating Ghetsis": FlagLocationData(0x18A, key_item_location, "Player's House", None, has_beaten_ghetsis),
+    "Nuvema Town - Item from Looker after beating Ghetsis": FlagLocationData(0x18A, post_ghetsis, "Player's House", None, has_beaten_ghetsis),
     "Route 1 - Item after catching tutorial #1": FlagLocationData(0x18B, always_default, "Route 1 East", None, None),
     "Route 1 - Item after catching tutorial #2": FlagLocationData(0x18B, always_default, "Route 1 East", None, None),
     "Route 1 - Item after catching tutorial #3": FlagLocationData(0x18B, always_default, "Route 1 East", None, None),
@@ -45,7 +40,7 @@ table: dict[str, FlagLocationData] = {
     "Nacrene City - Item from waitress in Café Warehouse": FlagLocationData(0x1B7, always_default, "Café Warehouse", None, None),
     "Nacrene City - Item from Bianca": FlagLocationData(0x18F, always_default, "Nacrene City", None, IF(shuffled_doors, has_defeated_nacrene_gym)),
     # Vanilla location of Light/Dark Stone
-    "Nacrene City - Item from Lenora after Relic Castle": FlagLocationData(0x195, key_item_location, "Nacrene City", None, has_confronted_ghetsis_relic_castle),
+    "Nacrene City - Item from Lenora after Relic Castle": FlagLocationData(0x195, always_default, "Nacrene City", None, has_confronted_ghetsis_relic_castle),
     "Nacrene Gym - Gym guide item": FlagLocationData(119, always_default, "Nacrene Gym", None, None),
     "Pinwheel Forest Outside - Item from challenge rock": FlagLocationData(0x1B8, always_default, "Pinwheel Forest Outside", None, has_fighting_type_species),
     "Pinwheel Forest - Item from ranger Forrest": FlagLocationData(1420+26, always_default, "Pinwheel Forest West", None, None),
@@ -53,7 +48,7 @@ table: dict[str, FlagLocationData] = {
     "Pinwheel Forest - Item from ranger Irene": FlagLocationData(1420+27, always_default, "Pinwheel Forest West", None, None),
     "Pinwheel Forest - Item from ranger Miguel": FlagLocationData(1420+28, always_default, "Pinwheel Forest West", None, None),
     # Vanilla location of Dragon Skull
-    "Pinwheel Forest - Stolen item from Plasma grunt": FlagLocationData(0x187, key_item_location, "Pinwheel Forest West", None, None),
+    "Pinwheel Forest - Stolen item from Plasma grunt": FlagLocationData(0x187, always_default, "Pinwheel Forest West", None, None),
     "Pinwheel Forest - Item from Lenora": FlagLocationData(0x188, always_default, "Pinwheel Forest West", None, None),
     "Skyarrow Bridge - Item from hiker in gate": FlagLocationData(268, always_default, "Skyarrow Bridge South Gate", None, None),
     "Castelia City - Item from scientist at Thumb Pier": FlagLocationData(269, always_default, "Castelia City Thumb Pier", None, None),
@@ -88,7 +83,7 @@ table: dict[str, FlagLocationData] = {
     # "Passerby Analytics HQ - Item for completing all survey requests": FlagLocationData(0000000, always_default, "Castelia City", None, None),
     "Castelia Gym - Gym guide item": FlagLocationData(120, always_default, "Castelia Gym Entrance", None, None),
     # Royal Unova only accessible at season-dependant day times
-    "Royal Unova - Item for defeating every trainer": FlagLocationData(0x198, always_default, "Castelia City Cruise Dock", None, has_beaten_ghetsis),
+    "Royal Unova - Item for defeating every trainer": FlagLocationData(0x198, post_ghetsis, "Castelia City Cruise Dock", None, has_beaten_ghetsis),
     "Route 4 - Item from Professor Juniper #1": FlagLocationData(0x19B, always_default, "Nimbasa South Gate", None, None),
     "Route 4 - Item from Professor Juniper #2": FlagLocationData(0x19B, always_default, "Nimbasa South Gate", None, None),
     "Route 4 - Item from Professor Juniper #3": FlagLocationData(0x19B, always_default, "Nimbasa South Gate", None, None),
@@ -102,7 +97,7 @@ table: dict[str, FlagLocationData] = {
     "Desert Resort - Item from man in black": FlagLocationData(276, always_default, "Desert Resort", None, None),
     "Desert Resort - Item from ranger Mylene": FlagLocationData(1420+549, always_default, "Desert Resort", None, None),
     "Desert Resort - Item from ranger Jaden": FlagLocationData(1420+550, always_default, "Desert Resort", None, None),
-    "Desert Resort - Item from Professor Juniper": FlagLocationData(0x19C, always_default, "Desert Resort", None, has_beaten_ghetsis),
+    "Desert Resort - Item from Professor Juniper": FlagLocationData(0x19C, post_ghetsis, "Desert Resort", None, has_beaten_ghetsis),
     "Relic Castle - 1F castleside item from backpacker": FlagLocationData(145, always_default, "Relic Castle Castleside 1F", None, None),
     "Nimbasa City - Item from Day-Care man": FlagLocationData(153, always_default, "Nimbasa City", None, None),
     "Nimbasa City - Item from socialite in western building": FlagLocationData(366, always_default, "Nimbasa City North West House 2F", None, None),
@@ -159,7 +154,7 @@ table: dict[str, FlagLocationData] = {
     "Mistralton Gym - Gym guide item": FlagLocationData(123, always_default, "Mistralton Gym", None, None),
     "Route 7 - Item from ranger Mary": FlagLocationData(1420+187, always_default, "Route 7", None, None),
     "Route 7 - Item from ranger Pedro": FlagLocationData(1420+183, always_default, "Route 7", None, None),
-    "Twist Mountain - Item from worker near ice rock cave": FlagLocationData(0x1BF, always_default, "Twist Mountain 1F South West", None, has_beaten_ghetsis),
+    "Twist Mountain - Item from worker near ice rock cave": FlagLocationData(0x1BF, post_ghetsis, "Twist Mountain 1F South West", None, has_beaten_ghetsis),
     "Icirrus City - Item from Aha if answer was correct": FlagLocationData(0x1A7, always_default, "Icirrus City Aha's House", disabled, None),
     "Icirrus City - Item from Aha if answer was incorrect": FlagLocationData(0x1A6, always_default, "Icirrus City Aha's House", disabled, None),
     "Icirrus City - Item from Aha for any answer": FlagLocationData(0x1E7, always_default, "Icirrus City Aha's House", None, None),
@@ -191,9 +186,9 @@ table: dict[str, FlagLocationData] = {
     "Route 13 - Item from veteran in western house #1": FlagLocationData(356, always_default, "Route 13 West House", None, None),
     "Route 13 - Item from veteran in western house #2": FlagLocationData(356, always_default, "Route 13 West House", None, None),
     # The following 2 locations normally have wingull grams, which are progressive key items
-    "Route 13 - Item from old man": FlagLocationData(318, key_item_location, "Route 13 North", None, None),
+    "Route 13 - Item from old man": FlagLocationData(318, always_default, "Route 13 North", None, None),
     # Lets put the blocking line of pokémon above her
-    "Route 13 - Item from parasol lady": FlagLocationData(319, key_item_location, "Route 13 South", None, has_talked_wingull_route_13),
+    "Route 13 - Item from parasol lady": FlagLocationData(319, always_default, "Route 13 South", None, has_talked_wingull_route_13),
     "Route 13 - Random item from man in black": FlagLocationData(279, always_default, "Route 13 North", None, None),
     "Lacunosa Town - Item from executive": FlagLocationData(0x1CA, always_default, "Lacunosa Town North East House", None, None),
     # Requires pokémon being randomized

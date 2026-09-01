@@ -109,7 +109,6 @@ class TMLocationData(NamedTuple):
     progress_type: ProgressTypeMethod
     region: str
     inclusion_rule: InclusionRule | None
-    hm_rule: Callable[[str], bool] | None
     rule: ExtendedRule | ExtRulesTuple | None
 
 
