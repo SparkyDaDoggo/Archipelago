@@ -1,10 +1,7 @@
 import random
 
-from . import random_combination, PokemonBWTestBase
+from . import PokemonBWTestBase, multiply_random_combinations
 from ..options import Goal
-
-
-all_goals = list(Goal.options)
 
 
 ###################################################
@@ -26,21 +23,9 @@ class TestGoalLegendaryHunt(PokemonBWTestBase):
     options = {"goal": "legendary_hunt"}
 class TestGoalPokemonMaster(PokemonBWTestBase):
     options = {"goal": "pokemon_master"}
-class TestCombinedGoal(PokemonBWTestBase):
-    options = {"goal": random_combination(all_goals)}
-    def setUp(self) -> None:
-        print("Modifiers: "+", ".join(self.options["goal"]))
-        super().setUp()
-class TestCombinedGoal1(TestCombinedGoal):
-    options = {"goal": random_combination(all_goals)}
-class TestCombinedGoal2(TestCombinedGoal):
-    options = {"goal": random_combination(all_goals)}
-class TestCombinedGoal3(TestCombinedGoal):
-    options = {"goal": random_combination(all_goals)}
-class TestCombinedGoal4(TestCombinedGoal):
-    options = {"goal": random_combination(all_goals)}
-class TestCombinedGoal5(TestCombinedGoal):
-    options = {"goal": random_combination(all_goals)}
+@multiply_random_combinations("goal", tuple(Goal.options), 8)
+class TestCombinedGoals(PokemonBWTestBase):
+    pass
 
 
 ###################################################

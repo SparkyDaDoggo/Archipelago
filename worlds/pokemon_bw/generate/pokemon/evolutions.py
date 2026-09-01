@@ -22,7 +22,7 @@ def would_loop_deep_search(pre: SpeciesEntry, evo: SpeciesEntry) -> bool:
     return False
 
 
-def cop(obj: Iterable, bad: Iterable) -> tuple:
+def cop(obj: Iterable[str | Iterable], bad: Iterable) -> tuple:
     return tuple(oo for oo in ((o if isinstance(o, str) else cop(o, bad)) for o in obj if o not in bad) if oo)
 
 
@@ -253,17 +253,17 @@ def randomize_evolutions(world: "PokemonBWWorld", by_id: dict[tuple[int, int], S
             if not mods.is_more_less_branches or not mods.is_random_methods:
                 return method_list
             method_slots += 1
-            bad += evolution_methods.level_methods
+            bad.update(evolution_methods.level_methods)
 
         if _dat.gender_ratio in (254, 255):
-            bad += ("Level up (male)", "Stone male")
+            bad.update("Level up (male)", "Stone male")
         if _dat.gender_ratio in (0, 255):
-            bad += ("Level up (female)", "Stone female")
+            bad.update("Level up (female)", "Stone female")
         if _dat.evolutions:
             plando_methods = tuple(resolve_paired(evo_entry.method) for evo_entry in _dat.evolutions)
             method_slots += len(_dat.evolutions)
             if any(lvlm in plando_methods for lvlm in evolution_methods.level_methods):
-                bad += evolution_methods.level_methods
+                bad.update(evolution_methods.level_methods)
             for oom in evolution_methods.only_once_methods:
                 if oom in plando_methods:
                     bad.add(oom)
@@ -289,13 +289,15 @@ def randomize_evolutions(world: "PokemonBWWorld", by_id: dict[tuple[int, int], S
                         method_list.append((picked_method, -1))
                         method_slots += picked_slots
                         branches_already += branches_picked
-                        if not evolution_methods.methods[picked_method].allow_multiple:
+                        only_once_paired = picked_slots in evolution_methods.paired_method_slots and picked_method != "_Level up item"
+                        method_data = evolution_methods.methods.get(picked_method, None)
+                        if only_once_paired or (method_data and method_data.allow_multiple):
                             _rand_methods = cop(_rand_methods, (picked_method, ))
                         break
             else:
-                from_vanilla = cop(from_vanilla, bad)
+                from_vanilla = [vm for vm in from_vanilla if vm[0] not in bad]
                 for vm in from_vanilla:
-                    slots = evolution_methods.paired_method_slots.get(vm, 1)
+                    slots = evolution_methods.paired_method_slots.get(vm[0], 1)
                     if method_slots + slots <= 7:
                         method_list.append(vm)
         else:
@@ -309,7 +311,9 @@ def randomize_evolutions(world: "PokemonBWWorld", by_id: dict[tuple[int, int], S
                     continue
                 method_list.append((picked_method, -1))
                 method_slots += picked_slots
-                if not evolution_methods.methods[picked_method].allow_multiple:
+                only_once_paired = picked_slots in evolution_methods.paired_method_slots and picked_method != "_Level up item"
+                method_data = evolution_methods.methods.get(picked_method, None)
+                if only_once_paired or (method_data and method_data.allow_multiple):
                     _rand_methods = cop(_rand_methods, (picked_method,))
                 break
 

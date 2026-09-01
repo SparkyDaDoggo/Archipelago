@@ -44,9 +44,9 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
             return first, world.random.choice(pool)
 
     def roll_groups(data: SpeciesEntry) -> tuple[str, str]:
-        pool = allowed if not mods.is_correlate_with_types \
-            else list(g for g in allowed if
-                      groups[g].compatible_types is None or any(t in data.types for t in groups[g].compatible_types))
+        pool = allowed.copy() if not mods.is_correlate_with_types \
+            else list(g for g in allowed if (groups[g].compatible_types is None
+                                             or any(t in data.types for t in groups[g].compatible_types)))
         if mods.is_mono_only and not mods.is_dual_only:
             return roll_mono(pool)
         elif mods.is_dual_only and not mods.is_mono_only:

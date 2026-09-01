@@ -18,8 +18,8 @@ def create(world: "PokemonBWWorld"):
         if data.region not in max_in_region or lvl > max_in_region[data.region]:
             max_in_region[data.region] = lvl
     for tp_data in world.trainer_teams:
-        t_data = trainer_table[tp_data.trainer_id]
-        if not t_data.logic_inc_rule(world):
+        t_data = trainer_table[tp_data.trainer_id - 1]
+        if t_data.logic_inc_rule and not t_data.logic_inc_rule(world):
             continue
         reg = t_data.region
         if reg and reg not in max_in_region or tp_data.level > max_in_region[reg]:

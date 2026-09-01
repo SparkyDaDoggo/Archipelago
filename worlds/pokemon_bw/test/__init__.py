@@ -20,20 +20,22 @@ def multiply_random_combinations(option: str, mods: tuple, count: int, additiona
         def create_test(index: int) -> Callable:
             def _test(self: cls):
                 self.options = {option: combs[index]} | additional
-                for name, value in WorldTestBase.__dict__.items():
+                print("Modifiers: " + ", ".join(self.options[option]))
+                all_members = tuple(WorldTestBase.__dict__.items()) + tuple(cls.__dict__.items())
+                for name, value in all_members:
+                    name: str
                     if not (isinstance(value, Callable) and name[:5] in "test_mod_"):
                         continue
-                    with self.subTest(name, game=self.game, seed=self.multiworld.seed):
+                    if name.startswith("test_combination"):
+                        continue
+                    with self.subTest("World setup", game=self.game):
                         self.world_setup()
+                    with self.subTest(name, game=self.game, seed=self.multiworld.seed):
                         value(self)
 
             return _test
 
-        def setUp(self: cls) -> None:
-            print("Modifiers: " + ", ".join(self.options[option]))
-
         cls.auto_construct = False
-        cls.setUp = setUp
         for i in range(count):
             setattr(cls, f"test_combination_{i}", create_test(i))
         return cls

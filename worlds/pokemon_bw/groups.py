@@ -37,5 +37,5 @@ def get_location_groups() -> dict[str, set[str]]:
         "Gym TM rewards": set(special.gym_tms),
         "TM/HM locations": {*special.gym_tms, *special.tm_hm_ncps},
         # Leftover from before these were auto excluded, not removing it to prevent breaking old yamls
-        "Post-Ghetsis locations": {},
+        "Post-Ghetsis locations": {"Nuvema Town - Item from Looker after beating Ghetsis"},
     }

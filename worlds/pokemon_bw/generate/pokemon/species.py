@@ -23,7 +23,6 @@ def generate_species_data(world: "PokemonBWWorld") -> tuple[dict[str, SpeciesEnt
     for name, entry in all_species.items():  # Fill (pre-)evolution lists
         if not entry.form:
             entry.evolutions = []
-            entry.pre_evolutions = {}
             entry.all_forms = [entry]
             for evo in entry.evolutions_copy:
                 evo_dex = pokedex.by_name[evo[2]]
@@ -35,6 +34,7 @@ def generate_species_data(world: "PokemonBWWorld") -> tuple[dict[str, SpeciesEnt
             entry.evolutions = base_entry.evolutions
             entry.pre_evolutions = base_entry.pre_evolutions
             entry.all_forms = base_entry.all_forms
+            assert len(entry.all_forms) == entry.form
             entry.all_forms.append(entry)
             if not entry.is_custom_form:
                 entry.level_up_moves = base_entry.level_up_moves

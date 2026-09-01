@@ -16,8 +16,8 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
     seeable_species_data: dict[str, "SpeciesEntry"] = {}
 
     for data in world.trainer_teams:
-        trainer = table[data.trainer_id]
-        if not trainer.logic_inc_rule(world):
+        trainer = table[data.trainer_id - 1]
+        if trainer.logic_inc_rule and not trainer.logic_inc_rule(world):
             continue
         r: "Region" = world.regions[trainer.region]
         species_data: "SpeciesEntry" = world.species_entries[data.species]

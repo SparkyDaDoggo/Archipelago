@@ -2,30 +2,30 @@ from typing import TYPE_CHECKING, Callable
 
 from BaseClasses import LocationProgressType, CollectionState
 
-from ...locations import PokemonBWLocation
+from ....locations import PokemonBWLocation
 
 if TYPE_CHECKING:
-    from ... import PokemonBWWorld
+    from .... import PokemonBWWorld
     from BaseClasses import Region
-    from .. import SpeciesEntry
+    from ... import SpeciesEntry
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ...data.locations.seensanity import location_table
+    from ....data.locations.seensanity import location_table
 
     return {name: data.dex_number + domain for name, data in location_table.items()}
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"],
            seeable_species_data: dict[str, "SpeciesEntry"]) -> None:
-    from ...data.locations.seensanity import location_table
-    from ...data.pokemon.pokedex import by_number
+    from ....data.locations.seensanity import location_table
+    from ....data.pokemon.pokedex import by_number
 
     if not world.options.seensanity:
         return
 
     def get_rule(dex: int) -> Callable[[CollectionState], bool]:
-        all_forms = world.species_entries_by_id[dex, 0].all_forms
+        all_forms = tuple(f.species_name for f in world.species_entries_by_id[dex, 0].all_forms if f)
         return lambda state: state.has_any((prefix + f for f in all_forms for prefix in ("", "[Seen] ")), world.player)
 
     r: "Region" = world.regions["Pokédex"]

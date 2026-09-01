@@ -59,7 +59,7 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
                 continue
             if evo_spec.species_name in blacklist:
                 continue
-            if level < (evo_tup[1] if methods[evo_tup[0]].has_level_value else 25):
+            if level < (evo_tup.value if methods[evo_tup.method].has_level_value else 25):
                 continue
             if mods.is_prevent_overpowered and sum(evo_spec.base_stats) > stats_threshold:
                 continue
@@ -154,16 +154,17 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
                                              else world.random.choice(tuple(types_by_name)))
             this_type = gym_types[trainer.gym[0]]
         elif mods.is_type_themed:
-            if not t_types[next_slot.trainer_id]:
-                t_types[next_slot.trainer_id] = world.random.choice(tuple(types_by_name))
-            this_type = t_types[next_slot.trainer_id]
+            if not t_types[next_slot.trainer_id - 1]:
+                t_types[next_slot.trainer_id - 1] = world.random.choice(tuple(types_by_name))
+            this_type = t_types[next_slot.trainer_id - 1]
         # Roll species
         next_slot.species = get_random(next_slot, this_type).species_name
         next_slot.write |= 2
     # fill rivals' last pokémon
-    for r_slot in rivals_slots:
-        r_slot.sort(key=lambda _slot: _slot.level)
-    for r_slot in rivals_slots:
-        for next_slot in r_slot:
-            next_slot.species = get_rival_last(next_slot).species_name
-            next_slot.write |= 2
+    if rivals_starter:
+        for r_slot in rivals_slots:
+            r_slot.sort(key=lambda _slot: _slot.level)
+        for r_slot in rivals_slots:
+            for next_slot in r_slot:
+                next_slot.species = get_rival_last(next_slot).species_name
+                next_slot.write |= 2

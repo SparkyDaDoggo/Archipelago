@@ -82,21 +82,23 @@ class IfExtRules(ExtRulesTuple):
         return world.rules_dict[None] if not self[0](world) else ExtRulesTuple.resolve(self[1], world)
 
 
-class RulesDict(dict[ExtendedRule | ExtRulesTuple | None, AccessRule]):
+RulesDictKey = ExtendedRule | ExtRulesTuple | None | tuple[Callable, int]
+
+
+class RulesDict(dict[RulesDictKey, AccessRule]):
 
     def __init__(self, world: "PokemonBWWorld" = None):
         super().__init__()
         self.world = world
         self[None] = lambda state: True
 
-    def get_or_add(self, item: ExtendedRule | ExtRulesTuple | None) -> AccessRule:
+    def get_or_add(self, item: RulesDictKey) -> AccessRule:
         if item not in self:
             self[item] = ExtRulesTuple.resolve(item, self.world)
         return self[item]
 
 
 class FlagLocationData(NamedTuple):
-    # flags begin at 0x23bf28 (B) or 0x23bf48 (W)
     flag_id: int
     progress_type: ProgressTypeMethod
     region: str

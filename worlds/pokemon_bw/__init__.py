@@ -338,11 +338,6 @@ class PokemonBWWorld(World):
         spoiler.write_spoiler_tm_hm_compat(self, spoiler_handle)
         spoiler.write_spoiler_move_data(self, spoiler_handle)
         spoiler.write_spoiler_type_chart(self, spoiler_handle)
-        # Prevent memory leaks
-        for entry in self.species_entries.values():
-            entry.pre_evolutions.clear()
-            entry.evolutions.clear()
-            entry.all_forms.clear()
 
     def part_slot_data(self) -> dict[str, Any]:
         """Earliest to call, plugins get this"""  # though they actually don't need it in this form?

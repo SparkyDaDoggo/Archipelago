@@ -67,7 +67,7 @@ table: list[TrainerData] = [
     TrainerData(61, "Bianca", "Player's Bedroom", "PkMn Trainer", 1, None, False, False, 8, None, 3, logic_inc_rule=disabled),
     TrainerData(62, "Grunt", "Wellspring Cave Entrance", "Team Plasma", 1, None, False, False, 8, None, 0, access_rule=IF(shuffled_doors, has_seen_plasma_route_3)),
     TrainerData(63, "Grunt", "Wellspring Cave Entrance", "Team Plasma", 1, None, False, False, 8, None, 0, access_rule=IF(shuffled_doors, has_seen_plasma_route_3)),
-    TrainerData(64, "N", "Accumula Town", "PkMn Trainer", 1, None, False, True, 16, None, 7, access_rule=has_seen_accumula_speech),
+    TrainerData(64, "N", "Accumula Town", "PkMn Trainer", 1, None, False, True, 16, None, 7, access_rule=IF(shuffled_doors, has_seen_accumula_speech)),
     TrainerData(65, "N", "Nacrene City", "PkMn Trainer", 3, None, False, False, 8, None, 7),
     TrainerData(66, "Cody", "Nimbasa Gym", "Rich Boy", 1, None, False, False, 8, ("Nimbasa", "Electric", False), 0),
     TrainerData(67, "Rolan", "Nimbasa Gym", "Rich Boy", 2, None, False, False, 8, ("Nimbasa", "Electric", False), 0),

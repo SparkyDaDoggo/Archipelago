@@ -13,8 +13,13 @@ class PokemonBWLocation(Location):
 
 
 def get_location_lookup_table() -> dict[str, int]:
-    from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity,
-                                     dexcountsanity, shinysanity, shinycountsanity, seensanity, seencountsanity)
+    from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm)
+    from .generate.locations.sanity import dexsanity
+    from .generate.locations.sanity import shinysanity
+    from .generate.locations.sanity import seensanity
+    from .generate.locations.sanity import shinycountsanity
+    from .generate.locations.sanity import seencountsanity
+    from .generate.locations.sanity import dexcountsanity
 
     return {
         **overworld_items.lookup(100000),
@@ -78,8 +83,13 @@ def create_and_place_event_locations(world: "PokemonBWWorld") -> tuple[dict[str,
 
 def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"],
                                seeable_species_data: dict[str, "SpeciesEntry"]) -> None:
-    from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm, dexsanity,
-                                     dexcountsanity, seensanity, seencountsanity, shinysanity, shinycountsanity)
+    from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm)
+    from .generate.locations.sanity import dexsanity
+    from .generate.locations.sanity import shinysanity
+    from .generate.locations.sanity import seensanity
+    from .generate.locations.sanity import shinycountsanity
+    from .generate.locations.sanity import seencountsanity
+    from .generate.locations.sanity import dexcountsanity
 
     overworld_items.create(world)
     hidden_items.create(world)

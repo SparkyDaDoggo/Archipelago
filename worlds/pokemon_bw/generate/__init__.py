@@ -99,12 +99,10 @@ class SpeciesEntry:
         self.evolution_stage = data.evolution_stage
         self.evolutions = None if not is_copy else data.evolutions
         self.evolutions_copy = data.evolutions if not is_copy else data.evolutions_copy
-        self.pre_evolutions = None if not is_copy else data.pre_evolutions
+        self.pre_evolutions = (None if data.form else {}) if not is_copy else data.pre_evolutions
         self.all_forms = None if not is_copy else data.all_forms
-        self.level_up_moves = data.level_up_moves if is_copy else (movesets_level_up.table[name]
-                                                                   if not data.form or data.is_custom_form else None)
-        self.tm_hm_moves = data.tm_hm_moves if is_copy else (movesets_tm_hm.table[name]
-                                                             if not data.form or data.is_custom_form else None)
+        self.level_up_moves = data.level_up_moves if is_copy else movesets_level_up.table[name]
+        self.tm_hm_moves = data.tm_hm_moves if is_copy else movesets_tm_hm.table[name]
         self.vanilla_moves_count = len(self.level_up_moves) if not is_copy else data.vanilla_moves_count
         self.egg_groups = None if not is_copy else data.egg_groups
         self.egg_species = None if not is_copy else data.egg_species
@@ -121,7 +119,7 @@ class SpeciesEntry:
 
     def by_form(self, form: int) -> Self:
         if len(self.all_forms) <= form:
-            self.all_forms += (None,) * (form - len(self.all_forms))
+            self.all_forms += (None,) * (form + 1 - len(self.all_forms))
         if self.all_forms[form] is None:
             self.all_forms[form] = SpeciesEntry(self.species_name, self, form)
         return self.all_forms[form]
