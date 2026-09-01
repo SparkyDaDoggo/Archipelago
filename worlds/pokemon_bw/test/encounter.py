@@ -1,74 +1,89 @@
-from test.bases import WorldTestBase
-
-from . import random_combination
+from . import multiply_random_combinations, PokemonBWTestBase
 from ..options import RandomizeWildPokemon, RandomizeTrainerPokemon
-
-
-class PokemonBWTestBase(WorldTestBase):
-    game = "Pokemon Black and White"
-
-
-wild_mods = tuple(RandomizeWildPokemon.valid_keys)
-trainer_mods = tuple(RandomizeTrainerPokemon.valid_keys)
+from ..data.pokemon.species import by_name
 
 
 class TestRandomizeWildPokemonSimple(PokemonBWTestBase):
     options = {"randomize_wild_pokemon": ["Randomize"]}
+@multiply_random_combinations("randomize_wild_pokemon", tuple(RandomizeWildPokemon.valid_keys), 11)
 class TestRandomizeWildPokemon(PokemonBWTestBase):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-    def setUp(self) -> None:
-        print("Modifiers: "+", ".join(self.options["randomize_wild_pokemon"]))
-        super().setUp()
+
+    def mod_ensure_all_obtainable(self):
+        if "Ensure all obtainable" not in self.options["randomize_wild_pokemon"]:
+            return
+        with self.subTest("Game", game=self.game, seed=self.multiworld.seed):
+            for name in by_name:
+                self.assertIn(name, self.world.catchable_species_data,
+                              f"Species {name} appears to not be catchable anywhere")
 
 
 class TestRandomizeTrainerPokemonSimple(PokemonBWTestBase):
     options = {"randomize_trainer_pokemon": ["Randomize"]}
+@multiply_random_combinations("randomize_trainer_pokemon", tuple(RandomizeTrainerPokemon.valid_keys), 10)
 class TestRandomizeTrainerPokemon(PokemonBWTestBase):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-    def setUp(self) -> None:
-        print("Modifiers: "+", ".join(self.options["randomize_trainer_pokemon"]))
-        super().setUp()
+    pass
 
 
-class TestRandomizeWildPokemon1(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon2(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon3(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon4(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon5(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon6(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon7(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon8(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon9(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-class TestRandomizeWildPokemon10(TestRandomizeWildPokemon):
-    options = {"randomize_wild_pokemon": random_combination(wild_mods)}
-
-
-class TestRandomizeTrainerPokemon1(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon2(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon3(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon4(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon5(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon6(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon7(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon8(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon9(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
-class TestRandomizeTrainerPokemon10(TestRandomizeTrainerPokemon):
-    options = {"randomize_trainer_pokemon": random_combination(trainer_mods)}
+class TestEncounterPlandoEmpty(PokemonBWTestBase):
+    options = {"encounter_plando": []}
+class TestEncounterPlandoAllParameters(PokemonBWTestBase):
+    options = {
+        "encounter_plando": [
+            {
+                "map": "Route 1",
+                "method": "Grass",
+                "species": "Kyogre",
+            },
+            {
+                "map": "Route 8",
+                "seasons": "Summer",
+                "method": "Surfing",
+                "slots": 1,
+                "species": ["Charmander", "Squirtle", "Bulbasaur"],
+            },
+            {
+                "map": "Icirrus City",
+                "seasons": ["Summer", "Winter"],
+                "method": "Surfing",
+                "slots": [1, 3, 4],
+                "species": "Blastoise",
+            },
+            {
+                "map": "Route 16",
+                "method": "Grass",
+                "species": "None",
+            },
+        ],
+    }
+class TestEncounterPlandoRandomize(PokemonBWTestBase):
+    options = {
+        "encounter_plando": [
+            {
+                "map": "Route 1",
+                "method": "Grass",
+                "species": "Kyogre",
+            },
+            {
+                "map": "Route 2",
+                "method": "Rustling grass",
+                "species": "Groudon",
+            },
+        ],
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestEncounterPlandoRandomizeAllObtainable(PokemonBWTestBase):
+    options = {
+        "encounter_plando": [
+            {
+                "map": "Route 1",
+                "method": "Grass",
+                "species": "Kyogre",
+            },
+            {
+                "map": "Route 2",
+                "method": "Rustling grass",
+                "species": "Groudon",
+            },
+        ],
+        "randomize_wild_pokemon": ["Randomize", "Ensure all obtainable"],
+    }

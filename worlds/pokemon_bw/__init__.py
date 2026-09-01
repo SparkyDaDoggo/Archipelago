@@ -184,6 +184,7 @@ class PokemonBWWorld(World):
         self.driftveil_random_move_id: int = 0
         self.move_entries: dict[str, MoveEntry] | None = None
         self.type_chart: dict[tuple[str, str], int] | None = None
+        self.catchable_species_data: dict[str, SpeciesEntry] | None = None
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
@@ -261,6 +262,7 @@ class PokemonBWWorld(World):
         plugins_create_regions(self, catchable_species_data)
         locations.temporary_debugging(self)
         self.multiworld.regions.extend(self.regions.values())
+        self.catchable_species_data = catchable_species_data
 
     def create_items(self) -> None:
         from .plugins.generate import plugins_create_items, plugins_create_items_main_only

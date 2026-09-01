@@ -247,7 +247,7 @@ class RandomizeHeldItems(ToggleSet):
     auto_add_if_any = "Randomize"
 
 
-class RandomizeEggGroups(ToggleSet):  # TODO custom egg groups possible?
+class RandomizeEggGroups(ToggleSet):
     """
     Randomizes the egg groups of every pokemon species.
     You can add as many of the following modifiers as you want.

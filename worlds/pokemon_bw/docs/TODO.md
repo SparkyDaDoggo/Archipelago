@@ -36,7 +36,6 @@
   - add rock on landing stage that is cleared exactly when champion room is messed up
   - some way to still get back to landing stage from champion room after champion room is repaired
   - remove once-per-day access to the riches
-- unittests update with new options
 
 # Not urgent
 
