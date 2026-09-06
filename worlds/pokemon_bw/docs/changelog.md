@@ -190,22 +190,27 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Seencountsanity`
     - Works like `Dexcountsanity`
     - Disables `All Pokémon Seen` entirely
+    - Requires the `Dexsanitysanity` plugin
   - `Formsanity`
     - Contains plando capabilities similar `Dexsanity`
     - Limits the effect of `All Pokémon Seen`
   - `Formcountsanity`
     - Works like `Dexcountsanity`
     - Limits the effect of `All Pokémon Seen`
+    - Requires the `Dexsanitysanity` plugin
   - `Shinysanity`
     - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexsanity`
     - Contains plando capabilities like `Dexsanity`
   - `Shinycountsanity`
     - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
+    - Requires the `Dexsanitysanity` plugin
   - `Shinyformsanity`
     - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Formsanity`
     - Contains plando capabilities like `Formsanity`
+    - Requires the `Dexsanitysanity` plugin
   - `Shinyformcountsanity`
     - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
+    - Requires the `Dexsanitysanity` plugin
 - Added an ingame option to change the shiny rate
   - Possible values are 0 (never) to 65535 (almost guaranteed)
   - Only appears when any `Shinysanity` variant is enabled
