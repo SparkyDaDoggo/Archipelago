@@ -22,7 +22,7 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
         r: "Region" = world.regions[trainer.region]
         species_data: "SpeciesEntry" = world.species_entries[data.species]
         l: PokemonBWLocation = PokemonBWLocation(
-            world.player, f"[TrainerPkmn] {data.trainer_id}-{data.team_number}", None, r)
+            world.player, f"[TrPkmn] {data.trainer_id}-{data.team_number}", None, r)
         item: PokemonBWItem = PokemonBWItem("[Seen] " + data.species, ItemClassification.progression, None, world.player)
         l.access_rule = world.rules_dict.get_or_add(trainer.access_rule)
         l.place_locked_item(item)

@@ -256,12 +256,9 @@ Pokemon Black and White:
 Instead of writing a single number to determine the amount of random Dexsanity checks you 
 want to have in your world, you can provide a fixed list of dex numbers (or forms for 
 `Formsanity` variants) you want to have checks for.
-However, adding a certain number doesn't guarantee that it will have a check.
-Only pokémon that are actually obtainable in your world can have Dexsanity checks (which 
-also applies to the standard way of using this option).
-You can ensure your dex numbers to have checks by either plando'ing those species 
-somewhere in the world or enabling wild pokémon randomization with 
-`Ensure all obtainable` included.
+However, not randomizing wild encounters and then adding dex numbers that are not 
+catchable in vanilla will only add a location if you plando that species somewhere in the 
+game.
 
 ## How do I use it?
 

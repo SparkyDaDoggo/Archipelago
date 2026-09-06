@@ -6,6 +6,7 @@ from ..data.common_options import ExtendedOptionCounter
 from worlds import world_sources
 
 DEXSANITYSANITY_ENABLED = any(source.name == "pokemon_bw_dexsanitysanity" for source in world_sources)
+DEXSANITYSANITY_VISIBILITY = Visibility.spoiler if not DEXSANITYSANITY_ENABLED else Visibility.all
 
 
 class Dexsanity(Range):
@@ -179,7 +180,7 @@ class Seencountsanity(ExtendedOptionCounter):
     """
     display_name = "Seencountsanity"
     fill_defaults = True
-    visibility = Visibility.spoiler | Visibility.complex_ui
+    visibility = DEXSANITYSANITY_VISIBILITY
     valid_keys = [
         "Maximum",
         "Steps",
@@ -256,7 +257,7 @@ class Formcountsanity(ExtendedOptionCounter):
     """
     display_name = "Formcountsanity"
     fill_defaults = True
-    visibility = Visibility.spoiler | Visibility.complex_ui
+    visibility = DEXSANITYSANITY_VISIBILITY
     valid_keys = [
         "Maximum",
         "Steps",
@@ -376,7 +377,7 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
     default = 0
     fill_defaults = True
     supports_weighting = True
-    visibility = Visibility.spoiler | Visibility.complex_ui
+    visibility = DEXSANITYSANITY_VISIBILITY
     individual_min_max = {
         "Maximum": (0, 649),
         "Steps": (1, 649),
@@ -440,7 +441,7 @@ class Shinyformsanity(Toggle):
     """
     display_name = "Shinyformsanity"
     value: int | list[str]
-    visibility = Visibility.spoiler | Visibility.complex_ui
+    visibility = DEXSANITYSANITY_VISIBILITY
     default = 0
 
     def __init__(self, value: Any):
@@ -497,7 +498,7 @@ class Shinyformcountsanity(Toggle, ExtendedOptionCounter):
     default = 0
     fill_defaults = True
     supports_weighting = True
-    visibility = Visibility.spoiler | Visibility.complex_ui
+    visibility = DEXSANITYSANITY_VISIBILITY
     individual_min_max = {
         "Maximum": (0, 72),
         "Steps": (1, 72),

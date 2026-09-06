@@ -22,7 +22,7 @@ def write_spoiler_encounter(world: "PokemonBWWorld", spoiler_handle: TextIO) -> 
             if method[1]:
                 m_name += f" ({method[1]})"
             m_name += " - " + method[2]
-            spoiler_handle.write(m_name+": "+(", ".join(species))+"\n")
+            spoiler_handle.write(m_name+": "+(", ".join(sorted(set(species))))+"\n")
 
         for name, data in world.static_encounter.items():
             spoiler_handle.write(name+": "+world.species_entries_by_id[data.species_id].species_name+"\n")
@@ -31,7 +31,7 @@ def write_spoiler_encounter(world: "PokemonBWWorld", spoiler_handle: TextIO) -> 
                                  " for " + by_number[data.wanted_dex_number] + "\n")
 
 
-def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
+def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:  # TODO trainer names
 
     if world.options.randomize_trainer_pokemon.is_randomize:
 
@@ -58,7 +58,7 @@ def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) ->
                                                          for evo in data.evolutions))+"\n")
 
 
-def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
+def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:  # TODO better formatting
 
     if (
         world.options.randomize_base_stats.is_randomize
@@ -128,11 +128,11 @@ def write_spoiler_type_chart(world: "PokemonBWWorld", spoiler_handle: TextIO) ->
     ):
 
         spoiler_handle.write(f"\n\nType chart ({world.player_name}, types names are abbreviated):\n\n")
-        spoiler_handle.write(f"    │ {' │ '.join(shorten.values())}")
+        spoiler_handle.write(f"    │ {' │ '.join(shorten.values())}\n")
         for att, short in shorten.items():
+            spoiler_handle.write("────┼─" * 17 + "───\n")
             spoiler_handle.write(short)
             for defe in shorten:
-                spoiler_handle.write("────┼─" * 17 + "───\n")
                 val = world.type_chart[att, defe]  # world.type_chart has all combinations
                 if val == 0xff:  # 0xff means no change from vanilla
                     val = chart.get((att, defe), 4)  # Neutral matchups are not in that dict

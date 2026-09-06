@@ -11,11 +11,12 @@ if TYPE_CHECKING:
 def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.ZipFile) -> None:
 
     adjust_sphere = bw_patch_instance.world.options.adjust_levels.is_wild_by_sphere
-    distances = bw_patch_instance.world.__class__.distances_by_sphere.get(bw_patch_instance.world.player, {})
-    max_distance = bw_patch_instance.world.__class__.max_distance_by_sphere
+    all_distances = bw_patch_instance.world.__class__.distances_by_sphere
     first_level: dict[str, tuple[int, int]] = {}
-    if adjust_sphere and not distances:
+    if adjust_sphere and not all_distances:
         bw_patch_instance.world.calculate_distances_by_sphere()
+    distances = all_distances[bw_patch_instance.world.player]
+    max_distance = bw_patch_instance.world.__class__.max_distance_by_sphere
 
     slots: list[list[bytearray]] = [
         [bytearray(56*4), bytearray(56*4), bytearray(56*4), bytearray(56*4)]

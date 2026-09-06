@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Self
 
-from BaseClasses import Location, Region, MultiWorld, CollectionState, Entrance
+from BaseClasses import Location, Region, MultiWorld, CollectionState, Entrance, ItemClassification
 from worlds.AutoWorld import LogicMixin
 
 if TYPE_CHECKING:
@@ -74,6 +74,7 @@ def get_regions(world: "PokemonBWWorld") -> dict[str, Region]:
 def create_and_place_event_locations(world: "PokemonBWWorld") -> tuple[dict[str, "SpeciesEntry"], dict[str, "SpeciesEntry"]]:
     """Returns a dict of species that are actually catchable in this world."""
     from .generate.events import wild, static, evolutions, goal, species_tables, form_change, levels, story, trainers
+    from .items import PokemonBWItem
 
     catchable_species_data: dict[str, "SpeciesEntry"] = wild.create(world) | static.create(world)
     evolutions.create(world, catchable_species_data)
@@ -83,6 +84,15 @@ def create_and_place_event_locations(world: "PokemonBWWorld") -> tuple[dict[str,
     species_tables.populate(world, catchable_species_data)
     story.create(world)
     goal.create(world)
+
+    for reg in world.regions.values():
+        if not len(reg.locations):
+            l = PokemonBWLocation(world.player, reg.name + " (sphere)", None, reg)
+            item = PokemonBWItem("Nothing", ItemClassification.progression, None, world.player)
+            l.place_locked_item(item)
+            l.show_in_spoiler = False
+            reg.locations.append(l)
+
     return catchable_species_data, seeable_species_data
 
 
