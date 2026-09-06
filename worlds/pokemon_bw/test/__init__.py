@@ -152,12 +152,28 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 # seencountsanity:
 #   default maximum=0
 #   One test each for full/partial, 10 steps, 10 leniency, vanilla/rando/all wilds + all_pokemon_seen
+# formsanity:
+#   default 0
+#   One test each for full/partial, vanilla/rando/all wilds + all_pokemon_seen
+#   One test each for random list of 100 (with ranges) with vanilla/rando/all wilds + all_pokemon_seen
+# formcountsanity:
+#   default maximum=0
+#   One test each for full/partial, 10 steps, 10 leniency, vanilla/rando/all wilds + all_pokemon_seen
 # shinysanity:
 #   default False
 #   One test for True
 #   One test each for full/partial, vanilla/rando/all wilds
 #   One test each for random list of 100 (with ranges) with vanilla/rando/all wilds
 # shinycountsanity:
+#   default False
+#   One test for True
+#   One test each for full/partial, 10 steps, 10 leniency, vanilla/rando/all wilds
+# shinyformsanity:
+#   default False
+#   One test for True
+#   One test each for full/partial, vanilla/rando/all wilds
+#   One test each for random list of 100 (with ranges) with vanilla/rando/all wilds
+# shinyformcountsanity:
 #   default False
 #   One test for True
 #   One test each for full/partial, 10 steps, 10 leniency, vanilla/rando/all wilds

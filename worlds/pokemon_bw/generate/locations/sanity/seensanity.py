@@ -11,14 +11,14 @@ if TYPE_CHECKING:
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ....data.locations.seensanity import location_table
+    from ....data.locations.sanity.seensanity import location_table
 
     return {name: data.dex_number + domain for name, data in location_table.items()}
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"],
            seeable_species_data: dict[str, "SpeciesEntry"]) -> None:
-    from ....data.locations.seensanity import location_table
+    from ....data.locations.sanity.seensanity import location_table
     from ....data.pokemon.pokedex import by_number
 
     if not world.options.seensanity:
@@ -65,4 +65,4 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             name = f"Pokédex - See {a_an} {chosen}"
             create_location(name)
 
-    world.seensanity_numbers.extend(seen_loc_dex_numbers)
+    world.disallowed_all_seen.extend(dex for dex in seen_loc_dex_numbers if dex not in world.disallowed_all_seen)

@@ -767,6 +767,36 @@ by_name: dict[str, SD] = {
     "Meloetta (Pirouette)": SD("Meloetta", "Meloetta (Pirouette)", 648, 1, ("Normal", "Fighting"), (100, 128, 90, 77, 77, 128), 3, 255, 5, 3, ("Serene Grace", "", ""), [], is_custom_form=True, custom_form_file=667),
 }
 
+form_alias: dict[str, str] = {
+    "Castform (Normal)": "Castform",
+    "Deoxys (Normal)": "Deoxys",
+    "Rotom (Normal)": "Rotom",
+    "Giratina (Altered)": "Giratina",
+    "Shaymin (Land)": "Shaymin",
+    "Darmanitan (Standard)": "Darmanitan",
+    "Meloetta (Aria)": "Meloetta",
+}
+
+unique_forms: tuple[str, ...] = (
+    "Unown (A)", "Unown (B)", "Unown (C)", "Unown (D)", "Unown (E)", "Unown (F)", "Unown (G)", "Unown (H)",
+    "Unown (I)", "Unown (J)", "Unown (K)", "Unown (L)", "Unown (M)", "Unown (N)", "Unown (O)", "Unown (P)",
+    "Unown (Q)", "Unown (R)", "Unown (S)", "Unown (T)", "Unown (U)", "Unown (V)", "Unown (W)", "Unown (X)",
+    "Unown (Y)", "Unown (Z)", "Unown (Exclamation Mark)", "Unown (Question Mark)",
+    "Castform (Normal)", "Castform (Sunny)", "Castform (Rainy)", "Castform (Snowy)",
+    "Deoxys (Normal)", "Deoxys (Attack)", "Deoxys (Defense)", "Deoxys (Speed)",
+    "Burmy (Plant)", "Burmy (Sandy)", "Burmy (Trash)", "Wormadam (Plant)", "Wormadam (Sandy)", "Wormadam (Trash)",
+    "Cherrim (Overcast)", "Cherrim (Sunshine)",
+    "Shellos (West)", "Shellos (East)", "Gastrodon (West)", "Gastrodon (East)",
+    "Rotom (Normal)", "Rotom (Heat)", "Rotom (Wash)", "Rotom (Frost)", "Rotom (Fan)", "Rotom (Mow)",
+    "Giratina (Altered)", "Giratina (Origin)",
+    "Shaymin (Land)", "Shaymin (Sky)",
+    "Basculin (Red-Striped)", "Basculin (Blue-Striped)",
+    "Darmanitan (Standard)", "Darmanitan (Zen)",
+    "Deerling (Spring)", "Deerling (Summer)", "Deerling (Autumn)", "Deerling (Winter)",
+    "Sawsbuck (Spring)", "Sawsbuck (Summer)", "Sawsbuck (Autumn)", "Sawsbuck (Winter)",
+    "Meloetta (Aria)", "Meloetta (Pirouette)",
+)
+
 _found_base = [False] * 650
 by_id: dict[tuple[int, int], str] = {}
 forms_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}

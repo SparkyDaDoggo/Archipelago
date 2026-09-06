@@ -1,4 +1,4 @@
-from .. import VisitLocationData as MLData
+from ... import VisitLocationData as MLData
 
 table: dict[str, MLData] = {
     "Nuvema Town - First visit": MLData(389, ("Nuvema Town", "Nuvema Town Near Lab", ), None),

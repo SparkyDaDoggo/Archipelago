@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ....data.locations.countsanity import dexcountsanity
+    from ....data.locations.sanity.countsanity import dexcountsanity
 
     return {name: number + domain for name, number in dexcountsanity.items()}
 

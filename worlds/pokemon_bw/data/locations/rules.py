@@ -228,24 +228,6 @@ has_access_chasm_evo_items: ExtendedRule = lambda state, world: state.has("[Even
 # Encounter requirements
 
 
-def build_caught_ext_rule(x: int) -> ExtendedRule:
-    def r(state: CollectionState, world: "PokemonBWWorld") -> bool:
-        found: int = 0
-        prog_items = state.prog_items[world.player]
-        for data in world.species_entries.values():
-            if data.form:
-                continue
-            for form in data.all_forms:
-                if form and prog_items[form.species_name]:
-                    found += 1
-                    break
-            if found >= x:
-                return True
-        return False
-
-    return r
-
-
 def build_caught_rule(x: int, world: "PokemonBWWorld") -> AccessRule:
     def r(state: CollectionState) -> bool:
         found: int = 0
@@ -264,12 +246,48 @@ def build_caught_rule(x: int, world: "PokemonBWWorld") -> AccessRule:
     return r
 
 
+def build_form_caught_rule(x: int, world: "PokemonBWWorld", all_forms: tuple[str, ...]) -> AccessRule:
+    def r(state: CollectionState) -> bool:
+        found: int = 0
+        prog_items = state.prog_items[world.player]
+        for form in all_forms:
+            if form and prog_items[form]:
+                found += 1
+            if found >= x:
+                return True
+        return False
+
+    return r
+
+
 def build_seen_ext_rule(x: int) -> ExtendedRule:
+    """This is used by NPC locations, which do need to check for All Pokémon Seen"""
+
     def r(state: CollectionState, world: "PokemonBWWorld") -> bool:
-        auto_seen = 649 - len(world.seensanity_numbers)
+        auto_seen = 649 - sum(world.disallowed_all_seen)
         is_seencount = bool(world.options.seencountsanity["Maximum"])
         if not is_seencount and world.options.all_pokemon_seen and auto_seen >= x:
             return True
+        found: int = auto_seen
+        prog_items = state.prog_items[world.player]
+        for data in world.species_entries.values():
+            if data.form:
+                continue
+            for form in data.all_forms:
+                if form and (prog_items[form.species_name] or prog_items["[Seen] " + form.species_name]):
+                    found += 1
+                    break
+            if found >= x:
+                return True
+        return False
+
+    return r
+
+
+def build_seen_rule(x: int, world: "PokemonBWWorld") -> AccessRule:
+    """This is only used by count sanities and thereby doesn't need to check for All Pokémon Seen"""
+
+    def r(state: CollectionState) -> bool:
         found: int = 0
         prog_items = state.prog_items[world.player]
         for data in world.species_entries.values():
@@ -286,26 +304,18 @@ def build_seen_ext_rule(x: int) -> ExtendedRule:
     return r
 
 
-def build_seen_rule(x: int, world: "PokemonBWWorld") -> AccessRule | None:
-    auto_seen = 649 - len(world.seensanity_numbers)
-    is_seencount = bool(world.options.seencountsanity["Maximum"])
-    if not is_seencount and world.options.all_pokemon_seen and auto_seen >= x:
-        r = None
-    else:
+def build_form_seen_rule(x: int, world: "PokemonBWWorld", all_forms: tuple[str, ...]) -> AccessRule | None:
+    """This is only used by count sanities and thereby doesn't need to check for All Pokémon Seen"""
 
-        def r(state: CollectionState) -> bool:
-            found: int = 0
-            prog_items = state.prog_items[world.player]
-            for data in world.species_entries.values():
-                if data.form:
-                    continue
-                for form in data.all_forms:
-                    if form and (prog_items[form.species_name] or prog_items["[Seen] " + form.species_name]):
-                        found += 1
-                        break
-                if found >= x:
-                    return True
-            return False
+    def r(state: CollectionState) -> bool:
+        found: int = 0
+        prog_items = state.prog_items[world.player]
+        for f in all_forms:
+            if prog_items[f] or prog_items["[Seen] " + f]:
+                found += 1
+            if found >= x:
+                return True
+        return False
 
     return r
 

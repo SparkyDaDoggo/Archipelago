@@ -182,21 +182,33 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - `category`
     - `pp`
   - Type effectiveness, currently only with the `effectiveness` key for every type combination
-- Added `Dexcountsanity` option with the `Maximum`, `Steps`, and `Leniency` keys
-- Added `Seensanity` option
-  - Contains plando capabilities like `Dexsanity`
-  - Limits the effect of `All Pokémon Seen`
-- Added `Seencountsanity` option
-  - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
-  - Disables `All Pokémon Seen` entirely
-- Added `Shinysanity` option
-  - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexsanity`
-  - Contains plando capabilities like `Dexsanity`
-- Added `Shinycountsanity` option
-  - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
+- Added multiple Dexsanity variants:
+  - `Dexcountsanity` with the `Maximum`, `Steps`, and `Leniency` keys
+  - `Seensanity`
+    - Contains plando capabilities like `Dexsanity`
+    - Limits the effect of `All Pokémon Seen`
+  - `Seencountsanity`
+    - Works like `Dexcountsanity`
+    - Disables `All Pokémon Seen` entirely
+  - `Formsanity`
+    - Contains plando capabilities similar `Dexsanity`
+    - Limits the effect of `All Pokémon Seen`
+  - `Formcountsanity`
+    - Works like `Dexcountsanity`
+    - Limits the effect of `All Pokémon Seen`
+  - `Shinysanity`
+    - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexsanity`
+    - Contains plando capabilities like `Dexsanity`
+  - `Shinycountsanity`
+    - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
+  - `Shinyformsanity`
+    - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Formsanity`
+    - Contains plando capabilities like `Formsanity`
+  - `Shinyformcountsanity`
+    - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
 - Added an ingame option to change the shiny rate
   - Possible values are 0 (never) to 65535 (almost guaranteed)
-  - Only appears when `Shinysanity` or `Shinycountsanity` is enabled
+  - Only appears when any `Shinysanity` variant is enabled
 - Added `Wild by spheres` and `Trainers by spheres` modifiers to `Adjust levels`
   - Also renamed `Wild` and `Trainers` to `Wild by distance` and `Trainers by distance` (respectively)
 - Added and changed some roadblocks:

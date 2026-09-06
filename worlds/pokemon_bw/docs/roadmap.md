@@ -119,8 +119,12 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Dexcountsanity
 - Seensanity
 - Seencountsanity
+- Formsanity
+- Formcountsanity
 - Shinysanity
 - Shinycountsanity
+- Shinyformsanity
+- Shinyformcountsanity
 - arm7 expansion (required for advanced assembly)
 - Shiny rate ingame option
 
@@ -135,7 +139,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - More or less per trainer
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Trainersanity
-  - Formsanity (not that many checks)
   - Gendersanity
   - All combinations of Dex/Seen/Form/Shiny/Gender/Count-sanities ("Dexsanitysanity")
     - Will be hidden from template, simple webhost, and options creator, instead explained in options guide

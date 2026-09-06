@@ -1,4 +1,4 @@
-from .. import DexLocationData
+from ... import DexLocationData
 
 
 location_table: dict[str, DexLocationData] = {

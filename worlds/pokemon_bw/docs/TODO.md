@@ -1,9 +1,9 @@
 # Important stuff
 
 - specialized unittests for rando modifiers
+- make client use static game data pointers
 - `increasing stats` in evo rando not working?
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- `Dungeon 1 to 1` + `Prevent rare encounters` + `dexsanity_friendly` + 12% threshold give too many different species
 - rom script changes to comply with regions rework:
   - master ball seller overhaul
   - Max & Reset options for shiny rate modifier & Exp multiplier

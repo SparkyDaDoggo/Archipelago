@@ -1,4 +1,5 @@
-from . import dexsanity, regions, region_connections
+from . import regions, region_connections
+from .sanity import dexsanity
 from .encounters import regions as encounter_regions, slots, static, region_connections as encounter_region_connections
 from .ingame_items import overworld_items, hidden_items, other, special
 from typing import TYPE_CHECKING

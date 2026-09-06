@@ -27,21 +27,22 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     from ..data.pokemon import types, species
 
     await reload_key_items(client, ctx)
+    opt = ctx.slot_data["options"]
 
-    if "tmhm_hunt" in ctx.slot_data["options"]["goal"] or "pokemon_master" in ctx.slot_data["options"]["goal"]:
+    if "tmhm_hunt" in opt["goal"] or "pokemon_master" in opt["goal"]:
         # "name **in** goal" works for both single goal strings and combined goals lists
         await client.write_unset_flag(ctx, 0x192)
     else:
         await client.write_set_flag(ctx, 0x192)
 
-    if "legendary_hunt" in ctx.slot_data["options"]["goal"] or "pokemon_master" in ctx.slot_data["options"]["goal"]:
+    if "legendary_hunt" in opt["goal"] or "pokemon_master" in opt["goal"]:
         # "name **in** goal" works for both single goal strings and combined goals lists
         await client.write_unset_flag(ctx, 0x1EA)
     else:
         await client.write_set_flag(ctx, 0x1EA)
 
     master_ball_cost: int = ctx.slot_data["master_ball_seller_cost"]
-    seller_modifiers = [mod.casefold() for mod in ctx.slot_data["options"]["master_ball_seller"]]
+    seller_modifiers = [mod.casefold() for mod in opt["master_ball_seller"]]
     await client.write_var(ctx, 0xF2, master_ball_cost)
     if "ns castle" in seller_modifiers:
         await client.write_set_flag(ctx, 0x1CF)
@@ -59,12 +60,15 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
         await client.write_set_flag(ctx, 0x1D0)
     else:
         await client.write_unset_flag(ctx, 0x1D0)
-
-    shcosanity = ctx.slot_data["options"].get("shinycountsanity", 0)
-    if ctx.slot_data["options"].get("shinysanity", 0) or shcosanity == 1 or (isinstance(shcosanity, dict) and shcosanity["Maximum"]):
+    shcosanity, shfocosanity = opt["shinycountsanity"], opt["shinyformcountsanity"]
+    if isinstance(shcosanity, int):
+        shcosanity = {"Maximum": shcosanity}
+    if isinstance(shfocosanity, int):
+        shfocosanity = {"Maximum": shfocosanity}
+    if any((opt["shinysanity"], shcosanity, opt["shinyformsanity"], shfocosanity)):
         await client.write_set_flag(ctx, 0x1E8)
 
-    await client.write_var(ctx, 0xF7, ReusableTMs._by_name[ctx.slot_data["options"].get("reusable_tms", "on")])
+    await client.write_var(ctx, 0xF7, ReusableTMs._by_name[opt["reusable_tms"]])
     await client.write_var(ctx, 0x137, types.by_name[ctx.slot_data["studio_castelia_type"]])
     await client.write_var(ctx, 0x13B, ctx.slot_data["driftveil_random_move_id"])
     await client.write_var(ctx, 0x113, species.by_name[ctx.slot_data["other_locations_species"]].dex_number)
@@ -73,15 +77,14 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
     if not client.get_flag(0x1DE):
 
         # Initial exp multiplier
-        await client.write_var(ctx, 0xF4, (ctx.slot_data["options"]["exp_multiplier"]
-                                           if "exp_multiplier" in ctx.slot_data["options"] else 1)-1)
+        await client.write_var(ctx, 0xF4, opt["exp_multiplier"]-1)
 
         # Initial season and npc vanish
-        if ctx.slot_data["options"]["season_control"] == "vanilla":
+        if opt["season_control"] == "vanilla":
             await client.write_set_flag(ctx, 0x193)
         else:
             await client.write_unset_flag(ctx, 0x193)
-            if ctx.slot_data["options"]["season_control"] == "randomized":
+            if opt["season_control"] == "randomized":
                 for network_item in ctx.items_received:
                     name = ctx.item_names.lookup_in_game(network_item.item)
                     if name in seasons.table:
@@ -90,15 +93,16 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
 
         # all pokemon seen: male seen, female seen, male shown, forms seen, forms shown
         # shown flags always the later ones, so setting them to male won't change it if a different form was set ingame
-        if ctx.slot_data["options"]["all_pokemon_seen"] and not ctx.slot_data["options"]["seencountsanity"]["Maximum"]:
+        if opt["all_pokemon_seen"]:
             seen_flags = bytearray(b'\xff') * 0x54
-            for dex in ctx.slot_data["seensanity_numbers"]:
+            for dex in set(ctx.slot_data["disallowed_all_seen"]):  # iterating over set allowed here since this is not generation
                 seen_flags[dex // 8] -= 1 << (dex % 8)
             await bizhawk.write(
                 ctx.bizhawk_ctx, (
                     (client.save_data_address + client.dex_seen_offsets[0], seen_flags, "Main RAM"),
                     (client.save_data_address + client.dex_seen_offsets[1], seen_flags, "Main RAM"),
                     (client.save_data_address + client.dex_display_offsets[0], seen_flags, "Main RAM"),
+                    (client.save_data_address + client.dex_display_offsets[1], seen_flags, "Main RAM"),
                     (client.save_data_address + client.dex_forms_offsets[0], b'\xff' * 9, "Main RAM"),
                     (client.save_data_address + client.dex_forms_offsets[2], b'\xff' * 9, "Main RAM"),
                 )

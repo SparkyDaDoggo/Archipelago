@@ -11,13 +11,13 @@ if TYPE_CHECKING:
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ....data.locations.dexsanity import location_table
+    from ....data.locations.sanity.dexsanity import location_table
 
     return {name: data.dex_number + domain for name, data in location_table.items()}
 
 
 def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEntry"]) -> None:
-    from ....data.locations.dexsanity import location_table
+    from ....data.locations.sanity.dexsanity import location_table
     from ....data.pokemon.pokedex import by_number
 
     if not world.options.dexsanity:

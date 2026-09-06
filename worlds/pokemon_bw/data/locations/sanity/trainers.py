@@ -1,5 +1,5 @@
-from .. import TrainerLocationData as TLData
-from .rules import *
+from ... import TrainerLocationData as TLData
+from ..rules import *
 
 table: dict[str, TLData] = {  # TODO regions rework
     "Nuvema Town - Defeat Cheren": TLData((53, 54, 55), "Nuvema Town", None, None),

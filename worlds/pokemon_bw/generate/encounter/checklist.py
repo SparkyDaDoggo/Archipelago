@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 
 
 def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
+    from ...data.pokemon.species import form_alias
     # Species needed for trade are added in generate_trade_encounters()
 
     if not world.options.randomize_wild_pokemon.is_randomize:
@@ -43,9 +44,21 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                 if spec not in always_required:
                     always_required.append(spec)
 
+        if isinstance(world.options.formsanity.value, list):
+            for form_name in world.options.formsanity.value:
+                spec = world.species_entries[form_alias.get(form_name, form_name)]
+                if spec not in always_required:
+                    always_required.append(spec)
+
         if isinstance(world.options.shinysanity.value, list):
             for dex_num in world.options.shinysanity.value:
                 spec = world.species_entries_by_id[(dex_num, 0)]
+                if spec not in always_required:
+                    always_required.append(spec)
+
+        if isinstance(world.options.shinyformsanity.value, list):
+            for form_name in world.options.shinyformsanity.value:
+                spec = world.species_entries[form_alias.get(form_name, form_name)]
                 if spec not in always_required:
                     always_required.append(spec)
 
@@ -56,9 +69,10 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                     always_required.append(data)
                 break
 
-        auto_seen = 649 - len(world.seensanity_numbers)
-        if world.options.seencountsanity["Maximum"] or not world.options.all_pokemon_seen:
-            auto_seen = 0
+        # cannot use world.disallowed_all_seen since that will only be filled at a later point
+        seen_amount = world.options.seensanity if isinstance(world.options.seensanity.value, int) else len(world.options.seensanity.value)
+        form_amount = 16  # for simplicity, let's just assume all forms are included
+        auto_seen = 649 - max(seen_amount, form_amount) if world.options.all_pokemon_seen else 0
         if auto_seen < 115:
             # Get list of ALL pokémon
             pool_115 = list(data for spec_name, data in world.species_entries.items()
@@ -220,7 +234,7 @@ def get_copy_checklist(world: "PokemonBWWorld") -> CopyChecklist | None:
             is_grass = "G" in slot.encounter_region[2]
             method_index = (file_index[2] % 12) if is_grass else ((file_index[2] - 36) % 5)
             method_start = file_index[2] - method_index
-            if not (group and group.head != slot) and chance < threshold:
+            if chance < threshold:
                 for combined_threshold in (threshold * step // 2 for step in range(1, 201)):
                     for next_index_down in range(12 if is_grass else 5):
                         if next_index_down == method_index:  # cannot be merged with itself

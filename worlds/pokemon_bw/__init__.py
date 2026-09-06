@@ -166,7 +166,7 @@ class PokemonBWWorld(World):
         self.encounter_by_method: dict[str, list[int]] = {}
         self.trade_data: dict[str, tuple[int, int]] = {}
         self.dexsanity_numbers: list[int] = []
-        self.seensanity_numbers: list[int] = []
+        self.disallowed_all_seen: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.region_distances: dict[str, int] | None = None
         self.max_distance: int = 0
@@ -372,8 +372,12 @@ class PokemonBWWorld(World):
                     "dexcountsanity": self.options.dexcountsanity.value,
                     "seensanity": self.options.seensanity.value,
                     "seencountsanity": self.options.seencountsanity.value,
+                    "formsanity": self.options.formsanity.value,
+                    "formcountsanity": self.options.formcountsanity.value,
                     "shinysanity": self.options.shinysanity.value,
                     "shinycountsanity": self.options.shinycountsanity.value,
+                    "shinyformsanity": self.options.shinyformsanity.value,
+                    "shinyformcountsanity": self.options.shinyformcountsanity.value,
                     "season_control": self.options.season_control.current_key,
                     "adjust_levels": self.options.adjust_levels.value,
                     "modify_levels": self.options.modify_levels.value,
@@ -406,7 +410,7 @@ class PokemonBWWorld(World):
                 "studio_castelia_type": self.studio_castelia_type,
                 "driftveil_random_move_id": self.driftveil_random_move_id,
                 "other_locations_species": self.other_locations_species,
-                "seensanity_numbers": self.seensanity_numbers,
+                "disallowed_all_seen": self.disallowed_all_seen,
             }
         return part
 

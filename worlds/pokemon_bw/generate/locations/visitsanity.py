@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ...data.locations.visitsanity import table
+    from ...data.locations.sanity.visitsanity import table
 
     return {
         name: data.map_id + domain for name, data in table.items()
@@ -16,7 +16,7 @@ def lookup(domain: int) -> dict[str, int]:
 
 
 def create(world: "PokemonBWWorld") -> None:
-    from ...data.locations.visitsanity import table
+    from ...data.locations.sanity.visitsanity import table
 
     r: "Region" = world.regions["Map Visits"]
     all_locs = list(table)

@@ -153,25 +153,17 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                f"[Scroll][NextLine]"
                f"- Season control: {slotdata['options']['season_control'].replace('_', ' ').capitalize()}"
                f"[Scroll][NextLine]")
-    if isinstance(slotdata['options']['dexsanity'], list):
-        info44 += f"- {len(slotdata['options']['dexsanity'])} fixed Dexsanity checks[Scroll][NextLine]"
-    else:
-        info44 += f"- {slotdata['options']['dexsanity']} random Dexsanity checks[Scroll][NextLine]"
-    if slotdata['options']['dexcountsanity']["Maximum"]:
-        info44 += (f"- Dexcountsanity checks with maximum {slotdata['options']['dexcountsanity']['Maximum']}, "
-                   f"steps {slotdata['options']['dexcountsanity']['Steps']}, "
-                   f"and leniency {slotdata['options']['dexcountsanity']['Leniency']}[Scroll][NextLine]")
-    if isinstance(slotdata['options']['shinysanity'], list):
-        info44 += f"- {len(slotdata['options']['shinysanity'])} fixed Shinysanity checks[Scroll][NextLine]"
-    else:
-        info44 += f"- {slotdata['options']['shinysanity']} random Shinysanity checks[Scroll][NextLine]"
-    shcosanity = slotdata['options']['shinycountsanity']
-    if isinstance(shcosanity, int):
-        shcosanity = {"Maximum": shcosanity, "Steps": 1, "Leniency": 0}
-    if shcosanity["Maximum"]:
-        info44 += (f"- Shinycountsanity checks with maximum {shcosanity['Maximum']}, "
-                   f"steps {shcosanity['Steps']}, "
-                   f"and leniency {shcosanity['Leniency']}[Scroll][NextLine]")
+    for sanity in ("dex", "seen", "form", "shiny", "shinyform"):
+        opt_val, opt_params = slotdata['options'][sanity + 'sanity'], slotdata['options'][sanity + 'countsanity']
+        if isinstance(opt_val, list):
+            info44 += f"- {len(opt_val)} fixed {sanity.capitalize()}sanity checks[Scroll][NextLine]"
+        else:
+            info44 += f"- {opt_val} random {sanity.capitalize()}sanity checks[Scroll][NextLine]"
+        if isinstance(opt_params, int):
+            opt_params = {"Maximum": opt_params, "Steps": 1, "Leniency": 0}
+        if opt_params["Maximum"]:
+            info44 += (f"- {sanity.capitalize()}countsanity checks with maximum {opt_params['Maximum']}, steps "
+                       f"{opt_params['Steps']}, and leniency {opt_params['Leniency']}[Scroll][NextLine]")
     if slotdata["options"]["replace_evo_methods"]:
         info44 += "- Replaced evolution methods:[Scroll][NextLine]"
         for mod in slotdata["options"]["replace_evo_methods"]:

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 def lookup(domain: int) -> dict[str, int]:
-    from ....data.locations.countsanity import seencountsanity
+    from ....data.locations.sanity.countsanity import seencountsanity
 
     return {name: number + domain for name, number in seencountsanity.items()}
 
@@ -51,3 +51,5 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         create_location(c)
     if maximum == option["Maximum"] and maximum % option["Steps"]:
         create_location(maximum)
+
+    world.disallowed_all_seen.extend(dex for dex in range(1, 650) if dex not in world.disallowed_all_seen)

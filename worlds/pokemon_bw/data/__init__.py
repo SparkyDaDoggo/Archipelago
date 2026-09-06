@@ -115,9 +115,13 @@ class TMLocationData(NamedTuple):
 
 
 class DexLocationData(NamedTuple):
-    # caught flags are stored at 0x23D1B4 (B) or 0x23D1D4 (W)
     dex_number: int
     ut_alias: str | None = None
+
+
+class FormLocationData(NamedTuple):
+    flag_id: int
+    species_id: tuple[int, int]
 
 
 class TrainerLocationData(NamedTuple):

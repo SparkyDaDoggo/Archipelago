@@ -18,7 +18,7 @@ def get_item_groups() -> dict[str, set[str]]:
 
 
 def get_location_groups() -> dict[str, set[str]]:
-    from .data.locations import dexsanity, countsanity, shinysanity, seensanity
+    from .data.locations.sanity import countsanity, dexsanity, shinysanity, seensanity, formsanity, shinyformsanity
     from .data.locations.ingame_items import overworld_items, hidden_items, other, special
 
     return {
@@ -26,8 +26,12 @@ def get_location_groups() -> dict[str, set[str]]:
         "Dexcountsanity": set(countsanity.dexcountsanity),
         "Seensanity": set(seensanity.location_table),
         "Seencountsanity": set(countsanity.seencountsanity),
+        "Formsanity": set(formsanity.table),
+        "Formcountsanity": set(countsanity.formcountsanity),
         "Shinysanity": set(shinysanity.location_table),
         "Shinycountsanity": set(countsanity.shinycountsanity),
+        "Shinyformsanity": set(shinyformsanity.table),
+        "Shinyformcountsanity": set(countsanity.shinyformcountsanity),
         "Overworld items": {*overworld_items.table, *overworld_items.abyssal_ruins, *overworld_items.seasonal},
         "Abyssal Ruins items": set(overworld_items.abyssal_ruins),
         "Hidden items": {*hidden_items.table, *hidden_items.seasonal},
@@ -37,5 +41,6 @@ def get_location_groups() -> dict[str, set[str]]:
         "Gym TM rewards": set(special.gym_tms),
         "TM/HM locations": {*special.gym_tms, *special.tm_hm_ncps},
         # Leftover from before these were auto excluded, not removing it to prevent breaking old yamls
+        # Also, having an empty group raises unittest failures
         "Post-Ghetsis locations": {"Nuvema Town - Item from Looker after beating Ghetsis"},
     }

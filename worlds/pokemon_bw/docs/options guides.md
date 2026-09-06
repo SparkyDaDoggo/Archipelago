@@ -249,13 +249,13 @@ Pokemon Black and White:
 
 # Dexsanity Plando guide (coming in 0.4.0)
 
-(This guide also applies to `Seensanity` and `Shinysanity`.)
+(This guide also applies to `Seensanity`, `Formsanity`, `Shinysanity`, and `Shinyformsanity`.)
 
 ## How does this work?
 
 Instead of writing a single number to determine the amount of random Dexsanity checks you 
-want to have in your world, you can provide a fixed list of dex numbers you want to have 
-checks for.
+want to have in your world, you can provide a fixed list of dex numbers (or forms for 
+`Formsanity` variants) you want to have checks for.
 However, adding a certain number doesn't guarantee that it will have a check.
 Only pokémon that are actually obtainable in your world can have Dexsanity checks (which 
 also applies to the standard way of using this option).
@@ -272,16 +272,25 @@ as a list to pick a random entry from, i.e. you will end up with one of the numb
 the amount of random checks.
 However, this makes it possible to choose between multiple lists of dex numbers.
 
+In the case of all `Formsanity` variants, you have to write a list of form names instead, 
+which differ slightly from the forms names used in other plando options and the spoiler 
+log. See [here](plando%20lists.md#Formsanity-names) for a list of all allowed forms.
+
 ## An example on how using this option could look like
 
 ```
 Pokemon Black and White:
   ...
   dexsanity:
-    - [50, 51, 52, 53, 54]
-    - [100, 200, 300, 400]
-    - 5  # A single number (which is then the amount of random checks again) can also be added as a possible value
-    - [494-649]  # (All Unova pokémon btw.)
+  - [50, 51, 52, 53, 54]
+  - [100, 200, 300, 400]
+  - 5  # A single number (which is then the amount of random checks again) can also be added as a possible value
+  - [494-649]  # (All Unova pokémon btw.)
+  ...
+  formsanity:
+  - ["Unown (M)", "Darmanitan (Zen)"]
+  - ["Castform (Normal)", "Castform (Sunny)", "Castform (Rainy)", "Castform (Snowy)"]
+  - 5
 ```
 
 # Stats Plando guide (coming in 0.4.0)

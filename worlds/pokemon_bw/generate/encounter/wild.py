@@ -14,7 +14,7 @@ def organize_by_method(world: "PokemonBWWorld") -> dict[str, list[int]]:
     # {method: ([species names], [dex numbers])}
     ret: dict[str, list[int]] = {}
     for data in world.wild_encounter.values():
-        if data.encounter_region not in ret:
+        if data.region not in ret:
             ret[data.region] = []
         if data.species_id[0] not in ret[data.region]:
             ret[data.region].append(data.species_id[0])
