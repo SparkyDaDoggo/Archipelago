@@ -1,8 +1,11 @@
 # Important stuff
 
+- RELEASE NOTES:
+  - old yamls won't break
+  - dexsanity variants should be seen as alternatives to each other
+  - wait 2 patch updates before submitting it to public multiworlds
 - specialized unittests for rando modifiers
 - make client use static game data pointers
-- `increasing stats` in evo rando not working?
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
 - rom script changes to comply with regions rework:
   - master ball seller overhaul

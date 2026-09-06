@@ -1,6 +1,7 @@
 import random
 
 from . import PokemonBWTestBase
+from ..data.pokemon.species import unique_forms
 
 
 ###################################################
@@ -240,52 +241,52 @@ class TestSeencountsanityFullEnsureAll(PokemonBWTestBase):
 
 class TestFormsanityPartialVanilla(PokemonBWTestBase):
     options = {
-        "formsanity": 100,
+        "formsanity": 10,
         "all_pokemon_seen": True,
     }
 class TestFormsanityPartialRando(PokemonBWTestBase):
     options = {
-        "formsanity": 100,
+        "formsanity": 10,
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestFormsanityPartialEnsureAll(PokemonBWTestBase):
     options = {
-        "formsanity": 100,
+        "formsanity": 10,
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
 class TestFormsanityFullVanilla(PokemonBWTestBase):
     options = {
-        "formsanity": 649,
+        "formsanity": 72,
         "all_pokemon_seen": True,
     }
 class TestFormsanityFullRando(PokemonBWTestBase):
     options = {
-        "formsanity": 649,
+        "formsanity": 72,
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestFormsanityFullEnsureAll(PokemonBWTestBase):
     options = {
-        "formsanity": 649,
+        "formsanity": 72,
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
 class TestFormsanityPlandoVanilla(PokemonBWTestBase):
     options = {
-        "formsanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "shinyformsanity": random.choices(unique_forms, k=10),
         "all_pokemon_seen": True,
     }
 class TestFormsanityPlandoRando(PokemonBWTestBase):
     options = {
-        "formsanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "shinyformsanity": random.choices(unique_forms, k=10),
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestFormsanityPlandoEnsureAll(PokemonBWTestBase):
     options = {
-        "formsanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "shinyformsanity": random.choices(unique_forms, k=10),
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
@@ -298,35 +299,35 @@ class TestFormsanityPlandoEnsureAll(PokemonBWTestBase):
 
 class TestFormcountsanityPartialVanilla(PokemonBWTestBase):
     options = {
-        "formcountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "formcountsanity": {"Maximum": 10, "Steps": 2, "Leniency": 2},
         "all_pokemon_seen": True,
     }
 class TestFormcountsanityPartialRando(PokemonBWTestBase):
     options = {
-        "formcountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "formcountsanity": {"Maximum": 10, "Steps": 2, "Leniency": 2},
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestFormcountsanityPartialEnsureAll(PokemonBWTestBase):
     options = {
-        "formcountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "formcountsanity": {"Maximum": 10, "Steps": 2, "Leniency": 2},
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
 class TestFormcountsanityFullVanilla(PokemonBWTestBase):
     options = {
-        "formcountsanity": {"Maximum": 649, "Steps": 10, "Leniency": 10},
+        "formcountsanity": {"Maximum": 72, "Steps": 2, "Leniency": 2},
         "all_pokemon_seen": True,
     }
 class TestFormcountsanityFullRando(PokemonBWTestBase):
     options = {
-        "formcountsanity": {"Maximum": 649, "Steps": 10, "Leniency": 10},
+        "formcountsanity": {"Maximum": 72, "Steps": 2, "Leniency": 2},
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestFormcountsanityFullEnsureAll(PokemonBWTestBase):
     options = {
-        "formcountsanity": {"Maximum": 649, "Steps": 10, "Leniency": 10},
+        "formcountsanity": {"Maximum": 72, "Steps": 2, "Leniency": 2},
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
@@ -425,7 +426,7 @@ class TestShinycountsanityFullEnsureAll(PokemonBWTestBase):
 
 
 ###################################################
-# Shinyformsanity                                     #
+# Shinyformsanity                                 #
 ###################################################
 
 
@@ -435,44 +436,44 @@ class TestShinyformsanityTrue(PokemonBWTestBase):
     }
 class TestShinyformsanityPartialVanilla(PokemonBWTestBase):
     options = {
-        "shinyformsanity": 100,
+        "shinyformsanity": 10,
     }
 class TestShinyformsanityPartialRando(PokemonBWTestBase):
     options = {
-        "shinyformsanity": 100,
+        "shinyformsanity": 10,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestShinyformsanityPartialEnsureAll(PokemonBWTestBase):
     options = {
-        "shinyformsanity": 100,
+        "shinyformsanity": 10,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
 class TestShinyformsanityFullVanilla(PokemonBWTestBase):
     options = {
-        "shinyformsanity": 649,
+        "shinyformsanity": 72,
     }
 class TestShinyformsanityFullRando(PokemonBWTestBase):
     options = {
-        "shinyformsanity": 649,
+        "shinyformsanity": 72,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestShinyformsanityFullEnsureAll(PokemonBWTestBase):
     options = {
-        "shinyformsanity": 649,
+        "shinyformsanity": 72,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
 class TestShinyformsanityPlandoVanilla(PokemonBWTestBase):
     options = {
-        "shinyformsanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "shinyformsanity": random.choices(unique_forms, k=10),
     }
 class TestShinyformsanityPlandoRando(PokemonBWTestBase):
     options = {
-        "shinyformsanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "shinyformsanity": random.choices(unique_forms, k=10),
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestShinyformsanityPlandoEnsureAll(PokemonBWTestBase):
     options = {
-        "shinyformsanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "shinyformsanity": random.choices(unique_forms, k=10),
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
 
@@ -488,29 +489,29 @@ class TestShinyformcountsanityTrue(PokemonBWTestBase):
     }
 class TestShinyformcountsanityPartialVanilla(PokemonBWTestBase):
     options = {
-        "shinyformcountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "shinyformcountsanity": {"Maximum": 10, "Steps": 2, "Leniency": 2},
     }
 class TestShinyformcountsanityPartialRando(PokemonBWTestBase):
     options = {
-        "shinyformcountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "shinyformcountsanity": {"Maximum": 10, "Steps": 2, "Leniency": 2},
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestShinyformcountsanityPartialEnsureAll(PokemonBWTestBase):
     options = {
-        "shinyformcountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "shinyformcountsanity": {"Maximum": 10, "Steps": 2, "Leniency": 2},
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
 class TestShinyformcountsanityFullVanilla(PokemonBWTestBase):
     options = {
-        "shinyformcountsanity": {"Maximum": 649, "Steps": 10, "Leniency": 10},
+        "shinyformcountsanity": {"Maximum": 72, "Steps": 2, "Leniency": 2},
     }
 class TestShinyformcountsanityFullRando(PokemonBWTestBase):
     options = {
-        "shinyformcountsanity": {"Maximum": 649, "Steps": 10, "Leniency": 10},
+        "shinyformcountsanity": {"Maximum": 72, "Steps": 2, "Leniency": 2},
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestShinyformcountsanityFullEnsureAll(PokemonBWTestBase):
     options = {
-        "shinyformcountsanity": {"Maximum": 649, "Steps": 10, "Leniency": 10},
+        "shinyformcountsanity": {"Maximum": 72, "Steps": 2, "Leniency": 2},
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }

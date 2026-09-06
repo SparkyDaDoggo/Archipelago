@@ -264,9 +264,8 @@ def build_seen_ext_rule(x: int) -> ExtendedRule:
     """This is used by NPC locations, which do need to check for All Pokémon Seen"""
 
     def r(state: CollectionState, world: "PokemonBWWorld") -> bool:
-        auto_seen = 649 - sum(world.disallowed_all_seen)
-        is_seencount = bool(world.options.seencountsanity["Maximum"])
-        if not is_seencount and world.options.all_pokemon_seen and auto_seen >= x:
+        auto_seen = (649 - len(world.disallowed_all_seen)) if world.options.all_pokemon_seen else 0
+        if auto_seen >= x:
             return True
         found: int = auto_seen
         prog_items = state.prog_items[world.player]

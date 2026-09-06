@@ -198,8 +198,7 @@ class Seencountsanity(ExtendedOptionCounter):
 
     @classmethod
     def from_any(cls, data: Dict[str, Any]):
-        if not DEXSANITYSANITY_ENABLED:
-            return super().from_any(cls.default)
+        return super().from_any(data if DEXSANITYSANITY_ENABLED else cls.default)
 
 
 class Formsanity(Range):
@@ -276,8 +275,7 @@ class Formcountsanity(ExtendedOptionCounter):
 
     @classmethod
     def from_any(cls, data: Dict[str, Any]):
-        if not DEXSANITYSANITY_ENABLED:
-            return super().from_any(cls.default)
+        return super().from_any(data if DEXSANITYSANITY_ENABLED else cls.default)
 
 
 class Shinysanity(Toggle):
@@ -441,38 +439,24 @@ class Shinyformsanity(Toggle):
     forms. It also contains plando capabilities in the way that **Formsanity** has them.
     """
     display_name = "Shinyformsanity"
-    value: int | list[int]
+    value: int | list[str]
     visibility = Visibility.spoiler | Visibility.complex_ui
     default = 0
 
     def __init__(self, value: Any):
+        from ..data.pokemon.species import unique_forms
+
         if isinstance(value, Iterable):
             resolved = []
             for val in value:
                 if isinstance(val, str):
-                    split = val.split("-")
-                    if len(split) != 2 or not split[0].isnumeric() or not split[1].isnumeric():
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    rang = int(split[0]), int(split[1])
-                    if not (1 < rang[0] <= 649) or not (1 < rang[1] <= 649):
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    resolved.extend(range(rang[0], rang[1]+1))
-                elif isinstance(val, int):
-                    if val < 1:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is lower than minimum 1")
-                    elif val > 649:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is higher than maximum 649")
+                    if val not in unique_forms:
+                        raise OptionError(f"Option {self.__class__.__name__} contains form name {val}, "
+                                          f"which is not an existing form")
                     resolved.append(val)
                 else:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers and integer "
-                                      f"ranges, found {type(val)}")
+                    raise OptionError(f"Option {self.__class__.__name__} as a list expects strings, found {type(val)}")
             self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
-        elif isinstance(value, int):
-            if not 0 <= value <= 649:
-                raise OptionError(f"Option {self.__class__.__name__}'s value {value} is not in range 0-649")
-            self.value = value
         else:
             super().__init__(value)
 
@@ -494,8 +478,7 @@ class Shinyformsanity(Toggle):
             return cls(cls.default)
         if type(data) is str:
             return cls.from_text(data)
-        else:
-            return cls(data)
+        return cls(data)
 
     @classmethod
     def get_option_name(cls, value):
