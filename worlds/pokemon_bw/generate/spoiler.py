@@ -31,7 +31,8 @@ def write_spoiler_encounter(world: "PokemonBWWorld", spoiler_handle: TextIO) -> 
                                  " for " + by_number[data.wanted_dex_number] + "\n")
 
 
-def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:  # TODO trainer names
+def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
+    from ..data.trainers.data import table
 
     if world.options.randomize_trainer_pokemon.is_randomize:
 
@@ -41,9 +42,10 @@ def write_spoiler_trainer(world: "PokemonBWWorld", spoiler_handle: TextIO) -> No
                 teams[entry.trainer_id] = []
             teams[entry.trainer_id].append(f"{entry.species} Lv.{entry.level}")
 
-        spoiler_handle.write(f"\n\nTrainer teams ({world.player_name}, Trainer names are WIP):\n\n")
+        spoiler_handle.write(f"\n\nTrainer teams ({world.player_name}):\n\n")
         for trainer, species in teams.items():
-            spoiler_handle.write(f"Trainer #{trainer}: "+(", ".join(species))+"\n")
+            tdata = table[trainer - 1]
+            spoiler_handle.write(f"#{trainer} {tdata.trainer_class} {tdata.name} ({tdata.region}): "+(", ".join(species))+"\n")
 
 
 def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
@@ -58,7 +60,7 @@ def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) ->
                                                          for evo in data.evolutions))+"\n")
 
 
-def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:  # TODO better formatting
+def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:
 
     if (
         world.options.randomize_base_stats.is_randomize
@@ -69,22 +71,24 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
                for data in world.options.stats_plando.value.values())
     ):
 
-        spoiler_handle.write(f"\n\nStats ({world.player_name}, the format is <type(s), hp, attack, defense, "
-                             f"special attack, special defense, speed, catch rate, egg group(s), egg species> "
-                             f"(last two only if randomized/plando'd)):\n\n")
+        spoiler_handle.write(f"\n\nStats ({world.player_name}):\n\n"
+                             f"{'Species':15} │ {'Type(s)':15} │ {'Base stats':28} | C.r. | "
+                             f"Egg groups + species (if randomized/plando'd)\n"
+                             f"{'─'*15}─┼─{'─'*15}─┼─{'─'*28}─┼─{'─'*4}─┼─{'─'*19}─┬─{'─'*24}\n")
         for name, data in world.species_entries.items():
-            line = [data.types[0]]
+            types_str = data.types[0]
             if data.types[0] != data.types[1]:
-                line.append(data.types[1])
-            line.extend(str(s) for s in data.base_stats)
-            line.append(str(data.catch_rate))
+                types_str += f", {data.types[1]}"
+            stats_str = ", ".join(str(s) for s in data.base_stats)
+            egg_gr_str = egg_sp_str = ""
             if data.egg_groups is not None:
-                line.append(data.egg_groups[0])
+                egg_gr_str += " │ " + data.egg_groups[0]
                 if data.egg_groups[0] != data.egg_groups[1]:
-                    line.append(data.egg_groups[1])
+                    egg_gr_str += ", " + data.egg_groups[1]
             if data.egg_species is not None:
-                line.append(data.egg_species)
-            spoiler_handle.write(f"{name}: {', '.join(line)}\n")
+                egg_sp_str += " │ " + data.egg_species[0]
+            spoiler_handle.write(f"{name+':':15} │ {types_str:15} │ {stats_str:28} │ {str(data.catch_rate):4}"
+                                 f"{egg_gr_str:19}{egg_sp_str}\n")
 
 
 def write_spoiler_levelup_movesets(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:

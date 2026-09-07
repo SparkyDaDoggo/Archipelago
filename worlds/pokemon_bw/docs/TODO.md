@@ -4,13 +4,18 @@
   - old yamls won't break
   - dexsanity variants should be seen as alternatives to each other
   - wait 2 patch updates before submitting it to public multiworlds
+  - mention the insanely long development cycle
 - specialized unittests for rando modifiers
 - make client use static game data pointers
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
+- wild rando broken for prevent rare + global 1-1 + merge phenomena
+- too many ??? in edited text
 - rom script changes to comply with regions rework:
   - master ball seller overhaul
   - Max & Reset options for shiny rate modifier & Exp multiplier
   - check whether npcs asking for event pokémon are still using the ex command
+  - Fix various lists requiring you to scroll down to press cancel instead of pressing B
+  - inject item receiver into code that executes AP menu script
   - ############################
   - accumula guards send you both ways
   - move striaton gym guide a bit south
@@ -42,14 +47,11 @@
 
 # Not urgent
 
-- rename slot methods to cave/dust cloud/etc everywhere
 - gym leader scripts control traded obedience level?
 - wingull grams overworld items not disappearing
 - extended location hint for challenge rock
 - a way to check whether map or fly menu is opened, used for switching to ow map in UT
 - Running shoes as an item, making mom cutscene on route 2 a check
-- Make event locations more distinguishable in spoiler from normal locations
-- text extraction starts all lines with [Terminate]
 - fill more funny dialog
 - pad ROM to power of 2
 - send plugin options over slot data as string (breaks backwards compatibility)

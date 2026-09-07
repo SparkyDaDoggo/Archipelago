@@ -162,8 +162,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         if isinstance(opt_params, int):
             opt_params = {"Maximum": opt_params, "Steps": 1, "Leniency": 0}
         if opt_params["Maximum"]:
-            info44 += (f"- {sanity.capitalize()}countsanity checks with maximum {opt_params['Maximum']}, steps "
-                       f"{opt_params['Steps']}, and leniency {opt_params['Leniency']}[Scroll][NextLine]")
+            info44 += (f"- {sanity.capitalize()}countsanity checks with[Scroll][NextLine]maximum "
+                       f"{opt_params['Maximum']}, steps {opt_params['Steps']},[Scroll][NextLine]and leniency "
+                       f"{opt_params['Leniency']}[Scroll][NextLine]")
     if slotdata["options"]["replace_evo_methods"]:
         info44 += "- Replaced evolution methods:[Scroll][NextLine]"
         for mod in slotdata["options"]["replace_evo_methods"]:

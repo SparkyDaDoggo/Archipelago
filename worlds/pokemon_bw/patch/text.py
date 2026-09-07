@@ -47,6 +47,7 @@ def decode(data: bytes) -> list[list[Entry]]:
             encchars = []
             decchars = []
             st = texts[i][j]
+            st.line = ""
             seek(blockoffsets[i] + tableoffsets[i][j])
             for k in range(charcounts[i][j]):
                 encchars.append(read(2))
@@ -57,8 +58,9 @@ def decode(data: bytes) -> list[list[Entry]]:
             k = 0
             while k < len(decchars):
                 char = decchars[k]
-                if char == 0xFFFF and k not in (0, len(decchars) - 1):
-                    st.line += "[Terminate]"
+                if char == 0xFFFF:
+                    if k != len(decchars) - 1:
+                        st.line += "[Terminate]"
                 elif char == 0xFFFE:
                     st.line += "[NextLine]"  # \n in CTRMap
                 elif char == 0xF000:
@@ -169,7 +171,7 @@ def encode(texts: list[list[Entry]]) -> bytes:
                     else:
                         end = entry.line.find("]", k)
                         raise Exception("Bad special characters: "+(entry.line[k+1:end] if end != -1 else entry.line[k+1]))
-            if decchars[-1] != 0xffff:
+            if not decchars or decchars[-1] != 0xffff:
                 decchars.append(0xffff)
             encchars: list[int] = []
             key = entry.key

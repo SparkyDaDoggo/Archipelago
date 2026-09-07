@@ -19,7 +19,16 @@ def randomize_type_chart(world: "PokemonBWWorld") -> dict[tuple[str, str], int]:
             split = name.index("_")
             this_chart[name[:split], name[split+1:]] = plando.effectiveness
 
-    if mods.is_shuffle:
+    if mods.is_randomize:
+        possible = (4,
+                    8 if not mods.is_disable_weaknesses else 4,
+                    2 if not mods.is_disable_resistances else 4,
+                    0 if not mods.is_disable_immunities else 4)
+        for matchup, effect in this_chart.items():
+            if effect != 0xff:
+                continue
+            this_chart[matchup] = world.random.choice(possible)
+    elif mods.is_shuffle:
         weak, resist, immune = 0, 0, 0
         for matchup, effect in chart.items():
             weak += effect == 8
@@ -43,14 +52,5 @@ def randomize_type_chart(world: "PokemonBWWorld") -> dict[tuple[str, str], int]:
             this_chart[matchup] = 0
         for matchup in to_fill[weak+resist+immune:]:
             this_chart[matchup] = 4
-    elif mods.is_randomize:
-        possible = (4,
-                    8 if not mods.is_disable_weaknesses else 4,
-                    2 if not mods.is_disable_resistances else 4,
-                    0 if not mods.is_disable_immunities else 4)
-        for matchup, effect in this_chart.items():
-            if effect != 0xff:
-                continue
-            this_chart[matchup] = world.random.choice(possible)
 
     return this_chart

@@ -136,26 +136,31 @@ class PokemonBWClient(BizHawkClient):
                 loc_name = ctx.location_names.lookup_in_game(loc_id)
                 if loc_name in all_item_locations:
                     self.missing_flag_loc_ids[all_item_locations[loc_name].flag_id].append(loc_id)
+
                 elif loc_name in dexsanity.location_table:
                     self.missing_dex_flag_loc_ids[dexsanity.location_table[loc_name].dex_number].append(loc_id)
                 elif loc_name in countsanity.dexcountsanity:
                     self.missing_dexcount_loc_ids[countsanity.dexcountsanity[loc_name]].append(loc_id)
+
                 elif loc_name in seensanity.location_table:
                     self.missing_seen_loc_ids[seensanity.location_table[loc_name].dex_number].append(loc_id)
                 elif loc_name in countsanity.seencountsanity:
                     self.missing_seencount_loc_ids[countsanity.seencountsanity[loc_name]].append(loc_id)
+
                 elif loc_name in formsanity.table:
-                    self.missing_seen_loc_ids[formsanity.table[loc_name].flag_id].append(loc_id)
+                    self.missing_form_loc_ids[formsanity.table[loc_name].flag_id].append(loc_id)
                 elif loc_name in countsanity.formcountsanity:
-                    self.missing_seencount_loc_ids[countsanity.formcountsanity[loc_name]].append(loc_id)
+                    self.missing_formcount_loc_ids[countsanity.formcountsanity[loc_name]].append(loc_id)
+
                 elif loc_name in shinysanity.location_table:
                     self.missing_shiny_loc_ids[shinysanity.location_table[loc_name].dex_number].append(loc_id)
                 elif loc_name in countsanity.shinycountsanity:
                     self.missing_shinycount_loc_ids[countsanity.shinycountsanity[loc_name]].append(loc_id)
+
                 elif loc_name in shinyformsanity.table:
-                    self.missing_shiny_loc_ids[shinyformsanity.table[loc_name].flag_id].append(loc_id)
+                    self.missing_shinyform_loc_ids[shinyformsanity.table[loc_name].flag_id].append(loc_id)
                 elif loc_name in countsanity.shinyformcountsanity:
-                    self.missing_shinycount_loc_ids[countsanity.shinyformcountsanity[loc_name]].append(loc_id)
+                    self.missing_shinyformcount_loc_ids[countsanity.shinyformcountsanity[loc_name]].append(loc_id)
                 else:
                     self.logger.warning(f"Missing location \"{loc_name}\" neither flag nor dex location")
             loc_name = "If you're reading this, write a 216 lines essay about the french revolution"
