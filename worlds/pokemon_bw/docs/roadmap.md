@@ -12,6 +12,10 @@ Version 1.0.0 will happen when certain important features are implemented.
 The content of future updates used to be predetermined, but various circumstances 
 resulted in that not really being followed, so it was changed to "whatever I wanna do next".
 
+## What features are **not** planned to be implemented
+
+- Shopsanity (due to technical limitations)
+
 ## Road to 1.0.0 (Required for core)
 
 ### 0.1.0: First version
