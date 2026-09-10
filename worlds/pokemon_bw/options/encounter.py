@@ -57,9 +57,9 @@ class RandomizeWildPokemon(ToggleSet):
     - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance
         in each area to the same pokemon. Takes priority over **Area 1-to-1** and alike.
 
-    It is **highly recommended** to include **Prevent rare encounters** if you want to
-    randomize wild pokemon, else you might find yourself searching for multiple
-    1% encounters on every route.
+    It is **highly recommended** to include **Prevent rare encounters** or one of the
+    **... 1 to 1** modifiers if you want to randomize wild pokemon, else you might find
+    yourself searching for multiple 1% encounters on every route.
     """
     # **Ensure all obtainable** -  ... This is automatically checked if **National pokedex** is chosen as the goal.
     # **Prevent bad early pokemon** - ... Without door shuffle, this includes...
@@ -110,7 +110,7 @@ class RandomizeTrainerPokemon(ToggleSet):
 
     Combining multiple modifiers that affect all trainer pokémon (i.e. not just gym
     trainers, ...) might massively increase generation time. Also in that case, most
-    options tend to be more lenient in order to reduce generation time.
+    options tend to be less strict in order to reduce generation time.
     """
     display_name = "Randomize Trainer Pokemon"
     is_randomize = False
@@ -140,8 +140,8 @@ class RandomizeStarterPokemon(ToggleSet):
     - **Randomize** - Toggles starter pokemon being randomized. Automatically added if
         any other modifier is added.
     - **Any base** - Only use unevolved/baby pokemon.
-    - **Base with 2 evolutions** - Only use unevolved/baby pokemon that can evolve twice.
-        Overrides **Any base**.
+    - **Base with 2 evolutions** - Only use unevolved/baby pokemon that can evolve twice
+        (or more, if evolutions are randomized). Overrides **Any base**.
     - **Only official starters** - Only use pokemon that have been a starter in any
         mainline game. Overrides **Any base** and **Base with 2 evolutions**.
     - **Type variety** - Every starter will have types that are different from the other two.
@@ -153,6 +153,7 @@ class RandomizeStarterPokemon(ToggleSet):
     is_any_base = False
     is_base_2_evos = False, "Base with 2 evolutions"
     is_only_official = False, "Only official starters"
+    is_similar_stats = False, "Similar base stats"
     is_type_variety = False
     is_vanilla_types = False
     auto_add_if_any = "Randomize"
@@ -171,6 +172,8 @@ class RandomizeStaticPokemon(ToggleSet):
     - **Any base** - Only use unevolved/baby pokemon.
     - **No legendaries** - Exclude legendaries from being placed into static encounters.
     - **Split statues** - Splits the statues in Desert Resort into 5 different species.
+    - **Split mimics** - Splits the fake pokeballs on routes 6 and 10 into more than just
+        two different pokemon.
     """
     display_name = "Randomize Static Pokemon"
     is_randomize = False
@@ -178,6 +181,7 @@ class RandomizeStaticPokemon(ToggleSet):
     is_any_base = False
     is_no_legendaries = False
     is_split_statues = False
+    is_split_mimics = False
     auto_add_if_any = "Randomize"
 
 
@@ -195,13 +199,10 @@ class RandomizeGiftPokemon(ToggleSet):
         you picked (like in vanilla), else it will always give you the same species.
     """
     display_name = "Randomize Gift Pokemon"
-    valid_keys = [
-        "Randomize",
-        "Similar base stats",
-        "No legendaries",
-        "Split monkeys",
-    ]
-    default = []
+    is_randomize = False
+    is_similar_stats = False, "Similar base stats"
+    is_no_legendaries = False
+    is_split_monkeys = False
     auto_add_if_any = "Randomize"
 
 
@@ -220,14 +221,11 @@ class RandomizeTradePokemon(ToggleSet):
     - **No legendaries** - Exclude legendaries from being placed into trades.
     """
     display_name = "Randomize Trade Pokemon"
-    valid_keys = [
-        "Randomize offer",
-        "Randomize request",
-        "Similar base stats",
-        "Coupled base stats",
-        "No legendaries",
-    ]
-    default = []
+    is_randomize_offer = False
+    is_randomize_request = False
+    is_similar_stats = False, "Similar base stats"
+    is_coupled_stats = False, "Coupled base stats"
+    is_no_legendaries = False
 
 
 class RandomizeLegendaryPokemon(ToggleSet):
@@ -247,14 +245,11 @@ class RandomizeLegendaryPokemon(ToggleSet):
     legendaries into these encounters.
     """
     display_name = "Randomize Legendary Pokemon"
-    valid_keys = [
-        "Randomize",
-        "Keep legendary",
-        "No legendaries",
-        "Similar base stats",
-        "Same type",
-    ]
-    default = []
+    is_randomize = False
+    is_keep_legendary = False
+    is_no_legendaries = False
+    is_similar_stats = False, "Similar base stats"
+    is_same_type = False
     auto_add_if_any = "Randomize"
 
 

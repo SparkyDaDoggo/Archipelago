@@ -1,6 +1,9 @@
 import string
 
 
+debug_flags = set()
+
+
 class Entry:
     line: str = "[Terminate]"
     key: int = 1
@@ -13,7 +16,7 @@ class Entry:
         self.flags = flags
 
 
-def decode(data: bytes) -> list[list[Entry]]:
+def decode(data: bytes, print_decode: bool = False) -> list[list[Entry]]:
 
     pointer = [0]
 
@@ -55,6 +58,8 @@ def decode(data: bytes) -> list[list[Entry]]:
             while len(encchars):
                 decchars.insert(0, encchars.pop() ^ st.key)
                 st.key = ((st.key >> 3) | (st.key << 13)) & 0xFFFF
+            if print_decode:
+                print("###", st.flags, decchars)
             k = 0
             while k < len(decchars):
                 char = decchars[k]
@@ -78,8 +83,16 @@ def decode(data: bytes) -> list[list[Entry]]:
                             k += 1
                             st.line += f"_{decchars[k]}"
                         st.line += "]"
-                elif 20 < char <= 0xFFF0 and char != 0xF000:
-                    st.line += chr(char)
+                elif char in (0x100, 0xFF00):
+                    k += 1
+                    total = decchars[k]
+                    st.line += f"[d_{char:x}_#{total}"
+                    for _ in range(total):
+                        k += 1
+                        st.line += f"_{decchars[k]}"
+                    st.line += "]"
+                elif 20 < char <= 0xD7FF or 0xE000 <= char < 0xF000:
+                    st.line += char.to_bytes(2, "little").decode("utf-16")
                 else:
                     st.line += f"[{hex(char)}]"
                 k += 1
@@ -155,6 +168,20 @@ def encode(texts: list[list[Entry]]) -> bytes:
                         decchars.append(raw)
                         k = end + 1
                     elif k + 2 < len(entry.line) and entry.line[k:k+3] == "[c_":
+                        end = entry.line.find("]", k)
+                        if end == -1:
+                            raise Exception("Unclosed command: "+entry.line[k:])
+                        parts = entry.line[k+1:end].split("_")
+                        if len(parts) < 3:
+                            raise Exception("Incomplete command: "+entry.line[k+1:end])
+                        if parts[2][0] != "#":
+                            raise Exception("Bad command formatting: "+entry.line[k+1:end])
+                        if int(parts[2][1:]) != len(parts) - 3:
+                            raise Exception("Incorrect value count for command: "+entry.line[k+1:end])
+                        decchars.extend([0xf000, int(parts[1], 16), int(parts[2][1:])])
+                        decchars.extend(int(part) for part in parts[3:])
+                        k = end + 1
+                    elif k + 2 < len(entry.line) and entry.line[k:k+3] == "[d_":
                         end = entry.line.find("]", k)
                         if end == -1:
                             raise Exception("Unclosed command: "+entry.line[k:])

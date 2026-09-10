@@ -131,17 +131,31 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Shinyformcountsanity
 - arm7 expansion (required for advanced assembly)
 - Shiny rate ingame option
+- Forget HMs without Move Deleter
 
-### Other stuff required for 1.0.0
+### Required for 1.0.0
 
 - Scripting system (required for many other features)
-- Options
+- Trainer rebattling
+- Expand plugins to client
+- Options:
+  - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
+  - Decrease trainer eyesight
+  - Starter/Static/Gift/Trade/Legendary pokémon randomization
+  - Disable certain location groups
+    - Hidden items
+    - Field items (will also disable min_once items)
+    - Abyssal Ruins
+    - Excluded locations (always enabled)
+
+### Stuff that would be nice to have in 1.0.0
+
+- Options:
   - More trainer pokémon randomization modifiers
     - Prevent bad early pokemon
     - Rivals take from box
     - N uses pokemon from nearby
     - More or less per trainer
-  - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Trainersanity
   - Gendersanity
   - All combinations of Dex/Seen/Form/Shiny/Gender/Count-sanities ("Dexsanitysanity")
@@ -161,32 +175,22 @@ resulted in that not really being followed, so it was changed to "whatever I wan
       - Shiny+Gender = Shinygender, Shiny+Count = Shinycount
       - Gender+Count = Gendercount
   - Trainer pokémon plando
-  - Decrease trainer eyesight
   - Customize roadblocks
     - Extra cuttable trees
     - Rock Smash rocks
     - Something with the badge gates
     - Something needed to cross quicksand in relic castle
-  - Starter/Static/Gift/Trade/Legendary pokémon randomization
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Fan club chairman levels checks modifier
   - Adjust encounters (like Adjust levels, but with species, based on base stats, mostly just devolve)
-  - Disable certain location groups
-    - Hidden items
-    - Field items (will also disable min_once items)
-    - Abyssal Ruins
-    - Post goal locations
   - Ingame options (things changeable in PC, moving Experience modifier here)
     - Season control (only when vanilla or changeable, not randomized)
 - Dowsing Machine as a hard requirement for hidden items (with option)
 - Reducing encounter slots in Modify Encounter Rates
-- Trainer rebattling
 - Xtransceiver being required to see certain story sequences (with some of them giving items)
   - Also, dynamic Xtransceiver item that automatically adds the correctly gendered version to the game
-- Make HMs forgettable
 - Castelia badge info NPC giving hints to in which game the badges are
 - Use portable AP menu code to make on-screen item receiving possible
-- Expand plugins to client
 
 ## Post-1.0.0 stuff
 
@@ -228,6 +232,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Dusk cloud hunt (dusk clouds have a chance to give a check)
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
+  - Some features won't be compatible with, e.g. Dexsanity
 - Display other players and item names ingame
 - Universal language support
 - Traps

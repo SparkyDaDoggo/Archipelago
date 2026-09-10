@@ -20,10 +20,11 @@ def extract(rom: "NintendoDSRom", target: str) -> None:
             for block_num in range(len(text)):
                 system_f.write("{\n".encode())
                 for line_num in range(len(text[block_num])):
+                    entry = text[block_num][line_num]
                     try:
-                        system_f.write(f"        {line_num}: \"{text[block_num][line_num].line}\"\n".encode())
+                        system_f.write(f"        {line_num} ({hex(entry.flags)}): \"{entry.line}\"\n".encode())
                     except UnicodeEncodeError:
-                        system_f.write(f"        {line_num}: \"{text[block_num][line_num].line}\"\n".encode("utf-16", errors="surrogatepass"))
+                        system_f.write(f"        {line_num} ({hex(entry.flags)}): \"{entry.line}\"\n".encode("utf-16", errors="surrogatepass"))
                 system_f.write("    },".encode())
             system_f.write("],\n".encode())
         for i in range(len(narc_story.files)):
@@ -32,10 +33,11 @@ def extract(rom: "NintendoDSRom", target: str) -> None:
             for block_num in range(len(text)):
                 story_f.write("{\n".encode())
                 for line_num in range(len(text[block_num])):
+                    entry = text[block_num][line_num]
                     try:
-                        story_f.write(f"        {line_num}: \"{text[block_num][line_num].line}\"\n".encode())
+                        story_f.write(f"        {line_num} ({hex(entry.flags)}): \"{entry.line}\"\n".encode())
                     except UnicodeEncodeError:
-                        story_f.write(f"        {line_num}: \"{text[block_num][line_num].line}\"\n".encode("utf-16", errors="surrogatepass"))
+                        story_f.write(f"        {line_num} ({hex(entry.flags)}): \"{entry.line}\"\n".encode("utf-16", errors="surrogatepass"))
                 story_f.write("    },".encode())
             story_f.write("],\n".encode())
 

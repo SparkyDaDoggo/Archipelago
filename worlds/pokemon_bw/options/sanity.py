@@ -177,6 +177,8 @@ class Seencountsanity(ExtendedOptionCounter):
     A combination of Dexcountsanity and Seensanity.
     This option can be edited like Dexcountsanity, while only requiring to see a certain
     amount of Pokemon species.
+
+    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
     """
     display_name = "Seencountsanity"
     fill_defaults = True
@@ -254,6 +256,8 @@ class Formcountsanity(ExtendedOptionCounter):
     A combination of Dexcountsanity and Formsanity.
     This option can be edited like Dexcountsanity, while only requiring to see a certain
     amount of unique forms.
+
+    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
     """
     display_name = "Formcountsanity"
     fill_defaults = True
@@ -371,6 +375,8 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
       Steps: 2
       Leniency: 5
     ```
+
+    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
     """
     display_name = "Shinycountsanity"
     value: int | dict[str, int]
@@ -438,6 +444,8 @@ class Shinyformsanity(Toggle):
     It works pretty much like **Shinysanity**, including being shown as a simple toggle
     outside the template yaml, while only requiring to see the shiny version of specific
     forms. It also contains plando capabilities in the way that **Formsanity** has them.
+
+    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
     """
     display_name = "Shinyformsanity"
     value: int | list[str]
@@ -492,6 +500,8 @@ class Shinyformcountsanity(Toggle, ExtendedOptionCounter):
     It works pretty much like **Shinycountsanity**, including being shown as a simple
     toggle outside the template yaml, while only requiring to see a certain amount of
     unique forms in their shiny variant.
+
+    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
     """
     display_name = "Shinyformcountsanity"
     value: dict[str, int]

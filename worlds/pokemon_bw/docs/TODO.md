@@ -8,8 +8,6 @@
 - specialized unittests for rando modifiers
 - make client use static game data pointers
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- wild rando broken for prevent rare + global 1-1 + merge phenomena
-- too many ??? in edited text
 - rom script changes to comply with regions rework:
   - master ball seller overhaul
   - Max & Reset options for shiny rate modifier & Exp multiplier
