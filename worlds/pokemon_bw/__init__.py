@@ -185,6 +185,7 @@ class PokemonBWWorld(World):
         self.move_entries: dict[str, MoveEntry] | None = None
         self.type_chart: dict[tuple[str, str], int] | None = None
         self.catchable_species_data: dict[str, SpeciesEntry] | None = None
+        self.starting_season: str = "Spring"
 
         self.ut_active: bool = False
         self.location_id_to_alias: dict[int, str] = {}
@@ -411,6 +412,7 @@ class PokemonBWWorld(World):
                 "driftveil_random_move_id": self.driftveil_random_move_id,
                 "other_locations_species": self.other_locations_species,
                 "disallowed_all_seen": self.disallowed_all_seen,
+                "starting_season": self.starting_season,
             }
         return part
 

@@ -226,6 +226,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - AP stuff (moved here from PC)
   - APhone
     - For now only to be able to call the Season Lady
+- Added an NPC in Castelia City's central plaza that confirms the legendary hunt goal, similar to the TM/HM hunt NPC
 
 ### Bug fixes and technical stuff
 
@@ -263,6 +264,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added logic for seen trainer pokémon
 - Made Post-Ghetsis locations be automatically excluded if the goal is `ghetsis`
   - The `Post-Ghetsis locations` group is now empty due to that, but not removed in order to not break older yamls
+- Added scripting system
+  - Moved most client setup to the init script as a part of that
 
 ### Is this version compatible with older multiworld slots and save files?
 No

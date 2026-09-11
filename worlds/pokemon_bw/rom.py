@@ -84,7 +84,7 @@ class PatchMethods:
                                        write_move_data, write_type_chart, write_egg_species)
         from .plugins.generate import plugins_write_patch
 
-        procedures: list[str] = ["base_patch", "write_text"]
+        procedures: list[str] = ["base_patch", "write_text", "write_scripts"]
         write_text.write_plando(patch, opened_zipfile)
         if patch.world.options.season_control != "vanilla":
             procedures.append("season_patch")
@@ -150,7 +150,7 @@ class PatchMethods:
         from .ndspy.rom import NintendoDSRom
         from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
                                        write_text, modify_rates, write_evolutions, write_stats, write_levelup_movesets,
-                                       tms_patch, write_move_data, write_type_chart, write_egg_species)
+                                       tms_patch, write_move_data, write_type_chart, write_egg_species, write_scripts)
         from .plugins.patch import plugins_patch
 
         patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch,
@@ -168,6 +168,7 @@ class PatchMethods:
             "write_egg_species": write_egg_species.patch,
             "write_move_data": write_move_data.patch,
             "write_type_chart": write_type_chart.patch,
+            "write_scripts": write_scripts.patch,
         }
 
         files_dump: dict[str, bytes | bytearray] = {}

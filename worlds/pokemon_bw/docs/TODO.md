@@ -53,6 +53,7 @@
 - fill more funny dialog
 - pad ROM to power of 2
 - send plugin options over slot data as string (breaks backwards compatibility)
+- Make ROM path settings check for the header and reject incompatible ROMs, such that the &deletepath command isn't needed anymore
 
 # Single reports, cannot recreate, need to wait for more reports
 

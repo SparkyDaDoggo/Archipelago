@@ -111,7 +111,8 @@ def populate_starting_inventory(world: "PokemonBWWorld", items: list[PokemonBWIt
         ]
         start = world.random.choice(seasons_list)
         world.push_precollected(start)
-        items.remove(start)
+        items.remove(start)  # Removable here because all seasons are at most only once in the item pool
+        world.starting_season = start.name
 
 
 def place_locked_items(world: "PokemonBWWorld", items: list[PokemonBWItem]) -> None:
