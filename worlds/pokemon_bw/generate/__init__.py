@@ -233,19 +233,20 @@ class SpeciesChecklist:
         self.to_check.append(species)
 
     def check(self, species: SpeciesEntry):
-        _to_check = [species]
+        _to_check = [(species, 0)]
         while _to_check:
-            species = _to_check.pop()
+            species, loop = _to_check.pop()
             if species in self.to_check:
                 self.to_check.remove(species)
             if species not in self.already_checked:
                 self.already_checked.add(species)
                 # Looping evolutions are possible if enabled in randomization
-                if self.world.options.modify_logic.is_consider_evos:
+                # Every level + Increasing stats could lead to being expected to level up some species past lvl 100
+                if self.world.options.modify_logic.is_consider_evos and loop < 10:
                     for evolution in species.evolutions:
                         if evolution.method == "Level up with party member":
                             self.add(self.world.species_entries_by_id[(evolution.value, 0)])
-                        _to_check.append(evolution.species.by_form(species.form))
+                        _to_check.append((evolution.species.by_form(species.form), loop + 1))
 
 
 @dataclass

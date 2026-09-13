@@ -14,6 +14,7 @@
   - check whether npcs asking for event pokémon are still using the ex command
   - Fix various lists requiring you to scroll down to press cancel instead of pressing B
   - inject item receiver into code that executes AP menu script
+  - Go Home button
   - ############################
   - accumula guards send you both ways
   - move striaton gym guide a bit south
