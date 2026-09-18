@@ -127,6 +127,9 @@ class SpeciesEntry:
     def has_form(self, form: int) -> bool:
         return len(self.all_forms) > form and self.all_forms[form] is not None
 
+    def __str__(self) -> str:
+        return self.species_name
+
 
 @dataclass
 class EvolutionsEntry:
@@ -146,6 +149,7 @@ class EncounterEntry:
     b1 species changed"""
     min_level: int
     max_level: int
+    min_max_fraction: float
     region: str = ""
 
     def build_region(self) -> Self:

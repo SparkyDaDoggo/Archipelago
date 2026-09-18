@@ -258,11 +258,15 @@ class AdjustLevels(ToggleSet):
         excluding Elite Four rematches, Alder, and Cynthia.
     - **Wild by sphere** - Normalizes wild pokemon levels by the spheres in multiworld
         generation, including all encounter methods. This is ignored by logic, only
-        applied in patching, and only raises the levels that are used in logic.
+        applied in patching, and doesn't fully lower the logical levels.
     - **Trainer by sphere** - Normalizes trainer pokemon levels by the spheres in
         multiworld generation, excluding Elite Four rematches, Alder, and Cynthia. This
-        is ignored by logic, only applied in patching, and only raises the levels that
-        are used in logic.
+        is ignored by logic, only applied in patching, and doesn't fully lower the
+        logical levels.
+    - **Tolerance X** - The percentage of how much a logical level can be lowered by
+        sphere normalizing. Allowed values for **X** are (currently) 0, 20, 50, and 100.
+        Including multiple percentages always takes the highest one. Including none
+        defaults to 20.
     """
     _ = """
     - **Static by distance** - Normalizes static, gift, fossil, and legendary pokemon 
@@ -278,6 +282,10 @@ class AdjustLevels(ToggleSet):
     is_wild_by_sphere = False
     is_trainer_by_sphere = False
     # is_static_by_sphere = True
+    is_tolerance_0 = False
+    is_tolerance_20 = True
+    is_tolerance_50 = False
+    is_tolerance_100 = False
     aliases_convert = [
         ("Wild", "Wild by distance"),
         ("Trainer", "Trainer by distance"),

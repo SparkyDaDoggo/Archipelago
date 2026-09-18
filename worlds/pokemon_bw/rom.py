@@ -184,7 +184,11 @@ class PatchMethods:
         plugins_patch(patch, rom, files_dump)
 
         with open(target, 'wb') as f:
-            f.write(rom.save(updateDeviceCapacity=True))
+            finished = rom.save(updateDeviceCapacity=True)
+            k = 1
+            while k < len(finished):
+                k <<= 1
+            f.write(finished + b'\0' * (k - len(finished)))
         if get_settings()["pokemon_bw_settings"]["dump_patched_files"]:
             with ZipFile(target.replace(".nds", "_files_dump.zip"), "w", ZIP_DEFLATED, True, 9) as dump:
                 for path, data in files_dump.items():

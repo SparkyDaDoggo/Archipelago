@@ -130,7 +130,7 @@ class MoveDataRandomizationAdjustments(ExtendedOptionCounter):
         "Accuracy maximum": 100,
         "PP minimum": 5,
         "PP maximum": 40,
-        "Normal type probability": 30,
+        "Normal type probability": 10,
     }
     individual_min_max = {
         "Move power minimum": (5, 250),
