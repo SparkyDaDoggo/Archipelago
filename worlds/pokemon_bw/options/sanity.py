@@ -1,11 +1,12 @@
 import random
+from pathlib import Path
 from typing import Any, Iterable, Self, Dict
 
 from Options import Range, Toggle, OptionError, Visibility
 from ..data.common_options import ExtendedOptionCounter
 from worlds import world_sources
 
-DEXSANITYSANITY_ENABLED = any(source.name == "pokemon_bw_dexsanitysanity" for source in world_sources)
+DEXSANITYSANITY_ENABLED = any(Path(source.path).stem == "pokemon_bw_dexsanitysanity" for source in world_sources)
 DEXSANITYSANITY_VISIBILITY = Visibility.spoiler if not DEXSANITYSANITY_ENABLED else Visibility.all
 
 
@@ -21,8 +22,8 @@ class Dexsanity(Range):
     Alternatively, you can put in a list of dex numbers and dex number ranges in order to
     plando what pokemon you want to have locations for:
     ```
-      dexsanity:
-        - [50, 51, 52, 53, 54, 460-469, 500]
+    dexsanity:
+    - [50, 51, 52, 53, 54, 460-469, 500]
     ```
     See the options guides for more information.
     """
@@ -127,8 +128,8 @@ class Seensanity(Range):
     Alternatively, you can put in a list of dex numbers and dex number ranges in order to
     plando what pokemon you want to have locations for:
     ```
-      seensanity:
-        - [50, 51, 52, 53, 54, 460-469, 500]
+    seensanity:
+    - [50, 51, 52, 53, 54, 460-469, 500]
     ```
     See the options guides for more information.
     """
@@ -216,8 +217,8 @@ class Formsanity(Range):
     Alternatively, you can put in a list of form names in order to plando what forms you
     want to have locations for:
     ```
-      formsanity:
-      - ["Unown (M)", "Darmanitan (Zen)"]
+    formsanity:
+    - ["Unown (M)", "Darmanitan (Zen)"]
     ```
     See the options guides for more information.
     """
@@ -298,8 +299,8 @@ class Shinysanity(Toggle):
     Alternatively, you can put in a list of dex numbers in order to plando what pokemon
     you want to have locations for:
     ```
-      shinysanity:
-        - [50, 51, 52, 53, 54, 460, 461, 500]
+    shinysanity:
+    - [50, 51, 52, 53, 54, 460, 461, 500]
     ```
     See the options guides for more information.
     """

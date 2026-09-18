@@ -132,10 +132,10 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - arm7 expansion (required for advanced assembly)
 - Shiny rate ingame option
 - Forget HMs without Move Deleter
+- Scripting system (required for many other features)
 
 ### Required for 1.0.0
 
-- Scripting system (required for many other features)
 - Trainer rebattling
 - Expand plugins to client
 - Options:

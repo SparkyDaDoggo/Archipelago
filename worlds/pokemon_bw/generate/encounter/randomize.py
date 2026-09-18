@@ -20,7 +20,8 @@ def create_encounter(world: "PokemonBWWorld") -> None:
 
     world.wild_encounter = {
         data.file_index: EncounterEntry(versioned_species(data), enc_regions.region_tup_by_file_tup(data.file_index),
-                                        data.file_index, 0, data.min_level, data.max_level).build_region()
+                                        data.file_index, 0, data.min_level, data.max_level,
+                                        data.min_level / data.max_level).build_region()
         for data in slots.table
     }
     world.trainer_teams = [

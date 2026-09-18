@@ -1,20 +1,35 @@
 # Important stuff
 
-- RELEASE NOTES:
-  - old yamls won't break
-  - dexsanity variants should be seen as alternatives to each other
-  - wait 2 patch updates before submitting it to public multiworlds
-  - mention the insanely long development cycle
+- `Keep Levels` and `Keep amount` in levelup moves rando not working?
+- evo rando with every level takes extraordinary long to generate
+- make some can_surf rules dependent on door shuffle
+- various tracker stuff should use co-op ID
+- rom script changes to comply with regions rework:
+  - check whether npcs asking for event pokémon are still using the ex command
+  - Ingame co-op ID
+
+# Not urgent
+
+- gym leader scripts control traded obedience level?
+- wingull grams overworld items not disappearing
+- extended location hint for challenge rock
+- a way to check whether map or fly menu is opened, used for switching to ow map in UT
+- Running shoes as an item, making mom cutscene on route 2 a check
+- fill more funny dialog
+- send plugin options over slot data as string (breaks backwards compatibility)
+- Make ROM path settings check for the header and reject incompatible ROMs, such that the &deletepath command isn't needed anymore
+- reload_key_items sometimes has index out of range error
+- items receiving in client has rare cases of recursion errors
 - specialized unittests for rando modifiers
 - make client use static game data pointers
-- `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- rom script changes to comply with regions rework:
-  - master ball seller overhaul
-  - Max & Reset options for shiny rate modifier & Exp multiplier
-  - check whether npcs asking for event pokémon are still using the ex command
+- turn plugin options into actual options (can you even add more options after initial class creation?)
+- import plugin packages and classes while the main apworld itself is getting imported
+- rom script changes, some to comply with regions rework:
   - Fix various lists requiring you to scroll down to press cancel instead of pressing B
   - inject item receiver into code that executes AP menu script
   - Go Home button
+  - master ball seller overhaul
+  - Max & Reset options for shiny rate modifier & Exp multiplier
   - ############################
   - accumula guards send you both ways
   - move striaton gym guide a bit south
@@ -43,18 +58,6 @@
   - add rock on landing stage that is cleared exactly when champion room is messed up
   - some way to still get back to landing stage from champion room after champion room is repaired
   - remove once-per-day access to the riches
-
-# Not urgent
-
-- gym leader scripts control traded obedience level?
-- wingull grams overworld items not disappearing
-- extended location hint for challenge rock
-- a way to check whether map or fly menu is opened, used for switching to ow map in UT
-- Running shoes as an item, making mom cutscene on route 2 a check
-- fill more funny dialog
-- pad ROM to power of 2
-- send plugin options over slot data as string (breaks backwards compatibility)
-- Make ROM path settings check for the header and reject incompatible ROMs, such that the &deletepath command isn't needed anymore
 
 # Single reports, cannot recreate, need to wait for more reports
 

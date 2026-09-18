@@ -103,7 +103,6 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             fill_restrictive(world.multiworld, state, tm_hm_locs, tm_hm_items,
                              single_player_placement=True, lock=True, allow_partial=True, name="TM/HM shuffle")
             items.extend(tm_hm_items)  # Re-add unplaced to item pool
-            # TODO what to do with HM rules now?
         case "hm_with_badge":
             tm_items = [item for item in items if item.name in tm_hm.tm and "TM70" not in item.name]
             hm_items = [item for item in items if item.name in tm_hm.hm or "TM70" in item.name]

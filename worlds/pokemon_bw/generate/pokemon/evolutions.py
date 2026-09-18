@@ -181,11 +181,11 @@ def randomize_evolutions(world: "PokemonBWWorld", by_id: dict[tuple[int, int], S
         random_method = ("Level up",)
 
     def _get_random_target(_curr_targets: set[SpeciesEntry], _dat: SpeciesEntry) -> SpeciesEntry | None:
-        picked = world.random.randrange(1, 650) - 1
-        end = picked if picked else 649
-        while picked != end:
-            picked = picked % 649 + 1
-            picked_data = by_id[picked, 0]
+        picked = world.random.randrange(649)
+        it = 0
+        while it < 649:
+            picked_data = by_id[(picked + it) % 649 + 1, 0]
+            it += 1
             if _dat == picked_data:  # no self-evolution for now, assumes _dat is always base form
                 continue
             if mods.is_common_type and _dat.types[0] not in picked_data.types and _dat.types[1] not in picked_data.types:

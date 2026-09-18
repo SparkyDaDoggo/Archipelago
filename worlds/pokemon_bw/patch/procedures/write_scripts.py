@@ -35,38 +35,29 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     first_command = init_scripts.lines[r0_addr+1].parts
     assert first_command[0] == "FlagSet"
 
-    # TMHM hunt NPC
-    # "name **in** goal" works for both single goal strings and combined goals lists
-    to_insert.append(Line("command", [
-        "FlagReset" if "tmhm_hunt" in opt["goal"] or "pokemon_master" in opt["goal"] else "FlagSet",
-        0x192
-    ]))
-    # Legendary hunt NPC
-    # "name **in** goal" works for both single goal strings and combined goals lists
-    to_insert.append(Line("command", [
-        "FlagReset" if "legendary_hunt" in opt["goal"] or "pokemon_master" in opt["goal"] else "FlagSet",
-        0x1EA
-    ]))
+    to_insert += (
+        # TMHM hunt NPC
+        # "name **in** goal" works for both single goal strings and combined goals lists
+        Line("command", [
+            "FlagReset" if "tmhm_hunt" in opt["goal"] or "pokemon_master" in opt["goal"] else "FlagSet",
+            0x192
+        ]),
+        # Legendary hunt NPC
+        Line("command", [
+            "FlagReset" if "legendary_hunt" in opt["goal"] or "pokemon_master" in opt["goal"] else "FlagSet",
+            0x1EA
+        ]),
+    )
 
     # Master ball sellers
     seller_modifiers = [mod.casefold() for mod in opt["master_ball_seller"]]
-    to_insert.append(Line("command", ["WorkSetConst", 0x40F2, slotdata["master_ball_seller_cost"]]))
-    to_insert.append(Line("command", [
-        "FlagSet" if "ns castle" in seller_modifiers else "FlagReset",
-        0x1CF
-    ]))
-    to_insert.append(Line("command", [
-        "FlagSet" if "pc" in seller_modifiers else "FlagReset",
-        0x1D1
-    ]))
-    to_insert.append(Line("command", [
-        "FlagSet" if "cherens mom" in seller_modifiers else "FlagReset",
-        0x1D2
-    ]))
-    to_insert.append(Line("command", [
-        "FlagSet" if "undella mansion seller" in seller_modifiers else "FlagReset",
-        0x1D0
-    ]))
+    to_insert += (
+        Line("command", ["WorkSetConst", 0x40F2, slotdata["master_ball_seller_cost"]]),
+        Line("command", ["FlagSet" if "ns castle" in seller_modifiers else "FlagReset", 0x1CF]),
+        Line("command", ["FlagSet" if "pc" in seller_modifiers else "FlagReset", 0x1D1]),
+        Line("command", ["FlagSet" if "cherens mom" in seller_modifiers else "FlagReset", 0x1D2]),
+        Line("command", ["FlagSet" if "undella mansion seller" in seller_modifiers else "FlagReset", 0x1D0]),
+    )
 
     # Shiny rate activation
     shcosanity, shfocosanity = opt["shinycountsanity"], opt["shinyformcountsanity"]
@@ -74,29 +65,30 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         shcosanity = {"Maximum": shcosanity}
     if isinstance(shfocosanity, int):
         shfocosanity = {"Maximum": shfocosanity}
-    to_insert.append(Line("command", [
-        "FlagSet" if any((opt["shinysanity"], shcosanity, opt["shinyformsanity"], shfocosanity)) else "FlagReset",
-        0x1E8
-    ]))
+    active_shiny_rate = any((opt["shinysanity"], shcosanity, opt["shinyformsanity"], shfocosanity))
+    to_insert += (
+        Line("command", ["FlagSet" if active_shiny_rate else "FlagReset", 0x1E8]),
+        Line("command", ["WorkSetConst", 0x40F3, 1024 if active_shiny_rate else 8]),
+    )
 
-    # Reusable items dialog
-    to_insert.append(Line("command", ["WorkSetConst", 0x40F7, ReusableTMs._by_name[opt["reusable_tms"]]]))
-    # Studio Castelia check type
-    to_insert.append(Line("command", ["WorkSetConst", 0x4137, types.by_name[slotdata["studio_castelia_type"]]]))
-    # Driftveil check move ID
-    to_insert.append(Line("command", ["WorkSetConst", 0x413B, slotdata["driftveil_random_move_id"]]))
-    # Various checks species ID
-    to_insert.append(Line("command", ["WorkSetConst", 0x4113, species.by_name[opt["other_locations_species"]].dex_number]))
-    # Initial exp multiplier
-    to_insert.append(Line("command", ["WorkSetConst", 0x40F4, opt["exp_multiplier"] - 1]))
+    # Other
+    to_insert += (
+        # Reusable items dialog
+        Line("command", ["WorkSetConst", 0x40F7, ReusableTMs._by_name[opt["reusable_tms"]]]),
+        # Studio Castelia check type
+        Line("command", ["WorkSetConst", 0x4137, types.by_name[slotdata["studio_castelia_type"]]]),
+        # Driftveil check move ID
+        Line("command", ["WorkSetConst", 0x413B, slotdata["driftveil_random_move_id"]]),
+        # Various checks species ID
+        Line("command", ["WorkSetConst", 0x4113, species.by_name[slotdata["other_locations_species"]].dex_number]),
+        # Initial exp multiplier
+        Line("command", ["WorkSetConst", 0x40F4, opt["exp_multiplier"] - 1]),
 
-    # Initial season and npc vanish
-    to_insert.append(Line("command", [
-        "FlagSet" if opt["season_control"] == "vanilla" else "FlagReset",
-        0x193
-    ]))
-    # Can always be set, because vanilla ignores that variable and changeable always starts with Spring by default
-    to_insert.append(Line("command", ["WorkSetConst", 0x40C1, seasons.table[slotdata["starting_season"]].var_value]))
+        # Initial season and npc vanish
+        Line("command", ["FlagSet" if opt["season_control"] == "vanilla" else "FlagReset", 0x193]),
+        # Can always be set, because vanilla ignores that variable and changeable always starts with Spring by default
+        Line("command", ["WorkSetConst", 0x40C1, seasons.table[slotdata["starting_season"]].var_value]),
+    )
 
     init_scripts.lines[r0_addr+1:r0_addr+2] = to_insert
     narc.files[866] = bytes(assemble(init_scripts))

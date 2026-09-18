@@ -13,7 +13,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Same as simple, but accepts multiple chained calculations
 - Added a location group for season-dependant item locations
 - Added an item group for fossils and another one for TMs and HMs combined
-- Reworked how wild encounters are listed in the spoiler log
 - Added glitched logic in UT for `Require Dowsing Machine` and `Require Flash` logic modifiers
 - Added `Funny Dialog` and `Text Plando` options
   - `funny` and `efficient` choices for `Funny Dialog`
@@ -45,7 +44,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Gym leaders now always have vanilla-type themed teams by default
   - `Rivals keep starter`
     - They also always evolve when possible
-- Added `Underpowered threshold` parameter to `Pokémon Randomization Adjustments`
 - Added `Wild Randomization Blacklist` and `Trainer Randomization Blacklist` options
   - The wild blacklist might not prevent some pokémon for various reasons (including other options)
   - Ignored by `Encounter Plando`
@@ -102,6 +100,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Correlate with types`
   - `Follow evolutions`
   - `Allow baby stages`
+  - `Allow custom groups`
 - Added `Randomize Egg Species` option with the following modifiers:
   - `Fix evolutions`
   - `Randomize`
@@ -214,7 +213,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added an ingame option to change the shiny rate
   - Possible values are 0 (never) to 65535 (almost guaranteed)
   - Only appears when any `Shinysanity` variant is enabled
-- Added `Wild by spheres` and `Trainers by spheres` modifiers to `Adjust levels`
+- Added `Wild by spheres`, `Trainers by spheres`, and multiple `Tolerance X` modifiers to `Adjust levels`
   - Also renamed `Wild` and `Trainers` to `Wild by distance` and `Trainers by distance` (respectively)
 - Added and changed some roadblocks:
   - The grunts in Pinwheel Forest now also disappear after defeating Lenora
@@ -241,7 +240,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Made the Gracidea also accept non-event Shaymins (+ updated logic accordingly)
 - Fixed logic of move evolutions
 - Wrote down move IDs
-- Enhanced spoiler output by adding trainers + newly randomizable stuff and organizing evolutions
+- Enhanced spoiler output by reworking wild, adding trainers + newly randomizable stuff, and organizing evolutions
 - Fixed legendary hunt flags being reset after defeating Ghetsis/Alder and resetting statics
 - Fixed `Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)` not showing up on the UT map tracker
 - Added option groups
@@ -260,12 +259,15 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - This also fixes potentially getting locked out of the Driftveil City fly flag
 - Re-added forgettable HMs
 - Added static pointers for game data in RAM
-- Prevented plugin options from being put onto the multiserver
+- Prevented plugin options and text plando from being put onto the multiserver
 - Added logic for seen trainer pokémon
 - Made Post-Ghetsis locations be automatically excluded if the goal is `ghetsis`
   - The `Post-Ghetsis locations` group is now empty due to that, but not removed in order to not break older yamls
 - Added scripting system
   - Moved most client setup to the init script as a part of that
+- Added remaining gym leader flags to the tracker events bitmap
+- Fixed BizHawk 2.11 compatibility by padding the ROM size to a power of 2
+- Added support for poptracker co-op
 
 ### Is this version compatible with older multiworld slots and save files?
 No

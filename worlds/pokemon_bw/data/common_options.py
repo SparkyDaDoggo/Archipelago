@@ -71,9 +71,9 @@ class ExtendedOptionCounter(OptionCounter):
 
     @classmethod
     def from_any(cls, data: Dict[str, Any]):
-        data = data.copy()
         if not isinstance(data, dict):
-            raise NotImplementedError(f"Cannot Convert from non-dictionary, got {type(data)}")
+            raise OptionError(f"Cannot Convert from non-dictionary, got {type(data)}")
+        data = data.copy()
         if cls.fill_defaults:
             for key in cls.valid_keys:
                 if key not in data:

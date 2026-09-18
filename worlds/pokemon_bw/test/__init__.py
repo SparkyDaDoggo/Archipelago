@@ -1,4 +1,5 @@
 import random
+import time
 from typing import Iterable, Callable, Type, Any, TYPE_CHECKING
 
 from test.bases import WorldTestBase
@@ -29,7 +30,9 @@ def multiply_random_combinations(option: str, mods: tuple, count: int, additiona
                     if name.startswith("test_combination"):
                         continue
                     with self.subTest("World setup", game=self.game):
+                        start_time = time.time()
                         self.world_setup()
+                        print(f"...took {time.time() - start_time} seconds to generate")
                     with self.subTest(name, game=self.game, seed=self.multiworld.seed):
                         value(self)
 

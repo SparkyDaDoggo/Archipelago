@@ -159,6 +159,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
 
     any_species_by_type: dict[str, dict[int, list[SpeciesEntry]]] = {t: {} for t in types_by_name}
     any_species: dict[int, list[SpeciesEntry]] = {}
+    # Always do RNG calculation forst, else there will be problems with UT
     if not world.random.randint(0, 999) and len(set(w.game for w in world.multiworld.worlds.values())) > 3:
         print(world.prepare_text(prepare))
     if mods.is_type_themed_areas:

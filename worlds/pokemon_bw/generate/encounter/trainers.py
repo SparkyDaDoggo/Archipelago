@@ -55,6 +55,8 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     def can_evolve(spec: SpeciesEntry, level: int) -> SpeciesEntry | None:
         for evo_tup in spec.evolutions:
             evo_spec = evo_tup.species.by_form(spec.form)
+            if evo_spec.virtual:
+                evo_spec = evo_spec.by_form(0)
             if evo_spec.dex_number == spec.dex_number:
                 continue
             if evo_spec.species_name in blacklist:

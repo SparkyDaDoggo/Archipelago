@@ -295,7 +295,8 @@ class AdjustLevels(ToggleSet):
 class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much plando
     """
     Modifies the level of all wild and trainer pokemon. You can choose a certain mode for
-    each type of encounter. This is applied AFTER **Adjust Levels**.
+    each type of encounter. This is applied AFTER adjusting levels by distance and BEFORE
+    adjusting them by sphere.
 
     The mode decides how to apply the value to every pokemon. You can write either the
     name of the mode or the corresponding number:
@@ -338,7 +339,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
         elif isinstance(data, list):
             self.value = deepcopy(data)
         else:
-            raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(data)}")
+            raise OptionError(f"Cannot convert from non-dictionary, got {type(data)}")
 
     def get_option_name(self, value):
         if isinstance(value, dict):
@@ -375,7 +376,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
             }
             for entry in data:
                 if not isinstance(entry, dict):
-                    raise NotImplementedError(f"Cannot convert list entry from non-dictionary, got {type(entry)}")
+                    raise OptionError(f"Cannot convert list entry from non-dictionary, got {type(entry)}")
                 entry: dict
                 for key in list_defaults:
                     if key not in entry:
@@ -384,7 +385,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
                     entry["mode"] = aliases[entry["mode"]]
             return cls(data)
         else:
-            raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(data)}")
+            raise OptionError(f"Cannot convert from non-dictionary, got {type(data)}")
 
     def verify(self, world: typing.Type["World"], player_name: str, plando_options: PlandoOptions) -> None:
 
@@ -417,7 +418,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
                         errors.append(f"{entry['type']} value {entry['value']} "
                                       f"out of range {_min} to {_max} for mode {mode}")
         else:
-            raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(self.value)}")
+            raise OptionError(f"Cannot convert from non-dictionary, got {type(self.value)}")
 
         if len(errors) != 0:
             errors = [f"For option {getattr(self, 'display_name', self)} of player {player_name}:"] + errors
@@ -442,7 +443,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
                     calc = cls.modify(entry["mode"], entry["value"], calc)
             return calc
         else:
-            raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(value)}")
+            raise OptionError(f"Cannot convert from non-dictionary, got {type(value)}")
 
     @classmethod
     def modify_wild(cls, value: dict[str, int] | list[dict[str, int | str]], level: int) -> int:
@@ -455,7 +456,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
                     calc = cls.modify(entry["mode"], entry["value"], calc)
             return calc
         else:
-            raise NotImplementedError(f"Cannot convert from non-dictionary, got {type(value)}")
+            raise OptionError(f"Cannot convert from non-dictionary, got {type(value)}")
 
     @classmethod
     def modify(cls, mode: int, value: int, level: int) -> int:
@@ -856,7 +857,7 @@ class PluginOptions(OptionDict):
     @classmethod
     def from_any(cls, data: dict[str, typing.Any]) -> OptionDict:
         if not isinstance(data, dict):
-            raise NotImplementedError(f"Cannot Convert from non-dictionary, got {type(data)}")
+            raise OptionError(f"Cannot Convert from non-dictionary, got {type(data)}")
         return cls(PluginOptions.search_recursively(data.copy()))
 
     @staticmethod
