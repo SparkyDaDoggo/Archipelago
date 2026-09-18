@@ -11,22 +11,23 @@ prepare = 2535066677756337011704079367178338195647310737841450300510022399884905
 
 
 def organize_by_method(world: "PokemonBWWorld") -> dict[str, list[int]]:
-    # {method: ([species names], [dex numbers])}
+    # {method: ([species names], [dex + form numbers])}
     ret: dict[str, list[int]] = {}
     for data in world.wild_encounter.values():
         if data.region not in ret:
             ret[data.region] = []
-        if data.species_id[0] not in ret[data.region]:
-            ret[data.region].append(data.species_id[0])
+        num = data.species_id[0] + (data.species_id[1] << 11)
+        if num not in ret[data.region]:
+            ret[data.region].append(num)
     for static_slot, entry in world.static_encounter.items():
-        ret[static_slot] = [entry.species_id[0]]
+        ret[static_slot] = [entry.species_id[0] + (entry.species_id[1] << 11)]
     for trade_slot, trade_entry in world.trade_encounter.items():
-        ret[trade_slot] = [trade_entry.species_id[0]]
+        ret[trade_slot] = [trade_entry.species_id[0] + (trade_entry.species_id[1] << 11)]
     return ret
 
 
 def organize_trades(world: "PokemonBWWorld") -> dict[str, tuple[int, int]]:
-    return {trade_slot: (trade_entry.species_id[0], trade_entry.wanted_dex_number)
+    return {trade_slot: (trade_entry.species_id[0] + (trade_entry.species_id[1] << 11), trade_entry.wanted_dex_number)
             for trade_slot, trade_entry in world.trade_encounter.items()}
 
 

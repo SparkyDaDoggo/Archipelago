@@ -15,13 +15,18 @@ async def set_coop_id(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
         client.coop_id = coop_id
         await ctx.send_msgs([{
             "cmd": "Set",
-            "key": "pokemon_bw_tracker_slots_enabled_",
+            "key": f"pokemon_bw_tracker_slots_enabled_{ctx.team}_{ctx.slot}",
             "default": 0,
             "want_reply": False,
-            "operations": [{
-                "operation": "or",
-                "value": int(bool(coop_id)),
-            }],
+            "operations": [
+                {
+                    "operation": "default",
+                    "value": 0,
+                }, {
+                    "operation": "or",
+                    "value": int(bool(coop_id)),
+                }
+            ],
         }])
 
 
@@ -39,7 +44,7 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
     if map_id != client.current_map:
         client.current_map = map_id
         if should_change(map_id):
-            await ctx.send_msgs([{
+            messages = [{
                 "cmd": "Set",
                 "key": f"pokemon_bw_map_{ctx.team}_{ctx.slot}",
                 "default": {},
@@ -53,7 +58,19 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
                         "value": {client.coop_id: map_id},
                     }
                 ],
-            }])
+            }]
+            if not client.coop_id:
+                messages.append({
+                    "cmd": "Set",
+                    "key": f"pokemon_bw_map_single_{ctx.team}_{ctx.slot}",
+                    "default": 0,
+                    "want_reply": False,
+                    "operations": [{
+                        "operation": "replace",
+                        "value": map_id,
+                    }],
+                })
+            await ctx.send_msgs(messages)
 
 
 async def set_wild_ids(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
@@ -94,8 +111,8 @@ async def set_wild_ids(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
             "want_reply": False,
             "operations": [
                 {
-                        "operation": "default",
-                        "value": 0,
+                    "operation": "default",
+                    "value": 0,
                 }, {
                     "operation": "update",
                     "value": {client.coop_id: [opp1, opp2]},
@@ -274,7 +291,7 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
                     "operation": "default",
                     "value": 0,
                 }, {
-                    "operation": "replace",
+                    "operation": "update",
                     "value": {client.coop_id: bitmap},
                 }
             ]

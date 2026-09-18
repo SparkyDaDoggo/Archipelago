@@ -136,7 +136,7 @@ class PokemonBWWorld(World):
             "locations/old_compat.json",
         ],
         "map_page_index": tracker.map_page_index,
-        "map_page_setting_key": "pokemon_bw_map_{team}_{player}",
+        "map_page_setting_key": "pokemon_bw_map_single_{team}_{player}",
     }
 
     def __init__(self, multiworld: MultiWorld, player: int):
