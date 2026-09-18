@@ -10,7 +10,7 @@ from .client.locations import check_flag_locations, check_dex_locations, check_s
 from .client.items import receive_items
 from .client.setup import early_setup, late_setup
 from .client.tracker import (set_map, set_dex_caught_seen, set_goal_bitmap, set_statics_bitmap, set_trades_bitmap,
-                             set_wild_ids)
+                             set_wild_ids, set_coop_id)
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -90,6 +90,7 @@ class PokemonBWClient(BizHawkClient):
         self.logger = logging.getLogger("Client")
         self.debug_halt = False
         self.current_wild_ids: tuple[int, int] = (0, 0)
+        self.coop_id = -1
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         """Should return whether the currently loaded ROM should be handled by this client. You might read the game name
@@ -204,6 +205,7 @@ class PokemonBWClient(BizHawkClient):
             if len(locations_to_check) != 0:
                 await ctx.send_msgs([{"cmd": "LocationChecks", "locations": list(locations_to_check)}])
 
+            await set_coop_id(self, ctx)
             await set_map(self, ctx)
             await set_dex_caught_seen(self, ctx)
             await set_goal_bitmap(self, ctx)

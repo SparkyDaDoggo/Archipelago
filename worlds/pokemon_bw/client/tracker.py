@@ -7,6 +7,24 @@ if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
 
 
+async def set_coop_id(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
+
+    coop_id = await client.read_var(ctx, 0xF1)
+
+    if client.coop_id != coop_id:
+        client.coop_id = coop_id
+        await ctx.send_msgs([{
+            "cmd": "Set",
+            "key": "pokemon_bw_tracker_slots_enabled_",
+            "default": 0,
+            "want_reply": False,
+            "operations": [{
+                "operation": "or",
+                "value": int(bool(coop_id)),
+            }],
+        }])
+
+
 async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
 
     read = await bizhawk.read(
@@ -24,12 +42,17 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
             await ctx.send_msgs([{
                 "cmd": "Set",
                 "key": f"pokemon_bw_map_{ctx.team}_{ctx.slot}",
-                "default": 0,
+                "default": {},
                 "want_reply": False,
-                "operations": [{
-                    "operation": "replace",
-                    "value": map_id,
-                }],
+                "operations": [
+                    {
+                        "operation": "default",
+                        "value": 0,
+                    }, {
+                        "operation": "update",
+                        "value": {client.coop_id: map_id},
+                    }
+                ],
             }])
 
 
@@ -67,12 +90,17 @@ async def set_wild_ids(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
         await ctx.send_msgs([{
             "cmd": "Set",
             "key": f"pokemon_bw_wild_ids_{ctx.team}_{ctx.slot}",
-            "default": 0,
+            "default": {},
             "want_reply": False,
-            "operations": [{
-                "operation": "replace",
-                "value": [opp1, opp2],
-            }],
+            "operations": [
+                {
+                        "operation": "default",
+                        "value": 0,
+                }, {
+                    "operation": "update",
+                    "value": {client.coop_id: [opp1, opp2]},
+                }
+            ],
         }])
 
 
@@ -81,37 +109,51 @@ async def set_statics_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientConte
 
     bitmap = 0
     if client.get_flag(665):  # Darmanitan left
-        bitmap |= 1
+        bitmap |= 0b1
     if client.get_flag(663):  # Darmanitan middle left
-        bitmap |= 2
+        bitmap |= 0b10
     if client.get_flag(664):  # Darmanitan middle
-        bitmap |= 4
+        bitmap |= 0b100
     if client.get_flag(666):  # Darmanitan middle right
-        bitmap |= 8
+        bitmap |= 0b1000
     if client.get_flag(667):  # Darmanitan right
-        bitmap |= 16
+        bitmap |= 0b1_0000
     if client.get_flag(2748):  # Musharna
-        bitmap |= 32
+        bitmap |= 0b10_0000
     if client.get_flag(344):  # Zoroark
-        bitmap |= 64
+        bitmap |= 0b100_0000
     if client.get_flag(768):  # Route 6 Foongus left
-        bitmap |= 128
+        bitmap |= 0b1000_0000
     if client.get_flag(767):  # Route 6 Foongus right
-        bitmap |= 256
+        bitmap |= 0b1_0000_0000
     if client.get_flag(772):  # Route 10 Foongus left
-        bitmap |= 512
+        bitmap |= 0b10_0000_0000
     if client.get_flag(771):  # Route 10 Foongus right
-        bitmap |= 1024
+        bitmap |= 0b100_0000_0000
     if client.get_flag(770):  # Route 10 Amoongus left
-        bitmap |= 2048
+        bitmap |= 0b1000_0000_0000
     if client.get_flag(769):  # Route 10 Amoongus right
-        bitmap |= 4096
+        bitmap |= 0b1_0000_0000_0000
     if client.get_flag(339):  # Sold Magikarp
-        bitmap |= 8192
+        bitmap |= 0b10_0000_0000_0000
     if client.get_flag(315):  # Larvesta egg
-        bitmap |= 16384
+        bitmap |= 0b100_0000_0000_0000
     if (await client.read_var(ctx, 0xC7)) >= 2:  # Zorua
-        bitmap |= 32768
+        bitmap |= 0b1000_0000_0000_0000
+    if client.get_flag(0x1E5):  # Victini
+        bitmap |= 0b1_0000_0000_0000_0000
+    if client.get_flag(0x1CE):  # Reshiram/Zekrom
+        bitmap |= 0b10_0000_0000_0000_0000
+    if client.get_flag(0x1E4):  # Kyurem
+        bitmap |= 0b100_0000_0000_0000_0000
+    if client.get_flag(0x1E6):  # Volcarona
+        bitmap |= 0b1000_0000_0000_0000_0000
+    if client.get_flag(0x1E1):  # Cobalion
+        bitmap |= 0b1_0000_0000_0000_0000_0000
+    if client.get_flag(0x1E2):  # Terrakion
+        bitmap |= 0b10_0000_0000_0000_0000_0000
+    if client.get_flag(0x1E3):  # Virizion
+        bitmap |= 0b100_0000_0000_0000_0000_0000
     if bitmap != client.goal_bitmap:
         client.statics_bitmap |= bitmap
         await ctx.send_msgs([{
@@ -167,51 +209,65 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
 
     bitmap = 0
     if client.get_flag(0x1D6):  # N
-        bitmap |= 1
+        bitmap |= 0b1
     if client.get_flag(0x1D3):  # Ghetsis
-        bitmap |= 2
+        bitmap |= 0b10
     if (await client.read_var(ctx, 0xE4)) >= 2:  # Cynthia
-        bitmap |= 4
+        bitmap |= 0b100
     if client.get_flag(705):  # Sage Giallo
-        bitmap |= 8
+        bitmap |= 0b1000
     if client.get_flag(0x1B5):  # Sage Gorm
-        bitmap |= 16
+        bitmap |= 0b10000
     if client.get_flag(0x1D5):  # Sage Zinzolin
-        bitmap |= 32
+        bitmap |= 0b100000
     if client.get_flag(809):  # Sage Ryoku
-        bitmap |= 64
+        bitmap |= 0b1000000
     if client.get_flag(0x1D7):  # Sage Rood
-        bitmap |= 128
+        bitmap |= 0b10000000
     if client.get_flag(0x1D8):  # Sage Bronius
-        bitmap |= 256
+        bitmap |= 0b1_0000_0000
     if client.get_flag(0x1E5):  # Victini
-        bitmap |= 512
+        bitmap |= 0b10_0000_0000
     if client.get_flag(0x1CE):  # Reshiram/Zekrom
-        bitmap |= 1024
+        bitmap |= 0b100_0000_0000
     if client.get_flag(0x1E4):  # Kyurem
-        bitmap |= 2048
+        bitmap |= 0b1000_0000_0000
     if client.get_flag(0x1E6):  # Volcarona
-        bitmap |= 4096
+        bitmap |= 0b1_0000_0000_0000
     if client.get_flag(0x1E1):  # Cobalion
-        bitmap |= 8192
+        bitmap |= 0b10_0000_0000_0000
     if client.get_flag(0x1E2):  # Terrakion
-        bitmap |= 16384
+        bitmap |= 0b100_0000_0000_0000
     if client.get_flag(0x1E3):  # Virizion
-        bitmap |= 32768
+        bitmap |= 0b1000_0000_0000_0000
     if client.get_flag(0x1D4):  # Alder
-        bitmap |= 65536
+        bitmap |= 0b1_0000_0000_0000_0000
     if client.get_flag(0x191):  # TM/HM scientist
-        bitmap |= 131072
+        bitmap |= 0b10_0000_0000_0000_0000
     if client.get_flag(0x178):  # Gym leader Brycen
-        bitmap |= 262144
+        bitmap |= 0b100_0000_0000_0000_0000
     if client.get_flag(841):  # Daycare man
-        bitmap |= 524288
+        bitmap |= 0b1000_0000_0000_0000_0000
+    if client.get_flag(0x172):  # Striaton gym leaders
+        bitmap |= 0b1_0000_0000_0000_0000_0000
+    if client.get_flag(0x173):  # Nacrene gym leader
+        bitmap |= 0b10_0000_0000_0000_0000_0000
+    if client.get_flag(0x174):  # Castelia gym leader
+        bitmap |= 0b100_0000_0000_0000_0000_0000
+    if client.get_flag(0x175):  # Nimbasa gym leader
+        bitmap |= 0b1000_0000_0000_0000_0000_0000
+    if client.get_flag(0x176):  # Driftveil gym leader
+        bitmap |= 0b1_0000_0000_0000_0000_0000_0000
+    if client.get_flag(0x177):  # Mistralton gym leader
+        bitmap |= 0b10_0000_0000_0000_0000_0000_0000
+    if client.get_flag(0x179):  # Opelucid gym leader
+        bitmap |= 0b100_0000_0000_0000_0000_0000_0000
     if bitmap != client.goal_bitmap:
         client.goal_bitmap |= bitmap
         await ctx.send_msgs([{
             "cmd": "Set",
             "key": f"pokemon_bw_events_{ctx.team}_{ctx.slot}",
-            "default": 0,
+            "default": {},
             "want_reply": False,
             "operations": [
                 {
@@ -219,7 +275,7 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
                     "value": 0,
                 }, {
                     "operation": "replace",
-                    "value": bitmap,
+                    "value": {client.coop_id: bitmap},
                 }
             ]
         }])
