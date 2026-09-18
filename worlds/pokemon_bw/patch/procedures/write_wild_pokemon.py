@@ -3,14 +3,25 @@ from typing import TYPE_CHECKING
 
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.narc import NARC
+from ...options import ModifyLevels
 
 if TYPE_CHECKING:
     from ...rom import PokemonBWPatch
 
 
 def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.ZipFile) -> None:
+    from ...generate.encounter.levels import adjust_wild
 
-    adjust_sphere = bw_patch_instance.world.options.adjust_levels.is_wild_by_sphere
+    # regarding sphere scaling
+    mods = bw_patch_instance.world.options.adjust_levels
+    adjust_sphere = mods.is_wild_by_sphere
+    tolerance = max((
+        0 if mods.is_tolerance_0 else -1,
+        20 if mods.is_tolerance_20 else -1,
+        50 if mods.is_tolerance_50 else -1,
+        100 if mods.is_tolerance_100 else -1,
+    ))
+    tolerance = 20 if tolerance == -1 else tolerance
     all_distances = bw_patch_instance.world.__class__.distances_by_sphere
     first_level: dict[str, tuple[int, int]] = {}
     if adjust_sphere and not all_distances:
@@ -18,38 +29,41 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
     distances = all_distances[bw_patch_instance.world.player]
     max_distance = bw_patch_instance.world.__class__.max_distance_by_sphere
 
+    # regarding modify levels
+    mod_value = bw_patch_instance.world.options.modify_levels.value
+    if isinstance(mod_value, dict):
+        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"]},
+                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"]}]
+    else:
+        calcs: list[dict[str, int | str]] = mod_value
+    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"])]
+    wild_calcs = tuple(calc for calc in calcs if calc["type"] == "Wild")
+
     slots: list[list[bytearray]] = [
         [bytearray(56*4), bytearray(56*4), bytearray(56*4), bytearray(56*4)]
         for _ in range(112)
     ]
 
     for file, slot in bw_patch_instance.world.wild_encounter.items():
-        if slot.write:
-            # adjust by sphere if enabled
-            if adjust_sphere:
-                # see generate/encounter/levels.py for an explanation
-                dist = distances[slot.region]
-                if slot.region not in first_level:
-                    lvl, _ = first_level[slot.region] = (50 * dist // max_distance, slot.max_level)
-                else:
-                    first, first_orig = first_level[slot.region]
-                    lvl = first * slot.max_level // first_orig
-                # ... * 4 // 5 in order to allow a little bit of lowering the level, ... + 1 to prevent level 0
-                new_levels = (max(min(lvl * slot.min_level // slot.max_level, 100), slot.min_level * 4 // 5 + 1),
-                              max(min(lvl, 100), slot.max_level * 4 // 5 + 1))
-                if (slot.min_level, slot.max_level) != new_levels:
-                    slot.min_level, slot.max_level = new_levels
-                    slot.write |= 1
-            arr = slots[file[0]][file[1]]
-            # write species if changed
-            if slot.write & 2:
-                species = slot.species_id
-                value = (species[0] + (species[1] * 2048)).to_bytes(2, "little")
-                arr[file[2]*4:file[2]*4+2] = value
-            # write levels if changed
-            if slot.write & 1:
-                arr[file[2]*4+2] = slot.min_level
-                arr[file[2]*4+3] = slot.max_level
+        new_levels = adjust_wild(slot, distances, first_level, max_distance) if adjust_sphere else (slot.min_level, slot.max_level)
+        for calc in wild_calcs:
+            new_levels = (ModifyLevels.modify(calc["mode"], calc["value"], new_levels[0]),
+                          ModifyLevels.modify(calc["mode"], calc["value"], new_levels[1]))
+        new_levels = (max(new_levels[0], slot.min_level * (100 - tolerance) // 100, 1),
+                      max(new_levels[1], slot.max_level * (100 - tolerance) // 100, 1))
+        if (slot.min_level, slot.max_level) != new_levels:
+            slot.min_level, slot.max_level = new_levels
+            slot.write |= 1
+        arr = slots[file[0]][file[1]]
+        # write species if changed
+        if slot.write & 2:
+            species = slot.species_id
+            value = (species[0] + (species[1] * 2048)).to_bytes(2, "little")
+            arr[file[2]*4:file[2]*4+2] = value
+        # write levels if changed
+        if slot.write & 1:
+            arr[file[2]*4+2] = slot.min_level
+            arr[file[2]*4+3] = slot.max_level
 
     for file_num in range(112):
         if any(slots[file_num][3]):

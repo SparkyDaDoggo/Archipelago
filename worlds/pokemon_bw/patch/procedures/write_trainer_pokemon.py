@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from ...ndspy.rom import NintendoDSRom
 from ...ndspy.narc import NARC
+from ...options import ModifyLevels
 
 if TYPE_CHECKING:
     from ...rom import PokemonBWPatch
@@ -11,8 +12,18 @@ if TYPE_CHECKING:
 def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.ZipFile) -> None:
     from ...data.pokemon.species import by_name
     from ...data.trainers.data import table as trainer_table
+    from ...generate.encounter.levels import adjust_trainer
 
-    adjust_sphere = bw_patch_instance.world.options.adjust_levels.is_trainer_by_sphere
+    # regarding sphere scaling
+    mods = bw_patch_instance.world.options.adjust_levels
+    adjust_sphere = mods.is_trainer_by_sphere
+    tolerance = max((
+        0 if mods.is_tolerance_0 else -1,
+        20 if mods.is_tolerance_20 else -1,
+        50 if mods.is_tolerance_50 else -1,
+        100 if mods.is_tolerance_100 else -1,
+    ))
+    tolerance = 20 if tolerance == -1 else tolerance
     all_distances = bw_patch_instance.world.__class__.distances_by_sphere
     first_level: dict[str, tuple[int, int]] = {}
     if adjust_sphere and not all_distances:
@@ -20,32 +31,34 @@ def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Z
     distances = all_distances[bw_patch_instance.world.player]
     max_distance = bw_patch_instance.world.__class__.max_distance_by_sphere
 
+    # regarding modify levels
+    mod_value = bw_patch_instance.world.options.modify_levels.value
+    if isinstance(mod_value, dict):
+        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"]},
+                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"]}]
+    else:
+        calcs: list[dict[str, int | str]] = mod_value
+    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"])]
+    trainer_calcs = tuple(calc for calc in calcs if calc["type"] == "Trainer")
+
     slots: list[bytearray] = [
         bytearray(6*4)
         for _ in range(616)
     ]
 
     for pokemon in bw_patch_instance.world.trainer_teams:
+        t_data = trainer_table[pokemon.trainer_id - 1]
+        if t_data.do_not_adjust:
+            continue
+        new_level = adjust_trainer(pokemon, t_data, distances, first_level, max_distance) if adjust_sphere else pokemon.level
+        for calc in trainer_calcs:
+            new_level = ModifyLevels.modify(calc["mode"], calc["value"], new_level)
+        new_level = max(new_level, pokemon.level * (100 - tolerance) // 100, 1)
+        if new_level != pokemon.level:
+            pokemon.level = new_level
+            pokemon.write |= 1
         if not pokemon.write:
             continue
-        # adjust by sphere if enabled
-        if adjust_sphere:
-            # see generate/encounter/levels.py for an explanation
-            t_data = trainer_table[pokemon.trainer_id - 1]
-            if t_data.do_not_adjust:
-                continue
-            reg_name = t_data.region
-            dist = distances[reg_name]
-            if reg_name not in first_level:
-                lvl, _ = first_level[reg_name] = (50 * dist // max_distance, pokemon.level)
-            else:
-                first, first_orig = first_level[reg_name]
-                lvl = first * pokemon.level // first_orig
-            # ... * 4 // 5 in order to allow a little bit of lowering the level, level 0 is prevented by min(lvl + 2, 100)
-            new_level = max(min(lvl + 2, 100), pokemon.level * 4 // 5 + 1)
-            if new_level != pokemon.level:
-                pokemon.level = new_level
-                pokemon.write |= 1
         address = 4 * pokemon.team_number
         species_data = by_name[pokemon.species]
         # write species if changed
