@@ -206,6 +206,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
 
     # {dex: ({wild/static places}, [(trade, wanted dex), ...], [pre-evo dex])}
     places_for_location: dict[int, tuple[set[str], list[tuple[str, int]], list[int], StrVar]] = {}
+    logic_mods = world.options.modify_logic
 
     # Wild encounter
     for entry in world.wild_encounter.values():
@@ -215,7 +216,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
         places_for_location[dex][0].add(entry.region)
 
     # Static encounter
-    if world.options.modify_logic.is_consider_static:
+    if logic_mods.is_consider_static:
         for static_slot, entry in world.static_encounter.items():
             catching_place = static_slot[:static_slot.rfind("Encounter")]
             dex = entry.species_id[0]
@@ -224,7 +225,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             places_for_location[dex][0].add(catching_place)
 
     # Trade encounter
-    if world.options.modify_logic.is_consider_trades and (world.options.modify_logic.is_consider_static
+    if logic_mods.is_consider_trades and (logic_mods.is_consider_static
                                                           or world.options.randomize_wild_pokemon.is_randomize):
         for trade_slot, entry in world.trade_encounter.items():
             catching_place = trade_slot[:trade_slot.rindex('Encounter')]
@@ -235,7 +236,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             places_for_location[dex][1].append((catching_place, wanted_dex))
 
     # Evolutions
-    if world.options.modify_logic.is_consider_evos:
+    if logic_mods.is_consider_evos and not world.options.randomize_evolutions.is_every_level:
         for species, data in world.species_entries.items():
             for evo in data.evolutions:
                 pre_evo_dex = data.dex_number

@@ -196,6 +196,7 @@ class MoveEntry:
     accuracy: int
     pp: int
     name: str
+    locked: bool
     write: int = 0
     """b0 = general data
     b1 = name"""
@@ -208,6 +209,7 @@ class MoveEntry:
         self.accuracy = data.accuracy
         self.pp = data.pp
         self.name = name
+        self.locked = data.locked
 
 
 class SpeciesChecklist:
@@ -238,6 +240,8 @@ class SpeciesChecklist:
 
     def check(self, species: SpeciesEntry):
         _to_check = [(species, 0)]
+        opt = self.world.options
+        consider_evos = opt.modify_logic.is_consider_evos and not opt.randomize_evolutions.is_every_level
         while _to_check:
             species, loop = _to_check.pop()
             if species in self.to_check:
@@ -246,7 +250,7 @@ class SpeciesChecklist:
                 self.already_checked.add(species)
                 # Looping evolutions are possible if enabled in randomization
                 # Every level + Increasing stats could lead to being expected to level up some species past lvl 100
-                if self.world.options.modify_logic.is_consider_evos and loop < 10:
+                if consider_evos and loop < 10:
                     for evolution in species.evolutions:
                         if evolution.method == "Level up with party member":
                             self.add(self.world.species_entries_by_id[(evolution.value, 0)])

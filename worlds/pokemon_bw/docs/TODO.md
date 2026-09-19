@@ -1,10 +1,6 @@
 # Important stuff
 
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- evo rando with every level takes extraordinary long to generate
-- make some can_surf rules dependent on door shuffle
-- rom script changes to comply with regions rework:
-  - check whether npcs asking for event pokémon are still using the ex command
 
 # Not urgent
 

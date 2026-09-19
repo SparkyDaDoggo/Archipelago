@@ -62,9 +62,10 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     stats_threshold: int = world.options.pokemon_randomization_adjustments["Overpowered threshold"]
     blacklist = world.options.wild_randomization_blacklist.value
     area_types: dict[str, str] = {}
+    consider_evos = world.options.modify_logic.is_consider_evos and not world.options.randomize_evolutions.is_every_level
 
     # Devolve overpowered species, might be able to reduce the species list a bit
-    if mods.is_prevent_overpowered and world.options.modify_logic.is_consider_evos:
+    if mods.is_prevent_overpowered and consider_evos:
 
         def try_devolve(_entry: SpeciesEntry):
             stats_total = sum(_entry.base_stats)
@@ -91,7 +92,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
             try_devolve(spec_entry)
 
     if len(species_checklist) > len(logic_slots):
-        if world.options.modify_logic.is_consider_evos:
+        if consider_evos:
             for species_data in species_checklist.copy_list():
                 for evolution in species_data.evolutions:
                     if evolution.method == "Level up with party member":

@@ -304,6 +304,7 @@ class MoveData(NamedTuple):
     power: int
     accuracy: int
     pp: int
+    locked: bool = False
     # (Number of positive effects) - (Number of negative effects)
     # effects_difference: int
 

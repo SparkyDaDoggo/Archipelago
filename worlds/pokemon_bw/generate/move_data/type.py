@@ -26,6 +26,8 @@ def randomize_type(world: "PokemonBWWorld", all_moves: dict[str, MoveEntry]):
     other_types = tuple(t for t in by_name if t != "Normal")
 
     for data in all_moves.values():
+        if data.locked:
+            continue
         data.write |= 1
         if world.random.randrange(100) < normal_chance:
             data.type = "Normal"

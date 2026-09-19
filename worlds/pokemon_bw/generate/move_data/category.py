@@ -22,6 +22,6 @@ def randomize_category(world: "PokemonBWWorld", all_moves: dict[str, MoveEntry])
         return
 
     for data in all_moves.values():
-        if data.category != "Status":
+        if data.category != "Status" and not data.locked:
             data.write |= 1
             data.category = world.random.choice(("Physical", "Special"))

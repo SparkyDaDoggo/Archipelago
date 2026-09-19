@@ -1,4 +1,4 @@
-from ... import FlagLocationData, OrExtRules as OR
+from ... import FlagLocationData, OrExtRules as OR, IfExtRules as IF
 from ..rules import *
 from ..progress_type import *
 
@@ -24,7 +24,7 @@ table: dict[str, FlagLocationData] = {
     "Wellspring Cave - B1F south hidden item": FlagLocationData(1064, always_default, "Wellspring Cave B1F", None, None),
     "Wellspring Cave - B1F hidden item south east of trainers": FlagLocationData(1063, always_default, "Wellspring Cave B1F", None, None),
     "Wellspring Cave - B1F hidden item north west of trainers": FlagLocationData(1036, always_default, "Wellspring Cave B1F", None, None),
-    "Wellspring Cave - B1F north hidden item": FlagLocationData(1022, always_default, "Wellspring Cave B1F", None, can_use_surf),
+    "Wellspring Cave - B1F north hidden item": FlagLocationData(1022, always_default, "Wellspring Cave B1F", None, IF(shuffled_doors, can_use_surf)),
     "Nacrene City - Hidden item on railway": FlagLocationData(905, always_default, "Nacrene City", None, None),
     "Nacrene City - Hidden item near Café Warehouse": FlagLocationData(940, always_default, "Nacrene City", None, None),
     "Pinwheel Forest - Outside north hidden item": FlagLocationData(941, always_default, "Pinwheel Forest Outside", None, None),
@@ -102,8 +102,8 @@ table: dict[str, FlagLocationData] = {
     "Route 15 - Hidden item near Poké Transfer Lab": FlagLocationData(1015, always_default, "Route 15", None, None),
     "Route 15 - Hidden item between ledges": FlagLocationData(1034, always_default, "Route 15", None, None),
     "Route 14 - East hidden item": FlagLocationData(1047, always_default, "Route 14", None, can_use_surf),
-    "Abundant Shrine - Hidden item on southern lake": FlagLocationData(1013, always_default, "Abundant Shrine", None, can_use_surf),
-    "Abundant Shrine - Hidden item near northern lake": FlagLocationData(1014, always_default, "Abundant Shrine", None, can_use_surf),
+    "Abundant Shrine - Hidden item on southern lake": FlagLocationData(1013, always_default, "Abundant Shrine", None, IF(shuffled_doors, can_use_surf)),
+    "Abundant Shrine - Hidden item near northern lake": FlagLocationData(1014, always_default, "Abundant Shrine", None, IF(shuffled_doors, can_use_surf)),
     "Abundant Shrine - East hidden item": FlagLocationData(1060, always_default, "Abundant Shrine", None, None),
     "Abundant Shrine - Center hidden item": FlagLocationData(1033, always_default, "Abundant Shrine", None, None),
     "Abundant Shrine - North west hidden item": FlagLocationData(1011, always_default, "Abundant Shrine", None, None),

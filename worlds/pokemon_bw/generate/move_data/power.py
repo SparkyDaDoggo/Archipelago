@@ -30,7 +30,7 @@ def randomize_power(world: "PokemonBWWorld", all_moves: dict[str, MoveEntry]):
         possible = (min_acc, max_acc)
 
     for data in all_moves.values():
-        if data.power in (0, 1):
+        if data.power in (0, 1) or data.locked:
             continue
         data.write |= 1
         chosen = world.random.randrange(len(possible))

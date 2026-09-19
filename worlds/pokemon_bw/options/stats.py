@@ -16,15 +16,15 @@ class RandomizeBaseStats(ToggleSet):
     Randomizes the base stats of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles base stats being randomized. Automatically added if any
-        other modifier is added.
-    - **Random total** - Allows the base stats of a species to be entirely random.
-        Otherwise, the species will be roughly as strong as before.
-    - **Follow evolutions** - Evolved species will use their pre-evolution's base stats
-        and add on top of that.
+    - **Randomize** - Toggles base stats being randomized. Automatically
+        added if any other modifier is added.
+    - **Random total** - Allows the base stats of a species to be entirely
+        random. Otherwise, the species will be roughly as strong as before.
+    - **Follow evolutions** - Evolved species will use their pre-evolution's
+        base stats and add on top of that.
 
-    If evolutions are randomized and **Follow evolutions** is included, then not including **Random total** might
-    not be followed consistently.
+    If evolutions are randomized and **Follow evolutions** is included,
+    then not including **Random total** might not be followed consistently.
     """
     display_name = "Randomize Base Stats"
     is_randomize = False
@@ -52,7 +52,8 @@ class RandomizeEvolutions(ToggleSet):
         pre-evolutions.
     - **Every level** - Makes all species have a levelup evolution that triggers on
         any levelup. Including **More or less branches** will ensure at least one method
-        is levelup. This potentially ignores some other modifiers being excluded/included.
+        is levelup. This potentially ignores some other modifiers being excluded/included
+        and disables **Consider evolutions** from the **Modify Logic** option.
     - **Pair stats** - Always makes the stats-dependent methods of Tyrogue be randomized together.
     - **Pair 50 50** - Always makes the PID-dependent methods of Wurmple be randomized together.
     - **Increasing stats** - Evolved pokemon will always have an equal or higher base
@@ -114,14 +115,14 @@ class RandomizeCatchRates(ToggleSet):
     Randomizes the catch rate of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Shuffle** - Gives every species a commonly used catch rate (e.g. 255, 45, 3, ...).
-        Automatically added if any other modifier is added.
-    - **Randomize** - Gives every species a completely random catch rate in range 3-255.
-        Supersedes **Shuffle**.
-    - **Follow evolutions** - Evolved species will have a catch rate equal to or lower
-        than their pre-evolution(s).
-    - **Correlate with base stats** - Species with a higher base stat total are more
-        likely to have a lower catch rate.
+    - **Shuffle** - Gives every species a commonly used catch rate (e.g. 255,
+        45, 3, ...). Automatically added if any other modifier is added.
+    - **Randomize** - Gives every species a completely random catch rate
+        in range 3-255. Supersedes **Shuffle**.
+    - **Follow evolutions** - Evolved species will have a catch rate equal
+        to or lower than their pre-evolution(s).
+    - **Correlate with base stats** - Species with a higher base stat
+        total are more likely to have a lower catch rate.
     """
     display_name = "Randomize Catch Rates"
     is_shuffle = False
@@ -138,13 +139,15 @@ class RandomizeGenderRatio(ToggleSet):
 
     - **Shuffle** - Gives every species a commonly used gender ratio
         (e.g. 50/50, 1 in 8, ...).
-    - **Randomize** - Gives every species a completely random gender ratio.
-        Overrides **Shuffle**.
-    - **Follow evolutions** - Evolved species will have the same gender ratio as (one of)
-        their pre-evolution(s). Not including this can lead to some pokémon changing
-        their gender when evolved.
-    - **Keep fixed** - Keeps all male-only, female-only, and unknown gender ratios.
-    - **Force split** - Prevents all species from becoming unknown gender-only.
+    - **Randomize** - Gives every species a completely random gender
+        ratio. Overrides **Shuffle**.
+    - **Follow evolutions** - Evolved species will have the same gender
+        ratio as (one of) their pre-evolution(s). Not including this
+        can lead to some pokémon changing their gender when evolved.
+    - **Keep fixed** - Keeps all male-only, female-only, and unknown
+        gender ratios.
+    - **Force split** - Prevents all species from becoming unknown
+        gender-only.
 
     Male-only and female-only ratios can be prevented using the
     **Stats Randomization Adjustments** option.
@@ -163,17 +166,17 @@ class RandomizeLevelUpMovesets(ToggleSet):
     Randomizes the moves a pokemon species learns by leveling up.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles level up movesets being randomized. Automatically added
-        if any other modifier is added.
+    - **Randomize** - Toggles level up movesets being randomized.
+        Automatically added if any other modifier is added.
     - **Keep types** - Randomized moves have either a matching or normal type.
-    - **Progressive power** - If a move is learned after another one (and it's not a
-        status move), it will have an equal or higher base power.
+    - **Progressive power** - If a move is learned after another one (and it's
+        not a status move), it will have an equal or higher base power.
     - **Keep amount** - Keeps the amount of moves a species learns normally.
-    - **Keep levels** - If the species learned a move at a certain level, it will still
-        learn something at that level.
-    - **Follow evolutions** - Evolved species will try to have a large portion of the
-        levelup moveset(s) of their pre-evolution(s). Has priority over some **Keep ...**
-        modifiers. Might not be applied to all species if plando is used.
+    - **Keep levels** - If the species learned a move at a certain level,
+        it will still learn something at that level.
+    - **Follow evolutions** - Evolved species will try to have a large portion of
+        the levelup moveset(s) of their pre-evolution(s). Has priority over some
+        **Keep ...** modifiers. Might not be applied to all species if plando is used.
     - **Start with 4** - Ensures that each species learns at least 4 moves at level 1.
         Has priority over all **Keep ...** modifiers.
     """
@@ -193,14 +196,17 @@ class RandomizeTMHMCompatibility(ToggleSet):
     Randomizes the TM and HM compatibility of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Force all TMs** - Forces all TMs (not HMs) to be compatible with every pokemon species.
-    - **Force all HMs** - Forces all HMs (and TM70 Flash) to be compatible with every
-        pokemon species.
-    - **Randomize** - Toggles TM and HM compatibility being randomized. Automatically
-        added if any other modifier is added.
-    - **Match types** - Compatible TM moves have either a matching or normal type.
-    - **Follow evolutions** - Evolved species will be able to learn all TMs/HMs of their
-        pre-evolution(s).
+    - **Force all TMs** - Forces all TMs (not HMs) to be
+        compatible  with every pokemon species.
+    - **Force all HMs** - Forces all HMs (and TM70 Flash) to
+        be compatible with every pokemon species.
+    - **Randomize** - Toggles TM and HM compatibility being
+        randomized. Automatically added if any other modifier
+        is added.
+    - **Match types** - Compatible TM moves have either a
+        matching  or normal type.
+    - **Follow evolutions** - Evolved species will be able
+        to learn all TMs/HMs of their pre-evolution(s).
     """
     display_name = "Randomize TM/HM Compatibility"
     is_all_tms = False, "Force all TMs"

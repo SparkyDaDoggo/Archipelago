@@ -727,21 +727,20 @@ class ModifyLogic(ToggleSet):
     Modifies parts of what's logically required for various locations.
     You can add as many of the following modifiers as you want.
 
-    - **Require Dowsing Machine** - Makes the Dowsing Machine a logical requirement to
-        find hidden items.
-    - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the basement of
-        Wellspring Cave logically require TM70 Flash.
-    - **Consider <feature X>** - Toggles whether <feature X> is considered in logic to
-        get access to some pokemon species. The available features are **evolutions**,
-        **static pokemon**, **trades**, and **form change**. However, do note that trades
-        are automatically excluded if evolutions are excluded and wild pokemon are not
-        randomized.
+    - **Require Dowsing Machine** - Makes the Dowsing Machine a logical
+        requirement to find hidden items.
+    - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the
+        basement of Wellspring Cave logically require TM70 Flash.
+    - **Consider <feature X>** - Toggles whether <feature X> is considered in
+        logic to get access to some pokemon species. The available features are
+        **evolutions**, **static pokemon**, **trades**, and **form change**.
+        However, do note that trades are automatically excluded if evolutions
+        are excluded and wild pokemon are not randomized. Also, evolutions are
+        automatically excluded if evolutions are  randomized with the
+        **Every level** modifier.
     """
-    # - **Prioritize key item locations** - Marks locations, that normally contain key items (which also includes
-    #     badge rewards in gyms), as priority locations, making them mostly contain progressive items.
     display_name = "Modify Logic"
     is_require_dowsing = True, "Require Dowsing Machine"
-    # is_prioritize_key_locs = True, "Prioritize key item locations"
     is_require_flash = True
     is_consider_evos = True, "Consider evolutions"
     is_consider_static = True, "Consider static pokemon"

@@ -29,6 +29,8 @@ def randomize_pp(world: "PokemonBWWorld", all_moves: dict[str, MoveEntry]):
         possible = (min_count, max_count)
 
     for data in all_moves.values():
+        if data.locked:
+            continue
         data.write |= 1
         chosen = world.random.randrange(len(possible))
         if not (mods.is_shuffle_power or mods.is_randomize_power) and mods.is_correlate_power_and_pp:

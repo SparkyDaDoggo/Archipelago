@@ -166,7 +166,7 @@ by_name: dict[str, MoveData] = {
     "Super Fang": MoveData(162, "Normal", "Physical", 1, 90, 10),
     "Slash": MoveData(163, "Normal", "Physical", 70, 100, 20),
     "Substitute": MoveData(164, "Normal", "Status", 0, 101, 10),
-    "Struggle": MoveData(165, "Normal", "Physical", 50, 101, 1),
+    "Struggle": MoveData(165, "Normal", "Physical", 50, 101, 1, locked=True),
     "Sketch": MoveData(166, "Normal", "Status", 0, 101, 1),
     "Triple Kick": MoveData(167, "Fighting", "Physical", 10, 90, 10),
     "Thief": MoveData(168, "Dark", "Physical", 40, 100, 10),

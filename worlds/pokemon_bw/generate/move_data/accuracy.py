@@ -29,7 +29,7 @@ def randomize_accuracy(world: "PokemonBWWorld", all_moves: dict[str, MoveEntry])
         possible = (min_acc, max_acc)
 
     for data in all_moves.values():
-        if data.accuracy == 101:
+        if data.accuracy == 101 or data.locked:
             continue
         data.write |= 1
         chosen = world.random.randrange(len(possible))
