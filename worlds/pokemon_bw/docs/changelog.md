@@ -211,8 +211,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - It shows as a toggle in the Options Creator and on Webhost, but can be edited manually to work like `Dexcountsanity`
     - Requires the `Dexsanitysanity` plugin
 - Added an ingame option to change the shiny rate
-  - Possible values are 0 (never) to 65535 (almost guaranteed)
-  - Only appears when any `Shinysanity` variant is enabled
+  - Possible values are 0 (never) to 65535 (almost guaranteed), with 8 being the vanilla value
+  - Only appears when any `Shinysanity` variant is enabled, in that case it's set to 1/64 by default
 - Added `Wild by spheres`, `Trainers by spheres`, and multiple `Tolerance X` modifiers to `Adjust levels`
   - Also renamed `Wild` and `Trainers` to `Wild by distance` and `Trainers by distance` (respectively)
 - Added and changed some roadblocks:

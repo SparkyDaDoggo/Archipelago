@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 import worlds._bizhawk as bizhawk
 from ..tracker import should_change
+from ..data.pokemon import forms
 
 if TYPE_CHECKING:
     from ..bizhawk_client import PokemonBWClient
@@ -303,9 +304,11 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
     packages = []
     read = await bizhawk.read(
         ctx.bizhawk_ctx, (
-            (client.save_data_address + client.dex_offset, client.dex_bytes_amount, client.ram_read_write_domain),
-            *((client.save_data_address + offset, client.dex_bytes_amount, client.ram_read_write_domain)
+            (client.save_data_address + client.dex_offset, client.dex_bytes_amount, "Main RAM"),
+            *((client.save_data_address + offset, client.dex_bytes_amount, "Main RAM")
               for offset in client.dex_seen_offsets),
+            *((client.save_data_address + offset, client.dex_forms_bytes_amount, "Main RAM")
+              for offset in client.dex_forms_offsets),
         )
     )
     if read[0] != client.tracker_caught_cache:
@@ -336,6 +339,15 @@ async def set_dex_caught_seen(client: "PokemonBWClient", ctx: "BizHawkClientCont
                 if read_num[(i-1)//8] & (1 << ((i-1) % 8)):
                     seen.add(i)
             client.tracker_seen_caches[form_num] = read_num
+    for form_num in range(2):
+        read_num = read[form_num+5]
+        cache = client.tracker_form_caches[form_num]
+        if read_num != cache:
+            for i in range(72):
+                if read_num[i//8] & (1 << (i % 8)):
+                    spec_id = forms.flag_to_id[i]
+                    seen.add(spec_id[0] + (spec_id[1] << 11))
+            client.tracker_form_caches[form_num] = read_num
     if seen:
         packages.append({
             "cmd": "Set",

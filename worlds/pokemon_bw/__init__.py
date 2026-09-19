@@ -165,6 +165,7 @@ class PokemonBWWorld(World):
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
         self.encounter_by_method: dict[str, list[int]] = {}
         self.trade_data: dict[str, tuple[int, int]] = {}
+        self.level_by_region: dict[str, int] = {}
         self.dexsanity_numbers: list[int] = []
         self.disallowed_all_seen: list[int] = []
         self.regions: dict[str, Region] | None = None
@@ -429,6 +430,7 @@ class PokemonBWWorld(World):
             # Needed for PopTracker
             "encounter_by_method": self.encounter_by_method,
             "trade_data": self.trade_data,
+            "level_by_region": self.level_by_region,
             "dexsanity_pokemon": self.dexsanity_numbers,
         }
 
