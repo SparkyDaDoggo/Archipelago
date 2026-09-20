@@ -1,13 +1,12 @@
 from typing import TYPE_CHECKING, Callable
 
 from ...locations import PokemonBWLocation
-from BaseClasses import ItemClassification, CollectionState
+from BaseClasses import ItemClassification, CollectionState, Region
 from ...items import PokemonBWItem
+from .. import SpeciesEntry
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from BaseClasses import Region
-    from .. import SpeciesEntry
 
 
 def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
@@ -24,7 +23,8 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
                 r: "Region" = world.regions[data.encounter_region]
                 l: PokemonBWLocation = PokemonBWLocation(world.player, name, None, r)
                 species_id: tuple[int, int] = data.species_id
-                species_name: str = world.species_entries_by_id[species_id].species_name
+                species_data: "SpeciesEntry" = world.species_entries_by_id[species_id]
+                species_name: str = species_data.species_name
                 item: PokemonBWItem = PokemonBWItem(species_name, ItemClassification.progression, None, world.player)
                 l.place_locked_item(item)
                 l.show_in_spoiler = False
@@ -35,7 +35,6 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
                     l.access_rule = get_trade_rule(world.species_entries_by_id[data.wanted_dex_number, 0].species_name)
                 r.locations.append(l)
 
-                species_data: "SpeciesEntry" = world.species_entries[species_name]
                 catchable_species_data[species_name] = species_data
 
     if world.options.modify_logic.is_consider_static:

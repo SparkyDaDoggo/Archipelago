@@ -126,11 +126,11 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
         for bit in range(8):
             # forms
             if cache4[eight_flags] & (1 << bit):
-                forms_dex_nums.add(eight_flags * 8 + bit + 1)
+                forms_dex_nums.add(eight_flags * 8 + bit)
             # shiny forms
             if cache5[eight_flags] & (1 << bit):
-                forms_dex_nums.add(eight_flags * 8 + bit + 1)
-                shiny_forms_dex_nums.add(eight_flags * 8 + bit + 1)
+                forms_dex_nums.add(eight_flags * 8 + bit)
+                shiny_forms_dex_nums.add(eight_flags * 8 + bit)
 
     for dex_num in seen_dex_nums:
         locations_to_check += client.missing_seen_loc_ids[dex_num]

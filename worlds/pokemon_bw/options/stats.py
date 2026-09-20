@@ -168,7 +168,7 @@ class RandomizeLevelUpMovesets(ToggleSet):
 
     - **Randomize** - Toggles level up movesets being randomized.
         Automatically added if any other modifier is added.
-    - **Keep types** - Randomized moves have either a matching or normal type.
+    - **Match types** - Randomized moves have either a matching or normal type.
     - **Progressive power** - If a move is learned after another one (and it's
         not a status move), it will have an equal or higher base power.
     - **Keep amount** - Keeps the amount of moves a species learns normally.
@@ -182,7 +182,7 @@ class RandomizeLevelUpMovesets(ToggleSet):
     """
     display_name = "Randomize Level Up Movesets"
     is_randomize = False
-    is_keep_types = False
+    is_match_types = False
     is_progressive_power = False
     is_keep_amount = False
     is_keep_levels = False
@@ -197,14 +197,13 @@ class RandomizeTMHMCompatibility(ToggleSet):
     You can add as many of the following modifiers as you want.
 
     - **Force all TMs** - Forces all TMs (not HMs) to be
-        compatible  with every pokemon species.
+        compatible with every pokemon species.
     - **Force all HMs** - Forces all HMs (and TM70 Flash) to
         be compatible with every pokemon species.
-    - **Randomize** - Toggles TM and HM compatibility being
-        randomized. Automatically added if any other modifier
-        is added.
+    - **Randomize** - Toggles TM and HM compatibility being randomized.
+        Automatically added if any other modifier is added.
     - **Match types** - Compatible TM moves have either a
-        matching  or normal type.
+        matching or normal type.
     - **Follow evolutions** - Evolved species will be able
         to learn all TMs/HMs of their pre-evolution(s).
     """

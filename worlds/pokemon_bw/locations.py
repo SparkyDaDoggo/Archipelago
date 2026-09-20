@@ -85,6 +85,14 @@ def create_and_place_event_locations(world: "PokemonBWWorld") -> tuple[dict[str,
     story.create(world)
     goal.create(world)
 
+    reg = world.regions["Castelia City Castelia Street East Building 1F"]
+    loc = PokemonBWLocation(world.player, "[Event] Get shown a Zorua", None, reg)
+    it = PokemonBWItem("[Seen] Zorua", ItemClassification.progression, None, world.player)
+    loc.place_locked_item(it)
+    loc.show_in_spoiler = False
+    reg.locations.append(loc)
+    seeable_species_data["Zorua"] = world.species_entries["Zorua"]
+
     for reg in world.regions.values():
         if not len(reg.locations):
             l = PokemonBWLocation(world.player, reg.name + " (sphere)", None, reg)

@@ -1,6 +1,21 @@
 # Important stuff
 
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
+- route 3 grunts not hidden at beginning
+- glitched logic not working
+- dexsanitysanity cannot import deprecated
+- basculin forms apparently last form flag ids??? form flag ids generally mixed up
+- driftveil biker trainer ids mixed up
+- volcarona logic bugged
+- season lady phone number not registering
+- dancing men textboxes closing immediately
+- Item from Harlequin in Castelia was doable in early sphere but was expected later
+- make pokemon master be replaced by a combination of all goals
+- legendary hunt npc showing without the goal being chosen
+- consider trainers modifier in modify logic
+- https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0
+- add setting for extended spoiler output, also only print actually modified things
+- remove efficient from funny dialog
 
 # Not urgent
 
@@ -25,6 +40,7 @@
   - master ball seller overhaul
   - Max & Reset options for shiny rate modifier & Exp multiplier
   - ############################
+  - various events force-teleporting you should be removed
   - accumula guards send you both ways
   - move striaton gym guide a bit south
   - striaton parcel man send both ways
@@ -33,6 +49,7 @@
   - pinwheel shadow triad member send both ways
   - move rumination field rocks a bit
   - make liberty garden grunts not disappearing
+  - remove victini shiny lock
   - relic castle 1f worker send both ways
   - relic castle chased grunt running towards all entrances
   - driftveil cheren and clay scene talking as alternate trigger
@@ -42,6 +59,7 @@
   - both icirrus city scenes by trigger
   - dragonspiral rocks inside, cleared after bryce fight
   - make dragonspiral grunt trainers not disappear
+  - remove reshiram/zekrom shiny lock
   - remove time requirement of tubeline bridge bikers
   - fix route 9 infielder script
   - add rocks to challengers cave entrance

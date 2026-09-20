@@ -394,7 +394,8 @@ region_list: dict[str, RegionData] = {
     "Black City": RegionData("City", 0, False),  # Merging all sub maps because there are no plans to do anything with this
     "White Forest": RegionData("City", 424, True),  # Merging all sub maps because there are no plans to do anything with this
     "Black City/White Forest West Gate": RegionData("Gate", 379, False),
-    "Route 15": RegionData("Route", 378, True),
+    "Route 15": RegionData("Route", 378, True, full_map=False),
+    "Route 15 Below East Bridge": RegionData("Route", 378, True, full_map=False),
     "Poké Transfer Lab": RegionData("Interior", 381, False),
     "Route 15 Caravan": RegionData("Interior", 382, False),
     "Marvelous Bridge": RegionData("Bridge", 263, True),

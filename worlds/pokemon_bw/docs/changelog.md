@@ -76,7 +76,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Permutation`
 - Added `Randomize Level Up Movesets` option with the following modifiers:
   - `Randomize`
-  - `Keep types`
+  - `Match types`
   - `Progressive power`
   - `Keep amount`
   - `Keep levels`

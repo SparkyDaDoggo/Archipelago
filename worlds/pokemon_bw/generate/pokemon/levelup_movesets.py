@@ -78,7 +78,7 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
         if this_plando and len(this_plando) + len(evo_moves) > amount:
             amount = len(this_plando) + len(evo_moves)
 
-        possible_random = all_moves if not mods.is_keep_types else tuple(
+        possible_random = all_moves if not mods.is_match_types else tuple(
             t for t in all_moves if t[1].type in (*data.types, "Normal")
         )
         chosen_moves, plandod_moves = [(n, world.move_entries[n]) for n in evo_moves], []

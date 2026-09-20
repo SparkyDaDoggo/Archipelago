@@ -442,7 +442,7 @@ connections: list[ERCData] = [
     ERCData(("AbShrine", "", "F"), ("Abundant Shrine", )),
     ERCData(("AbShrine", "", "FR"), ("Abundant Shrine", )),
     ERCData(("r15", "", "G"), ("Route 15", )),
-    ERCData(("r15", "", "DG"), ("Route 15", )),
+    ERCData(("r15", "", "DG"), ("Route 15 Below East Bridge", )),
     ERCData(("r15", "", "RG"), ("Route 15", )),
     ERCData(("r16", "", "G"), ("Route 16", )),
     ERCData(("r16", "", "DG"), ("Route 16 Behind Boulder", )),
