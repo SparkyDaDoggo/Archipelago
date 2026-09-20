@@ -66,7 +66,7 @@ class Goal(Choice):
     You can also combine multiple goals by providing a list of multiple option names:
     ```
     goal:
-      - ["tmhm_hunt", "legendary_hunt"]
+    - ["tmhm_hunt", "legendary_hunt"]
     ```
     See the options guides for more information.
     """

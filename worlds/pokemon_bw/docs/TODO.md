@@ -16,6 +16,9 @@
 - https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0
 - add setting for extended spoiler output, also only print actually modified things
 - remove efficient from funny dialog
+- trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
+- extended hints for all other dexsanity variants
+- reduce extended hints evo/trade depth to just 2
 
 # Not urgent
 

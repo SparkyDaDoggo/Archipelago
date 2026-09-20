@@ -163,9 +163,8 @@ class PokemonBWWorld(World):
         self.static_encounter: dict[str, StaticEncounterEntry] | None = None
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
-        self.encounter_by_method: dict[str, list[int]] = {}
-        self.trade_data: dict[str, tuple[int, int]] = {}
         self.level_by_region: dict[str, int] = {}
+        self.tracker_evolutions: list[list[tuple[int, int, int]]]
         self.dexsanity_numbers: list[int] = []
         self.disallowed_all_seen: list[int] = []
         self.regions: dict[str, Region] | None = None
@@ -195,7 +194,6 @@ class PokemonBWWorld(World):
         from .generate.pokemon import species
         from .generate.move_data.randomize import generate_move_data
         from .generate.encounter.randomize import create_encounter
-        from .generate.encounter.wild import organize_by_method, organize_trades
         from .data import version
         from .plugins import load_plugins
         from .plugins.generate import plugins_generate_early, plugins_fill_rules, plugins_generate_encounters
@@ -246,8 +244,6 @@ class PokemonBWWorld(World):
         self.species_entries, self.species_entries_by_id = species.generate_species_data(self)
         create_encounter(self)
         plugins_generate_encounters(self)
-        self.encounter_by_method = organize_by_method(self)
-        self.trade_data = organize_trades(self)
 
     def create_item(self, name: str) -> items.PokemonBWItem:
         return items.generate_item(name, self)
@@ -419,6 +415,8 @@ class PokemonBWWorld(World):
 
     def fill_slot_data(self) -> Mapping[str, Any]:
         from .data import version
+        from .generate.encounter.wild import organize_by_method, organize_trades
+        from .generate.pokemon.evolutions import organize_for_tracker
 
         slot_data = self.extended_slot_data()
         slot_data["options"]["text_plando"] = []
@@ -428,9 +426,10 @@ class PokemonBWWorld(World):
             # Needed for UT
             "ut_compatibility": version.ut(),
             # Needed for PopTracker
-            "encounter_by_method": self.encounter_by_method,
-            "trade_data": self.trade_data,
+            "encounter_by_method": organize_by_method(self),
+            "trade_data": organize_trades(self),
             "level_by_region": self.level_by_region,
+            "tracker_evolutions": organize_for_tracker(self),
             "dexsanity_pokemon": self.dexsanity_numbers,
         }
 

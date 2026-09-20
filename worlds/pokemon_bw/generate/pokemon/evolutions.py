@@ -6,6 +6,52 @@ if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
+def organize_for_tracker(world: "PokemonBWWorld") -> list[list[tuple[int, int, int]]]:
+    ret = [[] for _ in range(650)]
+    for name, data in world.species_entries.items():
+        to_pair = {}
+        for evo in data.evolutions:
+            match evo.method:
+                case "Level up Silcoon":
+                    if spec := to_pair.pop(("Level up Cascoon", evo.value), False):
+                        ret[data.dex_number].append((101, evo.value, data.dex_number + (spec << 16)))
+                    else:
+                        to_pair[("Level up Silcoon", evo.value)] = data.dex_number
+                case "Level up Cascoon":
+                    if spec := to_pair.pop(("Level up Silcoon", evo.value), False):
+                        ret[data.dex_number].append((101, evo.value, data.dex_number + (spec << 16)))
+                    else:
+                        to_pair[("Level up Cascoon", evo.value)] = data.dex_number
+                case "Level up Ninjask":
+                    if spec := to_pair.pop(("Level up Shedinja", evo.value), False):
+                        ret[data.dex_number].append((102, evo.value, data.dex_number + (spec << 16)))
+                    else:
+                        to_pair[("Level up Ninjask", evo.value)] = data.dex_number
+                case "Level up Shedinja":
+                    if spec := to_pair.pop(("Level up Ninjask", evo.value), False):
+                        ret[data.dex_number].append((102, evo.value, (spec << 16) + data.dex_number))
+                    else:
+                        to_pair[("Level up Shedinja", evo.value)] = data.dex_number
+                case "Level up item day":
+                    if ("Level up item night", evo.value, data.dex_number) in to_pair:
+                        ret[data.dex_number].append((103, evo.value, data.dex_number))
+                    else:
+                        to_pair[("Level up item day", evo.value, data.dex_number)] = 0
+                case "Level up item night":
+                    if ("Level up item day", evo.value, data.dex_number) in to_pair:
+                        ret[data.dex_number].append((103, evo.value, data.dex_number))
+                    else:
+                        to_pair[("Level up item night", evo.value, data.dex_number)] = 0
+                case m:
+                    ret[data.dex_number].append((methods[m].id, evo.value, data.dex_number))
+        for key, dex in to_pair.items():
+            if dex:
+                ret[data.dex_number].append((methods[key[0]], key[1], dex))
+            else:
+                ret[data.dex_number].append((methods[key[0]], key[1], key[2]))
+    return ret
+
+
 def would_loop_deep_search(pre: SpeciesEntry, evo: SpeciesEntry) -> bool:
     pre, evo = pre.all_forms[0], evo.all_forms[0]
     searched: set[SpeciesEntry] = set()

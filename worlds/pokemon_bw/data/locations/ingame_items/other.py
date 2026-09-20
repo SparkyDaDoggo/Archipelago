@@ -135,9 +135,9 @@ table: dict[str, FlagLocationData] = {
     "Anville Town - Item from depot agent on first visit": FlagLocationData(323, always_default, "Anville Town South East House", None, None),
     "Driftveil City - Item from man for seeing more than 50 pokémon": FlagLocationData(
         264, always_default, "Driftveil City Upper Right House East of Market", None, has_51_species),
-    "Driftveil City - Item from girl in pokémon center #1": FlagLocationData(147, always_default, "Driftveil City Pokémon Center", None, None),
-    "Driftveil City - Item from girl in pokémon center #2": FlagLocationData(147, always_default, "Driftveil City Pokémon Center", None, None),
-    "Driftveil City - Item from girl in pokémon center #3": FlagLocationData(147, always_default, "Driftveil City Pokémon Center", None, None),
+    "Driftveil City - Item from girl in pokémon center #1": FlagLocationData(147, always_default, "Driftveil City Pokemon Center", None, None),
+    "Driftveil City - Item from girl in pokémon center #2": FlagLocationData(147, always_default, "Driftveil City Pokemon Center", None, None),
+    "Driftveil City - Item from girl in pokémon center #3": FlagLocationData(147, always_default, "Driftveil City Pokemon Center", None, None),
     "Driftveil City - Item from man in black in market": FlagLocationData(365, always_default, "Driftveil Market", None, None),
     # That lady is asking for a random TM move every day
     "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move": FlagLocationData(
@@ -182,7 +182,7 @@ table: dict[str, FlagLocationData] = {
     "Marvelous Bridge - Patrat shuffle reward": FlagLocationData(0x1C4, always_default, "Marvelous Bridge", None, has_found_woman_on_village_bridge),
     "Route 15 - Item from ranger Shelly": FlagLocationData(1420+454, always_default, "Route 15", None, None),
     "Route 15 - Item from ranger Keith": FlagLocationData(1420+456, always_default, "Route 15", None, None),
-    "Undella Town - Item from man in Pokémon Center": FlagLocationData(359, always_default, "Undella Town Pokémon Center", None, None),
+    "Undella Town - Item from man in Pokémon Center": FlagLocationData(359, always_default, "Undella Town Pokemon Center", None, None),
     "Route 13 - Item from veteran in western house #1": FlagLocationData(356, always_default, "Route 13 West House", None, None),
     "Route 13 - Item from veteran in western house #2": FlagLocationData(356, always_default, "Route 13 West House", None, None),
     # The following 2 locations normally have wingull grams, which are progressive key items
@@ -193,7 +193,7 @@ table: dict[str, FlagLocationData] = {
     "Lacunosa Town - Item from executive": FlagLocationData(0x1CA, always_default, "Lacunosa Town North East House", None, None),
     # Requires pokémon being randomized
     "Lacunosa Town - Item from girl for showing a Shaymin": FlagLocationData(
-        329, wild_rando_dependant, "Lacunosa Town Pokémon Center", None, IF(randomized_wild, has_shaymin)),
+        329, wild_rando_dependant, "Lacunosa Town Pokemon Center", None, IF(randomized_wild, has_shaymin)),
     "Route 12 - Item from breeder Ethel": FlagLocationData(1420+452, always_default, "Route 12", None, None),
     "Route 12 - Item from breeder Eustace": FlagLocationData(1420+451, always_default, "Route 12", None, None),
     "Village Bridge - Item from baker Chris": FlagLocationData(0x1AF, always_default, "Village Bridge", None, None),

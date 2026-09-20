@@ -10,7 +10,7 @@ table: list[EventData] = [
     EventData("Argument in Bianca's house", "Bianca's House", shuffled_doors, None),
     EventData("Introduction in Juniper's Lab", "Juniper's Lab", shuffled_doors, None),
     EventData("Catching sage Rood", "Route 18", None, has_beaten_ghetsis),
-    EventData("Accumula Town PC tutorial", "Accumula Town Pokémon Center", shuffled_doors, None),
+    EventData("Accumula Town PC tutorial", "Accumula Town Pokemon Center", shuffled_doors, None),
     EventData("Accumula Town Ghetsis speech", "Accumula Town", shuffled_doors, chain_event("Accumula Town PC tutorial")),
     EventData("Trainers' School Cheren fight", "Striaton City Trainers' School", shuffled_doors, None),
     EventData("Defeating leader Cilan/Chili/Cress", "Striaton Gym", None, None),

@@ -45,7 +45,7 @@ tm_hm_ncps: dict[str, TMLocationData] = {
     "Chargestone Cave - TM from sage Bronius": TMLocationData(0x1A4, post_ghetsis, "Chargestone Cave B2F", None, has_beaten_ghetsis),
     "Route 7 - TM from battle girl": TMLocationData(133, always_default, "Route 7", None, None),
     "Twist Mountain - TM from Alder": TMLocationData(0x1A5, always_default, "Twist Mountain Entrance", None, has_defeated_mistralton_gym),
-    "Icirrus City - TM from old lady in pokémon center": TMLocationData(135, always_default, "Icirrus City Pokémon Center", None, None),
+    "Icirrus City - TM from old lady in pokémon center": TMLocationData(135, always_default, "Icirrus City Pokemon Center", None, None),
     "Route 8 - TM from western parasol lady": TMLocationData(258, always_default, "Route 8", None, None),
     "Tubeline Bridge - TM from battle girl": TMLocationData(260, always_default, "Tubeline Bridge", None, None),
     "Route 9 - TM from infielder": TMLocationData(0x1A9, always_default, "Route 9", None, None),
