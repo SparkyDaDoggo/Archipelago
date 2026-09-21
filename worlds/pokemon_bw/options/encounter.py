@@ -21,12 +21,14 @@ class RandomizeWildPokemon(ToggleSet):
     ```
     randomize_wild_pokemon:
       ["Randomize", "Prevent rare encounters"]
+
     ```
     Here is an alternative way to format it:
     ```
     randomize_wild_pokemon:
     - Randomize
     - Prevent rare encounters
+
     ```
 
     - **Randomize** - Toggles wild pokemon being randomized. Automatically added if any
@@ -327,6 +329,7 @@ class EncounterPlando(Option[list[PlandoEncounter]]):
       method: Grass/Dark grass/...
       slots: Slot number(s) (0-11), optional
       species: Name(s) of species, random if multiple
+
     ```
     Encounter Plando requires the corresponding host setting to be enabled, else it will
     be ignored for all players. Be aware that this can lead to generation failures when

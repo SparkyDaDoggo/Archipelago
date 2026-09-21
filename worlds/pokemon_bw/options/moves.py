@@ -196,6 +196,7 @@ class MoveDataPlando(Option[dict[str, PlandoMoveData | PlandoTypeEffect | Plando
         effectiveness: 4
       Psychic_Bug:
         effectiveness: 0
+
     ```
 
     Move Data Plando requires the corresponding host setting to be enabled, else it will

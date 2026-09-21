@@ -146,8 +146,8 @@ class RandomizeGenderRatio(ToggleSet):
         can lead to some pokémon changing their gender when evolved.
     - **Keep fixed** - Keeps all male-only, female-only, and unknown
         gender ratios.
-    - **Force split** - Prevents all species from becoming unknown
-        gender-only.
+    - **No unknown gender** - Prevents all species from becoming
+        unknown gender-only.
 
     Male-only and female-only ratios can be prevented using the
     **Stats Randomization Adjustments** option.
@@ -157,7 +157,7 @@ class RandomizeGenderRatio(ToggleSet):
     is_randomize = False
     is_follow_evolutions = False
     is_keep_fixed = False
-    is_prevent_unknown_gender = False
+    is_no_unknown_gender = False
     auto_add_if_any = "Shuffle"
 
 
@@ -353,10 +353,9 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Catch rates maximum",
         "Levelup moves amount minimum",
         "Levelup moves amount maximum",
-        # "Gender ratio minimum",
-        # "Gender ratio maximum",
+        "Gender ratio minimum",
+        "Gender ratio maximum",
         # "No held item chance",
-        # "Single egg group chance",
     ]
     default = {
         "Stats total minimum": 200,
@@ -470,6 +469,7 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
         catch_rate: 190
         egg_groups: [Monster, "Human-Like"]
         egg_species: Venusaur
+
     ```
 
     Stats Plando requires the corresponding host setting to be enabled, else it will be

@@ -67,6 +67,7 @@ class Goal(Choice):
     ```
     goal:
     - ["tmhm_hunt", "legendary_hunt"]
+
     ```
     See the options guides for more information.
     """
@@ -113,12 +114,9 @@ class ShuffleBadgeRewards(Choice):
     - **Shuffle** - Gym badges are shuffled between the gym leaders.
     - **Anything** - Gym badges can be anywhere and gym leaders can give any item.
     """
-    # - **Any badge** - Puts the badges into the item pool, while only allowing items that have the word "badge" in
-    #     their name (which also applies to gym badges of other games/worlds) being placed at gym leaders.
     display_name = "Shuffle Badge Rewards"
     option_vanilla = 0
     option_shuffle = 1
-    # option_any_badge = 2
     option_anything = 3
     default = 1
 
@@ -140,12 +138,9 @@ class ShuffleTMRewards(Choice):
         leader's badge reward (including the TM from Clay on route 6).
     - **Anything** - No restrictions.
     """
-    # - **Any TM/HM** - These NPCs will give any item that starts with "TM" or "HM" followed by any digit
-    #     (which also applies to TMs and HMs of other games/worlds).
     display_name = "Shuffle TM Rewards"
     option_shuffle = 0
     option_hm_with_badge = 1
-    # option_any_tm_hm = 2
     option_anything = 3
     default = 0
 
@@ -316,6 +311,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
     - type: Either "Trainer" or "Wild"
       mode: Any mode described above (can as well be either the name or the number)
       value: The value like described above
+
     ```
     """
     display_name = "Modify levels"
@@ -787,6 +783,7 @@ class PokemonBWTextPlando(PlandoTexts):
     - text: 'This is your text'
       at: text_key
       percentage: 100
+
     ```
     Refer to the Text Plando guide of this game for further information.
     """

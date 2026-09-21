@@ -24,6 +24,7 @@ class Dexsanity(Range):
     ```
     dexsanity:
     - [50, 51, 52, 53, 54, 460-469, 500]
+
     ```
     See the options guides for more information.
     """
@@ -130,6 +131,7 @@ class Seensanity(Range):
     ```
     seensanity:
     - [50, 51, 52, 53, 54, 460-469, 500]
+
     ```
     See the options guides for more information.
     """
@@ -219,6 +221,7 @@ class Formsanity(Range):
     ```
     formsanity:
     - ["Unown (M)", "Darmanitan (Zen)"]
+
     ```
     See the options guides for more information.
     """
@@ -301,6 +304,7 @@ class Shinysanity(Toggle):
     ```
     shinysanity:
     - [50, 51, 52, 53, 54, 460, 461, 500]
+
     ```
     See the options guides for more information.
     """
@@ -375,6 +379,7 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
     - Maximum: 10
       Steps: 2
       Leniency: 5
+
     ```
 
     This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.

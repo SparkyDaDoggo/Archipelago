@@ -39,6 +39,7 @@ class SpeciesEntry:
     base_stats_copy: tuple[int, int, int, int, int, int]
     catch_rate: int
     gender_ratio: int
+    gender_ratio_copy: int
     exp_curve: int
     abilities: tuple[str, str, str]
     """(primary, secondary, hidden)"""
@@ -78,7 +79,8 @@ class SpeciesEntry:
     b6 = tm/hm compatibility
     b7 = exp curve
     b8 = egg groups
-    b9 = egg species"""
+    b9 = egg species
+    b10 = gender ratio"""
 
     def __init__(self: Self, name: str, data: SpeciesData | Self, is_copy: int = 0):
         if is_copy and data.form:
@@ -94,6 +96,7 @@ class SpeciesEntry:
         self.base_stats_copy = data.base_stats if not is_copy else data.base_stats_copy
         self.catch_rate = data.catch_rate
         self.gender_ratio = data.gender_ratio
+        self.gender_ratio_copy = data.gender_ratio
         self.exp_curve = data.exp_curve
         self.abilities = data.abilities
         self.evolution_stage = data.evolution_stage

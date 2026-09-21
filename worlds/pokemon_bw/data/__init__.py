@@ -119,6 +119,13 @@ class DexLocationData(NamedTuple):
     ut_alias: str | None = None
 
 
+class DexGenderLocationData(NamedTuple):
+    dex_number: int
+    gender: int
+    """0 is male, 254 is female"""
+    ut_alias: str | None = None
+
+
 class FormLocationData(NamedTuple):
     flag_id: int
     species_id: tuple[int, int]
