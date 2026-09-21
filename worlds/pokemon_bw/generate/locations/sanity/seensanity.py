@@ -66,3 +66,4 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             create_location(name)
 
     world.disallowed_all_seen.extend(dex for dex in seen_loc_dex_numbers if dex not in world.disallowed_all_seen)
+    world.dexsanity_numbers["seensanity"] = seen_loc_dex_numbers

@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
-from BaseClasses import LocationProgressType, CollectionState
+from BaseClasses import LocationProgressType
 
 from ....locations import PokemonBWLocation
 
@@ -64,3 +64,4 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         if count >= len(forms_by_dex[dex]):
             full_formsanity_pokemon.append(dex)
     world.disallowed_all_seen.extend(dex for dex in full_formsanity_pokemon if dex not in world.disallowed_all_seen)
+    world.dexsanity_numbers["formsanity"] = formsanity_ids

@@ -231,7 +231,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
     from .data.pokemon.pokedex import by_number
 
     # {dex: ({wild/static places}, [(trade, wanted dex), ...], [pre-evo dex])}
-    places_for_location: dict[int, tuple[set[str], list[tuple[str, int]], list[int], StrVar]] = {}
+    places_for_location: dict[int, tuple[set[str], list[tuple[str, int]], list[SpeciesEntry], StrVar]] = {}
     logic_mods = world.options.modify_logic
 
     # Wild encounter
@@ -251,8 +251,8 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             places_for_location[dex][0].add(catching_place)
 
     # Trade encounter
-    if logic_mods.is_consider_trades and (logic_mods.is_consider_static
-                                                          or world.options.randomize_wild_pokemon.is_randomize):
+    if logic_mods.is_consider_trades and (logic_mods.is_consider_static or
+                                          world.options.randomize_wild_pokemon.is_randomize):
         for trade_slot, entry in world.trade_encounter.items():
             catching_place = trade_slot[:trade_slot.rindex('Encounter')]
             dex = entry.species_id[0]
@@ -265,36 +265,49 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
     if logic_mods.is_consider_evos and not world.options.randomize_evolutions.is_every_level:
         for species, data in world.species_entries.items():
             for evo in data.evolutions:
-                pre_evo_dex = data.dex_number
                 evo_dex = evo.species.dex_number
                 if evo_dex not in places_for_location:
                     places_for_location[evo_dex] = set(), [], [], StrVar()
-                places_for_location[evo_dex][2].append(pre_evo_dex)
+                places_for_location[evo_dex][2].append(data)
 
-    def build_string(_dex: int, _depth=0) -> str:
+    def build_string(_dex: int) -> str:
         if places_for_location[_dex][3].value:
             return places_for_location[_dex][3].value
         _buffer = list(places_for_location[_dex][0])
         _buffer.sort()
         for _loc, _wanted_dex in places_for_location[_dex][1]:
             _wanted_name = by_number[_wanted_dex]
-            if _wanted_dex in places_for_location and _depth < 3:
-                _buffer.append(f"{_loc} (wants {_wanted_name}, found at {build_string(_wanted_dex, _depth+1)})")
+            if _wanted_dex in places_for_location and sum(len(_s) for _s in _buffer) < 100:
+                _buffer.append(f"{_loc} (wants {_wanted_name}, found at {build_string(_wanted_dex)})")
             else:
                 _buffer.append(f"{_loc} (wants {_wanted_name})")
-        for _pre_evo_dex in places_for_location[_dex][2]:
-            _pre_evo_name = by_number[_pre_evo_dex]
-            if _pre_evo_dex in places_for_location and _depth < 3:
-                _buffer.append(f"Evolving {_pre_evo_name} (found at {build_string(_pre_evo_dex, _depth+1)})")
+        for _pre_evo in places_for_location[_dex][2]:
+            if _pre_evo.dex_number in places_for_location and sum(len(_s) for _s in _buffer) < 100:
+                _buffer.append(f"Evolving {_pre_evo.dex_name} (found at {build_string(_pre_evo.dex_number)})")
             else:
-                _buffer.append(f"Evolving {_pre_evo_name}")
+                _buffer.append(f"Evolving {_pre_evo.dex_name}")
         _built = ", ".join(_buffer)
         places_for_location[_dex][3].value = _built
         return _built
 
     for dex in places_for_location:
-        loc_id = world.location_name_to_id[f"Pokédex - {by_number[dex]}"]
-        hint_data[world.player][loc_id] = build_string(dex)
+        if dex in world.dexsanity_numbers["dexsanity"]:
+            loc_id = world.location_name_to_id[f"Pokédex - {by_number[dex]}"]
+            hint_data[world.player][loc_id] = build_string(dex)
+
+    for dex in places_for_location:
+        if dex in world.dexsanity_numbers["seensanity"]:
+            name = by_number[dex]
+            a_an = "an" if name[0] in "AEIOU" and name != "Uxie" else "a"
+            loc_id = world.location_name_to_id[f"Pokédex - See {a_an} {name}"]
+            hint_data[world.player][loc_id] = build_string(dex)
+
+    for dex in places_for_location:
+        if dex in world.dexsanity_numbers["shinysanity"]:
+            loc_id = world.location_name_to_id[f"Pokédex - Find a shiny {by_number[dex]}"]
+            hint_data[world.player][loc_id] = build_string(dex)
+
+    # TODO Formsanity, whose format of using form order IDs is bad for this
 
     deerling_npc_id = world.location_name_to_id["Route 6 - Item from scientist for all Deerling forms"]
     hint_data[world.player][deerling_npc_id] = build_string(585)

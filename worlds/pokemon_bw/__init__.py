@@ -190,7 +190,7 @@ class PokemonBWWorld(World):
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
         self.level_by_region: dict[str, int] = {}
         self.tracker_evolutions: list[list[tuple[int, int, int]]]
-        self.dexsanity_numbers: list[int] = []
+        self.dexsanity_numbers: dict[str, list[int]] = {}
         self.disallowed_all_seen: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.region_distances: dict[str, int] | None = None
@@ -464,7 +464,7 @@ class PokemonBWWorld(World):
             "trade_data": organize_trades(self),
             "level_by_region": self.level_by_region,
             "tracker_evolutions": organize_for_tracker(self),
-            "dexsanity_pokemon": self.dexsanity_numbers,
+            "all_dexsanity_numbers": self.dexsanity_numbers,
         }
 
     @staticmethod

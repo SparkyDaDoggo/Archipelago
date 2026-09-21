@@ -2,9 +2,6 @@
 
 apworld
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- driftveil biker trainer ids mixed up? ace trainer elmer as well?
-- extended hints for all other dexsanity variants
-- reduce extended hints evo/trade depth to just 2, or alternatively try to cap length of hint string
 - Static zororark is not considered in logic
 
 rom
@@ -18,7 +15,6 @@ rom
 - You need to re-enter the room after talking to the Silver Wing NPC for the map change to work.
 
 both
-- basculin forms apparently last form flag ids??? form flag ids generally mixed up
 - legendary hunt npc showing without the goal being chosen
 - https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage

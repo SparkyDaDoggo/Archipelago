@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
-from BaseClasses import LocationProgressType, CollectionState
+from BaseClasses import LocationProgressType
 
 from ....locations import PokemonBWLocation
 
@@ -25,6 +25,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
 
     r: "Region" = world.regions["Pokédex"]
     catchable_forms: list[str] = []
+    shinyformsanity_ids: list[int] = []
     for data in catchable_species_data.values():
         if data.dex_name not in catchable_forms:
             catchable_forms.append(data.dex_name)
@@ -34,6 +35,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         l.progress_type = LocationProgressType.DEFAULT
         l.access_rule = lambda state: state.has(spec, world.player)
         r.locations.append(l)
+        shinyformsanity_ids.append(table[loc_name].flag_id)
 
     if isinstance(world.options.shinyformsanity.value, list):
         for form_name in sorted(set(world.options.shinyformsanity.value)):
@@ -52,3 +54,5 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         for _ in range(count):
             chosen = possible.pop()
             create_location(chosen[0], world.species_entries_by_id[chosen[1].species_id].species_name)
+
+    world.dexsanity_numbers["shinyformsanity"] = shinyformsanity_ids

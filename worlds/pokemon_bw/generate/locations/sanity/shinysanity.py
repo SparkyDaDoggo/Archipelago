@@ -29,11 +29,12 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
 
     r: "Region" = world.regions["Pokédex"]
     catchable_dex: list[str] = []
+    loc_numbers: list[int] = []
     for data in catchable_species_data.values():
         if data.dex_name not in catchable_dex:
             catchable_dex.append(data.dex_name)
 
-    def create_location(loc_name: str, dex_name: str) -> None:
+    def create_location(loc_name: str) -> None:
         data = location_table[loc_name]
         l: PokemonBWLocation = PokemonBWLocation(world.player, loc_name, world.location_name_to_id[loc_name], r)
         l.progress_type = LocationProgressType.DEFAULT
@@ -41,6 +42,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         if data.ut_alias is not None:
             world.location_id_to_alias[world.location_name_to_id[loc_name]] = data.ut_alias
         r.locations.append(l)
+        loc_numbers.append(data.dex_number)
 
     if isinstance(world.options.shinysanity.value, list):
         for dex_num in sorted(set(world.options.shinysanity.value)):
@@ -48,11 +50,13 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             pokemon = by_number[dex_num]
             if pokemon in catchable_dex:
                 name = f"Pokédex - Find a shiny {pokemon}"
-                create_location(name, pokemon)
+                create_location(name)
     else:
         world.random.shuffle(catchable_dex)
         count = min(world.options.shinysanity.value, len(catchable_dex))
         for _ in range(count):
             pokemon = catchable_dex.pop()
             name = f"Pokédex - Find a shiny {pokemon}"
-            create_location(name, pokemon)
+            create_location(name)
+
+    world.dexsanity_numbers["shinysanity"] = loc_numbers

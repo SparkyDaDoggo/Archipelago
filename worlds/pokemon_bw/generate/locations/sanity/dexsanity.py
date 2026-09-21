@@ -58,4 +58,4 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
             name = f"Pokédex - {catchable_dex.pop()}"
             create_location(name)
 
-    world.dexsanity_numbers.extend(dexsanity_numbers)
+    world.dexsanity_numbers["dexsanity"] = dexsanity_numbers
