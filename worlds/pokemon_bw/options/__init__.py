@@ -781,6 +781,14 @@ class FunnyDialog(Toggle):
     display_name = "Funny Dialog"
     default = 0
 
+    @classmethod
+    def from_any(cls, data: typing.Any):
+        if data == "funny":
+            data = 1
+        elif data == "efficient":
+            data = 0
+        return super().from_any(data)
+
     def verify(self, world: typing.Type["World"], player_name: str, plando_options: "PlandoOptions") -> None:
         from BaseClasses import PlandoOptions
         if self and not (PlandoOptions.texts & plando_options):

@@ -46,9 +46,9 @@ def organize_for_tracker(world: "PokemonBWWorld") -> list[list[tuple[int, int, i
                     ret[data.dex_number].append((methods[m].id, evo.value, data.dex_number))
         for key, dex in to_pair.items():
             if dex:
-                ret[data.dex_number].append((methods[key[0]], key[1], dex))
+                ret[data.dex_number].append((methods[key[0]].id, key[1], dex))
             else:
-                ret[data.dex_number].append((methods[key[0]], key[1], key[2]))
+                ret[data.dex_number].append((methods[key[0]].id, key[1], key[2]))
     return ret
 
 
