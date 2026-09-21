@@ -359,12 +359,7 @@ vanilla_seasons: InclusionRule = lambda world: world.options.season_control == "
 changeable_seasons: InclusionRule = lambda world: world.options.season_control != "vanilla"
 disabled: InclusionRule = lambda world: False
 randomized_wild: InclusionRule = lambda world: world.options.randomize_wild_pokemon.is_randomize
-tm_hm_hunt_goal: InclusionRule = lambda world: (
-    world.options.goal == "tmhm_hunt" or (world.options.goal == "pokemon_master"
-                                          and (not world.options.goal.combined
-                                               or "tmhm_hunt" in world.options.goal.combined
-                                               or "pokemon_master" in world.options.goal.combined))
-)
+tm_hm_hunt_goal: InclusionRule = lambda world: "tmhm_hunt" in world.options.goal.current_key
 # TODO properly implement when door shuffle
 shuffled_doors: InclusionRule = lambda world: False and world.options.door_shuffle.any_shuffled()
 vanilla_doors: InclusionRule = lambda world: True or not world.options.door_shuffle.any_shuffled()

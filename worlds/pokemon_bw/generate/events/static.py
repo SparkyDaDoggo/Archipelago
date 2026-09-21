@@ -13,29 +13,33 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
     from ...generate import TradeEncounterEntry, StaticEncounterEntry
 
     catchable_species_data: dict[str, "SpeciesEntry"] = {}
+    is_dynamic = world.options.version.current_key == "dynamic"  # .current_key == ... because dynamic might not be added yet
 
     def get_trade_rule(x: str) -> Callable[[CollectionState], bool]:
         return lambda state: state.has(x, world.player)
 
     def f(table: dict[str, TradeEncounterEntry | StaticEncounterEntry], is_static: bool):
         for name, data in table.items():
-            if not is_static or ((data.inclusion_rule is None) or data.inclusion_rule(world)):
-                r: "Region" = world.regions[data.encounter_region]
-                l: PokemonBWLocation = PokemonBWLocation(world.player, name, None, r)
-                species_id: tuple[int, int] = data.species_id
-                species_data: "SpeciesEntry" = world.species_entries_by_id[species_id]
-                species_name: str = species_data.species_name
-                item: PokemonBWItem = PokemonBWItem(species_name, ItemClassification.progression, None, world.player)
-                l.place_locked_item(item)
-                l.show_in_spoiler = False
-                if is_static:
-                    if data.access_rule is not None:
-                        l.access_rule = world.rules_dict.get_or_add(data.access_rule)
-                else:
-                    l.access_rule = get_trade_rule(world.species_entries_by_id[data.wanted_dex_number, 0].species_name)
-                r.locations.append(l)
+            if is_static and not ((data.inclusion_rule is None) or data.inclusion_rule(world)):
+                continue
+            if is_dynamic and data.different_vanilla:
+                continue
+            r: "Region" = world.regions[data.encounter_region]
+            l: PokemonBWLocation = PokemonBWLocation(world.player, name, None, r)
+            species_id: tuple[int, int] = data.species_id
+            species_data: "SpeciesEntry" = world.species_entries_by_id[species_id]
+            species_name: str = species_data.species_name
+            item: PokemonBWItem = PokemonBWItem(species_name, ItemClassification.progression, None, world.player)
+            l.place_locked_item(item)
+            l.show_in_spoiler = False
+            if is_static:
+                if data.access_rule is not None:
+                    l.access_rule = world.rules_dict.get_or_add(data.access_rule)
+            else:
+                l.access_rule = get_trade_rule(world.species_entries_by_id[data.wanted_dex_number, 0].species_name)
+            r.locations.append(l)
 
-                catchable_species_data[species_name] = species_data
+            catchable_species_data[species_name] = species_data
 
     if world.options.modify_logic.is_consider_static:
         f(world.static_encounter, True)

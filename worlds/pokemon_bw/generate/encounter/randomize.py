@@ -12,16 +12,17 @@ def create_encounter(world: "PokemonBWWorld") -> None:
     from ...data.trainers.pokemon import table as trainer_pokemon_table
     from ...data.trainers.data import table as trainers_table
 
+    is_dynamic = world.options.version.current_key == "dynamic"  # .current_key == ... because dynamic might not be added yet
     versioned_species = (
         (lambda d: d.species_white)
-        if world.options.version == "white"
+        if world.options.version == "white" or (is_dynamic and world.random.random() < 0.5)
         else (lambda d: d.species_black)
     )
 
     world.wild_encounter = {
         data.file_index: EncounterEntry(versioned_species(data), enc_regions.region_tup_by_file_tup(data.file_index),
-                                        data.file_index, 0, data.min_level, data.max_level,
-                                        data.min_level / data.max_level).build_region()
+                                        data.file_index, 0, data.species_black != data.species_white,
+                                        data.min_level, data.max_level, data.min_level / data.max_level).build_region()
         for data in slots.table
     }
     world.trainer_teams = [

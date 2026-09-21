@@ -150,6 +150,7 @@ class EncounterEntry:
     write: int
     """b0 level changed
     b1 species changed"""
+    different_vanilla: bool
     min_level: int
     max_level: int
     min_max_fraction: float
@@ -167,6 +168,7 @@ class StaticEncounterEntry:
     encounter_region: str
     inclusion_rule: InclusionRule | None
     access_rule: ExtendedRule | None
+    different_vanilla: bool
 
 
 @dataclass
@@ -174,6 +176,7 @@ class TradeEncounterEntry:
     species_id: tuple[int, int]
     wanted_dex_number: int
     encounter_region: str
+    different_vanilla: bool
 
 
 @dataclass

@@ -24,7 +24,7 @@ def register_client():
 class PokemonBWClient(BizHawkClient):
     game = "Pokemon Black and White"
     system = "NDS"
-    patch_suffix = (".apblack", ".apwhite")
+    patch_suffix = (".apblack", ".apwhite", ".apbw")
 
     ram_read_write_domain = "Main RAM"
     rom_read_only_domain = "ROM"  # Only works on BizHawk 2.10+

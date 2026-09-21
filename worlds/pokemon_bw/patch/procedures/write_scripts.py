@@ -39,12 +39,12 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         # TMHM hunt NPC
         # "name **in** goal" works for both single goal strings and combined goals lists
         Line("command", [
-            "FlagReset" if "tmhm_hunt" in opt["goal"] or "pokemon_master" in opt["goal"] else "FlagSet",
+            "FlagReset" if "tmhm_hunt" in opt["goal"] else "FlagSet",
             0x192
         ]),
         # Legendary hunt NPC
         Line("command", [
-            "FlagReset" if "legendary_hunt" in opt["goal"] or "pokemon_master" in opt["goal"] else "FlagSet",
+            "FlagReset" if "legendary_hunt" in opt["goal"] else "FlagSet",
             0x1EA
         ]),
     )

@@ -131,6 +131,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Shiny rate ingame option
 - Forget HMs without Move Deleter
 - Scripting system (required for many other features)
+- Dynamic choice in Game Version option
 
 ### Required for 1.0.0
 
@@ -204,7 +205,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - TM/HM content
   - Fairy type
   - Levelup curve modifier
-  - Dynamic version
   - Door shuffle
   - Shuffle roadblock requirements
   - Original content

@@ -24,10 +24,27 @@ class PokemonBWSettings(settings.Group):
         description = "Pokemon Black Version ROM"
         copy_to = "PokemonBlack.nds"
 
+        @classmethod
+        def validate(cls, path: str) -> None:
+            rom.validate("black", path)
+
     class PokemonWhiteRomFile(settings.UserFilePath):
         """File name of your Pokémon White Version ROM"""
         description = "Pokemon White Version ROM"
         copy_to = "PokemonWhite.nds"
+
+        @classmethod
+        def validate(cls, path: str) -> None:
+            rom.validate("white", path)
+
+    class PokemonBWDynamicRomFile(settings.UserFilePath):
+        """File name of your Pokémon White Version ROM"""
+        description = "Pokemon Black or White Version ROM"
+        copy_to = "PokemonWhite.nds"
+
+        @classmethod
+        def validate(cls, path: str) -> None:
+            rom.validate("dynamic", path)
 
     class UTPackPath(settings.FilePath):
         """Path to the user's Pokémon Black and White Poptracker Pack."""
@@ -71,6 +88,7 @@ class PokemonBWSettings(settings.Group):
 
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
+    dynamic_rom: PokemonWhiteRomFile = PokemonBWDynamicRomFile(PokemonBWDynamicRomFile.copy_to)
     ut_pack_path: UTPackPath | str = UTPackPath()
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
@@ -317,11 +335,18 @@ class PokemonBWWorld(World):
                     self.multiworld.get_out_file_name_base(self.player) + rom.PokemonBlackPatch.patch_file_ending
                 ), world=self, player=self.player, player_name=self.player_name
             ).write()
-        else:
+        elif self.options.version == "white":
             rom.PokemonWhitePatch(
                 path=os.path.join(
                     output_directory,
                     self.multiworld.get_out_file_name_base(self.player) + rom.PokemonWhitePatch.patch_file_ending
+                ), world=self, player=self.player, player_name=self.player_name
+            ).write()
+        else:
+            rom.PokemonBWDynamicPatch(
+                path=os.path.join(
+                    output_directory,
+                    self.multiworld.get_out_file_name_base(self.player) + rom.PokemonBWDynamicPatch.patch_file_ending
                 ), world=self, player=self.player, player_name=self.player_name
             ).write()
 
@@ -343,7 +368,7 @@ class PokemonBWWorld(World):
             self.slot_data_cache = {
                 "options": {
                     "version": self.options.version.current_key,
-                    "goal": self.options.goal.to_slot_data(),
+                    "goal": self.options.goal.current_key,
                     "randomize_wild_pokemon": self.options.randomize_wild_pokemon.value,
                     "randomize_trainer_pokemon": self.options.randomize_trainer_pokemon.value,
                     "pokemon_randomization_adjustments": self.options.pokemon_randomization_adjustments.value,

@@ -40,12 +40,15 @@ if typing.TYPE_CHECKING:
 class GameVersion(Choice):
     """
     Select your game version.
+
+    **Dynamic** lets you choose any of the two versions,
+    but logic will be a bit restricted to account for that.
     """
     display_name = "Game Version"
     option_black = 0
     option_white = 1
-    # option_dynamic = 2
-    default = "random"
+    option_dynamic = 2
+    default = 2
 
 
 class Goal(Choice):
@@ -73,8 +76,9 @@ class Goal(Choice):
     """
     # - **Regional pokedex** - Complete the Unova pokedex (requires wild Pokemon being randomized)
     # - **National pokedex** - Complete the national pokedex (requires wild Pokemon being randomized)
-    # - **Custom pokedex** - Complete all dexsanity locations (requires wild Pokemon being randomized and dexsanity being set to at least 100)
+    # - **Custom pokedex** - Complete all dexsanity locations (requires wild Pokemon being randomized)
     display_name = "Goal"
+    value: int | list[str]
     option_ghetsis = 0
     option_champion = 1
     option_cynthia = 2
@@ -85,25 +89,36 @@ class Goal(Choice):
     option_tmhm_hunt = 7
     option_seven_sages_hunt = 8
     option_legendary_hunt = 9
-    option_pokemon_master = 10
+    # option_pokemon_master = 10  # Alias, gets converted to list of all other
     default = 0
-    combined: list[str] | None = None
+
+    def __init__(self, value: int | list[str]):
+        super().__init__(value)  # Because of type errors
 
     @classmethod
     def from_any(cls, data: typing.Any):
+        if data in ("pokemon_master", 10):
+            data = list(cls.options)
         if isinstance(data, list):
             if not data:
                 raise OptionError("Combined goals list must not be empty")
             data = list((d.casefold() if isinstance(d, str) else d) for d in data)
             if all((d in cls.options or d in cls.name_lookup) for d in data):
-                c = cls(cls.option_pokemon_master)
-                c.combined = [(d if isinstance(d, str) else cls.name_lookup[d]) for d in data]
-                return c
+                return cls([(d if isinstance(d, str) else cls.name_lookup[d]) for d in data])
             raise OptionError(f"Combined goals list has invalid entries: {data}")
         return super().from_any(data)
 
-    def to_slot_data(self) -> str | list[str]:
-        return self.current_key if self.combined is None else self.combined
+    @classmethod
+    def get_option_name(cls, value: int | list[str]) -> str:
+        name = cls.name_lookup[value] if isinstance(value, int) else ", ".join(value)
+        if cls.auto_display_name:
+            return name.replace("_", " ").title()
+        else:
+            return name
+
+    @property
+    def current_key(self) -> str | list[str]:
+        return self.name_lookup[self.value] if isinstance(self.value, int) else self.value
 
 
 class ShuffleBadgeRewards(Choice):
@@ -728,12 +743,12 @@ class ModifyLogic(ToggleSet):
     - **Require Flash** - Makes Mistralton Cave, Challenger's Cave, and the
         basement of Wellspring Cave logically require TM70 Flash.
     - **Consider <feature X>** - Toggles whether <feature X> is considered in
-        logic to get access to some pokemon species. The available features are
-        **evolutions**, **static pokemon**, **trades**, and **form change**.
-        However, do note that trades are automatically excluded if evolutions
-        are excluded and wild pokemon are not randomized. Also, evolutions are
-        automatically excluded if evolutions are  randomized with the
-        **Every level** modifier.
+        logic to get access to some pokemon species. The available features
+        are **evolutions**, **static pokemon**, **trades**, **form change**,
+        and **trainers**. However, do note that trades are automatically
+        excluded if evolutions are excluded and wild pokemon are not
+        randomized. Also, evolutions are automatically excluded if evolutions
+        are randomized with the **Every level** modifier.
     """
     display_name = "Modify Logic"
     is_require_dowsing = True, "Require Dowsing Machine"
@@ -742,6 +757,7 @@ class ModifyLogic(ToggleSet):
     is_consider_static = True, "Consider static pokemon"
     is_consider_trades = False
     is_consider_form_change = True
+    is_consider_trainers = True
     ignore_deprecated = [
         "Prioritize key item locations",
     ]

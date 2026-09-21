@@ -9,9 +9,10 @@ def generate_static_encounters(world: "PokemonBWWorld",
                                species_checklist: SpeciesChecklist) -> dict[str, StaticEncounterEntry]:
     from ...data.locations.encounters.static import static, legendary, fossils, gift
 
+    is_dynamic = world.options.version.current_key == "dynamic"  # .current_key == ... because dynamic might not be added yet
     versioned_species = (
         (lambda d: d.species_white)
-        if world.options.version == "white"
+        if world.options.version == "white" or (is_dynamic and world.random.random() < 0.5)
         else (lambda d: d.species_black)
     )
 
@@ -19,7 +20,8 @@ def generate_static_encounters(world: "PokemonBWWorld",
     for table in (static, legendary, fossils, gift):
         for name, data in table.items():
             encounters[name] = StaticEncounterEntry(
-                versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule
+                versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule,
+                data.species_black != data.species_white
             )
             if (
                 (data.inclusion_rule is None or data.inclusion_rule(world))
@@ -35,14 +37,15 @@ def generate_trade_encounters(world: "PokemonBWWorld",
     from ...data.locations.encounters.static import trade
 
     is_black = world.options.version == "black"
+    is_dynamic = world.options.version.current_key == "dynamic"  # .current_key == ... because dynamic might not be added yet
     versioned_species = (
         (lambda d: d.species_black)
-        if is_black
+        if is_black or (is_dynamic and world.random.random() < 0.5)
         else (lambda d: d.species_white)
     )
     versioned_wanted = (
         (lambda d: d.wanted_black)
-        if is_black
+        if is_black or (is_dynamic and world.random.random() < 0.5)
         else (lambda d: d.wanted_white)
     )
 
@@ -51,7 +54,8 @@ def generate_trade_encounters(world: "PokemonBWWorld",
         encounters[name] = TradeEncounterEntry(
             versioned_species(data),
             versioned_wanted(data),
-            data.encounter_region
+            data.encounter_region,
+            data.species_black != data.species_white
         )
         if (world.options.modify_logic.is_consider_trades and (world.options.modify_logic.is_consider_static
                                                                or world.options.randomize_wild_pokemon.is_randomize)):

@@ -72,7 +72,36 @@ class PokemonWhitePatch(APAutoPatchInterface):
         return PatchMethods.get_file(self, file)
 
 
-PokemonBWPatch = PokemonBlackPatch | PokemonWhitePatch
+class PokemonBWDynamicPatch(APAutoPatchInterface):
+    game = "Pokemon Black and White"
+    patch_file_ending = ".apbw"
+    result_file_ending = ".nds"
+
+    world: "PokemonBWWorld"
+
+    def __init__(self, path: str, player=None, player_name="", world=None):
+        self.world = world
+        self.files: dict[str, bytes] = {}
+        super().__init__(path, player, player_name, "")
+
+    def write_contents(self, opened_zipfile: ZipFile) -> None:
+        super().write_contents(opened_zipfile)
+        PatchMethods.write_contents(self, opened_zipfile)
+
+    def get_manifest(self) -> Dict[str, Any]:
+        return PatchMethods.get_manifest(self, super().get_manifest())
+
+    def patch(self, target: str) -> None:
+        PatchMethods.patch(self, target, "dynamic")
+
+    def read_contents(self, opened_zipfile: ZipFile) -> Dict[str, Any]:
+        return PatchMethods.read_contents(self, opened_zipfile, super().read_contents(opened_zipfile))
+
+    def get_file(self, file: str) -> bytes:
+        return PatchMethods.get_file(self, file)
+
+
+PokemonBWPatch = PokemonBlackPatch | PokemonWhitePatch | PokemonBWDynamicPatch
 
 
 class PatchMethods:
@@ -143,9 +172,9 @@ class PatchMethods:
         if pathlib.Path(target).exists():
             with open(target, "rb") as f:
                 header_part = f.read(0xA0)
-                found_rom_version = tuple(header_part[0x9D:0xA0])
-                if version.rom() == found_rom_version:
-                    return
+            found_rom_version = tuple(header_part[0x9D:0xA0])
+            if version.rom() == found_rom_version:
+                return
 
         from .ndspy.rom import NintendoDSRom
         from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
@@ -229,25 +258,6 @@ def get_base_rom_bytes(version: str, file_name: str = "") -> bytes:
         file_name = get_base_rom_path(version, file_name)
     with open(file_name, "rb") as file:
         base_rom_bytes = bytes(file.read())
-    header_bytes = base_rom_bytes[:18]
-    stuff = ((b'POKEMON\x20B\0\0\0IRBO01', b'IRA', b'IRB', "Black", "White")
-             if version == "black" else
-             (b'POKEMON\x20W\0\0\0IRAO01', b'IRB', b'IRA', "White", "Black"))
-    if header_bytes != stuff[0]:
-        if stuff[1] in header_bytes:
-            raise Exception(f"Supplied base ROM appears to be a copy of Pokémon {stuff[4]} Version. However, "
-                            f"this patch file requires an english copy of Pokémon {stuff[3]} Version. Please "
-                            f"delete the Pokemon{stuff[3]}.nds file in your Archipelago installation folder and "
-                            f"run this patch file again.")
-        elif stuff[2] in header_bytes:
-            raise Exception(f"Supplied base ROM appears to be a non-english copy of Pokémon {stuff[3]} Version. "
-                            f"However, this apworld requires an english copy. Please delete the "
-                            f"Pokemon{stuff[3]}.nds file in your Archipelago installation folder and run this "
-                            f"patch file again.")
-        else:
-            raise Exception(f"Supplied base ROM appears to not be an english copy of Pokémon {stuff[3]} Version "
-                            f"({header_bytes}). Please delete the Pokemon{stuff[3]}.nds file in your Archipelago "
-                            f"installation folder and run this patch file again.")
     return base_rom_bytes
 
 
@@ -261,3 +271,35 @@ def get_base_rom_path(version: str, file_name: str = "") -> str:
 
 def version_str(ver: tuple[int, ...]) -> str:
     return ".".join(str(i) for i in ver)
+
+
+def validate(version: str, file_name: str):
+    with open(file_name, "rb", buffering=0) as f:
+        header = f.read(18)
+    full = (b'POKEMON\x20B\0\0\0IRBO01', b'POKEMON\x20W\0\0\0IRAO01')
+
+    if version == "dynamic":
+        if header not in full:
+            if b'IRA' in header:
+                raise ValueError("Supplied base ROM appears to be a non-english copy of Pokémon White Version. "
+                                 "However, this apworld requires an english copy.")
+            elif b'IRB' in header:
+                raise ValueError("Supplied base ROM appears to be a non-english copy of Pokémon Black Version. "
+                                 "However, this apworld requires an english copy.")
+            else:
+                raise ValueError(f"Supplied base ROM appears to not be an english copy of Pokémon Black or White "
+                                 f"Version ({header}).")
+    else:
+        stuff = ((full[0], b'IRA', b'IRB', "Black", "White")
+                 if version == "black" else
+                 (full[1], b'IRB', b'IRA', "White", "Black"))
+        if header != stuff[0]:
+            if stuff[1] in header:
+                raise ValueError(f"Supplied base ROM appears to be a copy of Pokémon {stuff[4]} Version. However, "
+                                 f"this patch file requires an english copy of Pokémon {stuff[3]} Version.")
+            elif stuff[2] in header:
+                raise ValueError(f"Supplied base ROM appears to be a non-english copy of Pokémon {stuff[3]} Version. "
+                                 f"However, this apworld requires an english copy.")
+            else:
+                raise ValueError(f"Supplied base ROM appears to not be an english copy of Pokémon {stuff[3]} Version "
+                                 f"({header}).")

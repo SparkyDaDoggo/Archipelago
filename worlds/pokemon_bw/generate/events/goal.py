@@ -6,7 +6,9 @@ if TYPE_CHECKING:
 
 def create(world: "PokemonBWWorld") -> None:
 
-    all_goals = world.options.goal.combined or [world.options.goal.current_key]
+    all_goals = world.options.goal.current_key
+    if isinstance(all_goals, str):
+        all_goals = [all_goals]
     needed_goals = []
     possible_goals = {
         "ghetsis": ("[Event] Defeating Ghetsis", ),
@@ -37,9 +39,7 @@ def create(world: "PokemonBWWorld") -> None:
         ),
     }
     for goal in all_goals:
-        if goal == "pokemon_master":
-            needed_goals.extend(g for gevents in possible_goals.values() for g in gevents)
-        elif goal in possible_goals:
+        if goal in possible_goals:
             needed_goals += possible_goals[goal]
         else:
             raise Exception(f"Bad goal option: {goal}")

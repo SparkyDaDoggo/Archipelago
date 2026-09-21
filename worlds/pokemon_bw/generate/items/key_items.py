@@ -31,8 +31,12 @@ def generate_default(world: "PokemonBWWorld") -> list[PokemonBWItem]:
     if world.options.version == "black":
         data = special["Light Stone"]
         items.append(PokemonBWItem("Light Stone", data.classification(world, "Light Stone"), data.item_id, world.player))
-    else:
+    elif world.options.version == "white":
         data = special["Dark Stone"]
         items.append(PokemonBWItem("Dark Stone", data.classification(world, "Dark Stone"), data.item_id, world.player))
+    else:
+        stone = world.random.choice(("Light Stone", "Dark Stone"))
+        data = special[stone]
+        items.append(PokemonBWItem(stone, data.classification(world, stone), data.item_id, world.player))
 
     return items

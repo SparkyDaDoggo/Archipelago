@@ -225,6 +225,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - APhone
     - For now only to be able to call the Season Lady
 - Added an NPC in Castelia City's central plaza that confirms the legendary hunt goal, similar to the TM/HM hunt NPC
+- Added dynamic version selection
 
 ### Bug fixes and technical stuff
 
@@ -267,6 +268,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added remaining gym leader flags to the tracker events bitmap
 - Fixed BizHawk 2.11 compatibility by padding the ROM size to a power of 2
 - Added support for poptracker co-op
+- Choosing the ROM now gets prompted again if the chosen ROM is incompatible
 
 ### Is this version compatible with older multiworld slots and save files?
 No
