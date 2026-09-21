@@ -187,10 +187,8 @@ class TestMasterBallSellerCustomCosts(PokemonBWTestBase):
 ###################################################
 
 
-class TestFunnyDialogFunny(PokemonBWTestBase):
-    options = {"funny_dialog": "funny"}
-class TestFunnyDialogEfficient(PokemonBWTestBase):
-    options = {"funny_dialog": "efficient"}
+class TestFunnyDialog(PokemonBWTestBase):
+    options = {"funny_dialog": True}
 
 
 ###################################################
@@ -211,14 +209,5 @@ class TestTextPlandoWithFunny(PokemonBWTestBase):
             {"at": "story 0 0 1", "text": "Test[c_100_#1_0][NextLine]123[Terminate]", "percentage": 100},
             {"at": "system 12 0 1", "text": "Test[End][NextLine]123[NextLine]123[Scroll][NextLine]lol[Terminate]"},
         ],
-        "funny_dialog": "funny",
-    }
-class TestTextPlandoWithEfficient(PokemonBWTestBase):
-    options = {
-        "text_plando": [
-            {"at": "system 12 0 1", "text": "Test 123[Terminate]", "percentage": 12},
-            {"at": "story 0 0 1", "text": "Test[c_100_#1_0][NextLine]123[Terminate]", "percentage": 100},
-            {"at": "system 12 0 1", "text": "Test[End][NextLine]123[NextLine]123[Scroll][NextLine]lol[Terminate]"},
-        ],
-        "funny_dialog": "efficient",
+        "funny_dialog": True,
     }

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",
           files_dump: dict[str, bytes | bytearray]) -> None:
     import orjson
-    from ...data.text import funny_dialog, efficient_dialog
+    from ...data.text import funny_dialog
     from ..text import decode, encode
 
     data: dict[str, str | Any] = orjson.loads(bw_patch_instance.get_file("text.json"))
@@ -21,8 +21,8 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     narc_story = NARC(rom.getFileByName("a/0/0/3"))
     slotdata = orjson.loads(bw_patch_instance.files.get("slot_data.json", b'{}'))
 
-    # funny/efficient dialog
-    if data["dialog"] == "funny":
+    # funny dialog
+    if data["dialog"]:
         all_lines: dict[tuple[Literal["system", "story"], int], list[tuple[int, int, str]]] = {}
         for text_data in funny_dialog.table:
             key = (text_data.section, text_data.file)
@@ -36,16 +36,6 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             text_file = decode(narc.files[key[1]])
             for value in values:
                 insert_line(text_file, value[0], value[1], value[2])
-            encoded = encode(text_file)
-            narc.files[key[1]] = encoded
-            files_dump[f"{'a002' if narc == narc_system else 'a003'}/{key[1]}"] = encoded
-    elif data["dialog"] == "efficient":
-        for key, table in efficient_dialog.table.items():
-            narc = narc_system if key[0] == "system" else narc_story
-            text_file = decode(narc.files[key[1]])
-            for block_num in range(len(table)):
-                for line_num, text in table[block_num].items():
-                    insert_line(text_file, block_num, line_num, text)
             encoded = encode(text_file)
             narc.files[key[1]] = encoded
             files_dump[f"{'a002' if narc == narc_system else 'a003'}/{key[1]}"] = encoded
@@ -211,10 +201,8 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         for mod in slotdata["options"]["master_ball_seller"]:
             info45 += f"-- {mod.title()}[Scroll][NextLine]"
         info45 += f"-- Actual cost: {slotdata['master_ball_seller_cost']}[Scroll][NextLine]"
-    if slotdata["options"]["funny_dialog"] == "funny":
+    if slotdata["options"]["funny_dialog"]:
         info45 += "- Funny dialog[Scroll][NextLine]"
-    elif slotdata["options"]["funny_dialog"] == "efficient":
-        info45 += "- Efficient dialog[Scroll][NextLine]"
     if slotdata["options"]["text_plando"]:
         if len(slotdata["options"]["text_plando"]) == 1:
             info45 += "- One text plando entry[Scroll][NextLine]"
@@ -262,6 +250,6 @@ def write_plando(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zi
         if line.text
     ]
     opened_zipfile.writestr("text.json", orjson.dumps({
-        "dialog": bw_patch_instance.world.options.funny_dialog.current_key,
+        "dialog": bw_patch_instance.world.options.funny_dialog.value,
         "plando": lines,
     }))

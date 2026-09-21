@@ -759,27 +759,23 @@ class FillerItemsBlacklist(ItemSet):
     display_name = "Filler Items Blacklist"
 
 
-class FunnyDialog(Choice):
+class FunnyDialog(Toggle):
     """
-    Adds humorous dialog submitted by the folks in the Pokemon Black and White channel
-    of the Archipelago Discord server. Alternatively, the efficient mode shortens many
-    story lines for quicker playthroughs.
+    Adds humorous dialog submitted by the folks in the Pokemon Black and White
+    channel on the Archipelago Discord server.
 
     This option requires Text Plando being enabled in the host settings.
     """
     display_name = "Funny Dialog"
-    option_none = 0
-    option_funny = 1
-    option_efficient = 2
     default = 0
 
     def verify(self, world: typing.Type["World"], player_name: str, plando_options: "PlandoOptions") -> None:
         from BaseClasses import PlandoOptions
-        if self.current_key != "none" and not (PlandoOptions.texts & plando_options):
+        if self and not (PlandoOptions.texts & plando_options):
             # plando is disabled but plando options were given so overwrite the option
             self.value = 0
             logging.warning(f"The plando texts module is turned off, "
-                            f"so funny/efficient dialog for {player_name} will be ignored.")
+                            f"so funny dialog for {player_name} will be ignored.")
         else:
             super().verify(world, player_name, plando_options)
 

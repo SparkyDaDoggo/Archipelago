@@ -15,7 +15,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added an item group for fossils and another one for TMs and HMs combined
 - Added glitched logic in UT for `Require Dowsing Machine` and `Require Flash` logic modifiers
 - Added `Funny Dialog` and `Text Plando` options
-  - `funny` and `efficient` choices for `Funny Dialog`
   - Both options require the text plando setting in the host yaml to be enabled
   - Added a setting to enable text extraction upon running a patch file
 - Added plando mode to `Dexsanity` option

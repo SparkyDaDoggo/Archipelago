@@ -1,6 +1,6 @@
 
 from typing import TYPE_CHECKING
-from .. import SpeciesChecklist, CopyChecklist
+from .. import SpeciesChecklist
 import logging
 
 if TYPE_CHECKING:

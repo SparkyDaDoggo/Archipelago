@@ -76,8 +76,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Simple method, shown on Webhost
   - Advanced method, more capabilities
 - Funny dialogue
-  - Funny mode, including actually funny things
-  - Efficient mode, making a lot of text shorter
 - Text Plando
   - Text extractor setting in patching process
 - Dexsanity plando (custom behavior of the Dexsanity option)

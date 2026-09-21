@@ -223,12 +223,11 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 #   no tests
 # funny_dialog:
 #   default none
-#   one test for each other choice
+#   one test for True
 # text_plando:
 #   default []
 #   one test for multiple lines with all kinds of commands
 #   one test for multiple lines + funny dialog
-#   one test for multiple lines + efficient dialog
 # plugin_options:
 #   irrelevant to generator
 # reusable_tms:

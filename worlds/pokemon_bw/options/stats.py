@@ -189,6 +189,9 @@ class RandomizeLevelUpMovesets(ToggleSet):
     is_follow_evolutions = False
     is_start_with_4 = False
     auto_add_if_any = "Randomize"
+    aliases_convert = [
+        ("Keep types", "Match types")
+    ]
 
 
 class RandomizeTMHMCompatibility(ToggleSet):
