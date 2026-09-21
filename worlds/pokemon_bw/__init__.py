@@ -78,13 +78,18 @@ class PokemonBWSettings(settings.Group):
     class EnableArm7ExpansionTest(settings.Bool):
         """Deprecated setting, originally used for testing purposes."""
 
-    class PluginSettings(dict[str, Any]):
-        """This can be used to define certain settings that are used by plugins.
-        The main apworld will ignore this setting entirely."""
-
     class ExtractText(settings.Bool):
         """If enabled, running a patch file for this game will also produce a text file
         containing all ingame text alongside the rom."""
+
+    class ExtendedSpoiler(settings.Bool):
+        """If enabled, various randomized data (e.g. trainer teams, base stats, levelup
+        movesets, ...) are written to the spoiler log as well, but only if they are
+        randomized or plando'd."""
+
+    class PluginSettings(dict[str, Any]):
+        """This can be used to define certain settings that are used by plugins.
+        The main apworld will ignore this setting entirely."""
 
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
@@ -97,6 +102,7 @@ class PokemonBWSettings(settings.Group):
     dump_patched_files: DumpPatchedFiles | bool = False
     enable_arm7_expansion_test: EnableArm7ExpansionTest | bool = False
     extract_text: ExtractText | bool = False
+    extended_spoiler: ExtendedSpoiler | bool = False
     plugin_settings: PluginSettings = {}
 
 
@@ -354,13 +360,15 @@ class PokemonBWWorld(World):
         from .generate import spoiler
 
         spoiler.write_spoiler_encounter(self, spoiler_handle)
-        spoiler.write_spoiler_trainer(self, spoiler_handle)
-        spoiler.write_spoiler_stats(self, spoiler_handle)
+        if settings.get_settings()["pokemon_bw_settings"]["extended_spoiler"]:
+            spoiler.write_spoiler_trainer(self, spoiler_handle)
+            spoiler.write_spoiler_stats(self, spoiler_handle)
         spoiler.write_spoiler_evolutions(self, spoiler_handle)
-        spoiler.write_spoiler_levelup_movesets(self, spoiler_handle)
-        spoiler.write_spoiler_tm_hm_compat(self, spoiler_handle)
-        spoiler.write_spoiler_move_data(self, spoiler_handle)
-        spoiler.write_spoiler_type_chart(self, spoiler_handle)
+        if settings.get_settings()["pokemon_bw_settings"]["extended_spoiler"]:
+            spoiler.write_spoiler_levelup_movesets(self, spoiler_handle)
+            spoiler.write_spoiler_tm_hm_compat(self, spoiler_handle)
+            spoiler.write_spoiler_move_data(self, spoiler_handle)
+            spoiler.write_spoiler_type_chart(self, spoiler_handle)
 
     def part_slot_data(self) -> dict[str, Any]:
         """Earliest to call, plugins get this"""  # though they actually don't need it in this form?

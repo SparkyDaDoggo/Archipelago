@@ -56,6 +56,8 @@ def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) ->
         spoiler_handle.write(f"\n\nEvolutions ({world.player_name}, each entry in the format "
                              f"<method, value, species>):\n\n")
         for name, data in world.species_entries.items():
+            if not data.write & 0b1:
+                continue
             spoiler_handle.write(f"{name}: "+(" | ".join(f"{evo.method}, {evo.value}, {evo.species.dex_name}"
                                                          for evo in data.evolutions))+"\n")
 
@@ -76,6 +78,8 @@ def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None
                              f"Egg groups + species (if randomized/plando'd)\n"
                              f"{'─'*15}─┼─{'─'*15}─┼─{'─'*28}─┼─{'─'*4}─┼─{'─'*19}─┬─{'─'*24}\n")
         for name, data in world.species_entries.items():
+            if not data.write & 0b1100101100:
+                continue
             types_str = data.types[0]
             if data.types[0] != data.types[1]:
                 types_str += f", {data.types[1]}"
@@ -99,6 +103,8 @@ def write_spoiler_levelup_movesets(world: "PokemonBWWorld", spoiler_handle: Text
         spoiler_handle.write(f"\n\nLevelup movesets ({world.player_name}, with each entry having the format <level, "
                              f"move name>):\n\n")
         for name, data in world.species_entries.items():
+            if not data.write & 0b10000:
+                continue
             spoiler_handle.write(f"{name}: "+str(data.level_up_moves.level_up_moves).replace("'", "")+"\n")
 
 
@@ -109,6 +115,8 @@ def write_spoiler_tm_hm_compat(world: "PokemonBWWorld", spoiler_handle: TextIO) 
 
         spoiler_handle.write(f"\n\nTM/HM compatibility ({world.player_name}):\n\n")
         for name, data in world.species_entries.items():
+            if not data.write & 0b1000000:
+                continue
             spoiler_handle.write(f"{name}: {', '.join(data.tm_hm_moves.tm_hm_moves)}\n")
 
 
@@ -120,6 +128,8 @@ def write_spoiler_move_data(world: "PokemonBWWorld", spoiler_handle: TextIO) -> 
         spoiler_handle.write(f"\n\nMove data ({world.player_name}, the format is <power, accuracy, type, category, "
                              f"pp>):\n\n")
         for name, data in world.move_entries.items():
+            if not data.write:
+                continue
             spoiler_handle.write(f"{name}: {data.power}, {data.accuracy}, {data.type}, {data.category}, {data.pp}\n")
 
 

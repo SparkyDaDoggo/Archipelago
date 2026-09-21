@@ -4,6 +4,7 @@ from .classification import *
 special: dict[str, ItemData] = {
     "Light Stone": ItemData(0x0268, always_progression),
     "Dark Stone": ItemData(0x0269, always_progression),
+    "God Stone": ItemData(0x026E, always_filler),  # Only shown as ??? ingame
     "Xtransceiver (Blue)": ItemData(0x026D, always_filler),
     "Xtransceiver (Red)": ItemData(0x0272, always_filler),
 }
@@ -86,5 +87,4 @@ useless: dict[str, ItemData] = {
     "Red Orb": ItemData(0x0216, always_filler),
     "Blue Orb": ItemData(0x0217, always_filler),
     "Enigma Stone": ItemData(0x0218, always_filler),
-    "God Stone": ItemData(0x026E, always_filler),
 }

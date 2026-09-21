@@ -269,6 +269,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed BizHawk 2.11 compatibility by padding the ROM size to a power of 2
 - Added support for poptracker co-op
 - Choosing the ROM now gets prompted again if the chosen ROM is incompatible
+- Removed God Stone form the useless key items pool as it is only shown as `???` ingame
+  - It can still be given via console commands
 
 ### Is this version compatible with older multiworld slots and save files?
 No
