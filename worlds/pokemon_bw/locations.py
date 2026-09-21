@@ -75,11 +75,29 @@ def create_and_place_event_locations(world: "PokemonBWWorld") -> tuple[dict[str,
     """Returns a dict of species that are actually catchable in this world."""
     from .generate.events import wild, static, evolutions, goal, species_tables, form_change, levels, story, trainers
     from .items import PokemonBWItem
+    from .data.items import all_tm_hm
+    from .data.pokemon import moves
 
+    # species data dicts
     catchable_species_data: dict[str, "SpeciesEntry"] = wild.create(world) | static.create(world)
     evolutions.create(world, catchable_species_data)
     form_change.create(world, catchable_species_data)
     seeable_species_data: dict[str, "SpeciesEntry"] = trainers.create(world)
+
+    # some niche locations' data
+    chosen = world.random.choice(tuple(a for a in catchable_species_data.items() if a[1].tm_hm_moves.tm_hm_moves))
+    world.other_locations_species = chosen[0]
+    world.studio_castelia_type = world.random.choice(chosen[1].types)
+    chosen_tms = list(chosen[1].tm_hm_moves.tm_hm_moves)
+    chosen_tms.sort()
+    chosen_tm = world.random.choice(chosen_tms)
+    for name in all_tm_hm:
+        if name.startswith(chosen_tm):
+            world.driftveil_random_tm = name
+            world.driftveil_random_move_id = world.move_entries[moves.tm_hm[chosen_tm].move].id
+            break
+
+    # other events
     levels.create(world)
     species_tables.populate(world, catchable_species_data)
     story.create(world)
@@ -113,7 +131,7 @@ def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: 
 
     overworld_items.create(world)
     hidden_items.create(world)
-    other.create(world, catchable_species_data)
+    other.create(world)
     badge_rewards.create(world)
     tm_hm.create(world)
     dexsanity.create(world, catchable_species_data)

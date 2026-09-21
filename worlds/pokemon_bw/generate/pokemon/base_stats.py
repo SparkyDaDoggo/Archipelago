@@ -70,6 +70,11 @@ def randomize_stats_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
                 raise Exception(f"Error with distributing cache in base stats rando: "
                                 f"cache = {cache}, dist = {dist}, total = {total}, max_total = {max_total}, "
                                 f"min_total = {min_total}, individual = {individual}")
+        if any(evo.method in ("Level up higher defense", "Level up higher attack", "Level up equal physical")
+               for evo in data.evolutions):
+            both = dist[1] + dist[2]
+            dist[2] = both // 2
+            dist[1] = both - dist[2]
         set_value(data, tuple(dist))
         if data.species_name in world.options.stats_plando:
             plando_stat = world.options.stats_plando[data.species_name]
@@ -120,6 +125,11 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
                 raise Exception(f"Error with distributing cache in base stats rando: "
                                 f"cache = {cache}, dist = {dist}, total = {total}, max_total = {max_total}, "
                                 f"min_total = {min_total}, append = {append}")
+        if any(evo.method in ("Level up higher defense", "Level up higher attack", "Level up equal physical")
+               for evo in data.evolutions):
+            both = dist[1] + dist[2]
+            dist[2] = both // 2
+            dist[1] = both - dist[2]
         set_value(data, tuple(dist))
         apply_plando(data)
         do_evos(data, dist)

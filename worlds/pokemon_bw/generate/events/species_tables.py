@@ -25,3 +25,5 @@ def populate(world: "PokemonBWWorld", catchable_species_data: dict[str, "Species
             world.flash_species.add(species_name)
         if "Fighting" in data.types:
             world.fighting_type_species.add(species_name)
+        if world.studio_castelia_type in data.types:
+            world.studio_castelia_type_species.add(species_name)

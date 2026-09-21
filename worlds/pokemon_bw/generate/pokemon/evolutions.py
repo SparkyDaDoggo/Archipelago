@@ -305,6 +305,9 @@ def randomize_evolutions(world: "PokemonBWWorld", by_id: dict[tuple[int, int], S
             bad.update("Level up (male)", "Stone male")
         if _dat.gender_ratio in (0, 255):
             bad.update("Level up (female)", "Stone female")
+        if not 0.8 <= _dat.base_stats[1]/(_dat.base_stats[2] or 1) <= 1.25:
+            bad.update("Level up higher defense", "Level up higher attack",
+                       "Level up equal physical", "_Level up stats")
         if _dat.evolutions:
             plando_methods = tuple(resolve_paired(evo_entry.method) for evo_entry in _dat.evolutions)
             method_slots += len(_dat.evolutions)

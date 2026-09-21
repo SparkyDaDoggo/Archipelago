@@ -6,7 +6,7 @@ from NetUtils import ClientStatus
 
 import worlds._bizhawk as bizhawk
 from worlds._bizhawk.client import BizHawkClient
-from .client.locations import check_flag_locations, check_dex_locations, check_seen_locations
+from .client.locations import check_flag_locations, check_dex_locations, check_seen_locations, check_form_locations
 from .client.items import receive_items
 from .client.setup import early_setup, late_setup
 from .client.tracker import (set_map, set_dex_caught_seen, set_goal_bitmap, set_statics_bitmap, set_trades_bitmap,
@@ -201,7 +201,8 @@ class PokemonBWClient(BizHawkClient):
             locations_to_check: list[int] = (
                 await check_flag_locations(self, ctx) +
                 await check_dex_locations(self, ctx) +
-                await check_seen_locations(self, ctx)
+                await check_seen_locations(self, ctx) +
+                await check_form_locations(self, ctx)
             )
             if len(locations_to_check) != 0:
                 await ctx.send_msgs([{"cmd": "LocationChecks", "locations": list(locations_to_check)}])

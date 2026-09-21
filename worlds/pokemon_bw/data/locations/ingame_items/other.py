@@ -69,7 +69,7 @@ table: dict[str, FlagLocationData] = {
     "Battle Company - 47F item from scientist": FlagLocationData(191, always_default, "Battle Company 47F", None, None),
     "Battle Company - 55F item from President Geoff": FlagLocationData(163, always_default, "Battle Company 55F", None, None),
     # Asks for random pokémon type
-    "Castelia City - Item from harlequin in Studio Castelia": FlagLocationData(0x1BA, always_default, "Studio Castelia", None, has_other_locations_species),
+    "Castelia City - Item from harlequin in Studio Castelia": FlagLocationData(0x1BA, always_default, "Studio Castelia", None, has_studio_castelia_type_species),
     "Castelia City - Item from manager in Café Sonata": FlagLocationData(164, always_default, "Café Sonata", None, None),
     "Castelia City - Item from Iris in Plasma hideout": FlagLocationData(
         0x199, always_default, "Castelia City Plasma Hideout 1F", None, IF(shuffled_doors, has_confronted_plasma_castelia)),

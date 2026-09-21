@@ -37,40 +37,38 @@ async def check_dex_locations(client: "PokemonBWClient", ctx: "BizHawkClientCont
     if not (any(client.missing_dex_flag_loc_ids) or any(client.missing_dexcount_loc_ids)):
         return []
 
-    locations_to_check: list[int] = []
     read = await bizhawk.read(
         ctx.bizhawk_ctx, (
             (client.save_data_address + client.dex_offset, client.dex_bytes_amount, client.ram_read_write_domain),
         )
     )
     dex_buffer = read[0]
+
+    if dex_buffer == client.dex_cache:
+        return []
+
+    locations_to_check: list[int] = []
+    dex_nums = set()
     for eight_flags in range(client.dex_bytes_amount):
-        if client.dex_cache[eight_flags] == dex_buffer[eight_flags]:
-            continue
-        merge = client.dex_cache[eight_flags] | dex_buffer[eight_flags]
-        if client.dex_cache[eight_flags] != merge:
-            new = merge - client.dex_cache[eight_flags]
-            for bit in range(8):
-                if new & (1 << bit):
-                    client.dexsanity_count += 1
-                    missing_ids = client.missing_dex_flag_loc_ids[eight_flags * 8 + bit + 1]
-                    for loc_id in missing_ids:
-                        locations_to_check.append(loc_id)
-                    missing_ids.clear()
-                    missing_ids = client.missing_dexcount_loc_ids[client.dexsanity_count]
-                    for loc_id in missing_ids:
-                        locations_to_check.append(loc_id)
-                    missing_ids.clear()
-        client.dex_cache[eight_flags] = merge
+        client.dex_cache[eight_flags] = dex_buffer[eight_flags]
+        for bit in range(8):
+            if dex_buffer[eight_flags] & (1 << bit):
+                dex_nums.add(eight_flags * 8 + bit + 1)
+
+    for dex_num in dex_nums:
+        locations_to_check += client.missing_dex_flag_loc_ids[dex_num]
+        client.missing_dex_flag_loc_ids[dex_num].clear()
+    for count in range(len(dex_nums)):
+        locations_to_check += client.missing_dexcount_loc_ids[count]
+        client.missing_dexcount_loc_ids[count].clear()
+
     return locations_to_check
 
 
 async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> list[int]:
 
     if not (any(client.missing_seen_loc_ids) or any(client.missing_seencount_loc_ids) or
-            any(client.missing_form_loc_ids) or any(client.missing_formcount_loc_ids) or
-            any(client.missing_shiny_loc_ids) or any(client.missing_shinycount_loc_ids) or
-            any(client.missing_shinyform_loc_ids) or any(client.missing_shinycount_loc_ids)):
+            any(client.missing_shiny_loc_ids) or any(client.missing_shinycount_loc_ids)):
         return []
 
     read = await bizhawk.read(
@@ -79,27 +77,18 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
             (client.save_data_address + client.dex_seen_offsets[1], client.dex_bytes_amount, client.ram_read_write_domain),
             (client.save_data_address + client.dex_seen_offsets[2], client.dex_bytes_amount, client.ram_read_write_domain),
             (client.save_data_address + client.dex_seen_offsets[3], client.dex_bytes_amount, client.ram_read_write_domain),
-            (client.save_data_address + client.dex_forms_offsets[0], client.dex_forms_bytes_amount, client.ram_read_write_domain),
-            (client.save_data_address + client.dex_forms_offsets[1], client.dex_forms_bytes_amount, client.ram_read_write_domain),
         )
     )
     seen_male_buffer, seen_female_buffer, shiny_male_buffer, shiny_female_buffer = seen_buffers = read[0], read[1], read[2], read[3]
-    forms_buffer, shiny_forms_buffer = forms_buffers = read[4], read[5]
     cache0, cache1, cache2, cache3 = client.dex_seen_caches
-    cache4, cache5 = client.dex_form_caches
     # Seen flags should never be unchecked
 
-    if (
-        all(seen_buffers[i] == client.dex_seen_caches[i] for i in range(4)) and
-        all(forms_buffers[i] == client.dex_form_caches[i] for i in range(2))
-    ):
+    if all(seen_buffers[i] == client.dex_seen_caches[i] for i in range(4)):
         return []
 
     locations_to_check: list[int] = []
     seen_dex_nums = set()
     shiny_dex_nums = set()
-    forms_dex_nums = set()
-    shiny_forms_dex_nums = set()
     for eight_flags in range(client.dex_bytes_amount):
         cache0[eight_flags] = seen_male_buffer[eight_flags]
         cache1[eight_flags] = seen_female_buffer[eight_flags]
@@ -120,6 +109,50 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
             if cache3[eight_flags] & (1 << bit):
                 seen_dex_nums.add(eight_flags * 8 + bit + 1)
                 shiny_dex_nums.add(eight_flags * 8 + bit + 1)
+
+    for dex_num in seen_dex_nums:
+        locations_to_check += client.missing_seen_loc_ids[dex_num]
+        client.missing_seen_loc_ids[dex_num].clear()
+    for count in range(len(seen_dex_nums)):
+        locations_to_check += client.missing_seencount_loc_ids[count]
+        client.missing_seencount_loc_ids[count].clear()
+
+    for dex_num in shiny_dex_nums:
+        locations_to_check += client.missing_seen_loc_ids[dex_num]
+        client.missing_seen_loc_ids[dex_num].clear()
+        locations_to_check += client.missing_shiny_loc_ids[dex_num]
+        client.missing_shiny_loc_ids[dex_num].clear()
+    for count in range(len(shiny_dex_nums)):
+        locations_to_check += client.missing_seencount_loc_ids[count]
+        client.missing_seencount_loc_ids[count].clear()
+        locations_to_check += client.missing_shinycount_loc_ids[count]
+        client.missing_shinycount_loc_ids[count].clear()
+
+    return locations_to_check
+
+
+async def check_form_locations(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> list[int]:
+
+    if not (any(client.missing_form_loc_ids) or any(client.missing_formcount_loc_ids) or
+            any(client.missing_shinyform_loc_ids) or any(client.missing_shinycount_loc_ids)):
+        return []
+
+    read = await bizhawk.read(
+        ctx.bizhawk_ctx, (
+            (client.save_data_address + client.dex_forms_offsets[0], client.dex_forms_bytes_amount, client.ram_read_write_domain),
+            (client.save_data_address + client.dex_forms_offsets[1], client.dex_forms_bytes_amount, client.ram_read_write_domain),
+        )
+    )
+    forms_buffer, shiny_forms_buffer = forms_buffers = read[0], read[1]
+    cache4, cache5 = client.dex_form_caches
+    # Seen flags should never be unchecked
+
+    if all(forms_buffers[i] == client.dex_form_caches[i] for i in range(2)):
+        return []
+
+    locations_to_check: list[int] = []
+    forms_dex_nums = set()
+    shiny_forms_dex_nums = set()
     for eight_flags in range(client.dex_forms_bytes_amount):
         cache4[eight_flags] = forms_buffer[eight_flags]
         cache5[eight_flags] = shiny_forms_buffer[eight_flags]
@@ -132,30 +165,12 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
                 forms_dex_nums.add(eight_flags * 8 + bit)
                 shiny_forms_dex_nums.add(eight_flags * 8 + bit)
 
-    for dex_num in seen_dex_nums:
-        locations_to_check += client.missing_seen_loc_ids[dex_num]
-        client.missing_seen_loc_ids[dex_num].clear()
-    for count in range(len(seen_dex_nums)):
-        locations_to_check += client.missing_seencount_loc_ids[count]
-        client.missing_seencount_loc_ids[count].clear()
-
     for form_flag in forms_dex_nums:
         locations_to_check += client.missing_form_loc_ids[form_flag]
         client.missing_form_loc_ids[form_flag].clear()
     for count in range(len(forms_dex_nums)):
         locations_to_check += client.missing_formcount_loc_ids[count]
         client.missing_formcount_loc_ids[count].clear()
-
-    for dex_num in shiny_dex_nums:
-        locations_to_check += client.missing_seen_loc_ids[dex_num]
-        client.missing_seen_loc_ids[dex_num].clear()
-        locations_to_check += client.missing_shiny_loc_ids[dex_num]
-        client.missing_shiny_loc_ids[dex_num].clear()
-    for count in range(len(shiny_dex_nums)):
-        locations_to_check += client.missing_seencount_loc_ids[count]
-        client.missing_seencount_loc_ids[count].clear()
-        locations_to_check += client.missing_shinycount_loc_ids[count]
-        client.missing_shinycount_loc_ids[count].clear()
 
     for form_flag in shiny_forms_dex_nums:
         locations_to_check += client.missing_form_loc_ids[form_flag]

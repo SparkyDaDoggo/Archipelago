@@ -30,7 +30,9 @@ def generate_item(name: str, world: "PokemonBWWorld") -> PokemonBWItem:
 def get_item_lookup_table() -> dict[str, int]:
     from .data.items import all_items_dict_view
 
-    return {name: data.item_id for name, data in all_items_dict_view.items()}
+    table = {name: data.item_id for name, data in all_items_dict_view.items()}
+    table["Out of logic"] = 1000000
+    return table
 
 
 def get_main_item_pool(world: "PokemonBWWorld") -> list[PokemonBWItem]:

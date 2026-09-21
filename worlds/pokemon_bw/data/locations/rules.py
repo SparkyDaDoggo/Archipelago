@@ -336,7 +336,9 @@ has_115_species_seen: ExtendedRule = build_seen_ext_rule(115)
 has_fighting_type_species: ExtendedRule = lambda state, world: (
     state.has_any(world.fighting_type_species, world.player)
 )
-
+has_studio_castelia_type_species: ExtendedRule = lambda state, world: (
+    state.has_any(world.studio_castelia_type_species, world.player)
+)
 dark_cave: ExtendedRule = lambda state, world: (
     not world.options.modify_logic.is_require_flash or can_use_flash(state, world)
     or state.has("Out of logic", world.player)

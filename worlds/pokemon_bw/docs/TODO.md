@@ -1,24 +1,28 @@
 # Important stuff
 
+apworld
 - `Keep Levels` and `Keep amount` in levelup moves rando not working?
+- driftveil biker trainer ids mixed up? ace trainer elmer as well?
+- extended hints for all other dexsanity variants
+- reduce extended hints evo/trade depth to just 2, or alternatively try to cap length of hint string
+- Static zororark is not considered in logic
+
+rom
 - route 3 grunts not hidden at beginning
-- glitched logic not working
-- dexsanitysanity cannot import deprecated
-- basculin forms apparently last form flag ids??? form flag ids generally mixed up
-- driftveil biker trainer ids mixed up
-- volcarona logic bugged
 - season lady phone number not registering
 - dancing men textboxes closing immediately
-- Item from Harlequin in Castelia was doable in early sphere but was expected later
-- make pokemon master be replaced by a combination of all goals
+- All the Plasma Grunts (Liberty Garden, Dragon Spiral Tower, Desert Palace etc) are in logic for "Seen" but are permanently missable.
+- Leaving Royal Unova locks you out of it
+- P2 Scientist gives Shock and Burn Drives instead of AP items after beating him with Genesect (CONFIRMED)
+- seasons didn´t change when entering a building but restarting change the season. save file: https://discord.com/channels/731205301247803413/1550513249693474847/1550949092203569272
+- You need to re-enter the room after talking to the Silver Wing NPC for the map change to work.
+
+both
+- basculin forms apparently last form flag ids??? form flag ids generally mixed up
 - legendary hunt npc showing without the goal being chosen
-- consider trainers modifier in modify logic
 - https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0
-- add setting for extended spoiler output, also only print actually modified things
-- remove efficient from funny dialog
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
-- extended hints for all other dexsanity variants
-- reduce extended hints evo/trade depth to just 2
+
 
 # Not urgent
 
@@ -88,3 +92,7 @@
 - liberty garden blackscreen
 - one case of goal not triggering reported in sync
 - master ball seller not showing up again?
+
+# Spreadsheet because I don't know where else to put it
+
+https://docs.google.com/spreadsheets/d/1nTE-zLKvLuS_o0_4VnhBtydn03_-O1f130813sLqzuY/edit?gid=0#gid=0

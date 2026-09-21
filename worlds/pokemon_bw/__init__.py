@@ -180,6 +180,7 @@ class PokemonBWWorld(World):
         self.waterfall_species: set[str] = set()
         self.flash_species: set[str] = set()
         self.fighting_type_species: set[str] = set()  # Needed for challenge rock outside of pinwheel forest
+        self.studio_castelia_type_species: set[str] = set()
         self.to_be_filled_locations: int = 0
         self.seed: int = 0
         self.to_be_locked_items: dict[str, list[items.PokemonBWItem] | dict[str, items.PokemonBWItem]] = {}

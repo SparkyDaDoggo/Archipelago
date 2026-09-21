@@ -268,6 +268,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added remaining gym leader flags to the tracker events bitmap
 - Fixed BizHawk 2.11 compatibility by padding the ROM size to a power of 2
 - Added support for poptracker co-op
+- Fixed Dexsanity checks not sending out if checked while disconnected form the server
 - Choosing the ROM now gets prompted again if the chosen ROM is incompatible
 - Removed God Stone form the useless key items pool as it is only shown as `???` ingame
   - It can still be given via console commands
