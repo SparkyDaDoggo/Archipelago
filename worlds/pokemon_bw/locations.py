@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Self
 
 from BaseClasses import Location, Region, MultiWorld, CollectionState, Entrance, ItemClassification
 from worlds.AutoWorld import LogicMixin
+from .data import TrainerData
 
 if TYPE_CHECKING:
     from . import PokemonBWWorld
@@ -229,16 +230,21 @@ class StrVar:
 
 def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int, str]]) -> None:
     from .data.pokemon.pokedex import by_number
+    from .data.locations.sanity import formsanity, shinyformsanity
+    from .data.trainers.data import table as trainer_table
+    from .data.pokemon.species import by_name
 
-    # {dex: ({wild/static places}, [(trade, wanted dex), ...], [pre-evo dex])}
-    places_for_location: dict[int, tuple[set[str], list[tuple[str, int]], list[SpeciesEntry], StrVar]] = {}
+    # {dex: ({wild/static places}, [(trade, wanted dex), ...], [pre-evo dex], string so far, seen string so far, [trainers])}
+    places_for_location: dict[int, tuple[
+        set[str], list[tuple[str, int]], list[SpeciesEntry], StrVar, StrVar, set[TrainerData]
+    ]] = {}
     logic_mods = world.options.modify_logic
 
     # Wild encounter
     for entry in world.wild_encounter.values():
         dex = entry.species_id[0]
         if dex not in places_for_location:
-            places_for_location[dex] = set(), [], [], StrVar()
+            places_for_location[dex] = set(), [], [], StrVar(), StrVar(), set()
         places_for_location[dex][0].add(entry.region)
 
     # Static encounter
@@ -247,7 +253,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             catching_place = static_slot[:static_slot.rfind("Encounter")]
             dex = entry.species_id[0]
             if dex not in places_for_location:
-                places_for_location[dex] = set(), [], [], StrVar()
+                places_for_location[dex] = set(), [], [], StrVar(), StrVar(), set()
             places_for_location[dex][0].add(catching_place)
 
     # Trade encounter
@@ -258,7 +264,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             dex = entry.species_id[0]
             wanted_dex = entry.wanted_dex_number
             if dex not in places_for_location:
-                places_for_location[dex] = set(), [], [], StrVar()
+                places_for_location[dex] = set(), [], [], StrVar(), StrVar(), set()
             places_for_location[dex][1].append((catching_place, wanted_dex))
 
     # Evolutions
@@ -267,14 +273,27 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             for evo in data.evolutions:
                 evo_dex = evo.species.dex_number
                 if evo_dex not in places_for_location:
-                    places_for_location[evo_dex] = set(), [], [], StrVar()
+                    places_for_location[evo_dex] = set(), [], [], StrVar(), StrVar(), set()
                 places_for_location[evo_dex][2].append(data)
 
-    def build_string(_dex: int) -> str:
-        if places_for_location[_dex][3].value:
-            return places_for_location[_dex][3].value
+    # Trainer teams
+    if logic_mods.is_consider_trainers:
+        for trainer_poke in world.trainer_teams:
+            trainer = trainer_table[trainer_poke.trainer_id - 1]
+            if trainer.logic_inc_rule and not trainer.logic_inc_rule(world):
+                continue
+            dex = by_name[trainer_poke.species].dex_number
+            if dex not in places_for_location:
+                places_for_location[dex] = set(), [], [], StrVar(), StrVar(), set()
+            places_for_location[dex][5].add(trainer)
+
+    def build_string(_dex: int, _seen=False) -> str:
+        if places_for_location[_dex][3 + _seen].value:
+            return places_for_location[_dex][3 + _seen].value
         _buffer = list(places_for_location[_dex][0])
         _buffer.sort()
+        if _seen:
+            _buffer += sorted(f"{_t.trainer_class} {_t.name} ({_t.region})" for _t in places_for_location[_dex][5])
         for _loc, _wanted_dex in places_for_location[_dex][1]:
             _wanted_name = by_number[_wanted_dex]
             if _wanted_dex in places_for_location and sum(len(_s) for _s in _buffer) < 100:
@@ -287,27 +306,31 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             else:
                 _buffer.append(f"Evolving {_pre_evo.dex_name}")
         _built = ", ".join(_buffer)
-        places_for_location[_dex][3].value = _built
+        places_for_location[_dex][3 + _seen].value = _built
         return _built
 
     for dex in places_for_location:
         if dex in world.dexsanity_numbers["dexsanity"]:
             loc_id = world.location_name_to_id[f"Pokédex - {by_number[dex]}"]
             hint_data[world.player][loc_id] = build_string(dex)
-
-    for dex in places_for_location:
         if dex in world.dexsanity_numbers["seensanity"]:
             name = by_number[dex]
             a_an = "an" if name[0] in "AEIOU" and name != "Uxie" else "a"
             loc_id = world.location_name_to_id[f"Pokédex - See {a_an} {name}"]
-            hint_data[world.player][loc_id] = build_string(dex)
-
-    for dex in places_for_location:
+            hint_data[world.player][loc_id] = build_string(dex, True)
         if dex in world.dexsanity_numbers["shinysanity"]:
             loc_id = world.location_name_to_id[f"Pokédex - Find a shiny {by_number[dex]}"]
             hint_data[world.player][loc_id] = build_string(dex)
 
-    # TODO Formsanity, whose format of using form order IDs is bad for this
+    for loc_name, loc_data in formsanity.table.items():
+        if loc_data.species_id[0] in places_for_location:
+            loc_id = world.location_name_to_id[loc_name]
+            hint_data[world.player][loc_id] = build_string(loc_data.species_id[0], True)
+
+    for loc_name, loc_data in shinyformsanity.table.items():
+        if loc_data.species_id[0] in places_for_location:
+            loc_id = world.location_name_to_id[loc_name]
+            hint_data[world.player][loc_id] = build_string(loc_data.species_id[0])
 
     deerling_npc_id = world.location_name_to_id["Route 6 - Item from scientist for all Deerling forms"]
     hint_data[world.player][deerling_npc_id] = build_string(585)
