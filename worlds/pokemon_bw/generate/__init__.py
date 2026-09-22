@@ -60,6 +60,8 @@ class SpeciesEntry:
     level_up_moves: LevelUpMovesetData | None
     """tuple(level, move name)"""
     vanilla_moves_count: int
+    vanilla_move_levels: list[int]
+    """Sorted in descending order"""
     tm_hm_moves: TMHMMovesetData | None
     """TM number (internal order is TM[1-95],HM[1-6])"""
 
@@ -107,6 +109,8 @@ class SpeciesEntry:
         self.level_up_moves = data.level_up_moves if is_copy else movesets_level_up.table[name]
         self.tm_hm_moves = data.tm_hm_moves if is_copy else movesets_tm_hm.table[name]
         self.vanilla_moves_count = len(self.level_up_moves) if not is_copy else data.vanilla_moves_count
+        self.vanilla_move_levels = sorted(set(m[0] for m in self.level_up_moves.level_up_moves), reverse=True) \
+            if not is_copy else data.vanilla_move_levels
         self.egg_groups = None if not is_copy else data.egg_groups
         self.egg_species = None if not is_copy else data.egg_species
         self.is_custom_form = data.is_custom_form

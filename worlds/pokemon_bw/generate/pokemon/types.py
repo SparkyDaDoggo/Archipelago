@@ -35,7 +35,7 @@ def randomize_types_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
 
     mods = world.options.randomize_types
 
-    if not mods.is_randomize:
+    if not mods.is_shuffle:
         plando_types(world, all_species)
         return
 
@@ -61,7 +61,7 @@ def randomize_types_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
     l1, l2 = list(types_by_name), list(types_by_name)
     world.random.shuffle(l2)
     rand_type_full = lambda _, b, e: world.random.choice(tuple(tt for tt in (l1 + ([e, e, e] if e else [])) if tt != b))
-    if mods.is_permutation:
+    if not mods.is_randomize:
         perm = {t1: t2 for t1, t2 in itertools.zip_longest(l1, l2)}
         rand_type = lambda _t, _, __: perm[_t]
     else:
@@ -113,9 +113,9 @@ def randomize_types_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
 
     mods = world.options.randomize_types
 
-    if not mods.is_randomize or (not mods.is_force_evolutions and
-                                 (world.options.randomize_evolutions.is_common_type
-                                  or world.options.randomize_evolutions.is_follow_type)):
+    if not mods.is_shuffle or (not mods.is_force_evolutions and
+                               (world.options.randomize_evolutions.is_common_type
+                                or world.options.randomize_evolutions.is_follow_type)):
         return
 
     plandod_ts = plando_types(world, all_species)
@@ -132,7 +132,7 @@ def randomize_types_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
     l1, l2 = list(types_by_name), list(types_by_name)
     world.random.shuffle(l2)
     rand_type_full = lambda _, b, e: world.random.choice(tuple(tt for tt in (l1 + ([e, e, e] if e else [])) if tt != b))
-    if mods.is_permutation:
+    if not mods.is_randomize:
         perm = {t1: t2 for t1, t2 in itertools.zip_longest(l1, l2)}
         rand_type = lambda _t, _, __: perm[_t]
     else:

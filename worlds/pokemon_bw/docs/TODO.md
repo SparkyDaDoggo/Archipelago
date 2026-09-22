@@ -1,8 +1,6 @@
 # Important stuff
 
 apworld
-- `Keep Levels` and `Keep amount` in levelup moves rando not working?
-- Static zororark is not considered in logic
 
 rom
 - route 3 grunts not hidden at beginning
@@ -15,7 +13,6 @@ rom
 - You need to re-enter the room after talking to the Silver Wing NPC for the map change to work.
 
 both
-- legendary hunt npc showing without the goal being chosen
 - https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
 

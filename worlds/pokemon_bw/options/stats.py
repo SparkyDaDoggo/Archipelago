@@ -79,8 +79,10 @@ class RandomizeTypes(ToggleSet):
     Randomizes the type(s) of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles types being randomized. Automatically added if any other
-        modifier is added.
+    - **Shuffle** - Replaces each type with a fixed other type, e.g. all Water
+        types might be replaced with Flying types. Automatically added if any
+        other modifier is added.
+    - **Randomize** - Fully randomizes the type(s) of every pokemon species.
     - **Mono only** - All species will only get a single type.
     - **Dual only** - All species will only get two distinct types.
     - **Follow evolutions** - Evolved species will share at least one type with (one of)
@@ -90,13 +92,12 @@ class RandomizeTypes(ToggleSet):
         plando. Supersedes **Follow evolutions**.
     - **Usual combinations** - Usual combinations in vanilla (e.g. Normal/Flying,
         Rock/Ground, ...) and more prominent mono types are more likely to show up.
-    - **Permutation** - Each type will be replaced by a fixed other type, e.g. all Water
-        types might be replaced with Flying types.
 
     Including both **Mono only** and **Dual only** will cancel each other out, i.e.
     it will be the same as including none of them.
     """
     display_name = "Randomize Types"
+    is_shuffle = False
     is_randomize = False
     is_single_only = False, "Mono only"
     is_dual_only = False
@@ -105,9 +106,11 @@ class RandomizeTypes(ToggleSet):
     is_follow_evolutions = False
     is_force_evolutions = False
     is_usual_combinations = False
-    is_permutation = False
     # is_no_4x_weaknesses = False
-    auto_add_if_any = "Randomize"
+    auto_add_if_any = "Shuffle"
+    ignore_deprecated = [
+        "Permutation",
+    ]
 
 
 class RandomizeCatchRates(ToggleSet):
@@ -169,28 +172,28 @@ class RandomizeLevelUpMovesets(ToggleSet):
     - **Randomize** - Toggles level up movesets being randomized.
         Automatically added if any other modifier is added.
     - **Match types** - Randomized moves have either a matching or normal type.
-    - **Progressive power** - If a move is learned after another one (and it's
-        not a status move), it will have an equal or higher base power.
-    - **Keep amount** - Keeps the amount of moves a species learns normally.
-    - **Keep levels** - If the species learned a move at a certain level,
-        it will still learn something at that level.
-    - **Follow evolutions** - Evolved species will try to have a large portion of
-        the levelup moveset(s) of their pre-evolution(s). Has priority over some
-        **Keep ...** modifiers. Might not be applied to all species if plando is used.
-    - **Start with 4** - Ensures that each species learns at least 4 moves at level 1.
-        Has priority over all **Keep ...** modifiers.
+    - **Progressive power** - If a move is learned after another one (and
+        it's not a status move), it will have an equal or higher base power.
+    - **Keep levels and amount** - Tries to keep the vanilla levels and amount
+        of learned moves.
+    - **Follow evolutions** - Evolved species will have a large portion of the
+        levelup moveset(s) of their pre-evolution(s). Has priority over some
+        other modifiers. Might not be applied to all species if plando is used.
+    - **Start with 4** - Ensures that each species learns at least 4 moves at
+        level 1. Has priority over other modifiers.
     """
     display_name = "Randomize Level Up Movesets"
     is_randomize = False
     is_match_types = False
     is_progressive_power = False
-    is_keep_amount = False
-    is_keep_levels = False
+    is_keep_levels_and_amount = False
     is_follow_evolutions = False
     is_start_with_4 = False
     auto_add_if_any = "Randomize"
     aliases_convert = [
-        ("Keep types", "Match types")
+        ("Keep types", "Match types"),
+        ("Keep levels", "Keep levels and amount"),
+        ("Keep amount", "Keep levels and amount"),
     ]
 
 
@@ -217,6 +220,9 @@ class RandomizeTMHMCompatibility(ToggleSet):
     is_match_types = False
     is_follow_evolutions = False
     auto_add_if_any = "Randomize"
+    aliases_convert = [
+        ("Keep types", "Match types")
+    ]
 
 
 class RandomizeAbilities(ToggleSet):
@@ -351,10 +357,10 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Maximum evo level",
         "Catch rates minimum",
         "Catch rates maximum",
+        # "Gender ratio minimum",
+        # "Gender ratio maximum",
         "Levelup moves amount minimum",
         "Levelup moves amount maximum",
-        "Gender ratio minimum",
-        "Gender ratio maximum",
         # "No held item chance",
     ]
     default = {
@@ -369,7 +375,6 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Levelup moves amount minimum": 10,
         "Levelup moves amount maximum": 20,
         # "No held item chance": 90,
-        # "Single egg group chance": 75,
     }
     individual_min_max = {
         "Stats total minimum": (6, 1530),
@@ -383,7 +388,6 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Levelup moves amount minimum": (1, 100),
         "Levelup moves amount maximum": (1, 100),
         # "No held item chance": (0, 100),
-        # "Single egg group chance": (0, 100),
     }
     min_max_pairs = [
         ("Stats total minimum", "Stats total maximum"),

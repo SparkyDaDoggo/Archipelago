@@ -66,19 +66,18 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Pair 50 50`
   - `Increasing stats`
 - Added `Randomize Types` option with the following modifiers:
+  - `Shuffle`
   - `Randomize`
   - `Mono only`
   - `Dual only`
   - `Follow evolutions`
   - `Force evolutions`
   - `Usual combinations`
-  - `Permutation`
 - Added `Randomize Level Up Movesets` option with the following modifiers:
   - `Randomize`
   - `Match types`
   - `Progressive power`
-  - `Keep amount`
-  - `Keep levels`
+  - `Keep levels and amount`
   - `Follow evolutions`
   - `Start with 4`
 - Added `Randomize TM/HM Compatibility` option with the following modifiers:
