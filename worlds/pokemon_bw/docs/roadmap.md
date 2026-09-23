@@ -132,10 +132,10 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Forget HMs without Move Deleter
 - Scripting system (required for many other features)
 - Dynamic choice in Game Version option
+- Trainer rebattling
 
 ### Required for 1.0.0
 
-- Trainer rebattling
 - Expand plugins to client
 - Options:
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex

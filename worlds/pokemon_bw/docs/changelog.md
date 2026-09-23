@@ -225,6 +225,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - For now only to be able to call the Season Lady
 - Added an NPC in Castelia City's central plaza that confirms the legendary hunt goal, similar to the TM/HM hunt NPC
 - Added dynamic version selection
+- Added optional rebattling regular trainers by talking to them again
 
 ### Bug fixes and technical stuff
 

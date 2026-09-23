@@ -233,6 +233,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
     from .data.locations.sanity import formsanity, shinyformsanity
     from .data.trainers.data import table as trainer_table
     from .data.pokemon.species import by_name
+    from .options.sanity import DEXSANITYSANITY_ENABLED
 
     # {dex: ({wild/static places}, [(trade, wanted dex), ...], [pre-evo dex], string so far, seen string so far, [trainers])}
     places_for_location: dict[int, tuple[
@@ -327,10 +328,11 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             loc_id = world.location_name_to_id[loc_name]
             hint_data[world.player][loc_id] = build_string(loc_data.species_id[0], True)
 
-    for loc_name, loc_data in shinyformsanity.table.items():
-        if loc_data.species_id[0] in places_for_location:
-            loc_id = world.location_name_to_id[loc_name]
-            hint_data[world.player][loc_id] = build_string(loc_data.species_id[0])
+    if DEXSANITYSANITY_ENABLED:
+        for loc_name, loc_data in shinyformsanity.table.items():
+            if loc_data.species_id[0] in places_for_location:
+                loc_id = world.location_name_to_id[loc_name]
+                hint_data[world.player][loc_id] = build_string(loc_data.species_id[0])
 
     deerling_npc_id = world.location_name_to_id["Route 6 - Item from scientist for all Deerling forms"]
     hint_data[world.player][deerling_npc_id] = build_string(585)
