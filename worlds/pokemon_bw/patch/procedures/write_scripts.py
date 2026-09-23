@@ -88,6 +88,10 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         Line("command", ["FlagSet" if opt["season_control"] == "vanilla" else "FlagReset", 0x193]),
         # Can always be set, because vanilla ignores that variable and changeable always starts with Spring by default
         Line("command", ["WorkSetConst", 0x40C1, seasons.table[slotdata["starting_season"]].var_value]),
+
+        # Relic Castle sand filled room roadblock pokémon and level
+        Line("command", ["WorkSetConst", 0x40F8, slotdata["relic_castle_roadblock"][0]]),
+        Line("command", ["WorkSetConst", 0x40F9, slotdata["relic_castle_roadblock"][1]]),
     )
 
     init_scripts.lines[r0_addr+1:r0_addr+2] = to_insert

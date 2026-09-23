@@ -45,13 +45,14 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     other_slots: list[EncounterEntry] = []
     copy_slots: list[EncounterEntry] = []
     is_vanilla_seasons = rules.vanilla_seasons(world)
+    is_dynamic = world.options.version == "dynamic"
     for entry in world.wild_encounter.values():
         if entry.write & 2:
             continue
         group = copy_checklist[entry.file_index]
         if group and group.search().head != entry:
             copy_slots.append(entry)
-        elif entry.encounter_region[1] and is_vanilla_seasons:
+        elif (entry.encounter_region[1] and is_vanilla_seasons) or (is_dynamic and entry.different_vanilla):
             other_slots.append(entry)
         else:
             logic_slots.append(entry)

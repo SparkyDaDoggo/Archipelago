@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from .. import SpeciesEntry
 from ...data import LevelUpMovesetData
+from ...generate import MoveEntry
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
-    from ...generate import MoveEntry
 
 
 @dataclass

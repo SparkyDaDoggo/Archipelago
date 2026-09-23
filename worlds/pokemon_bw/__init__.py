@@ -435,6 +435,7 @@ class PokemonBWWorld(World):
         Only call in patching, various values are initialized only late in generation,
         but tracker stuff is not needed in patch files
         """
+        slot = self.wild_encounter[14, 0, 0]
         part = self.part_slot_data()
         if "master_ball_seller_cost" not in part:
             part |= {
@@ -444,6 +445,7 @@ class PokemonBWWorld(World):
                 "other_locations_species": self.other_locations_species,
                 "disallowed_all_seen": self.disallowed_all_seen,
                 "starting_season": self.starting_season,
+                "relic_castle_roadblock": (slot.species_id[0], slot.max_level),
             }
         return part
 

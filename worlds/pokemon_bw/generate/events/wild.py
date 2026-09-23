@@ -17,13 +17,13 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
     # To remove duplicates
     available_in_region: dict[str, set[str]] = {}
     is_changeable_seasons = rules.changeable_seasons(world)
-    is_dynamic = world.options.version.current_key == "dynamic"  # .current_key == ... because dynamic might not be added yet
+    is_dynamic = world.options.version == "dynamic"
     method_offset = lambda x: (x % 12) if x < 36 else ((x - 12) % 5)
 
     for data in world.wild_encounter.values():
         if not is_changeable_seasons and data.encounter_region[1]:
             continue
-        if is_dynamic and data.different_vanilla:
+        if is_dynamic and data.different_vanilla and not data.write & 2:
             continue
         if data.region not in available_in_region:
             available_in_region[data.region] = set()

@@ -4,13 +4,8 @@ apworld
 
 rom
 - route 3 grunts not hidden at beginning
-- season lady phone number not registering
-- dancing men textboxes closing immediately
 - All the Plasma Grunts (Liberty Garden, Dragon Spiral Tower, Desert Palace etc) are in logic for "Seen" but are permanently missable.
 - Leaving Royal Unova locks you out of it
-- P2 Scientist gives Shock and Burn Drives instead of AP items after beating him with Genesect (CONFIRMED)
-- seasons didn´t change when entering a building but restarting change the season. save file: https://discord.com/channels/731205301247803413/1550513249693474847/1550949092203569272
-- You need to re-enter the room after talking to the Silver Wing NPC for the map change to work.
 
 both
 - https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0
