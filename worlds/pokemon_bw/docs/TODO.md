@@ -3,9 +3,6 @@
 apworld
 
 rom
-- route 3 grunts not hidden at beginning
-- All the Plasma Grunts (Liberty Garden, Dragon Spiral Tower, Desert Palace etc) are in logic for "Seen" but are permanently missable.
-- Leaving Royal Unova locks you out of it
 
 both
 - https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0

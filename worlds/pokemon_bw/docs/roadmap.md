@@ -219,8 +219,11 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - MetLocationsanity
   - Visitsanity
   - TMHMCountsanity
-  - Boss fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame)) (?)
-  - Story fight Plando (Cheren, Bianca, N, ...) (?)
+  - TVsanity
+  - Boss Fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame))
+    - Sounds kinda unnecessary, but is intended as a concept for the core PlandoBosses option
+  - Story fight Plando (Cheren, Bianca, N, ...)
+    - Maybe make it a part of Boss Fight Plando
   - DeathLink
   - Wonder trade
   - Multiworld gift Pokémon

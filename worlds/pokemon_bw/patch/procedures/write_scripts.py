@@ -94,7 +94,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         Line("command", ["WorkSetConst", 0x40F9, slotdata["relic_castle_roadblock"][1]]),
     )
 
-    init_scripts.lines[r0_addr+1:r0_addr+2] = to_insert
+    init_scripts.lines[r0_addr+1:r0_addr+1] = to_insert
     narc.files[866] = bytes(assemble(init_scripts))
     files_dump["a057/866"] = narc.files[866]
 
