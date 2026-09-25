@@ -4,13 +4,71 @@ from typing import Any, Iterable, Self, Dict
 
 from Options import Range, Toggle, OptionError, Visibility
 from ..data.common_options import ExtendedOptionCounter
+from ..data.pokemon.pokedex import by_name as dex_by_name
+from ..data.pokemon.species import unique_forms
 from worlds import world_sources
 
 DEXSANITYSANITY_ENABLED = any(Path(source.path).stem == "pokemon_bw_dexsanitysanity" for source in world_sources)
 DEXSANITYSANITY_VISIBILITY = Visibility.spoiler if not DEXSANITYSANITY_ENABLED else Visibility.all
 
 
-class Dexsanity(Range):
+class DexsanityResolver:
+
+    def resolve_plando_dex(self, value: int | str | list | dict) -> tuple[int, ...]:
+        while not isinstance(value, int | range):
+            if isinstance(value, str):
+                if "," in value:
+                    value = value.split(",")
+                elif "-" in value and all(a.strip().isnumeric() for a in value.split("-")):
+                    res = tuple(int(r) for r in value.split("-"))
+                    for r in res:
+                        if not 1 <= r <= 649:
+                            raise OptionError(f"Option {self.__class__.__name__} contains dex number {r}, "
+                                              f"which is not in range 1-649")
+                    value = range(res[0], res[1] + 1)
+                elif value.strip().isnumeric():
+                    value = int(value)
+                elif res := dex_by_name.get(value, False):
+                    value = res
+                else:
+                    raise OptionError(f"Option {self.__class__.__name__} contains invalid string value {value}")
+            elif isinstance(value, list):
+                value = random.choice(value)
+            elif isinstance(value, dict):
+                for v in value.values():
+                    if not isinstance(v, int):
+                        raise OptionError(f"Option {self.__class__.__name__} contains a list with a non-integer "
+                                          f"weight {v} ({type(v)})")
+                value = random.choices(tuple(value), tuple(value.values()))
+            else:
+                raise OptionError(f"Option {self.__class__.__name__} as a list expects integers, ranges, "
+                                  f"nested lists, and nested weighted lists, but instead found {type(value)}")
+        return tuple(value) if isinstance(value, range) else value
+
+    def resolve_plando_form(self, value: str | list | dict) -> str:
+        while True:
+            if isinstance(value, list):
+                value = random.choice(value)
+            elif isinstance(value, dict):
+                for v in value.values():
+                    if not isinstance(v, int):
+                        raise OptionError(f"Option {self.__class__.__name__} contains a list with a non-integer "
+                                          f"weight {v} ({type(v)})")
+                value = random.choices(tuple(value), tuple(value.values()))
+            elif isinstance(value, str):
+                if "," in value:
+                    value = value.split(",")
+                elif value in unique_forms:
+                    break
+                else:
+                    raise OptionError(f"Option {self.__class__.__name__} contains invalid string value {value}")
+            else:
+                raise OptionError(f"Option {self.__class__.__name__} as a list expects strings, nested lists, "
+                                  f"and nested weighted lists, but instead found {type(value)}")
+        return value
+
+
+class Dexsanity(Range, DexsanityResolver):
     """
     Adds a number of locations that can be checked by catching a certain pokemon species
     and registering it in the pokedex. The actual maximum number of added checks depends
@@ -19,11 +77,11 @@ class Dexsanity(Range):
     If you want to have all 649 possible checks, then you need to randomize wild
     encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of dex numbers and dex number ranges in order to
-    plando what pokemon you want to have locations for:
+    Alternatively, you can put in a list of dex numbers, names, ranges, lists, and
+    weighted lists in order to plando what pokemon you want to have locations for:
     ```
     dexsanity:
-    - [50, 51, 52, 53, 54, 460-469, 500]
+    - [50, 51, Maractus, 460-469, [1, 4, 7, Wurmple], {150: 5, 151: 1, Abra: 1}, 500]
 
     ```
     See the options guides for more information.
@@ -35,37 +93,18 @@ class Dexsanity(Range):
     range_end = 649
 
     def __init__(self, value: Any):
-        if isinstance(value, Iterable):
-            resolved = []
-            for val in value:
-                if isinstance(val, str):
-                    split = val.split("-")
-                    if len(split) != 2 or not split[0].isnumeric() or not split[1].isnumeric():
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    rang = int(split[0]), int(split[1])
-                    if not (1 < rang[0] <= self.range_end) or not (1 < rang[1] <= self.range_end):
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    resolved.extend(range(rang[0], rang[1]+1))
-                elif isinstance(val, int):
-                    if val < 1:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is lower than minimum 1")
-                    elif val > self.range_end:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is higher than maximum {self.range_end}")
-                    resolved.append(val)
-                else:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers and integer "
-                                      f"ranges, found {type(val)}")
-            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
+        if isinstance(value, Iterable):  # Strings should be caught in from_any
+            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_dex(v)))  # Get rid of duplicates and stay deterministic
         else:
             super().__init__(value)
 
     @classmethod
-    def from_any(cls, data: Any) -> Range:
-        if type(data) is int or isinstance(data, Iterable):
+    def from_any(cls, data: Any) -> Self:
+        if isinstance(data, str):
+            return cls.from_text(str(data))
+        if isinstance(data, (Iterable, int)):
             return cls(data)
-        return cls.from_text(str(data))
+        raise OptionError(f"Unsupported type for {cls.__name__}: {type(data)}")
 
 
 class Trainersanity(Range):
@@ -117,7 +156,7 @@ class Dexcountsanity(ExtendedOptionCounter):
     }
 
 
-class Seensanity(Range):
+class Seensanity(Range, DexsanityResolver):
     """
     Adds a number of locations that can be checked by seeing a certain Pokemon species,
     which is marked in the pokedex. The actual maximum number of added checks depends on
@@ -126,13 +165,7 @@ class Seensanity(Range):
     If you want to have all 649 possible checks, then you need to randomize wild
     encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of dex numbers and dex number ranges in order to
-    plando what pokemon you want to have locations for:
-    ```
-    seensanity:
-    - [50, 51, 52, 53, 54, 460-469, 500]
-
-    ```
+    Alternatively, you can plando your Seensanity checks the same way as in Dexsanity.
     See the options guides for more information.
     """
     display_name = "Seensanity"
@@ -142,37 +175,18 @@ class Seensanity(Range):
     range_end = 649
 
     def __init__(self, value: Any):
-        if isinstance(value, Iterable):
-            resolved = []
-            for val in value:
-                if isinstance(val, str):
-                    split = val.split("-")
-                    if len(split) != 2 or not split[0].isnumeric() or not split[1].isnumeric():
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    rang = int(split[0]), int(split[1])
-                    if not (1 < rang[0] <= self.range_end) or not (1 < rang[1] <= self.range_end):
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    resolved.extend(range(rang[0], rang[1]+1))
-                elif isinstance(val, int):
-                    if val < 1:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is lower than minimum 1")
-                    elif val > self.range_end:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is higher than maximum {self.range_end}")
-                    resolved.append(val)
-                else:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers and integer "
-                                      f"ranges, found {type(val)}")
-            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
+        if isinstance(value, Iterable):  # Strings should be caught in from_any
+            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_dex(v)))  # Get rid of duplicates and stay deterministic
         else:
             super().__init__(value)
 
     @classmethod
-    def from_any(cls, data: Any) -> Range:
-        if type(data) is int or isinstance(data, Iterable):
+    def from_any(cls, data: Any) -> Self:
+        if isinstance(data, str):
+            return cls.from_text(str(data))
+        if isinstance(data, (Iterable, int)):
             return cls(data)
-        return cls.from_text(str(data))
+        raise OptionError(f"Unsupported type for {cls.__name__}: {type(data)}")
 
 
 class Seencountsanity(ExtendedOptionCounter):
@@ -207,20 +221,20 @@ class Seencountsanity(ExtendedOptionCounter):
         return super().from_any(data if DEXSANITYSANITY_ENABLED else cls.default)
 
 
-class Formsanity(Range):
+class Formsanity(Range, DexsanityResolver):
     """
     Adds a number of locations that can be checked by seeing a specific form of certain
     pokemon species. The actual maximum number of added checks depends on what pokemon
-    species are actually obtainable in the wild.
+    species are actually obtainable in the wild and in trainer battles.
 
     If you want to have all 72 possible checks, then you need to randomize wild
     encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of form names in order to plando what forms you
-    want to have locations for:
+    Alternatively, you can put in a list of form names and (weighted or unweighted)
+    form name lists in order to plando what forms you want to have locations for:
     ```
     formsanity:
-    - ["Unown (M)", "Darmanitan (Zen)"]
+    - ["Unown (M)", ["Unown (B)", "Darmanitan (Zen)"], {"Meloetta (Aria)": 5, "Unown (W)": 1}]
 
     ```
     See the options guides for more information.
@@ -232,19 +246,8 @@ class Formsanity(Range):
     range_end = 72
 
     def __init__(self, value: Any):
-        from ..data.pokemon.species import unique_forms
-
         if isinstance(value, Iterable):
-            resolved = []
-            for val in value:
-                if isinstance(val, str):
-                    if val not in unique_forms:
-                        raise OptionError(f"Option {self.__class__.__name__} contains form name {val}, "
-                                          f"which is not an existing form")
-                    resolved.append(val)
-                else:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects strings, found {type(val)}")
-            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
+            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_form(v)))  # Get rid of duplicates and stay deterministic
         else:
             super().__init__(value)
 
@@ -287,7 +290,7 @@ class Formcountsanity(ExtendedOptionCounter):
         return super().from_any(data if DEXSANITYSANITY_ENABLED else cls.default)
 
 
-class Shinysanity(Toggle):
+class Shinysanity(Toggle, DexsanityResolver):
     """
     Adds a location for a randomly picked pokemon species to be seen in its shiny form.
 
@@ -299,13 +302,7 @@ class Shinysanity(Toggle):
     If you want to have all 649 possible checks, then you need to randomize wild
     encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of dex numbers in order to plando what pokemon
-    you want to have locations for:
-    ```
-    shinysanity:
-    - [50, 51, 52, 53, 54, 460, 461, 500]
-
-    ```
+    Alternatively, you can plando your Shinysanity checks the same way as in Dexsanity.
     See the options guides for more information.
     """
     display_name = "Shinysanity"
@@ -313,29 +310,8 @@ class Shinysanity(Toggle):
     default = 0
 
     def __init__(self, value: Any):
-        if isinstance(value, Iterable):
-            resolved = []
-            for val in value:
-                if isinstance(val, str):
-                    split = val.split("-")
-                    if len(split) != 2 or not split[0].isnumeric() or not split[1].isnumeric():
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    rang = int(split[0]), int(split[1])
-                    if not (1 < rang[0] <= 649) or not (1 < rang[1] <= 649):
-                        raise OptionError(f"Option {self.__class__.__name__} contains invalid range {val}")
-                    resolved.extend(range(rang[0], rang[1]+1))
-                elif isinstance(val, int):
-                    if val < 1:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is lower than minimum 1")
-                    elif val > 649:
-                        raise OptionError(f"Option {self.__class__.__name__} contains dex number {val}, "
-                                          f"which is higher than maximum 649")
-                    resolved.append(val)
-                else:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects integers and integer "
-                                      f"ranges, found {type(val)}")
-            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
+        if isinstance(value, Iterable):  # Strings should be caught in from_any
+            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_dex(v)))  # Get rid of duplicates and stay deterministic
         elif isinstance(value, int):
             if not 0 <= value <= 649:
                 raise OptionError(f"Option {self.__class__.__name__}'s value {value} is not in range 0-649")
@@ -344,7 +320,7 @@ class Shinysanity(Toggle):
             super().__init__(value)
 
     @classmethod
-    def from_text(cls, text: str) -> Toggle:
+    def from_text(cls, text: str) -> Self:
         if text.startswith("random-range-"):
             parts = text.split("-")
             if len(parts) != 4 or not parts[2].isnumeric() or not parts[3].isnumeric():
@@ -356,24 +332,25 @@ class Shinysanity(Toggle):
         return super().from_text(text)
 
     @classmethod
-    def from_any(cls, data: Any) -> Self:
-        if type(data) is str:
-            return cls.from_text(data)
-        else:
-            return cls(data)
-
-    @classmethod
     def get_option_name(cls, value):
         return ["No", "Yes"][int(value)] if value in (0, 1) else str(value)
+
+    @classmethod
+    def from_any(cls, data: Any) -> Self:
+        if isinstance(data, str):
+            return cls.from_text(str(data))
+        if isinstance(data, (Iterable, int)):
+            return cls(data)
+        raise OptionError(f"Unsupported type for {cls.__name__}: {type(data)}")
 
 
 class Shinycountsanity(Toggle, ExtendedOptionCounter):
     """
     A combination of **Shinysanity** and **Dexcountsanity**.
-    This can, like with **Shinysanity**, be edited in a text editor to work like the
-    regular **Dexcountsanity** option. Otherwise, it will be shown as a toggle.
-    However, using this like **Dexcountsanity** requires you to put the key-value pairs
-    as a list entry, i.e.:
+    This can, like with **Shinysanity**, be edited in a text editor to
+    work like the regular **Dexcountsanity** option. Otherwise, it will
+    be shown as a toggle. However, using this like **Dexcountsanity**
+    requires you to put the key-value pairs as a list entry, i.e.:
     ```
     shinycountsanity:
     - Maximum: 10
@@ -382,7 +359,8 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
 
     ```
 
-    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
     """
     display_name = "Shinycountsanity"
     value: int | dict[str, int]
@@ -444,7 +422,7 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
         return ["No", "Yes"][int(value)] if value in (0, 1) else str(value)
 
 
-class Shinyformsanity(Toggle):
+class Shinyformsanity(Toggle, DexsanityResolver):
     """
     A combination for **Shinysanity** and **Formsanity**.
     It works pretty much like **Shinysanity**, including being shown as a simple toggle
@@ -459,19 +437,8 @@ class Shinyformsanity(Toggle):
     default = 0
 
     def __init__(self, value: Any):
-        from ..data.pokemon.species import unique_forms
-
         if isinstance(value, Iterable):
-            resolved = []
-            for val in value:
-                if isinstance(val, str):
-                    if val not in unique_forms:
-                        raise OptionError(f"Option {self.__class__.__name__} contains form name {val}, "
-                                          f"which is not an existing form")
-                    resolved.append(val)
-                else:
-                    raise OptionError(f"Option {self.__class__.__name__} as a list expects strings, found {type(val)}")
-            self.value = sorted(set(resolved))  # Get rid of duplicates and stay deterministic
+            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_form(v)))  # Get rid of duplicates and stay deterministic
         else:
             super().__init__(value)
 
@@ -493,7 +460,9 @@ class Shinyformsanity(Toggle):
             return cls(cls.default)
         if type(data) is str:
             return cls.from_text(data)
-        return cls(data)
+        if isinstance(data, (Iterable, int)):
+            return cls(data)
+        raise OptionError(f"Unsupported type for {cls.__name__}: {type(data)}")
 
     @classmethod
     def get_option_name(cls, value):

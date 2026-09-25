@@ -17,7 +17,6 @@ both
 - Running shoes as an item, making mom cutscene on route 2 a check
 - fill more funny dialog
 - send plugin options over slot data as string (breaks backwards compatibility)
-- Make ROM path settings check for the header and reject incompatible ROMs, such that the &deletepath command isn't needed anymore
 - reload_key_items sometimes has index out of range error
 - items receiving in client has rare cases of recursion errors
 - specialized unittests for rando modifiers
@@ -26,8 +25,7 @@ both
 - import plugin packages and classes while the main apworld itself is getting imported
 - rom script changes, some to comply with regions rework:
   - inject item receiver into code that executes AP menu script
-  - Go Home button
-  - Max & Reset options for shiny rate modifier & Exp multiplier
+  - Go Home button (only after all rom changes listed below are implemented)
   - ############################
   - various events force-teleporting you should be removed
   - accumula guards send you both ways

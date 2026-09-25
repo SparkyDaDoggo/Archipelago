@@ -254,24 +254,28 @@ Pokemon Black and White:
 ## How does this work?
 
 Instead of writing a single number to determine the amount of random Dexsanity checks you 
-want to have in your world, you can provide a fixed list of dex numbers (or forms for 
-`Formsanity` variants) you want to have checks for.
+want to have in your world, you can provide a fixed list of dex numbers (or form names 
+for `Formsanity` variants) you want to have checks for. Randomizing wild encounters will 
+also ensure, that your plando'd Dexsanity checks are actually possible.
 However, not randomizing wild encounters and then adding dex numbers that are not 
 catchable in vanilla will only add a location if you plando that species somewhere in the 
 game.
 
 ## How do I use it?
 
-Instead of writing a single number, you can write a list of multiple dex numbers or dex 
-number ranges **as an entry**, i.e. as a list inside a list. 
+Instead of writing a single number, you can write a list of multiple dex numbers, pokémon 
+names (without the form suffix), dex number ranges, and (weighted or unweighted) lists 
+**as an entry**, i.e. as a list inside a list. Using even further nested lists inside 
+that entry will pick a random element out of them.
 Writing a simple list (e.g. `dexsanity: [1, 4, 7]`) will be interpreted by AP 
 as a list to pick a random entry from, i.e. you will end up with one of the numbers as 
 the amount of random checks.
 However, this makes it possible to choose between multiple lists of dex numbers.
 
-In the case of all `Formsanity` variants, you have to write a list of form names instead, 
-which differ slightly from the forms names used in other plando options and the spoiler 
-log. See [here](plando%20lists.md#Formsanity-names) for a list of all allowed forms.
+In the case of all `Formsanity` variants, you have to write a list of form names (and 
+weighted/unweighted lists) instead, which differ slightly from the forms names used in 
+other plando options and the spoiler log. 
+See [here](plando%20lists.md#Formsanity-names) for a list of all allowed forms.
 
 ## An example on how using this option could look like
 
@@ -279,14 +283,25 @@ log. See [here](plando%20lists.md#Formsanity-names) for a list of all allowed fo
 Pokemon Black and White:
   ...
   dexsanity:
-  - [50, 51, 52, 53, 54]
-  - [100, 200, 300, 400]
-  - 5  # A single number (which is then the amount of random checks again) can also be added as a possible value
-  - [494-649]  # (All Unova pokémon btw.)
+    # Out of all lines below, a random one is chosen
+  
+    # A simple lists of dex numbers
+  - [50, 51, 52, 53, 59]
+    # A simple lists of names
+  - [Omanyte, Omastar, Tirtouga, Carracosta]
+    # A single number (which is then the amount of random checks again)
+  - 5
+    # A list of just a single range (All Unova pokémon btw.)
+  - [494-649]
+    # A list containing one of every way to define your checks
+  - [151, Maractus, 210-220, [411, Genesect], {6: 5, Charmander: 2, "1-3": 1}]
+    # A list of lists of lists of names, you can go wild with nesting things
+  - [[[Goldeen, Finneon], [Magikarp, Luvdisc]], [[Alomomola, Basculin], [Remoraid, Barboach], Feebas]]
   ...
   formsanity:
   - ["Unown (M)", "Darmanitan (Zen)"]
-  - ["Castform (Normal)", "Castform (Sunny)", "Castform (Rainy)", "Castform (Snowy)"]
+  - ["Castform (Normal)", ["Castform (Sunny)", "Castform (Rainy)", "Castform (Snowy)"]]
+  - [{"Burmy (Plant)": 5, "Burmy (Trash)": 1, "Burmy (Sandy)": 1}, {"Wormadam (Trash)": 5, "Wormadam (Sandy)": 2}]
   - 5
 ```
 
