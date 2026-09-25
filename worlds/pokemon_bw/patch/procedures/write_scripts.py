@@ -51,8 +51,11 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
 
     # Master ball sellers
     seller_modifiers = [mod.casefold() for mod in opt["master_ball_seller"]]
+    cost = slotdata["master_ball_seller_cost"]
+    max_amount = 10 if not cost else (65535 // cost)  # Only implemented 10 in scripts for now
     to_insert += (
-        Line("command", ["WorkSetConst", 0x40F2, slotdata["master_ball_seller_cost"]]),
+        Line("command", ["WorkSetConst", 0x40F2, cost]),
+        Line("command", ["WorkSetConst", 0x40FA, max_amount]),
         Line("command", ["FlagSet" if "ns castle" in seller_modifiers else "FlagReset", 0x1CF]),
         Line("command", ["FlagSet" if "pc" in seller_modifiers else "FlagReset", 0x1D1]),
         Line("command", ["FlagSet" if "cherens mom" in seller_modifiers else "FlagReset", 0x1D2]),

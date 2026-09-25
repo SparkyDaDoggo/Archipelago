@@ -145,6 +145,12 @@ class VisitLocationData(NamedTuple):
     inclusion_rule: InclusionRule | None
 
 
+class TVLineData(NamedTuple):
+    lines: int | tuple[int, ...]
+    region: str
+    rule: ExtendedRule | ExtRulesTuple | None = None
+
+
 class EncounterData(NamedTuple):
     species_black: tuple[int, int]
     species_white: tuple[int, int]
@@ -274,7 +280,7 @@ class EventData(NamedTuple):
 
 
 class SpeciesData(NamedTuple):
-    dex_name: str
+    dex_name: str | None
     species_name: str | None
     dex_number: int
     form: int

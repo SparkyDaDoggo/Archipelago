@@ -88,8 +88,8 @@ class SpeciesEntry:
         if is_copy and data.form:
             data = data.all_forms[0]
 
-        self.dex_name = data.dex_name
-        self.species_name = (data.species_name or data.dex_name) \
+        self.dex_name = data.dex_name or name
+        self.species_name = (data.species_name or data.dex_name or name) \
             if not is_copy else (data.species_name + f" (internal form #{is_copy})")
         self.dex_number = data.dex_number
         self.form = is_copy or data.form

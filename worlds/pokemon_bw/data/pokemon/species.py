@@ -3,7 +3,7 @@ from typing import TypeVar
 
 from .. import SpeciesData as SD
 
-by_name: dict[str, SD] = {
+by_name: dict[str, SD] = {  # TODO reduce dex names to None if the same as key
     "Bulbasaur": SD("Bulbasaur", None, 1, 0, ("Grass", "Poison"), (45, 49, 49, 65, 65, 45), 45, 31, 3, 1, ("Overgrow", "", "Chlorophyll"), [("Level up", 16, "Ivysaur")]),
     "Ivysaur": SD("Ivysaur", None, 2, 0, ("Grass", "Poison"), (60, 62, 63, 80, 80, 60), 45, 31, 3, 2, ("Overgrow", "", "Chlorophyll"), [("Level up", 32, "Venusaur")]),
     "Venusaur": SD("Venusaur", None, 3, 0, ("Grass", "Poison"), (80, 82, 83, 100, 100, 80), 45, 31, 3, 3, ("Overgrow", "", "Chlorophyll"), []),
@@ -800,7 +800,6 @@ unique_forms: tuple[str, ...] = (
 _found_base = [False] * 650
 by_id: dict[tuple[int, int], str] = {}
 forms_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}
-forms_seen_by_dex: dict[int, list[str]] = {i: [] for i in range(1, 650)}
 for name, data in by_name.items():
     if data.form and not _found_base[data.dex_number]:
         raise Exception(f"Species table has base form after non-base form: {data.dex_number}")
@@ -808,8 +807,7 @@ for name, data in by_name.items():
         _found_base[data.dex_number] = True
     by_id[data.dex_number, data.form] = name
     forms_by_dex[data.dex_number].append(name)
-    forms_seen_by_dex[data.dex_number].extend((name, "[Seen] "+name))
-del _found_base
+del _found_base, name, data
 
 T = TypeVar("T")
 
