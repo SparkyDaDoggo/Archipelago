@@ -10,7 +10,7 @@ from .client.locations import check_flag_locations, check_dex_locations, check_s
 from .client.items import receive_items
 from .client.setup import early_setup, late_setup
 from .client.tracker import (set_map, set_dex_caught_seen, set_goal_bitmap, set_statics_bitmap, set_trades_bitmap,
-                             set_wild_ids, set_coop_id)
+                             set_wild_ids, set_coop_id, set_game_version)
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -86,6 +86,7 @@ class PokemonBWClient(BizHawkClient):
         self.save_data_address = 0
         self.current_map = -1
         self.game_version = -1  # 0 for black, 1 for white
+        self.tracker_game_version = -1  # 0 for black, 1 for white
         self.goal_checking_method: Callable[["PokemonBWClient", "BizHawkClientContext"],
                                             Coroutine[Any, Any, bool]] | None = None
         self.logger = logging.getLogger("Client")
@@ -207,6 +208,7 @@ class PokemonBWClient(BizHawkClient):
             if len(locations_to_check) != 0:
                 await ctx.send_msgs([{"cmd": "LocationChecks", "locations": list(locations_to_check)}])
 
+            await set_game_version(self, ctx)
             await set_coop_id(self, ctx)
             await set_map(self, ctx)
             await set_dex_caught_seen(self, ctx)

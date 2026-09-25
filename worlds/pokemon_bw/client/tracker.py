@@ -8,6 +8,24 @@ if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
 
 
+async def set_game_version(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
+
+    if client.game_version != client.tracker_game_version:
+        client.tracker_game_version = client.game_version
+        await ctx.send_msgs([{
+            "cmd": "Set",
+            "key": f"pokemon_bw_game_version_{ctx.team}_{ctx.slot}",
+            "default": 0,
+            "want_reply": False,
+            "operations": [
+                {
+                    "operation": "replace",
+                    "value": client.game_version,
+                }
+            ],
+        }])
+
+
 async def set_coop_id(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
 
     coop_id = await client.read_var(ctx, 0xF1)
