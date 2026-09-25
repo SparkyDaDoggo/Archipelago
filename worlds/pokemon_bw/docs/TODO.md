@@ -1,6 +1,7 @@
 # Important stuff
 
 apworld
+- Actual played version into datastorage, so that poptracker works with dynamic version
 
 rom
 

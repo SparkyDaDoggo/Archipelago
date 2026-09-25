@@ -43,7 +43,7 @@ class DexsanityResolver:
             else:
                 raise OptionError(f"Option {self.__class__.__name__} as a list expects integers, ranges, "
                                   f"nested lists, and nested weighted lists, but instead found {type(value)}")
-        return tuple(value) if isinstance(value, range) else value
+        return tuple(value) if isinstance(value, range) else (value, )
 
     def resolve_plando_form(self, value: str | list | dict) -> str:
         while True:
@@ -247,7 +247,7 @@ class Formsanity(Range, DexsanityResolver):
 
     def __init__(self, value: Any):
         if isinstance(value, Iterable):
-            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_form(v)))  # Get rid of duplicates and stay deterministic
+            self.value = sorted(set(self.resolve_plando_form(v) for v in value))  # Get rid of duplicates and stay deterministic
         else:
             super().__init__(value)
 
@@ -438,7 +438,7 @@ class Shinyformsanity(Toggle, DexsanityResolver):
 
     def __init__(self, value: Any):
         if isinstance(value, Iterable):
-            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_form(v)))  # Get rid of duplicates and stay deterministic
+            self.value = sorted(set(self.resolve_plando_form(v) for v in value))  # Get rid of duplicates and stay deterministic
         else:
             super().__init__(value)
 

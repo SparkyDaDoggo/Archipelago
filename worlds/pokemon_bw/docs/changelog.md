@@ -241,6 +241,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed logic of move evolutions
 - Wrote down move IDs
 - Enhanced spoiler output by reworking wild, adding trainers + newly randomizable stuff, and organizing evolutions
+  - Also added setting to disable most of the data being written, in order to reduce the default spoiler log size
 - Fixed legendary hunt flags being reset after defeating Ghetsis/Alder and resetting statics
 - Fixed `Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)` not showing up on the UT map tracker
 - Added option groups

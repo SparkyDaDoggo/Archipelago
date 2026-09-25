@@ -19,15 +19,16 @@ def generate_static_encounters(world: "PokemonBWWorld",
     encounters: dict[str, StaticEncounterEntry] = {}
     for table in (static, legendary, fossils, gift):
         for name, data in table.items():
-            encounters[name] = StaticEncounterEntry(
-                versioned_species(data), data.encounter_region, data.inclusion_rule, data.access_rule,
-                data.species_black != data.species_white
-            )
-            if (
-                (data.inclusion_rule is None or data.inclusion_rule(world))
-                and world.options.modify_logic.is_consider_static
-            ):
-                species_checklist.check(world.species_entries_by_id[versioned_species(data)])
+            diff_enc = data.species_black != data.species_white
+            encounters[name] = StaticEncounterEntry(versioned_species(data), data.encounter_region,
+                                                    data.inclusion_rule, data.access_rule, diff_enc)
+            if not world.options.modify_logic.is_consider_static:
+                continue
+            if data.inclusion_rule and not data.inclusion_rule(world):
+                continue
+            if is_dynamic and diff_enc:
+                continue
+            species_checklist.check(world.species_entries_by_id[versioned_species(data)])
 
     return encounters
 
@@ -51,15 +52,16 @@ def generate_trade_encounters(world: "PokemonBWWorld",
 
     encounters: dict[str, TradeEncounterEntry] = {}
     for name, data in trade.items():
-        encounters[name] = TradeEncounterEntry(
-            versioned_species(data),
-            versioned_wanted(data),
-            data.encounter_region,
-            data.species_black != data.species_white
-        )
-        if (world.options.modify_logic.is_consider_trades and (world.options.modify_logic.is_consider_static
-                                                               or world.options.randomize_wild_pokemon.is_randomize)):
-            species_checklist.check(world.species_entries_by_id[versioned_species(data)])
-            species_checklist.add(world.species_entries_by_id[(versioned_wanted(data), 0)])
+        diff_enc = data.species_black != data.species_white
+        encounters[name] = TradeEncounterEntry(versioned_species(data), versioned_wanted(data),
+                                               data.encounter_region, diff_enc)
+        if not world.options.modify_logic.is_consider_trades:
+            continue
+        if not world.options.modify_logic.is_consider_static and not world.options.randomize_wild_pokemon.is_randomize:
+            continue
+        if is_dynamic and diff_enc:
+            continue
+        species_checklist.check(world.species_entries_by_id[versioned_species(data)])
+        species_checklist.add(world.species_entries_by_id[(versioned_wanted(data), 0)])
 
     return encounters

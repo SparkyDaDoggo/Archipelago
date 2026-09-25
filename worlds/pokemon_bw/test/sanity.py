@@ -275,18 +275,18 @@ class TestFormsanityFullEnsureAll(PokemonBWTestBase):
     }
 class TestFormsanityPlandoVanilla(PokemonBWTestBase):
     options = {
-        "shinyformsanity": random.choices(unique_forms, k=10),
+        "formsanity": random.choices(unique_forms, k=10),
         "all_pokemon_seen": True,
     }
 class TestFormsanityPlandoRando(PokemonBWTestBase):
     options = {
-        "shinyformsanity": random.choices(unique_forms, k=10),
+        "formsanity": random.choices(unique_forms, k=10),
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Randomize"],
     }
 class TestFormsanityPlandoEnsureAll(PokemonBWTestBase):
     options = {
-        "shinyformsanity": random.choices(unique_forms, k=10),
+        "formsanity": random.choices(unique_forms, k=10),
         "all_pokemon_seen": True,
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }
