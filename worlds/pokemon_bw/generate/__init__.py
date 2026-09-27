@@ -173,6 +173,10 @@ class StaticEncounterEntry:
     inclusion_rule: InclusionRule | None
     access_rule: ExtendedRule | None
     different_vanilla: bool
+    write: int
+    """b0 is species
+    b1 is level"""
+    level: int = 0
 
 
 @dataclass

@@ -132,12 +132,14 @@ class RandomizeStarterPokemon(ToggleSet):
     - **Any base** - Only use unevolved/baby pokemon.
     - **Base with 2 evolutions** - Only use unevolved/baby pokemon
         that can evolve twice (or more, if evolutions are randomized).
-        Overrides  **Any base**.
+        Supersedes **Any base**.
     - **Only official starters** - Only use pokemon that have been
         a starter in any mainline game. Overrides **Any base** and
         **Base with 2 evolutions**.
+    - **Similar base stats** - Tries to keep the randomized pokemon
+        at a similar base stats total as the replaced one.
     - **Type variety** - Every starter will have types that are
-        different  from the other two.
+        different from the other two.
     - **Vanilla types** - Every starter will have one of the vanilla
         types, i.e. Grass, Fire, and Water.
     """

@@ -11,9 +11,16 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
     from ...data.pokemon.species import form_alias
     # Species needed for trade are added in generate_trade_encounters()
 
-    if not world.options.randomize_wild_pokemon.is_randomize:
+    opt = world.options
+
+    if not opt.randomize_wild_pokemon.is_randomize:
         return SpeciesChecklist([], world)
-    elif world.options.randomize_wild_pokemon.is_ensure_all:
+    elif opt.randomize_wild_pokemon.is_ensure_all:
+        if (
+            opt.formsanity > 50 or opt.shinyformsanity > 50 or
+            opt.formcountsanity["Maximum"] > 50 or opt.shinyformcountsanity["Maximum"] > 50
+        ):
+            return SpeciesChecklist([data for data in world.species_entries.values()], world)
         return SpeciesChecklist([data for data in world.species_entries.values() if data.form < 6], world)
     else:  # Just "Randomize"
         always_required = [world.species_entries[spec_name] for spec_name in (

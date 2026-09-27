@@ -20,6 +20,10 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     slotdata = orjson.loads(bw_patch_instance.files.get("slot_data.json", b'{}'))
     opt = slotdata["options"]
 
+    # ------------------------------------------------------------
+    # --- Init script
+    # ------------------------------------------------------------
+
     init_scripts = disassemble(narc.files[866])
     to_insert = []
     # Sequence0 address
@@ -100,5 +104,33 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     init_scripts.lines[r0_addr+1:r0_addr+1] = to_insert
     narc.files[866] = bytes(assemble(init_scripts))
     files_dump["a057/866"] = narc.files[866]
+
+    # ------------------------------------------------------------
+    # --- Script system
+    # ------------------------------------------------------------
+
+    system_scripts = disassemble(narc.files[873])
+    starters_addr = system_scripts.find_label(system_scripts.script_links[1]) + 1
+
+    starters_data = bw_patch_instance.files.get("statics/starters", b'\0' * 12)
+    while (line := system_scripts.lines[starters_addr].parts)[0] != "VMHalt":
+        starters_addr += 1
+        if line[0] != "WorkSetConst":
+            continue
+        if line[1] == 0x8012 and starters_data[0:2]:
+            line[2] = int.from_bytes(starters_data[0:2], "little")
+        elif line[1] == 0x8013 and starters_data[2]:
+            line[2] = starters_data[2]
+        elif line[1] == 0x8014 and starters_data[3:5]:
+            line[2] = int.from_bytes(starters_data[3:5], "little")
+        elif line[1] == 0x8015 and starters_data[5]:
+            line[2] = starters_data[5]
+        elif line[1] == 0x8016 and starters_data[6:8]:
+            line[2] = int.from_bytes(starters_data[6:8], "little")
+        elif line[1] == 0x8017 and starters_data[8]:
+            line[2] = starters_data[8]
+
+    narc.files[873] = bytes(assemble(system_scripts))
+    files_dump["a057/873"] = narc.files[873]
 
     rom.setFileByName("a/0/5/7", narc.save())

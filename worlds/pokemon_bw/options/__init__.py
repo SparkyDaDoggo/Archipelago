@@ -945,7 +945,7 @@ class PokemonBWOptions(PerGameCommonOptions):
     # Pokemon encounters
     randomize_wild_pokemon: RandomizeWildPokemon
     randomize_trainer_pokemon: RandomizeTrainerPokemon
-    # randomize_starter_pokemon: RandomizeStarterPokemon
+    randomize_starter_pokemon: RandomizeStarterPokemon
     # randomize_static_pokemon: RandomizeStaticPokemon
     # randomize_gift_pokemon: RandomizeGiftPokemon
     # randomize_trade_pokemon: RandomizeTradePokemon

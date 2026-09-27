@@ -110,7 +110,7 @@ class PatchMethods:
     def write_contents(patch: PokemonBWPatch, opened_zipfile: ZipFile) -> None:
         from .patch.procedures import (write_text, write_wild_pokemon, write_trainer_pokemon,
                                        modify_rates, write_evolutions, write_stats, write_levelup_movesets,
-                                       write_move_data, write_type_chart, write_egg_species)
+                                       write_move_data, write_type_chart, write_egg_species, write_static_pokemon)
         from .plugins.generate import plugins_write_patch
 
         procedures: list[str] = ["base_patch", "write_text", "write_scripts"]
@@ -125,6 +125,9 @@ class PatchMethods:
         if patch.world.options.randomize_trainer_pokemon.is_randomize:
             procedures.append("write_trainer_pokemon")
             write_trainer_pokemon.write_species(patch, opened_zipfile)
+        if any(data.write for data in patch.world.static_encounter.values()):
+            procedures.append("write_static_pokemon")
+            write_static_pokemon.write_patch(patch, opened_zipfile)
         if patch.world.options.modify_encounter_rates != "vanilla":
             procedures.append("modify_rates")
             modify_rates.write_patch(patch, opened_zipfile)
@@ -177,9 +180,10 @@ class PatchMethods:
                 return
 
         from .ndspy.rom import NintendoDSRom
-        from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon,
-                                       write_text, modify_rates, write_evolutions, write_stats, write_levelup_movesets,
-                                       tms_patch, write_move_data, write_type_chart, write_egg_species, write_scripts)
+        from .patch.procedures import (base_patch, season_patch, write_wild_pokemon, write_trainer_pokemon, write_text,
+                                       modify_rates, write_evolutions, write_stats, write_levelup_movesets, tms_patch,
+                                       write_move_data, write_type_chart, write_egg_species, write_scripts,
+                                       write_static_pokemon)
         from .plugins.patch import plugins_patch
 
         patch_procedures: dict[str, Callable[[NintendoDSRom, str, PokemonBWPatch,
@@ -189,6 +193,7 @@ class PatchMethods:
             "tms_patch": tms_patch.patch,
             "write_wild_pokemon": write_wild_pokemon.patch,
             "write_trainer_pokemon": write_trainer_pokemon.patch_species,
+            "write_static_pokemon": write_static_pokemon.patch,
             "modify_rates": modify_rates.patch,
             "write_text": write_text.patch,
             "write_evolutions": write_evolutions.patch,

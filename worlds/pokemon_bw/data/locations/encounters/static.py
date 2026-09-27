@@ -9,13 +9,15 @@ legendary: dict[str, StaticEncounterData] = {
     "Giant Chasm Static Encounter": StaticEncounterData((646, 0), (646, 0), "Giant Chasm Inner Cave", None, None),
     "Liberty Garden Static Encounter": StaticEncounterData((494, 0), (494, 0), "Liberty Garden Basement", None, None),
     "Dragonspiral Tower Static Encounter": StaticEncounterData((643, 0), (644, 0), "Dragonspiral Tower 7F", None, has_beaten_ghetsis),
-    "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", vanilla_doors, has_released_roamer),
+    "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", vanilla_doors, has_released_roamer, fixed=True),
 }
 
 gift: dict[str, StaticEncounterData] = {
     "Marvelous Bridge Sold Encounter": StaticEncounterData((129, 0), (129, 0), "Marvelous Bridge", None, None),
     "Route 18 Egg Encounter": StaticEncounterData((636, 0), (636, 0), "Route 18 House", None, None),
-    "Dreamyard Gift Encounter": StaticEncounterData((511, 0), (511, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
+    "Dreamyard Gift Encounter (Middle Starter)": StaticEncounterData((511, 0), (511, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
+    "Dreamyard Gift Encounter (Right Starter)": StaticEncounterData((513, 0), (513, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
+    "Dreamyard Gift Encounter (Left Starter)": StaticEncounterData((515, 0), (515, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
     "Castelia City Gift Encounter": StaticEncounterData((570, 0), (570, 0), "Castelia City Castelia Street East Building 1F", randomized_wild, has_celebi),
 }
 
@@ -54,4 +56,10 @@ static: dict[str, StaticEncounterData] = {
     "Route 10 Item Encounter 3": StaticEncounterData((591, 0), (591, 0), "Route 10", None, None),
     "Route 10 Item Encounter 4": StaticEncounterData((591, 0), (591, 0), "Route 10", None, None),
     "Lostlorn Forest Static Encounter": StaticEncounterData((571, 0), (571, 0), "Lostlorn Forest", randomized_wild, has_legendary_beasts),
+}
+
+starters: dict[str, StaticEncounterData] = {
+    "Left Starter": StaticEncounterData((495, 0), (495, 0), "Player's Bedroom", disabled, None),
+    "Middle Starter": StaticEncounterData((498, 0), (498, 0), "Player's Bedroom", disabled, None),
+    "Right Starter": StaticEncounterData((501, 0), (501, 0), "Player's Bedroom", disabled, None),
 }

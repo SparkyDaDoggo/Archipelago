@@ -14,6 +14,8 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     import orjson
     from ...data.text import funny_dialog
     from ..text import decode, encode
+    from ...data.pokemon.types import by_id as types_by_id
+    from ...data.pokemon.pokedex import by_number as poke_by_number
 
     data: dict[str, str | Any] = orjson.loads(bw_patch_instance.get_file("text.json"))
     plando: list[tuple[str, str]] = data["plando"]
@@ -224,6 +226,21 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     encoded = encode(text_file)
     narc_story.files[436] = encoded
     files_dump["a003/436"] = encoded
+
+    starters_data = bw_patch_instance.files.get("statics/starters", b'\0' * 12)
+    left = (f"[c_bd02_#0]The {types_by_id[starters_data[9]]}-type Pokémon[NextLine][c_bd02_#0]"
+            f"{poke_by_number[int.from_bytes(starters_data[0:2], 'little')]}")
+    middle = (f"[c_bd02_#0]The {types_by_id[starters_data[10]]}-type Pokémon[NextLine][c_bd02_#0]"
+              f"{poke_by_number[int.from_bytes(starters_data[3:5], 'little')]}")
+    right = (f"[c_bd02_#0]The {types_by_id[starters_data[11]]}-type Pokémon[NextLine][c_bd02_#0]"
+             f"{poke_by_number[int.from_bytes(starters_data[6:8], 'little')]}")
+    text_file = decode(narc_story.files[430])
+    insert_line(text_file, 0, 16, right)
+    insert_line(text_file, 0, 17, middle)
+    insert_line(text_file, 0, 18, left)
+    encoded = encode(text_file)
+    narc_story.files[430] = encoded
+    files_dump["a003/430"] = encoded
 
     rom.setFileByName("a/0/0/2", narc_system.save())
     rom.setFileByName("a/0/0/3", narc_story.save())

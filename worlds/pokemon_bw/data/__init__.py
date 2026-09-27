@@ -166,6 +166,7 @@ class StaticEncounterData(NamedTuple):
     encounter_region: str
     inclusion_rule: InclusionRule | None
     access_rule: ExtendedRule | None
+    fixed: bool = False
 
 
 class TradeEncounterData(NamedTuple):
