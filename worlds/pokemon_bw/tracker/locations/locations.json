@@ -175,6 +175,28 @@
         ]
     },
     {
+        "name": "Battle Company",
+        "sections": [
+{"name": "Battle Company - 47F item from clerk #1"},
+{"name": "Battle Company - 47F item from clerk #2"},
+{"name": "Battle Company - 47F item from clerk #3"},
+{"name": "Battle Company - 47F item from clerk #4"},
+{"name": "Battle Company - 47F item from clerk #5"},
+{"name": "Battle Company - 47F item from clerk #6"},
+{"name": "Battle Company - 47F item from scientist"},
+{"name": "Battle Company - 47F item in lower-left corner"},
+{"name": "Battle Company - 55F center item"},
+{"name": "Battle Company - 55F item from President Geoff"}
+        ],
+        "map_locations": [
+            {
+                "map": "casteliacity",
+                "x": 586,
+                "y": 750
+            }
+        ]
+    },
+    {
         "name": "Celestial Tower",
         "sections": [
 {"name": "Celestial Tower - 2F left item"},
@@ -761,7 +783,7 @@
     {
         "name": "Nuvema Town",
         "sections": [
-{"name": "Nuvema Town - Item from Looker"},
+{"name": "Nuvema Town - Item from Looker after beating Ghetsis"},
 {"name": "Nuvema Town - Item #2 from Mom"},
 {"name": "Nuvema Town - Item from Mom after first fight"},
 {"name": "Nuvema Town - TM from Professor Juniper for seeing 115 species"},
@@ -1541,11 +1563,11 @@
         "sections": [
 {"name": "Village Bridge - Hidden item in trash can"},
 {"name": "Village Bridge - Item from baker Chris"},
-{"name": "Village Bridge - Item from fisherman for showing a certain pokémon #1"},
-{"name": "Village Bridge - Item from fisherman for showing a certain pokémon #2"},
-{"name": "Village Bridge - Item from fisherman for showing a certain pokémon #3"},
-{"name": "Village Bridge - Item from fisherman for showing a certain pokémon #4"},
-{"name": "Village Bridge - Item from fisherman for showing a certain pokémon #5"},
+{"name": "Village Bridge - Item from fisherman for showing a certain pokémon caught today #1"},
+{"name": "Village Bridge - Item from fisherman for showing a certain pokémon caught today #2"},
+{"name": "Village Bridge - Item from fisherman for showing a certain pokémon caught today #3"},
+{"name": "Village Bridge - Item from fisherman for showing a certain pokémon caught today #4"},
+{"name": "Village Bridge - Item from fisherman for showing a certain pokémon caught today #5"},
 {"name": "Village Bridge - Item on northern island"},
 {"name": "Village Bridge - Item on southern island"},
 {"name": "Village Bridge - North east hidden item #1"},

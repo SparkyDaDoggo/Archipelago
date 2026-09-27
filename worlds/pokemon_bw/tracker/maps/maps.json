@@ -125,5 +125,11 @@
 {"name": "wellspringcaveb1f", "img": "images/maps/wellspringcaveb1f.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "routes_17_18_p2lab", "img": "images/maps/routes_17_18_p2lab.png", "location_size": 16, "location_border_thickness": 2},
 {"name": "pokemonleague", "location_size": 16, "location_border_thickness": 2, "img": "images/maps/pokemonleague.png"},
-{"name": "pokemonleaguechampionsroom", "location_size": 16, "location_border_thickness": 2, "img": "images/maps/pokemonleaguechampionsroom.png"}
+{"name": "pokemonleaguechampionsroom", "location_size": 16, "location_border_thickness": 2, "img": "images/maps/pokemonleaguechampionsroom.png"},
+{"name": "casteliabattlecompany1f", "img": "images/maps/casteliabattlecompany1f.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "casteliabattlecompany47f", "img": "images/maps/casteliabattlecompany47f.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "casteliabattlecompany55f", "img": "images/maps/casteliabattlecompany55f.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "driftveilmarket", "img": "images/maps/driftveilmarket.png", "location_size": 16, "location_border_thickness": 2},
+{"name": "fennelshouse1f", "location_size": 16, "location_border_thickness": 2, "img": "images/maps/fennelshouse1f.png"},
+{"name": "fennelshouse2f", "location_size": 16, "location_border_thickness": 2, "img": "images/maps/fennelshouse2f.png"}
 ]
