@@ -146,6 +146,12 @@ mapping_single: dict[int, int] = {
     238: 124,        # => "p2 lab" these all are merged to one map
     146: 125,        # => "pokemonleague"
     144: 126,        # => "pokemonleaguechampionsroom"
+    44: 127,         # => "casteliabattlecompany1f"
+    45: 128,         # => "casteliabattlecompany47f"
+    46: 129,         # => "casteliabattlecompany55f"
+    105: 130,        # => "driftveilmarket"
+    9: 131,          # => "fennelshouse1f"
+    10: 132,         # => "fennelshouse2f"
     145: 0,          # => "halloffame", overwold"
 }
 
