@@ -5,6 +5,7 @@ option_groups = [
     OptionGroup("Encounter", [
         RandomizeWildPokemon,
         RandomizeTrainerPokemon,
+        RandomizeStarterPokemon,
         PokemonRandomizationAdjustments,
         EncounterPlando,
         WildRandomizationBlacklist,
@@ -14,9 +15,9 @@ option_groups = [
         RandomizeBaseStats,
         RandomizeEvolutions,
         RandomizeTypes,
-        RandomizeCatchRates,
         RandomizeLevelUpMovesets,
         RandomizeTMHMCompatibility,
+        RandomizeCatchRates,
         RandomizeEggGroups,
         RandomizeEggSpecies,
         StatsRandomizationAdjustments,

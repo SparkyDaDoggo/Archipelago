@@ -1,4 +1,6 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ChainMap
+
+from ...data import ItemData
 from ...items import PokemonBWItem
 
 if TYPE_CHECKING:
@@ -8,22 +10,17 @@ if TYPE_CHECKING:
 def generate_default(world: "PokemonBWWorld") -> list[PokemonBWItem]:
     from ...data.items.key_items import progression, vanilla, useless, special
     from ...data.items.medicine import important as med_important
+    from ...data.items.main_items import fossils
 
     items = [
         PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
-        for name, data in progression.items()
-    ] + [
-        PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
-        for name, data in vanilla.items()
-    ] + [
-        PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
-        for name, data in med_important.items()
+        for name, data in ChainMap[str, ItemData](progression, vanilla, med_important, fossils).items()
     ]
 
     if world.options.modify_item_pool.is_useless_key_items:
         items += [
             PokemonBWItem(name, data.classification(world, name), data.item_id, world.player)
-            for name, data in useless.items()
+            for name, data in useless.items() if name not in world.options.filler_items_blacklist
         ]
 
     data = special["Xtransceiver (Blue)"]

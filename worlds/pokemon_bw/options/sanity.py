@@ -78,12 +78,7 @@ class Dexsanity(Range, DexsanityResolver):
     encounters and add the **Ensure all obtainable** modifier.
 
     Alternatively, you can put in a list of dex numbers, names, ranges, lists, and
-    weighted lists in order to plando what pokemon you want to have locations for:
-    ```
-    dexsanity:
-    - [50, 51, Maractus, 460-469, [1, 4, 7, Wurmple], {150: 5, 151: 1, Abra: 1}, 500]
-
-    ```
+    weighted lists in order to plando what pokemon you want to have locations for.
     See the options guides for more information.
     """
     display_name = "Dexsanity"
@@ -231,12 +226,7 @@ class Formsanity(Range, DexsanityResolver):
     encounters and add the **Ensure all obtainable** modifier.
 
     Alternatively, you can put in a list of form names and (weighted or unweighted)
-    form name lists in order to plando what forms you want to have locations for:
-    ```
-    formsanity:
-    - ["Unown (M)", ["Unown (B)", "Darmanitan (Zen)"], {"Meloetta (Aria)": 5, "Unown (W)": 1}]
-
-    ```
+    form name lists in order to plando what forms you want to have locations for.
     See the options guides for more information.
     """
     display_name = "Formsanity"
@@ -351,13 +341,11 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
     work like the regular **Dexcountsanity** option. Otherwise, it will
     be shown as a toggle. However, using this like **Dexcountsanity**
     requires you to put the key-value pairs as a list entry, i.e.:
-    ```
+
     shinycountsanity:
     - Maximum: 10
       Steps: 2
       Leniency: 5
-
-    ```
 
     This option requires installing the Dexsanitysanity plugin.
     Otherwise, it will be ignored.

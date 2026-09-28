@@ -17,40 +17,28 @@ class RandomizeWildPokemon(ToggleSet):
     Randomizes wild pokemon encounters. You can add as many of the following modifiers as you want.
 
     The following is an example for how options like this can look like (when edited in a yaml):
-    ```
+
     randomize_wild_pokemon:
       ["Randomize", "Prevent rare encounters"]
 
-    # Or alternatively...
-    randomize_wild_pokemon:
-    - Randomize
-    - Prevent rare encounters
-
-    ```
-
     - **Randomize** - Toggles wild pokemon being randomized. Automatically added if any other modifier is added.
-    - **Ensure all obtainable** - Ensures that every pokemon species is obtainable by either catching or evolving.
-    - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total as the replaced encounter.
-    - **Prevent overpowered pokemon** - Tries to prevent pokemon with a base stat total over an adjustable threshold
-        being randomized into wild encounter slots. Other modifiers (except for **Similar base stats**) take priority in
-        case of conflicts.
-    - **Prevent bad early pokemon** - Prevents encountering pokemon with Wonder Guard or fixed HP attacks in areas that
-        are not that far from home. This includes all areas before Castelia City. Might not be fully ensured depending
-        on other options.
-    - **Type themed areas** - Tries to make every pokemon in an area have a certain same type. Might not be fully
-        ensured depending on RNG.
+    - **Ensure all obtainable** - Ensures that every pokemon species is obtainable in some way.
+    - **Similar base stats** - Tries to keep every randomized pokemon at a similar base stat total as before.
+    - **Prevent overpowered pokemon** - Tries to prevent pokemon with a very high base stat total in wild randomization.
+    - **Prevent bad early pokemon** - Tries to prevent encountering pokemon with Wonder Guard or fixed HP attacks
+        in areas not far from home.
+    - **Type themed areas** - Tries to make all pokemon in an area have a common type.
     - **Area 1 to 1** - Keeps the amount of different encounters and their encounter rate in every area.
-    - **Dungeon 1 to 1** - Keeps the amount of different encounters and their encounter rate across all areas (and if
-        it's part of a dungeon, then across all areas of that dungeon). Supersedes **Area 1 to 1**.
-    - **Global 1 to 1** - Keeps the amount of different encounters and their encounter rate across all areas in the
-        game. Supersedes **Area 1 to 1** and **Dungeon 1 to 1**. Ignored when **Ensure all obtainable** is added.
-    - **Merge phenomena** - Makes rustling grass, rippling water spots, dust clouds, and flying shadows in the same
-        area have only one encounter. Takes priority over **Area 1 to 1** and alike.
-    - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance in each area to the same
-        pokemon. Takes priority over **Area 1-to-1** and alike.
+    - **Dungeon 1 to 1** - The same as **Area 1 to 1**, but works across all areas of a dungeon.
+    - **Global 1 to 1** - The same as **Area 1 to 1**, but works across all areas in the game.
+        Ignored when **Ensure all obtainable** is added.
+    - **Merge phenomena** - Makes rustling grass, rippling water spots (surfing and fishing
+        separate), dust clouds, and flying shadows in the same area have only one encounter.
+    - **Prevent rare encounters** - Randomizes the encounter slots with the lowest chance in each area to the same pokemon.
 
     It is **highly recommended** to include **Prevent rare encounters** or one of the **... 1 to 1** modifiers if you
     want to randomize wild pokemon, else you might find yourself searching for multiple 1% encounters on every route.
+    Some modifiers might not be fully enforced due to conflicts with other modifiers or options.
     """
     # **Ensure all obtainable** -  ... This is automatically checked if **National pokedex** is chosen as the goal.
     # **Prevent bad early pokemon** - ... Without door shuffle, this includes...
@@ -93,10 +81,10 @@ class RandomizeTrainerPokemon(ToggleSet):
     - **Type themed** - All pokemon of a trainer will share at least one randomly chosen type.
     - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader and elite 4
         member instead of using their vanilla type. Do note that they always have type themed teams.
-    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned to their
-        gym leader.
-    - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon in common, which
-        will always evolve when possible.
+    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned
+        to their gym leader.
+    - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon
+        in common, which will always evolve when possible.
 
     Combining multiple modifiers that affect all trainer pokémon (i.e. not just gym trainers, ...)
     might massively increase generation time. Also in that case, most options tend to be less
@@ -324,20 +312,18 @@ class PlandoEncounter(typing.NamedTuple):
 class EncounterPlando(Option[list[PlandoEncounter]]):
     """
     Places specific pokemon species at specific locations.
-
     Every entry follows the following format:
-    ```
+
     - map: Name of map
       seasons: Season name(s), optional
       method: Grass/Dark grass/...
       slots: Slot number(s) (0-11), optional
       species: Name(s) of species, random if multiple
 
-    ```
     Encounter Plando requires the corresponding host setting to be enabled,
     else it will be ignored for all players. Be aware that this can lead to
     generation failures when combined with other restrictive options.
-    Refer to the Encounter Plando guide of this game for further information.
+    Refer to the options guides of this game for further information.
     """
     display_name = "Encounter Plando"
     supports_weighting = False

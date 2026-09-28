@@ -72,7 +72,8 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         shcosanity = {"Maximum": shcosanity}
     if isinstance(shfocosanity, int):
         shfocosanity = {"Maximum": shfocosanity}
-    active_shiny_rate = any((opt["shinysanity"], shcosanity, opt["shinyformsanity"], shfocosanity))
+    active_shiny_rate = any((opt["shinysanity"], shcosanity["Maximum"],
+                             opt["shinyformsanity"], shfocosanity["Maximum"]))
     to_insert += (
         Line("command", ["FlagSet" if active_shiny_rate else "FlagReset", 0x1E8]),
         Line("command", ["WorkSetConst", 0x40F3, 1024 if active_shiny_rate else 8]),
@@ -110,25 +111,22 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     # ------------------------------------------------------------
 
     system_scripts = disassemble(narc.files[873])
-    starters_addr = system_scripts.find_label(system_scripts.script_links[1]) + 1
 
-    starters_data = bw_patch_instance.files.get("statics/starters", b'\0' * 12)
-    while (line := system_scripts.lines[starters_addr].parts)[0] != "VMHalt":
-        starters_addr += 1
-        if line[0] != "WorkSetConst":
-            continue
-        if line[1] == 0x8012 and starters_data[0:2]:
-            line[2] = int.from_bytes(starters_data[0:2], "little")
-        elif line[1] == 0x8013 and starters_data[2]:
-            line[2] = starters_data[2]
-        elif line[1] == 0x8014 and starters_data[3:5]:
-            line[2] = int.from_bytes(starters_data[3:5], "little")
-        elif line[1] == 0x8015 and starters_data[5]:
-            line[2] = starters_data[5]
-        elif line[1] == 0x8016 and starters_data[6:8]:
-            line[2] = int.from_bytes(starters_data[6:8], "little")
-        elif line[1] == 0x8017 and starters_data[8]:
-            line[2] = starters_data[8]
+    if "statics/starters" in bw_patch_instance.files:
+        starters_addr = system_scripts.find_label(system_scripts.script_links[1]) + 1
+        starters_data = bw_patch_instance.files["statics/starters"]
+        while (line := system_scripts.lines[starters_addr].parts)[0] != "VMReturn":
+            starters_addr += 1
+            if line[0] != "WorkSetConst":
+                continue
+            if line[1] == 0x8012 and starters_data[0:2]:
+                line[2] = int.from_bytes(starters_data[0:2], "little")
+            elif line[1] == 0x8013 and starters_data[3:5]:
+                line[2] = int.from_bytes(starters_data[3:5], "little")
+            elif line[1] == 0x8014 and starters_data[6:8]:
+                line[2] = int.from_bytes(starters_data[6:8], "little")
+            elif line[1] == 0x8015 and starters_data[8]:  # Starters are always the same level anyway
+                line[2] = starters_data[8]
 
     narc.files[873] = bytes(assemble(system_scripts))
     files_dump["a057/873"] = narc.files[873]

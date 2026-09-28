@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError,
-                     OptionCounter, StartInventoryPool, OptionDict, ItemSet)
+                     OptionCounter, StartInventoryPool, OptionDict, ItemSet, Visibility)
 from .sanity import (Dexsanity, Dexcountsanity, Shinysanity, Shinycountsanity, Seensanity, Seencountsanity, Formsanity,
                      Formcountsanity, Shinyformcountsanity, Shinyformsanity)
 from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTradePokemon, RandomizeStarterPokemon,
@@ -36,6 +36,9 @@ if typing.TYPE_CHECKING:
 # itemset if verify item names
 # optionset if valid keys
 
+# IMPORTANT:
+# Descriptions should never be taller than 25 lines
+
 
 class GameVersion(Choice):
     """
@@ -59,20 +62,15 @@ class Goal(Choice):
     - **Champion** - Become the champion by defeating Alder
     - **Cynthia** - Defeat Cynthia in Undella Town
     - **Cobalion** - Reach and defeat/catch Cobalion in Mistralton Cave
-    - **TM/HM hunt** - Get all TMs and HMs and show them to a scientist at Castelia
-        City's Central Plaza
+    - **TM/HM hunt** - Get all TMs and HMs and show them to a scientist at
+        Castelia City's Central Plaza
     - **Seven Sages hunt** - Find the Seven Sages
-    - **Legendary hunt** - Find and defeat/catch all (stationary available) legendary
-        encounters, including Volcarona
+    - **Legendary hunt** - Find and defeat/catch all (stationary available)
+        legendary encounters, including Volcarona
     - **Pokemon master** - Complete the requirements of all other goals combined
 
-    You can also combine multiple goals by providing a list of multiple option names:
-    ```
-    goal:
-    - ["tmhm_hunt", "legendary_hunt"]
-
-    ```
-    See the options guides for more information.
+    You can also combine multiple goals by providing a list of multiple option
+    names. See the options guides for more information.
     """
     # - **Regional pokedex** - Complete the Unova pokedex (requires wild Pokemon being randomized)
     # - **National pokedex** - Complete the national pokedex (requires wild Pokemon being randomized)
@@ -123,7 +121,8 @@ class Goal(Choice):
 
 class ShuffleBadgeRewards(Choice):
     """
-    Determines how gym badges are randomized and what items gym badge locations can have.
+    Determines how gym badges are randomized and what items gym badge locations
+    can have.
 
     - **Vanilla** - Gym badges will stay at their vanilla locations.
     - **Shuffle** - Gym badges are shuffled between the gym leaders.
@@ -149,8 +148,8 @@ class ShuffleTMRewards(Choice):
     Determines what items NPCs, who would normally give TMs or HMs, can have.
 
     - **Shuffle** - These NPCs will always give a TM or HM from the same world.
-    - **HM with Badge** - Like "Shuffle", but puts each HM (and TM70 Flash) at a gym
-        leader's badge reward (including the TM from Clay on route 6).
+    - **HM with Badge** - Like "Shuffle", but puts each HM (and TM70 Flash) at
+        a gym leader's badge reward (including the TM from Clay on route 6).
     - **Anything** - No restrictions.
     """
     display_name = "Shuffle TM Rewards"
@@ -179,8 +178,8 @@ class ShuffleRoadblockReqs(Toggle):
 
 class AdditionalRoadblocks(Choice):
     """
-    Adds a number of additional roadblocks like cut trees or NPCs blocking your way
-    across the region.
+    Adds a number of additional roadblocks like cut trees or NPCs blocking your
+    way across the region.
     """
     display_name = "Additional Roadblocks"
     option_none = 0
@@ -196,18 +195,18 @@ class DoorShuffle(ToggleSet):
 
     - **Gates** - Shuffles all gate entrances, leading to the region having a
         slightly different layout than normally.
-    - **Buildings per map** - Shuffles the building entrances (not gates) within every
-        city or route.
-    - **Buildings anywhere** - Shuffles building entrances (not gates) all over Unova.
-        Supersedes **Building per map**.
-    - **Dungeons** - Shuffles the locations of all dungeons with two entrances and all
-        dungeons with only one entrance.
+    - **Buildings per map** - Shuffles the building entrances (not gates)
+        within every city or route.
+    - **Buildings anywhere** - Shuffles building entrances (not gates) all over
+        Unova. Supersedes **Building per map**.
+    - **Dungeons** - Shuffles the locations of all dungeons with two entrances
+        and all dungeons with only one entrance.
     - **Dungeon interiors** - Shuffles all entrances within a dungeon.
-    - **Dungeon interiors anywhere** - Shuffles all entrances within all dungeons between
-        each other. Supersedes **Dungeon interiors**.
+    - **Dungeon interiors anywhere** - Shuffles all entrances within all
+        dungeons between each other. Supersedes **Dungeon interiors**.
     - **Bridges** - Shuffles the locations of all bridges with each other.
-    - **Castelia layout** - Shuffles the open areas of Castelia City, leading to that
-        City having a slightly different layout than normally.
+    - **Castelia layout** - Shuffles the open areas of Castelia City, leading
+        to that City having a slightly different layout than normally.
     - **Full** - Fully shuffle all door warps. Supersedes all modifiers above.
     - **Decoupled** - Removes the requirement for all shuffled warps leading to
         each other.
@@ -241,13 +240,13 @@ class SeasonControl(Choice):
     """
     Determines how seasons are handled by the game.
 
-    - **Vanilla** - Seasons are not randomized and change based on real time. Locations
-        that depend on the season will only contain filler items.
-    - **Changeable** - The current season can be changed by an NPC next to the Pokemon
-        Center in Nimbasa City.
-    - **Randomized** - All seasons are unlockable by items that get shuffled into the
-        item pool. They can as well be changed by an NPC in Nimbasa City, with one season
-        being unlocked from the beginning.
+    - **Vanilla** - Seasons are not randomized and change based on real time.
+        Locations that depend on the season will only contain filler items.
+    - **Changeable** - The current season can be changed by an NPC next to the
+        Pokemon Center in Nimbasa City.
+    - **Randomized** - All seasons are unlockable by items that get shuffled
+        into the item pool. They can as well be changed by an NPC in Nimbasa
+        City, with one season being unlocked from the beginning.
     """
     display_name = "Season Control"
     option_vanilla = 0
@@ -258,32 +257,35 @@ class SeasonControl(Choice):
 
 class AdjustLevels(ToggleSet):
     """
-    Adjusts the levels of wild and trainer pokemon to have a consistent level curve in
-    all areas, including vanilla post-game areas (regardless of randomization).
+    Adjusts the levels of wild and trainer pokemon to have a consistent level
+    curve in all areas, including vanilla post-game areas (regardless of
+    randomization).
     You can add as many of the following modifiers as you want.
 
-    - **Wild by distance** - Normalizes wild pokemon levels by distance from home,
-        including all encounter methods.
-    - **Trainer by distance** - Normalizes trainer pokemon levels by distance from home,
-        excluding Elite Four rematches, Alder, and Cynthia.
-    - **Wild by sphere** - Normalizes wild pokemon levels by the spheres in multiworld
-        generation, including all encounter methods. This is ignored by logic, only
-        applied in patching, and doesn't fully lower the logical levels.
-    - **Trainer by sphere** - Normalizes trainer pokemon levels by the spheres in
-        multiworld generation, excluding Elite Four rematches, Alder, and Cynthia. This
-        is ignored by logic, only applied in patching, and doesn't fully lower the
+    - **Wild by distance** - Normalizes wild pokemon levels by distance from
+        home, including all encounter methods.
+    - **Trainer by distance** - Normalizes trainer pokemon levels by distance
+        from home, excluding Elite Four rematches, Alder, and Cynthia.
+    - **Wild by sphere** - Normalizes wild pokemon levels by the spheres in
+        multiworld generation, including all encounter methods. This is ignored
+        by logic, only applied in patching, and doesn't fully lower the
         logical levels.
-    - **Tolerance X** - The percentage of how much a logical level can be lowered by
-        sphere normalizing. Allowed values for **X** are (currently) 0, 20, 50, and 100.
-        Including multiple percentages always takes the highest one. Including none
-        defaults to 20.
+    - **Trainer by sphere** - Normalizes trainer pokemon levels by the spheres
+        in multiworld generation, excluding Elite Four rematches, Alder, and
+        Cynthia. This is ignored by logic, only applied in patching, and
+        doesn't fully lower the logical levels.
+    - **Tolerance X** - The percentage of how much a logical level can be
+        lowered by sphere normalizing. Allowed values for **X** are (currently)
+        0, 20, 50, and 100. Including multiple percentages always takes the
+        highest one. Including none defaults to 20.
     """
     _ = """
-    - **Static by distance** - Normalizes static, gift, fossil, and legendary pokemon 
-        levels by distance from home, excluding starters and the boxart legendaries.
-    - **Static by sphere** - Normalizes static, gift, fossil, and legendary pokemon 
-        levels by the spheres in multiworld generation, excluding starters and the boxart 
-        legendaries.
+    - **Static by distance** - Normalizes static, gift, fossil, and legendary
+        pokemon levels by distance from home, excluding starters and the
+        boxart legendaries.
+    - **Static by sphere** - Normalizes static, gift, fossil, and legendary
+        pokemon levels by the spheres in multiworld generation, excluding
+        starters and the boxart legendaries.
     """
     display_name = "Adjust levels"
     is_wild_by_distance = True
@@ -304,30 +306,25 @@ class AdjustLevels(ToggleSet):
 
 class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much plando
     """
-    Modifies the level of all wild and trainer pokemon. You can choose a certain mode for
-    each type of encounter. This is applied AFTER adjusting levels by distance and BEFORE
-    adjusting them by sphere.
+    Modifies the level of all wild and trainer pokemon. You can choose a
+    certain mode for each type of encounter. This is applied AFTER adjusting
+    levels by distance and BEFORE adjusting them by sphere.
 
-    The mode decides how to apply the value to every pokemon. You can write either the
-    name of the mode or the corresponding number:
-    - **Multiply** or **0** - Multiply each level with the value being seen as a
-        percentage, i.e. 100 means no modifying. Allowed values are in range 1 to 10000.
-    - **Add** or **1** - Add the value directly to each level (with negative values being
-        allowed), i.e. 0 means no modifying. Allowed values are in range -99 to 99.
-    - **Power** or **2** - Raise each level to the power of the value (which is seen as a
-        percentage), i.e. 100 means no modifying. Allowed values are in range 1 to 700.
+    The mode decides how to apply the value to every pokemon. You can write
+    either the name of the mode or the corresponding number:
+    - **Multiply** or **0** - Multiply each level with the value being seen as
+        a percentage, i.e. 100 means no modifying. Allowed values are in range
+        1 to 10000.
+    - **Add** or **1** - Add the value directly to each level (with negative
+        values being allowed), i.e. 0 means no modifying. Allowed values are in
+        range -99 to 99.
+    - **Power** or **2** - Raise each level to the power of the value (which is
+        seen as a percentage), i.e. 100 means no modifying. Allowed values are
+        in range 1 to 700.
 
-    An alternative way with more capabilities is to write this as a list with multiple
-    entries (similar to most plando options). Every entry must include the keys `type`,
-    `mode`, and `value`. All entries are individual calculations that are applied one
-    after another, rounding down floating numbers after each step.
-    Here is an example of how an entry can look like:
-    ```
-    - type: Either "Trainer" or "Wild"
-      mode: Any mode described above (can as well be either the name or the number)
-      value: The value like described above
-
-    ```
+    An alternative way with more capabilities is to write this as a list with
+    multiple entries (similar to most plando options).
+    See the options guides for more information
     """
     display_name = "Modify levels"
     valid_keys = [
@@ -487,23 +484,26 @@ class ModifyEncounterRates(Choice):
     Modifies the encounter slot rates for wild encounters.
 
     - **Vanilla** - Keeps the vanilla encounter slot rates.
-    - **Try normalized** - Normalizes the rates for the 12 grass method slots to 8-9%
-        each and the rates for surfing and fishing method slots to 20% each.
-    - **Try normalized alternative** - Same as **Try normalized**, but sets 9 slots to
-        10% each and 3 slots to 3-4% each for grass methods.
-    - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the remaining slots
-        to 5% or less each for all encounter methods.
-    - **One per method** - Sets all slots (except one) to 1%. Best in combination with
+    - **Try normalized** - Normalizes the rates for the 12 grass method slots
+        to 8-9% each and the rates for surfing and fishing method slots to
+        20% each.
+    - **Try normalized alternative** - Same as **Try normalized**, but sets 9
+        slots to 10% each and 3 slots to 3-4% each for grass methods.
+    - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the
+        remaining slots to 5% or less each for all encounter methods.
+    - **One per method** - Sets all slots (except one) to 1%. Best in
+        combination with **Prevent rare encounters**.
+    - **Dexsanity friendly** - Sets two slots to 33-34%, one slot to 24%, and
+        the remaining slots to 1% for grass methods. For surfing and fishing
+        methods, all slots (except one) are set to 1%. Best in combination with
         **Prevent rare encounters**.
-    - **Dexsanity friendly** - Sets two slots to 33-34%, one slot to 24%, and the
-        remaining slots to 1% for grass method. For surfing and fishing methods, all
-        slots (except one) are set to 1%. Best in combination with **Prevent rare encounters**.
-    - **Randomized (12)** - Distributes the encounter rates randomly between all 12 grass
-        methods slots, 5 surfing methods slots, and 5 fishing methods slots. All slots
-        will still have at least a 1% rate. Expect multiple 1% slot rates.
+    - **Randomized (12)** - Distributes the encounter rates randomly between
+        all 12 grass methods slots, 5 surfing methods slots, and 5 fishing
+        methods slots. All slots will still have at least a 1% rate. Expect
+        multiple 1% slot rates.
 
-    Alternatively, you can provide a list of custom encounter rates. See the option
-    guides for more information.
+    Alternatively, you can provide a list of custom encounter rates.
+    See the option guides for more information.
     """
     display_name = "Modify Encounter Rates"
     value: int | dict[str, list[int]]
@@ -568,8 +568,8 @@ class ModifyEncounterRates(Choice):
 
 class ExpMultiplier(Range):
     """
-    Multiplies the experience points received from defeating wild and trainer pokemon.
-    This can also be changed ingame afterwards.
+    Multiplies the experience points received from defeating wild and trainer
+    pokemon. This can also be changed ingame afterwards.
     """
     display_name = "Experience Multiplier"
     default = 1
@@ -582,8 +582,9 @@ class AllPokemonSeen(Toggle):
     Start with all pokemon seen in your Pokedex.
     This allows you to see where the pokemon can be encountered in the wild.
 
-    However, pokemon species with a Seensanity location will be excluded from this option
-    and having any Seencountsanity location disables this option entirely.
+    However, pokemon species with a Seensanity location will be excluded from
+    this option and having any Seencountsanity location disables this
+    option entirely.
     """
     display_name = "All Pokemon Seen"
     default = False
@@ -594,10 +595,10 @@ class AddFairyType(Choice):
     Adds the fairy type from the sixth generation games.
 
     - **No** - Don't add the fairy type.
-    - **Only randomized** - If types are randomized, this adds the fairy type to the pool
-        of possible types.
-    - **Modify vanilla** - Additionally updates the type combination of all pokemon that
-        received the fairy type in X and Y.
+    - **Only randomized** - If types are randomized, this adds the fairy type
+        to the pool of possible types.
+    - **Modify vanilla** - Additionally updates the type combination of all
+        pokemon that received the fairy type in X and Y.
     """
     display_name = "Add Fairy Type"
     option_no = 0
@@ -608,21 +609,22 @@ class AddFairyType(Choice):
 
 class ReplaceEvoMethods(ToggleSet):
     """
-    Replaces certain vanilla evolution methods with other methods that are easier to
-    achieve. This also excludes them from randomized evolutions. Trade and time based
-    evolutions are always replaced/excluded.
+    Replaces certain vanilla evolution methods with other methods that are
+    easier to achieve. This also excludes them from randomized evolutions.
+    Trade and time based evolutions are always replaced/excluded.
     You can add as many of the following modifiers as you want.
 
-    - **Locations** - Replaces evolutions requiring a magnetic place, the mossy rock, or
-        the ice rock with using a thunder stone, leaf stone, and shiny stone (respectively).
+    - **Locations** - Replaces evolutions requiring a magnetic place, the mossy
+        rock, or the ice rock with using a thunder stone, leaf stone, and shiny
+        stone (respectively).
     - **Friendship** - Replaces friendship based evolutions with level up evolutions.
-    - **PID** - Replaces personality value based evolutions. Gender dependant evolutions
-        lose their gender dependency, Wurmple's random evolutions will require a
-        Butterfree/Venomoth in your party, and Burmy will also evolve into Mothim while
-        having a Venomoth in your party. Be aware that this can lead to affected pokemon
-        changing their gender when evolved.
-    - **Stats** - Replaces Tyrogue's stat based evolutions with level up while holding a
-        protein, iron, or carbos.
+    - **PID** - Replaces personality value based evolutions. Gender dependant
+        evolutions lose their gender dependency, Wurmple's random evolutions
+        will require a Butterfree/Venomoth in your party, and Burmy will also
+        evolve into Mothim while having a Venomoth in your party. Be aware that
+        this can lead to affected pokemon changing their gender when evolved.
+    - **Stats** - Replaces Tyrogue's stat based evolutions with level up while
+        holding a protein, iron, or carbos.
     """
     display_name = "Replace Evolution Methods"
     is_locations = False
@@ -635,19 +637,23 @@ class MasterBallSeller(ToggleSet):
     """
     Adds the possibility to buy or obtain an unlimited amount of Master Balls.
     You can select multiple sellers.
-    If multiple cost modifiers are added, a random cost in range between them (snapped to
-    500-steps) gets selected. Adding no cost modifier defaults to 3000.
+    If multiple cost modifiers are added, a random cost in range between them
+    (snapped to 500-steps) gets selected. Adding no cost modifier defaults
+    to 3000.
 
-    - **Ns Castle** - Repurposes an NPC in N's Castle, who can be found in the same room
-        as the grunt giving Ultra Balls to the player, to give/sell Master Balls to the player.
-    - **PC** - Adds an option to every PC in Pokemon Centers to buy/obtain Master Balls.
-    - **Cherens Mom** - Repurposes Cheren's Mom in Nuvema Town to give/sell Master Balls.
-    - **Undella Mansion seller** - Adds the Master Ball to the pool of items that you can
-        buy from the evolution items seller in the Undella Mansion for a random price.
-        His offers are not affected by any cost modifier.
+    - **Ns Castle** - Repurposes an NPC in N's Castle, who can be found in the
+        same room as the grunt giving Ultra Balls to the player, to give/sell
+        Master Balls to the player.
+    - **PC** - Adds an option to every PC in Pokemon Centers to buy/obtain
+        Master Balls.
+    - **Cherens Mom** - Repurposes Cheren's Mom in Nuvema Town to give/sell
+        Master Balls.
+    - **Undella Mansion seller** - Adds the Master Ball to the pool of items
+        that you can buy from the evolution items seller in the Undella Mansion
+        for a random price. His offers are not affected by any cost modifier.
     - **Cost Free** - Makes Master Balls (potentially) cost nothing.
-    - **Cost X** - Makes Master Balls (potentially) cost X Pokedollars. X can be any
-        number in range of 0 to 30000.
+    - **Cost X** - Makes Master Balls (potentially) cost X Pokedollars. X can
+        be any number in range of 0 to 30000.
     """
     display_name = "Master Ball Seller"
     is_ns_castle = False, "Ns Castle"
@@ -690,7 +696,8 @@ class MasterBallSeller(ToggleSet):
 
 class WonderTrade(Toggle):
     """
-    Enables pokemon being sent to and received from the datastorage wonder trade protocol.
+    Enables pokemon being sent to and received from the datastorage wonder
+    trade protocol.
     """
     display_name = "Wonder Trade"
     default = False
@@ -698,9 +705,10 @@ class WonderTrade(Toggle):
 
 class MultiworldGiftPokemon(Toggle):
     """
-    Adds pokemon to the item pool that can be obtained from an NPC in [TBD] after
-    receiving the corresponding item from another player. Pokemon will only be placed in
-    other worlds and have a species that matches the theme of that world (if defined).
+    Adds pokemon to the item pool that can be obtained from an NPC in [TBD]
+    after receiving the corresponding item from another player. Pokemon will
+    only be placed in other worlds and have a species that matches the theme of
+    that world (if defined).
     """
     display_name = "Multiworld Gift Pokemon"
     default = False
@@ -708,8 +716,8 @@ class MultiworldGiftPokemon(Toggle):
 
 class TrapsProbability(Range):
     """
-    Determines the probability of every randomly generated filler item being replaced by
-    a random trap item.
+    Determines the probability of every randomly generated filler item being
+    replaced by a random trap item.
     """
     display_name = "Traps Probability"
     default = 0
@@ -722,10 +730,12 @@ class ModifyItemPool(ToggleSet):
     Modifies what items your world puts into the item pool.
     You can add as many of the following modifiers as you want.
 
-    - **Useless key items** - Adds one of each unused key item with filler classification.
-    - **Useful filler** - Main bag items that would normally occur only once can be
-        generated multiple times.
-    - **Ban bad filler** - Bans niche berries and mail from being generated as filler items.
+    - **Useless key items** - Adds one of each unused key item with
+        filler classification.
+    - **Useful filler** - Main bag items that would normally occur only once
+        can be generated multiple times.
+    - **Ban bad filler** - Bans niche berries and mail from being generated as
+        filler items.
     """
     display_name = "Modify Item Pool"
     is_useless_key_items = False
@@ -766,7 +776,6 @@ class ModifyLogic(ToggleSet):
 class FillerItemsBlacklist(ItemSet):
     """
     Excludes these items from being thrown into the item pool as filler items.
-    Items that are guaranteed to be in the item pool at least once, will stay.
     """
     display_name = "Filler Items Blacklist"
 
@@ -803,15 +812,15 @@ class FunnyDialog(Toggle):
 class PokemonBWTextPlando(PlandoTexts):
     """
     Replaces specified text lines. Every entry follows the following format:
-    ```
+
     - text: 'This is your text'
       at: text_key
       percentage: 100
 
-    ```
     Refer to the Text Plando guide of this game for further information.
     """
     display_name = "Text Plando"
+    visibility = Visibility.all  # People should at least know of the existence of this option
     default = [
         # ("story 160 0 7", "[c_100_#1_0] received [c_101_#1_1]![NextLine] Congratulations![Terminate]", 100),
         # ("system 172 0 1", "Huh? Why did you press the[NextLine]B button?[Terminate]", 100),

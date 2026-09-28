@@ -445,41 +445,31 @@ class PlandoStat(typing.NamedTuple):
 class StatsPlando(Option[dict[str, PlandoStat]]):
     """
     Here you can change certain stats of a pokemon species to your liking.
-    More stats are planned to be changeable.
-
     Here's an example of how this would look like:
-    ```
+
     stats_plando:
       Bulbasaur:
         base_hp: 5
         base_attack: 5
-        base_sp_attack: 255
         types: [Fire, Electric]
         evolutions:
         - species: Squirtle
           method: Stone
           stone: Water Stone
         - species: Eevee
-          method: Level up
-          level: 30
+          method: Friendship
         override_evolutions: false
         levelup_moveset:
         - move: Earthquake
           level: 1
         - move: Pound
           level: 100
-        override_levelup_moveset: false
-        tm_hm_compatibility: [TM70, HM03]
-        catch_rate: 190
-        egg_groups: [Monster, "Human-Like"]
-        egg_species: Venusaur
+        ... # (There are even more values than listed here)
 
-    ```
-
-    Stats Plando requires the corresponding host setting to be enabled, else it will be
-    ignored for all players. Be aware that this can lead to generation failures when
-    combined with other restrictive options or potential softlocks.
-    Refer to the Stats Plando guide of this game for further information.
+    Stats Plando requires the corresponding host setting to be enabled, else it
+    will be ignored for all players. Be aware that this can lead to generation
+    failures when combined with other restrictive options or potential softlocks.
+    Refer to the options guides of this game for further information.
     """
     display_name = "Stats Plando"
     supports_weighting = False

@@ -275,6 +275,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - It can still be given via console commands
 - Tweaked most of the Master Ball sellers to let you buy/obtain multiple Master Balls at once
 - Added `Max out` and `Reset` as choices for the ingame exp. multiplier
+- Added new entries for maps in UT
 
 ### Is this version compatible with older multiworld slots and save files?
 No

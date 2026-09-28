@@ -20,5 +20,6 @@ def create(world: "PokemonBWWorld") -> None:
         loc.place_locked_item(
             PokemonBWItem(name, ItemClassification.progression, None, world.player)
         )
+        loc.show_in_spoiler = False
         if data.access_rule is not None:
             loc.access_rule = world.rules_dict.get_or_add(data.access_rule)

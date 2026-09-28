@@ -55,11 +55,11 @@ def write_spoiler_evolutions(world: "PokemonBWWorld", spoiler_handle: TextIO) ->
 
         spoiler_handle.write(f"\n\nEvolutions ({world.player_name}, each entry in the format "
                              f"<method, value, species>):\n\n")
-        for name, data in world.species_entries.items():
+        for data in world.species_entries.values():
             if not data.write & 0b1:
                 continue
-            spoiler_handle.write(f"{name}: "+(" | ".join(f"{evo.method}, {evo.value}, {evo.species.dex_name}"
-                                                         for evo in data.evolutions))+"\n")
+            spoiler_handle.write(f"{data.dex_name}: "+(" | ".join(f"{evo.method}, {evo.value}, {evo.species.dex_name}"
+                                                                  for evo in data.evolutions))+"\n")
 
 
 def write_spoiler_stats(world: "PokemonBWWorld", spoiler_handle: TextIO) -> None:

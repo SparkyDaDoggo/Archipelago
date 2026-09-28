@@ -49,14 +49,12 @@ def generate_filler(world: "PokemonBWWorld") -> str:
     if world.filler_nested is None:
         from .data.items import berries, main_items, medicine
 
-        filter_items = (lambda it: True) if not world.options.filler_items_blacklist \
-            else (lambda it: it not in world.options.filler_items_blacklist)
-        main_filler = tuple(it for it in main_items.filler if filter_items(it))
-        main_min_once = tuple(it for it in main_items.min_once if filter_items(it))
-        main_mail = tuple(it for it in main_items.mail if filter_items(it))
-        berries_standard = tuple(it for it in berries.standard if filter_items(it))
-        berries_niche = tuple(it for it in berries.niche if filter_items(it))
-        medicine_all = tuple(it for it in medicine.table if filter_items(it))
+        main_filler = tuple(it for it in main_items.filler if it not in world.options.filler_items_blacklist)
+        main_min_once = tuple(it for it in main_items.min_once if it not in world.options.filler_items_blacklist)
+        main_mail = tuple(it for it in main_items.mail if it not in world.options.filler_items_blacklist)
+        berries_standard = tuple(it for it in berries.standard if it not in world.options.filler_items_blacklist)
+        berries_niche = tuple(it for it in berries.niche if it not in world.options.filler_items_blacklist)
+        medicine_all = tuple(it for it in medicine.table if it not in world.options.filler_items_blacklist)
 
         main_nested = [
             main_filler,

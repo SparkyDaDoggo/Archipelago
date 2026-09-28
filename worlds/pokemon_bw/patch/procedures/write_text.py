@@ -227,20 +227,24 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     narc_story.files[436] = encoded
     files_dump["a003/436"] = encoded
 
-    starters_data = bw_patch_instance.files.get("statics/starters", b'\0' * 12)
-    left = (f"[c_bd02_#0]The {types_by_id[starters_data[9]]}-type Pokémon[NextLine][c_bd02_#0]"
-            f"{poke_by_number[int.from_bytes(starters_data[0:2], 'little')]}")
-    middle = (f"[c_bd02_#0]The {types_by_id[starters_data[10]]}-type Pokémon[NextLine][c_bd02_#0]"
-              f"{poke_by_number[int.from_bytes(starters_data[3:5], 'little')]}")
-    right = (f"[c_bd02_#0]The {types_by_id[starters_data[11]]}-type Pokémon[NextLine][c_bd02_#0]"
-             f"{poke_by_number[int.from_bytes(starters_data[6:8], 'little')]}")
-    text_file = decode(narc_story.files[430])
-    insert_line(text_file, 0, 16, right)
-    insert_line(text_file, 0, 17, middle)
-    insert_line(text_file, 0, 18, left)
-    encoded = encode(text_file)
-    narc_story.files[430] = encoded
-    files_dump["a003/430"] = encoded
+    if "statics/starters" in bw_patch_instance.files:
+        starters_data = bw_patch_instance.files["statics/starters"]
+        text_file = decode(narc_story.files[430])
+        if starters_data[0:2]:
+            left = (f"[c_bd02_#0]The {types_by_id[starters_data[9]]}-type Pokémon[NextLine][c_bd02_#0]"
+                    f"{poke_by_number[int.from_bytes(starters_data[0:2], 'little')]}")
+            insert_line(text_file, 0, 18, left)
+        if starters_data[3:5]:
+            middle = (f"[c_bd02_#0]The {types_by_id[starters_data[10]]}-type Pokémon[NextLine][c_bd02_#0]"
+                      f"{poke_by_number[int.from_bytes(starters_data[3:5], 'little')]}")
+            insert_line(text_file, 0, 17, middle)
+        if starters_data[6:8]:
+            right = (f"[c_bd02_#0]The {types_by_id[starters_data[11]]}-type Pokémon[NextLine][c_bd02_#0]"
+                     f"{poke_by_number[int.from_bytes(starters_data[6:8], 'little')]}")
+            insert_line(text_file, 0, 16, right)
+        encoded = encode(text_file)
+        narc_story.files[430] = encoded
+        files_dump["a003/430"] = encoded
 
     rom.setFileByName("a/0/0/2", narc_system.save())
     rom.setFileByName("a/0/0/3", narc_story.save())

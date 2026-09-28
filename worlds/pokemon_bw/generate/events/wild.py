@@ -33,7 +33,7 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
         if species_name in available_in_region[data.region]:
             continue
         l: PokemonBWLocation = PokemonBWLocation(
-            world.player, data.region + f" {method_offset(data.file_index[2])}", None, r)
+            world.player, "[Wild] " + data.region + f" {method_offset(data.file_index[2])}", None, r)
         item: PokemonBWItem = PokemonBWItem(species_name, ItemClassification.progression, None, world.player)
         l.place_locked_item(item)
         l.show_in_spoiler = False

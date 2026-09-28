@@ -59,7 +59,7 @@ class RandomizeMoveData(ToggleSet):
     - **Correlate name and type** - Names will be made of words that fit the type of
         the move (or are overall neutral), if names are randomized (not just shuffled).
     """
-    display_name = "Randomize Move Power"
+    display_name = "Randomize Move Data"
     is_shuffle_power = False
     is_randomize_power = False
     is_randomize_type = False
@@ -181,7 +181,7 @@ class MoveDataPlando(Option[dict[str, PlandoMoveData | PlandoTypeEffect | Plando
     regardless of whether they're randomized or not.
 
     Here's an example of how this would look like:
-    ```
+
     move_data_plando:
       Tackle:
         power: 120
@@ -196,8 +196,6 @@ class MoveDataPlando(Option[dict[str, PlandoMoveData | PlandoTypeEffect | Plando
         effectiveness: 4
       Psychic_Bug:
         effectiveness: 0
-
-    ```
 
     Move Data Plando requires the corresponding host setting to be enabled, else it will
     be ignored for all players. Be aware that this can lead to generation failures or

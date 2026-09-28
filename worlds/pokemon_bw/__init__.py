@@ -40,7 +40,7 @@ class PokemonBWSettings(settings.Group):
     class PokemonBWDynamicRomFile(settings.UserFilePath):
         """File name of your Pokémon White Version ROM"""
         description = "Pokemon Black or White Version ROM"
-        copy_to = "PokemonWhite.nds"
+        copy_to = "PokemonBWDynamic.nds"
 
         @classmethod
         def validate(cls, path: str) -> None:

@@ -25,7 +25,7 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
             if is_dynamic and data.different_vanilla:
                 continue
             r: "Region" = world.regions[data.encounter_region]
-            l: PokemonBWLocation = PokemonBWLocation(world.player, name, None, r)
+            l: PokemonBWLocation = PokemonBWLocation(world.player, "[Static] " + name, None, r)
             species_id: tuple[int, int] = data.species_id
             species_data: "SpeciesEntry" = world.species_entries_by_id[species_id]
             species_name: str = species_data.species_name

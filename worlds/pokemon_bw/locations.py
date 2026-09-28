@@ -310,16 +310,19 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
         places_for_location[_dex][3 + _seen].value = _built
         return _built
 
+    dex_numb = world.dexsanity_numbers.get("dexsanity", ())
+    seen_numb = world.dexsanity_numbers.get("seensanity", ())
+    shiny_numb = world.dexsanity_numbers.get("shinysanity", ())
     for dex in places_for_location:
-        if dex in world.dexsanity_numbers["dexsanity"]:
+        if dex in dex_numb:
             loc_id = world.location_name_to_id[f"Pokédex - {by_number[dex]}"]
             hint_data[world.player][loc_id] = build_string(dex)
-        if dex in world.dexsanity_numbers["seensanity"]:
+        if dex in seen_numb:
             name = by_number[dex]
             a_an = "an" if name[0] in "AEIOU" and name != "Uxie" else "a"
             loc_id = world.location_name_to_id[f"Pokédex - See {a_an} {name}"]
             hint_data[world.player][loc_id] = build_string(dex, True)
-        if dex in world.dexsanity_numbers["shinysanity"]:
+        if dex in shiny_numb:
             loc_id = world.location_name_to_id[f"Pokédex - Find a shiny {by_number[dex]}"]
             hint_data[world.player][loc_id] = build_string(dex)
 
