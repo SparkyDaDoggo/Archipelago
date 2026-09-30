@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from .. import StaticEncounterEntry, TradeEncounterEntry, SpeciesChecklist
+from ...data import StaticEncounterData
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -9,26 +10,162 @@ def generate_static_encounters(world: "PokemonBWWorld",
                                species_checklist: SpeciesChecklist) -> dict[str, StaticEncounterEntry]:
     from ...data.locations.encounters.static import static, legendary, fossils, gift
 
-    is_dynamic = world.options.version.current_key == "dynamic"  # .current_key == ... because dynamic might not be added yet
+    is_dynamic = world.options.version == "dynamic"
     versioned_species = (
         (lambda d: d.species_white)
         if world.options.version == "white" or (is_dynamic and world.random.random() < 0.5)
         else (lambda d: d.species_black)
     )
-
+    legendaries_mythicals = [144, 145, 146, 159, 151,
+                             243, 244, 245, 249, 250, 251,
+                             377, 378, 379, 380, 381, 382, 383, 384, 385, 386,
+                             480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493,
+                             494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649]
+    pseudos = [149, 248, 373, 376, 445, 635, 479]
     encounters: dict[str, StaticEncounterEntry] = {}
-    for table in (static, legendary, fossils, gift):
-        for name, data in table.items():
-            diff_enc = data.species_black != data.species_white
-            encounters[name] = StaticEncounterEntry(versioned_species(data), data.encounter_region,
-                                                    data.inclusion_rule, data.access_rule, diff_enc, 0)
+    not_randomized: dict[str, StaticEncounterData] = {}
+
+    if not world.options.randomize_static_pokemon.is_randomize:
+        not_randomized |= static
+    else:
+        mods = world.options.randomize_static_pokemon
+        statues = small_mimics = big_mimics = None
+        for name, data in static.items():
+            possible = list(spec for spec in world.species_entries_by_id.values() if not spec.form)
+            if not mods.is_split_statues and "Desert Resort" in name and statues:
+                encounters[name] = StaticEncounterEntry(statues, data.encounter_region,
+                                                        data.inclusion_rule, data.access_rule, False, 0b1)
+                continue
+            if not mods.is_split_mimics and "Item" in name:
+                if name.endswith(("1", "2")) and small_mimics:
+                    encounters[name] = StaticEncounterEntry(small_mimics, data.encounter_region,
+                                                            data.inclusion_rule, data.access_rule, False, 0b1)
+                    continue
+                if name.endswith(("3", "4")) and big_mimics:
+                    encounters[name] = StaticEncounterEntry(big_mimics, data.encounter_region,
+                                                            data.inclusion_rule, data.access_rule, False, 0b1)
+                    continue
+            if mods.is_no_legendaries:
+                possible = [spec for spec in possible
+                            if spec.dex_number not in legendaries_mythicals] or possible
+            if mods.is_similar_stats:
+                # Similar stats at last because it gradually increases instead of simple True/False
+                stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
+                vanilla_spec = world.species_entries_by_id[versioned_species(data)]
+                while True:
+                    if next := [spec for spec in possible
+                                if abs(sum(vanilla_spec.base_stats) - sum(spec.base_stats)) <= stat_tolerance]:
+                        possible = next
+                        break
+                    stat_tolerance += 10
+            chosen = world.random.choice(possible)
+            encounters[name] = StaticEncounterEntry((chosen.dex_number, chosen.form), data.encounter_region,
+                                                    data.inclusion_rule, data.access_rule, False, 0b1)
+            if "Desert Resort" in name:
+                statues = (chosen.dex_number, chosen.form)
+            if "Item" in name and name.endswith(("1", "2")):
+                small_mimics = (chosen.dex_number, chosen.form)
+            if "Item" in name and name.endswith(("3", "4")):
+                big_mimics = (chosen.dex_number, chosen.form)
             if not world.options.modify_logic.is_consider_static:
                 continue
             if data.inclusion_rule and not data.inclusion_rule(world):
                 continue
-            if is_dynamic and diff_enc:
+            species_checklist.check(world.species_entries_by_id[chosen.dex_number, chosen.form])
+
+    if not world.options.randomize_gift_pokemon.is_randomize:
+        not_randomized |= gift | fossils
+    else:
+        mods = world.options.randomize_gift_pokemon
+        monkeys = None
+        for name, data in (gift | fossils).items():
+            possible = list(world.species_entries_by_id.values())
+            if not mods.is_split_monkeys and "Dreamyard" in name and monkeys:
+                encounters[name] = StaticEncounterEntry(monkeys, data.encounter_region,
+                                                        data.inclusion_rule, data.access_rule, False, 0b1)
                 continue
-            species_checklist.check(world.species_entries_by_id[versioned_species(data)])
+            if mods.is_no_legendaries:
+                possible = [spec for spec in possible if spec.dex_number not in legendaries_mythicals] or possible
+            if mods.is_any_base:
+                possible = [spec for spec in possible if not spec.pre_evolutions] or possible
+            if mods.is_similar_stats:
+                # Similar stats at last because it gradually increases instead of simple True/False
+                stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
+                vanilla_spec = world.species_entries_by_id[versioned_species(data)]
+                while True:
+                    if next := [spec for spec in possible
+                                if abs(sum(vanilla_spec.base_stats) - sum(spec.base_stats)) <= stat_tolerance]:
+                        possible = next
+                        break
+                    stat_tolerance += 10
+            chosen = world.random.choice(possible)
+            encounters[name] = StaticEncounterEntry((chosen.dex_number, chosen.form), data.encounter_region,
+                                                    data.inclusion_rule, data.access_rule, False, 0b1)
+            if "Dreamyard" in name:
+                monkeys = (chosen.dex_number, chosen.form)
+            if not world.options.modify_logic.is_consider_static:
+                continue
+            if data.inclusion_rule and not data.inclusion_rule(world):
+                continue
+            species_checklist.check(world.species_entries_by_id[chosen.dex_number, chosen.form])
+
+    if not world.options.randomize_legendary_pokemon.is_randomize:
+        not_randomized |= legendary
+    else:
+        mods = world.options.randomize_legendary_pokemon
+        vanilla_spec = None
+        for name, data in legendary.items():
+            if mods.is_keep_legendary and mods.is_no_legendaries:
+                possible = [spec for spec in world.species_entries.values()
+                            if spec.dex_number in pseudos and not spec.form]
+            elif mods.is_no_legendaries:
+                possible = [spec for spec in world.species_entries.values()
+                            if spec.dex_number not in legendaries_mythicals and not spec.form]
+            elif mods.is_keep_legendary:
+                possible = [spec for spec in world.species_entries.values()
+                            if spec.dex_number in legendaries_mythicals and not spec.form]
+            else:
+                possible = list(spec for spec in world.species_entries_by_id.values() if not spec.form)
+            if mods.is_same_type:
+                this1, this2 = (vanilla_spec := world.species_entries_by_id[versioned_species(data)]).types
+                possible = [spec for spec in possible if this1 in spec.types or this2 in spec.types] or possible
+            if mods.is_similar_stats:
+                # Similar stats at last because it gradually increases instead of simple True/False
+                stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
+                vanilla_spec = vanilla_spec or world.species_entries_by_id[versioned_species(data)]
+                while True:
+                    if next := [spec for spec in possible
+                                if abs(sum(vanilla_spec.base_stats) - sum(spec.base_stats)) <= stat_tolerance]:
+                        possible = next
+                        break
+                    stat_tolerance += 10
+            chosen = world.random.choice(possible)
+            encounters[name] = StaticEncounterEntry((chosen.dex_number, chosen.form), data.encounter_region,
+                                                    data.inclusion_rule, data.access_rule,
+                                                    data.species_black != data.species_white, 0b1)
+            if mods.is_keep_legendary and mods.is_no_legendaries:
+                pseudos.remove(chosen.dex_number)
+            elif mods.is_keep_legendary:
+                legendaries_mythicals.remove(chosen.dex_number)
+            if not world.options.modify_logic.is_consider_static:
+                continue
+            if data.inclusion_rule and not data.inclusion_rule(world):
+                continue
+            if is_dynamic and data.species_black != data.species_white:
+                continue
+            species_checklist.check(world.species_entries_by_id[chosen.dex_number, chosen.form])
+
+    for name, data in not_randomized.items():
+        encounters[name] = StaticEncounterEntry(versioned_species(data), data.encounter_region,
+                                                data.inclusion_rule, data.access_rule,
+                                                data.species_black != data.species_white, 0)
+        if not world.options.modify_logic.is_consider_static:
+            continue
+        if data.inclusion_rule and not data.inclusion_rule(world):
+            continue
+        if is_dynamic and data.species_black != data.species_white:
+            continue
+        species_checklist.check(world.species_entries_by_id[versioned_species(data)])
 
     return encounters
 

@@ -4,6 +4,7 @@ apworld
 - unittests for new options
 - yet another option descriptions rework
 - global 1 to 1 doesn't work
+- proper start inv from pool handling
 
 rom
 

@@ -13,7 +13,7 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
     from ...generate import TradeEncounterEntry, StaticEncounterEntry
 
     catchable_species_data: dict[str, "SpeciesEntry"] = {}
-    is_dynamic = world.options.version.current_key == "dynamic"  # .current_key == ... because dynamic might not be added yet
+    is_dynamic = world.options.version == "dynamic"
 
     def get_trade_rule(x: str) -> Callable[[CollectionState], bool]:
         return lambda state: state.has(x, world.player)

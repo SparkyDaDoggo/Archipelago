@@ -12,28 +12,61 @@ if TYPE_CHECKING:
 
 def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.ZipFile) -> None:
     from ...data.pokemon.types import by_name
+    from ...data.locations.encounters.static import static, starters, gift, fossils, legendary
 
-    left = bw_patch_instance.world.static_encounter["Left Starter"]
-    middle = bw_patch_instance.world.static_encounter["Middle Starter"]
-    right = bw_patch_instance.world.static_encounter["Right Starter"]
-    if any((left.write, middle.write, right.write)):
+    starter_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
+                         for name, data in starters.items())
+    if any(enc.write for enc, _ in starter_encs):
         data = bytearray(12)
-        if left.write & 0b1:
-            data[0:2] = left.species_id[0].to_bytes(2, "little")
-        if left.write & 0b10:
-            data[2] = left.level
-        if middle.write & 0b1:
-            data[3:5] = middle.species_id[0].to_bytes(2, "little")
-        if middle.write & 0b10:
-            data[5] = middle.level
-        if right.write & 0b1:
-            data[6:8] = right.species_id[0].to_bytes(2, "little")
-        if right.write & 0b10:
-            data[8] = right.level
-        data[9] = by_name[bw_patch_instance.world.species_entries_by_id[left.species_id].types[0]]
-        data[10] = by_name[bw_patch_instance.world.species_entries_by_id[middle.species_id].types[0]]
-        data[11] = by_name[bw_patch_instance.world.species_entries_by_id[right.species_id].types[0]]
+        for enc, patch_id in starter_encs:
+            if enc.write & 0b1:
+                data[3*patch_id:3*patch_id+2] = enc.species_id[0].to_bytes(2, "little")
+            data[9+patch_id] = by_name[bw_patch_instance.world.species_entries_by_id[enc.species_id].types[0]]
         opened_zipfile.writestr("statics/starters", bytes(data))
+
+    statics_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
+                         for name, data in static.items())
+    if any(enc.write for enc, _ in statics_encs):
+        data = bytearray(56)
+        for enc, patch_id in statics_encs:
+            if enc.write & 0b1:
+                data[4*patch_id:4*patch_id+2] = enc.species_id[0].to_bytes(2, "little")
+                data[4*patch_id+2] = enc.species_id[1]
+            data[4*patch_id+3] = enc.level if enc.write & 0b10 else 255
+        opened_zipfile.writestr("statics/statics", bytes(data))
+
+    gift_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
+                      for name, data in gift.items())
+    if any(enc.write for enc, _ in gift_encs):
+        data = bytearray(24)
+        for enc, patch_id in gift_encs:
+            if enc.write & 0b1:
+                data[4*patch_id:4*patch_id+2] = enc.species_id[0].to_bytes(2, "little")
+                data[4*patch_id+2] = enc.species_id[1]
+            data[4*patch_id+3] = enc.level if enc.write & 0b10 else 255
+        opened_zipfile.writestr("statics/gifts", bytes(data))
+
+    fossils_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
+                         for name, data in fossils.items())
+    if any(enc.write for enc, _ in fossils_encs):
+        data = bytearray(36)
+        for enc, patch_id in fossils_encs:
+            if enc.write & 0b1:
+                data[4*patch_id:4*patch_id+2] = enc.species_id[0].to_bytes(2, "little")
+                data[4*patch_id+2] = enc.species_id[1]
+            data[4*patch_id+3] = enc.level if enc.write & 0b10 else 255
+        opened_zipfile.writestr("statics/fossils", bytes(data))
+
+    legend_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
+                        for name, data in legendary.items())
+    if any(enc.write for enc, _ in legend_encs):
+        data = bytearray(32)
+        for enc, patch_id in legend_encs:
+            if enc.write & 0b1:
+                data[4*patch_id:4*patch_id+2] = enc.species_id[0].to_bytes(2, "little")
+                data[4*patch_id+2] = enc.species_id[1]
+            data[4*patch_id+3] = enc.level if enc.write & 0b10 else 255
+        opened_zipfile.writestr("statics/legendaries", bytes(data))
 
 
 def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWPatch",

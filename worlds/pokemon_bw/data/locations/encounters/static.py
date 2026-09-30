@@ -2,35 +2,35 @@ from ..rules import *
 from ... import StaticEncounterData, TradeEncounterData
 
 legendary: dict[str, StaticEncounterData] = {
-    "Guidance Chamber Static Encounter": StaticEncounterData((638, 0), (638, 0), "Guidance Chamber", None, None),
-    "Trial Chamber Static Encounter": StaticEncounterData((639, 0), (639, 0), "Trial Chamber", None, None),
-    "Rumination Field Static Encounter": StaticEncounterData((640, 0), (640, 0), "Rumination Field", None, None),
-    "Abundant Shrine Static Encounter": StaticEncounterData((645, 0), (645, 0), "Abundant Shrine", randomized_wild, has_forces_of_nature),
-    "Giant Chasm Static Encounter": StaticEncounterData((646, 0), (646, 0), "Giant Chasm Inner Cave", None, None),
-    "Liberty Garden Static Encounter": StaticEncounterData((494, 0), (494, 0), "Liberty Garden Basement", None, None),
-    "Dragonspiral Tower Static Encounter": StaticEncounterData((643, 0), (644, 0), "Dragonspiral Tower 7F", None, has_beaten_ghetsis),
-    "Roaming Encounter": StaticEncounterData((641, 0), (642, 0), "Route 7", vanilla_doors, has_released_roamer, fixed=True),
+    "Guidance Chamber Static Encounter": StaticEncounterData(0, (638, 0), (638, 0), "Guidance Chamber", None, None),
+    "Trial Chamber Static Encounter": StaticEncounterData(1, (639, 0), (639, 0), "Trial Chamber", None, None),
+    "Rumination Field Static Encounter": StaticEncounterData(2, (640, 0), (640, 0), "Rumination Field", None, None),
+    "Abundant Shrine Static Encounter": StaticEncounterData(3, (645, 0), (645, 0), "Abundant Shrine", randomized_wild, has_forces_of_nature),
+    "Giant Chasm Static Encounter": StaticEncounterData(4, (646, 0), (646, 0), "Giant Chasm Inner Cave", None, None),
+    "Liberty Garden Static Encounter": StaticEncounterData(5, (494, 0), (494, 0), "Liberty Garden Basement", None, None),
+    "Dragonspiral Tower Static Encounter": StaticEncounterData(6, (643, 0), (644, 0), "Dragonspiral Tower 7F", None, has_beaten_ghetsis),
+    "Roaming Encounter": StaticEncounterData(7, (641, 0), (642, 0), "Route 7", vanilla_doors, has_released_roamer, fixed=True),
 }
 
 gift: dict[str, StaticEncounterData] = {
-    "Marvelous Bridge Sold Encounter": StaticEncounterData((129, 0), (129, 0), "Marvelous Bridge", None, None),
-    "Route 18 Egg Encounter": StaticEncounterData((636, 0), (636, 0), "Route 18 House", None, None),
-    "Dreamyard Gift Encounter (Middle Starter)": StaticEncounterData((511, 0), (511, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
-    "Dreamyard Gift Encounter (Right Starter)": StaticEncounterData((513, 0), (513, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
-    "Dreamyard Gift Encounter (Left Starter)": StaticEncounterData((515, 0), (515, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
-    "Castelia City Gift Encounter": StaticEncounterData((570, 0), (570, 0), "Castelia City Castelia Street East Building 1F", randomized_wild, has_celebi),
+    "Marvelous Bridge Sold Encounter": StaticEncounterData(0, (129, 0), (129, 0), "Marvelous Bridge", None, None),
+    "Route 18 Egg Encounter": StaticEncounterData(1, (636, 0), (636, 0), "Route 18 House", None, None),
+    "Dreamyard Gift Encounter (Middle Starter)": StaticEncounterData(2, (511, 0), (511, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
+    "Dreamyard Gift Encounter (Right Starter)": StaticEncounterData(3, (513, 0), (513, 0), "Dreamyard Entrance", disabled, None),  # will require being randomized
+    "Dreamyard Gift Encounter (Left Starter)": StaticEncounterData(4, (515, 0), (515, 0), "Dreamyard Entrance", monkeys_not_split, None),  # will require being randomized
+    "Castelia City Gift Encounter": StaticEncounterData(5, (570, 0), (570, 0), "Castelia City Castelia Street East Building 1F", randomized_wild, has_celebi),
 }
 
 fossils: dict[str, StaticEncounterData] = {
-    "Root Fossil Reanimation": StaticEncounterData((345, 0), (345, 0), "Nacrene Museum", None, has_root_fossil),
-    "Claw Fossil Reanimation": StaticEncounterData((347, 0), (347, 0), "Nacrene Museum", None, has_claw_fossil),
-    "Helix Fossil Reanimation": StaticEncounterData((138, 0), (138, 0), "Nacrene Museum", None, has_helix_fossil),
-    "Dome Fossil Reanimation": StaticEncounterData((140, 0), (140, 0), "Nacrene Museum", None, has_dome_fossil),
-    "Old Amber Reanimation": StaticEncounterData((142, 0), (142, 0), "Nacrene Museum", None, has_old_amber),
-    "Armor Fossil Reanimation": StaticEncounterData((410, 0), (410, 0), "Nacrene Museum", None, has_armor_fossil),
-    "Skull Fossil Reanimation": StaticEncounterData((408, 0), (408, 0), "Nacrene Museum", None, has_skull_fossil),
-    "Cover Fossil Reanimation": StaticEncounterData((564, 0), (564, 0), "Nacrene Museum", None, has_cover_fossil),
-    "Plume Fossil Reanimation": StaticEncounterData((566, 0), (566, 0), "Nacrene Museum", None, has_plume_fossil),
+    "Root Fossil Reanimation": StaticEncounterData(0, (345, 0), (345, 0), "Nacrene Museum", None, has_root_fossil),
+    "Claw Fossil Reanimation": StaticEncounterData(1, (347, 0), (347, 0), "Nacrene Museum", None, has_claw_fossil),
+    "Helix Fossil Reanimation": StaticEncounterData(2, (138, 0), (138, 0), "Nacrene Museum", None, has_helix_fossil),
+    "Dome Fossil Reanimation": StaticEncounterData(3, (140, 0), (140, 0), "Nacrene Museum", None, has_dome_fossil),
+    "Old Amber Reanimation": StaticEncounterData(4, (142, 0), (142, 0), "Nacrene Museum", None, has_old_amber),
+    "Armor Fossil Reanimation": StaticEncounterData(5, (410, 0), (410, 0), "Nacrene Museum", None, has_armor_fossil),
+    "Skull Fossil Reanimation": StaticEncounterData(6, (408, 0), (408, 0), "Nacrene Museum", None, has_skull_fossil),
+    "Cover Fossil Reanimation": StaticEncounterData(7, (564, 0), (564, 0), "Nacrene Museum", None, has_cover_fossil),
+    "Plume Fossil Reanimation": StaticEncounterData(8, (566, 0), (566, 0), "Nacrene Museum", None, has_plume_fossil),
 }
 
 trade: dict[str, TradeEncounterData] = {
@@ -42,24 +42,24 @@ trade: dict[str, TradeEncounterData] = {
 }
 
 static: dict[str, StaticEncounterData] = {
-    "Desert Resort Static Encounter 1": StaticEncounterData((555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
-    "Desert Resort Static Encounter 2": StaticEncounterData((555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
-    "Desert Resort Static Encounter 3": StaticEncounterData((555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
-    "Desert Resort Static Encounter 4": StaticEncounterData((555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
-    "Desert Resort Static Encounter 5": StaticEncounterData((555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
-    "Dreamyard Static Encounter": StaticEncounterData((518, 0), (518, 0), "Dreamyard Basement North West", None, None),
-    "Relic Castle Static Encounter": StaticEncounterData((637, 0), (637, 0), "Relic Castle Basement Volcarona Room", None, None),
-    "Route 6 Item Encounter 1": StaticEncounterData((590, 0), (590, 0), "Route 6", None, None),
-    "Route 6 Item Encounter 2": StaticEncounterData((590, 0), (590, 0), "Route 6", None, None),
-    "Route 10 Item Encounter 1": StaticEncounterData((590, 0), (590, 0), "Route 10", None, None),
-    "Route 10 Item Encounter 2": StaticEncounterData((590, 0), (590, 0), "Route 10", None, None),
-    "Route 10 Item Encounter 3": StaticEncounterData((591, 0), (591, 0), "Route 10", None, None),
-    "Route 10 Item Encounter 4": StaticEncounterData((591, 0), (591, 0), "Route 10", None, None),
-    "Lostlorn Forest Static Encounter": StaticEncounterData((571, 0), (571, 0), "Lostlorn Forest", randomized_wild, has_legendary_beasts),
+    "Desert Resort Static Encounter 1": StaticEncounterData(0, (555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
+    "Desert Resort Static Encounter 2": StaticEncounterData(1, (555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
+    "Desert Resort Static Encounter 3": StaticEncounterData(2, (555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
+    "Desert Resort Static Encounter 4": StaticEncounterData(3, (555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
+    "Desert Resort Static Encounter 5": StaticEncounterData(4, (555, 0), (555, 0), "Desert Resort", None, has_rage_candy_bar),
+    "Dreamyard Static Encounter": StaticEncounterData(5, (518, 0), (518, 0), "Dreamyard Basement North West", None, None),
+    "Relic Castle Static Encounter": StaticEncounterData(6, (637, 0), (637, 0), "Relic Castle Basement Volcarona Room", None, None),
+    "Route 6 Item Encounter 1": StaticEncounterData(7, (590, 0), (590, 0), "Route 6", None, None),
+    "Route 6 Item Encounter 2": StaticEncounterData(8, (590, 0), (590, 0), "Route 6", None, None),
+    "Route 10 Item Encounter 1": StaticEncounterData(9, (590, 0), (590, 0), "Route 10", None, None),
+    "Route 10 Item Encounter 2": StaticEncounterData(10, (590, 0), (590, 0), "Route 10", None, None),
+    "Route 10 Item Encounter 3": StaticEncounterData(11, (591, 0), (591, 0), "Route 10", None, None),
+    "Route 10 Item Encounter 4": StaticEncounterData(12, (591, 0), (591, 0), "Route 10", None, None),
+    "Lostlorn Forest Static Encounter": StaticEncounterData(13, (571, 0), (571, 0), "Lostlorn Forest", randomized_wild, has_legendary_beasts),
 }
 
 starters: dict[str, StaticEncounterData] = {
-    "Left Starter": StaticEncounterData((495, 0), (495, 0), "Player's Bedroom", disabled, None),
-    "Middle Starter": StaticEncounterData((498, 0), (498, 0), "Player's Bedroom", disabled, None),
-    "Right Starter": StaticEncounterData((501, 0), (501, 0), "Player's Bedroom", disabled, None),
+    "Left Starter": StaticEncounterData(0, (495, 0), (495, 0), "Player's Bedroom", disabled, None),
+    "Middle Starter": StaticEncounterData(1, (498, 0), (498, 0), "Player's Bedroom", disabled, None),
+    "Right Starter": StaticEncounterData(2, (501, 0), (501, 0), "Player's Bedroom", disabled, None),
 }

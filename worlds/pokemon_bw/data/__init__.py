@@ -160,6 +160,7 @@ class EncounterData(NamedTuple):
 
 
 class StaticEncounterData(NamedTuple):
+    patch_id: int
     # (dex number, form)
     species_black: tuple[int, int]
     species_white: tuple[int, int]

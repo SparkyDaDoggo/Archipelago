@@ -152,7 +152,6 @@ class RandomizeStaticPokemon(ToggleSet):
         Automatically added if any other modifier is added.
     - **Similar base stats** - Tries to keep the randomized pokemon
         at a similar base stat total as the replaced one.
-    - **Any base** - Only use unevolved/baby pokemon.
     - **No legendaries** - Exclude legendaries from being placed
         into static encounters.
     - **Split statues** - Splits the statues in Desert Resort into
@@ -163,7 +162,6 @@ class RandomizeStaticPokemon(ToggleSet):
     display_name = "Randomize Static Pokemon"
     is_randomize = False
     is_similar_stats = False, "Similar base stats"
-    is_any_base = False
     is_no_legendaries = False
     is_split_statues = False
     is_split_mimics = False
@@ -180,6 +178,7 @@ class RandomizeGiftPokemon(ToggleSet):
         Automatically added if any other modifier is added.
     - **Similar base stats** - Tries to keep the randomized
         pokemon at a similar base stat total as the replaced one.
+    - **Any base** - Only use unevolved/baby pokemon.
     - **No legendaries** - Exclude legendaries from being placed
         into gift encounters.
     - **Split monkeys** - Makes the gift encounter in Dreamyard
@@ -189,6 +188,7 @@ class RandomizeGiftPokemon(ToggleSet):
     display_name = "Randomize Gift Pokemon"
     is_randomize = False
     is_similar_stats = False, "Similar base stats"
+    is_any_base = False
     is_no_legendaries = False
     is_split_monkeys = False
     auto_add_if_any = "Randomize"
@@ -225,15 +225,15 @@ class RandomizeLegendaryPokemon(ToggleSet):
         Automatically added if any other modifier is added.
     - **Keep legendary** - Randomized pokemon will all still be
         legendaries or mythicals.
-    - **No legendaries** - Exclude legendaries from being placed
-        into these encounters.
+    - **No legendaries** - Exclude legendaries and mythicals from
+        being placed into these encounters.
     - **Similar base stats** - Tries to keep the randomized
         pokemon at a similar base stat total as the replaced one.
         Overrides **Keep legendary**.
     - **Same type** - Tries to keep at least one type of every encounter.
 
     Including **Keep legendary** AND **No legendaries** will instead
-    only put pseudo legendaries into these encounters.
+    only put pseudo legendaries (and Rotom) into these encounters.
     """
     display_name = "Randomize Legendary Pokemon"
     is_randomize = False

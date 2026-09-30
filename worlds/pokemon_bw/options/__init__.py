@@ -955,10 +955,10 @@ class PokemonBWOptions(PerGameCommonOptions):
     randomize_wild_pokemon: RandomizeWildPokemon
     randomize_trainer_pokemon: RandomizeTrainerPokemon
     randomize_starter_pokemon: RandomizeStarterPokemon
-    # randomize_static_pokemon: RandomizeStaticPokemon
-    # randomize_gift_pokemon: RandomizeGiftPokemon
+    randomize_static_pokemon: RandomizeStaticPokemon
+    randomize_gift_pokemon: RandomizeGiftPokemon
+    randomize_legendary_pokemon: RandomizeLegendaryPokemon
     # randomize_trade_pokemon: RandomizeTradePokemon
-    # randomize_legendary_pokemon: RandomizeLegendaryPokemon
     pokemon_randomization_adjustments: PokemonRandomizationAdjustments
     encounter_plando: EncounterPlando
     wild_randomization_blacklist: WildRandomizationBlacklist
