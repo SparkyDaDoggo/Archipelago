@@ -28,14 +28,14 @@ progression: dict[str, ItemData] = {
     "Wingull Gram 3": ItemData(0x0271, always_progression),
     "GB Sounds": ItemData(0x01F6, always_progression),
     "Silver Wing": ItemData(0x01E2, always_progression),
+    "Gracidea": ItemData(0x01D2, always_progression),
+    "Dowsing Machine": ItemData(0x01D7, dowsing_machine_logic),
 }
 
 vanilla: dict[str, ItemData] = {
     "Pal Pad": ItemData(0x01B5, always_filler),
     "Bicycle": ItemData(0x01C2, always_useful),
     "Vs. Recorder": ItemData(0x01D1, always_filler),
-    "Gracidea": ItemData(0x01D2, always_progression),
-    "Dowsing Machine": ItemData(0x01D7, dowsing_machine_logic),
     "Prop Case": ItemData(0x0242, always_filler),
     "Town Map": ItemData(0x01BA, always_useful),
 }

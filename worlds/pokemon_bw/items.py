@@ -105,14 +105,21 @@ def random_choice_nested(random: Random, nested: Iterable[str | list | tuple | d
 def populate_starting_inventory(world: "PokemonBWWorld", items: list[PokemonBWItem]) -> None:
     from .data.items import seasons
 
-    if world.options.season_control == "randomized":
-        seasons_list: list["PokemonBWItem"] = [
-            item for item in items if item.name in seasons.table
-        ]
-        start = world.random.choice(seasons_list)
-        world.push_precollected(start)
-        items.remove(start)  # Removable here because all seasons are at most only once in the item pool
-        world.starting_season = start.name
+    opt = world.options
+
+    if opt.season_control == "randomized":
+        for season in seasons.table:
+            if season in opt.start_inventory_from_pool and opt.start_inventory_from_pool[season]:
+                world.starting_season = season
+                break
+        else:
+            seasons_list: list["PokemonBWItem"] = [
+                item for item in items if item.name in seasons.table
+            ]
+            start = world.random.choice(seasons_list)
+            world.push_precollected(start)
+            items.remove(start)  # Removable here because all seasons are at most only once in the item pool
+            world.starting_season = start.name
 
 
 def place_locked_items(world: "PokemonBWWorld", items: list[PokemonBWItem]) -> None:

@@ -276,6 +276,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Tweaked most of the Master Ball sellers to let you buy/obtain multiple Master Balls at once
 - Added `Max out` and `Reset` as choices for the ingame exp. multiplier
 - Added new entries for maps in UT
+- Proper handling for putting certain progression items into `Start Inventrory From Pool`
 
 ### Is this version compatible with older multiworld slots and save files?
 No

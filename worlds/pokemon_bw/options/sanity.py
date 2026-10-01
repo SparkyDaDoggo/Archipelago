@@ -70,15 +70,17 @@ class DexsanityResolver:
 
 class Dexsanity(Range, DexsanityResolver):
     """
-    Adds a number of locations that can be checked by catching a certain pokemon species
-    and registering it in the pokedex. The actual maximum number of added checks depends
-    on what pokemon species are actually obtainable in the wild.
+    Adds a number of locations that can be checked by catching a certain
+    pokemon species and registering it in the pokedex. The actual maximum
+    number of added checks depends on what pokemon species are actually
+    obtainable in the wild.
 
-    If you want to have all 649 possible checks, then you need to randomize wild
-    encounters and add the **Ensure all obtainable** modifier.
+    If you want to have all 649 possible checks, then you need to randomize
+    wild encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of dex numbers, names, ranges, lists, and
-    weighted lists in order to plando what pokemon you want to have locations for.
+    Alternatively, you can put in a list of dex numbers, names, ranges, lists,
+    and weighted lists in order to plando what pokemon you want to have
+    locations for.
     See the options guides for more information.
     """
     display_name = "Dexsanity"
@@ -114,23 +116,23 @@ class Trainersanity(Range):
 
 class Dexcountsanity(ExtendedOptionCounter):
     """
-    Adds a number of locations that can be checked by catching a certain total number of
-    species. This option consists of more than just one value:
+    Adds a number of locations that can be checked by catching a certain total
+    number of species. This option consists of more than just one value:
 
     - **Maximum** (0-649) - The highest number of pokemon that will have a check.
-    - **Steps** (1-649) - Excludes all locations with a count that is not dividable by
-        this value, except **Maximum** (but only if there are actually **<Maximum>**
-        pokemon species catchable).
-    - **Leniency** (0-648) - Makes all checks logically require this many more pokemon
-        species being available.
+    - **Steps** (1-649) - Excludes all locations with a count that is not
+        dividable by this value, except **Maximum** (but only if there are
+        actually **<Maximum>** pokemon species catchable).
+    - **Leniency** (0-648) - Makes all checks logically require this many more
+        pokemon species being available.
 
     Every parameter can be specified as unweighted/weighted lists, "random",
     and "random-range-x-y" like usual range options.
 
     The actual maximum number of added checks depends on how many different
     species are actually obtainable in the wild.
-    If you want to have all 649 possible checks, then you need to randomize wild
-    encounters and add the **Ensure all obtainable** modifier.
+    If you want to have all 649 possible checks, then you need to randomize
+    wild encounters and add the **Ensure all obtainable** modifier.
     """
     display_name = "Dexcountsanity"
     fill_defaults = True
@@ -153,14 +155,16 @@ class Dexcountsanity(ExtendedOptionCounter):
 
 class Seensanity(Range, DexsanityResolver):
     """
-    Adds a number of locations that can be checked by seeing a certain Pokemon species,
-    which is marked in the pokedex. The actual maximum number of added checks depends on
-    what pokemon species are actually observable in the wild or in trainer battles.
+    Adds a number of locations that can be checked by seeing a certain Pokemon
+    species, which is marked in the pokedex. The actual maximum number of added
+    checks depends on what pokemon species are actually observable in the wild
+    or in trainer battles.
 
-    If you want to have all 649 possible checks, then you need to randomize wild
-    encounters and add the **Ensure all obtainable** modifier.
+    If you want to have all 649 possible checks, then you need to randomize
+    wild encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can plando your Seensanity checks the same way as in Dexsanity.
+    Alternatively, you can plando your Seensanity checks the same way as in
+    Dexsanity.
     See the options guides for more information.
     """
     display_name = "Seensanity"
@@ -187,10 +191,11 @@ class Seensanity(Range, DexsanityResolver):
 class Seencountsanity(ExtendedOptionCounter):
     """
     A combination of Dexcountsanity and Seensanity.
-    This option can be edited like Dexcountsanity, while only requiring to see a certain
-    amount of Pokemon species.
+    This option can be edited like Dexcountsanity, while only requiring to see
+    a certain amount of Pokemon species.
 
-    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
     """
     display_name = "Seencountsanity"
     fill_defaults = True
@@ -218,15 +223,17 @@ class Seencountsanity(ExtendedOptionCounter):
 
 class Formsanity(Range, DexsanityResolver):
     """
-    Adds a number of locations that can be checked by seeing a specific form of certain
-    pokemon species. The actual maximum number of added checks depends on what pokemon
-    species are actually obtainable in the wild and in trainer battles.
+    Adds a number of locations that can be checked by seeing a specific form of
+    certain pokemon species. The actual maximum number of added checks depends
+    on what pokemon species are actually obtainable in the wild and in trainer
+    battles.
 
     If you want to have all 72 possible checks, then you need to randomize wild
     encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can put in a list of form names and (weighted or unweighted)
-    form name lists in order to plando what forms you want to have locations for.
+    Alternatively, you can put in a list of form names and (weighted or
+    unweighted) form name lists in order to plando what forms you want to have
+    locations for.
     See the options guides for more information.
     """
     display_name = "Formsanity"
@@ -251,10 +258,11 @@ class Formsanity(Range, DexsanityResolver):
 class Formcountsanity(ExtendedOptionCounter):
     """
     A combination of Dexcountsanity and Formsanity.
-    This option can be edited like Dexcountsanity, while only requiring to see a certain
-    amount of unique forms.
+    This option can be edited like Dexcountsanity, while only requiring to see
+    a certain amount of unique forms.
 
-    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
     """
     display_name = "Formcountsanity"
     fill_defaults = True
@@ -282,17 +290,19 @@ class Formcountsanity(ExtendedOptionCounter):
 
 class Shinysanity(Toggle, DexsanityResolver):
     """
-    Adds a location for a randomly picked pokemon species to be seen in its shiny form.
+    Adds a location for a randomly picked pokemon species to be seen in its
+    shiny form.
 
-    By editing your yaml with a text editor, you can set this option to any value in
-    range 0-649 in order to have more than just one location. Otherwise, this option will
-    be shown as a simple toggle. This also supports random-range-x-y.
-    Adding at least one location enables an ingame option in the PC to change the shiny
-    rate up to (almost) guaranteed.
-    If you want to have all 649 possible checks, then you need to randomize wild
-    encounters and add the **Ensure all obtainable** modifier.
+    By editing your yaml with a text editor, you can set this option to any
+    value in range 0-649 in order to have more than just one location.
+    Otherwise, this option will be shown as a simple toggle. This also supports
+    random-range-x-y. Adding at least one location enables an ingame option in
+    the portable menu to change the shiny rate up to (almost) guaranteed.
+    If you want to have all 649 possible checks, then you need to randomize
+    wild encounters and add the **Ensure all obtainable** modifier.
 
-    Alternatively, you can plando your Shinysanity checks the same way as in Dexsanity.
+    Alternatively, you can plando your Shinysanity checks the same way as in
+    Dexsanity.
     See the options guides for more information.
     """
     display_name = "Shinysanity"
@@ -413,11 +423,13 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
 class Shinyformsanity(Toggle, DexsanityResolver):
     """
     A combination for **Shinysanity** and **Formsanity**.
-    It works pretty much like **Shinysanity**, including being shown as a simple toggle
-    outside the template yaml, while only requiring to see the shiny version of specific
-    forms. It also contains plando capabilities in the way that **Formsanity** has them.
+    It works pretty much like **Shinysanity**, including being shown as a
+    simple toggle outside the template yaml, while only requiring to see the
+    shiny version of specific forms. It also contains plando capabilities in
+    the way that **Formsanity** has them.
 
-    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
     """
     display_name = "Shinyformsanity"
     value: int | list[str]
@@ -460,11 +472,12 @@ class Shinyformsanity(Toggle, DexsanityResolver):
 class Shinyformcountsanity(Toggle, ExtendedOptionCounter):
     """
     A combination of **Shinysanity**, **Formsanity**, and **Dexcountsanity**.
-    It works pretty much like **Shinycountsanity**, including being shown as a simple
-    toggle outside the template yaml, while only requiring to see a certain amount of
-    unique forms in their shiny variant.
+    It works pretty much like **Shinycountsanity**, including being shown as a
+    simple toggle outside the template yaml, while only requiring to see a
+    certain amount of unique forms in their shiny variant.
 
-    This option requires installing the Dexsanitysanity plugin. Otherwise, it will be ignored.
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
     """
     display_name = "Shinyformcountsanity"
     value: dict[str, int]

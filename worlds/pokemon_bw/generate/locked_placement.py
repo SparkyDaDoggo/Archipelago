@@ -42,12 +42,17 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             for loc, it in placements.items():
                 if is_excluded(world, badge_locations[loc]):
                     continue
+                if it in world.options.start_inventory_from_pool:
+                    continue
                 badge_locations[loc].place_locked_item(badge_items[it])
                 items.remove(badge_items[it])  # list.remove() safe here because badges only exist once in local pool
         case "shuffle":
             # Priority locations are ignored here because of no badges being filler
             # Shuffle items because of some locations potentially being skipped
-            badge_items: list[Item] = [item for item in items if item.name in badges.table]
+            badge_items: list[Item] = [
+                item for item in items
+                if item.name in badges.table and item.name not in world.options.start_inventory_from_pool
+            ]
             for item in badge_items:
                 items.remove(item)  # list.remove() safe here because badges only exist once in local pool
             world.random.shuffle(badge_items)
@@ -55,10 +60,8 @@ def place_badges_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
             locations = list(world.get_locations())
             filled_locations = [loc for loc in locations if loc.item]
             badge_locations: list[Location] = [
-                loc
-                for loc in locations
-                if loc.name in special.gym_badges
-                if not is_excluded(world, loc)
+                loc for loc in locations
+                if loc.name in special.gym_badges and not is_excluded(world, loc)
             ]
             state = CollectionState(world.multiworld)
             state.sweep_for_advancements(filled_locations)  # In case something in the future will be force-placed before badges
@@ -82,7 +85,10 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
         case "shuffle":
             # Priority locations are ignored here because of no TMs/HMs being filler
             # Get TMs and HMs shuffled
-            tm_hm_items: list[Item] = [item for item in items if item.name in all_tm_hm]
+            tm_hm_items: list[Item] = [
+                item for item in items
+                if item.name in all_tm_hm and item.name not in world.options.start_inventory_from_pool
+            ]
             for item in tm_hm_items:
                 items.remove(item)  # list.remove() safe here because badges only exist once in local pool
             world.random.shuffle(tm_hm_items)
@@ -104,12 +110,20 @@ def place_tm_hm_locked(world: "PokemonBWWorld", items: list[Item]) -> None:
                              single_player_placement=True, lock=True, allow_partial=True, name="TM/HM shuffle")
             items.extend(tm_hm_items)  # Re-add unplaced to item pool
         case "hm_with_badge":
-            tm_items = [item for item in items if item.name in tm_hm.tm and "TM70" not in item.name]
-            hm_items = [item for item in items if item.name in tm_hm.hm or "TM70" in item.name]
+            tm_items = [
+                item for item in items
+                if item.name in tm_hm.tm and "TM70" not in item.name
+                and item.name not in world.options.start_inventory_from_pool
+            ]
+            hm_items = [
+                item for item in items
+                if item.name in tm_hm.hm or "TM70" in item.name
+                and item.name not in world.options.start_inventory_from_pool
+            ]
             for item in tm_items:
-                items.remove(item)  # list.remove() safe here because badges only exist once in local pool
+                items.remove(item)  # list.remove() safe here because TMs only exist once in local pool
             for item in hm_items:
-                items.remove(item)  # list.remove() safe here because badges only exist once in local pool
+                items.remove(item)  # list.remove() safe here because HMs only exist once in local pool
             locations = list(world.get_locations())
             filled_locations = [loc for loc in locations if loc.item]
             other_tm_locations: list[Location] = [

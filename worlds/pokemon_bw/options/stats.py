@@ -38,26 +38,28 @@ class RandomizeEvolutions(ToggleSet):
     Randomizes the evolutions of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles evolutions being randomized. Automatically added if any
-        other modifier is added.
-    - **Random methods** - Allows the method (e.g. levelup, evolution stone, ...) of
-        every evolution to be randomized as well.
-    - **Common type** - Pre-evolution and evolved pokemon always share at least one type.
+    - **Randomize** - Toggles evolutions being randomized. Automatically added
+        if any other modifier is added.
+    - **Random methods** - Allows the method (e.g. levelup, evolution stone,
+        ...) of every evolution to be randomized as well.
+    - **Common type** - Pre- and post-evolution pokemon always share at least
+        one type.
     - **Follow type** - Whole evolution lines will share at least one type.
-    - **Multiple pre-evolutions** - Different pokemon species can evolve into the same species.
-    - **More or less branches** - Allows all species to be able to evolve into more or
-        less different species than before. Requires **Random methods** to be included
-        as well.
-    - **Looping evolution lines** - Allows all species to evolve into one of their
-        pre-evolutions.
-    - **Every level** - Makes all species have a levelup evolution that triggers on
-        any levelup. Including **More or less branches** will ensure at least one method
-        is levelup. This potentially ignores some other modifiers being excluded/included
-        and disables **Consider evolutions** from the **Modify Logic** option.
-    - **Pair stats** - Always makes the stats-dependent methods of Tyrogue be randomized together.
-    - **Pair 50 50** - Always makes the PID-dependent methods of Wurmple be randomized together.
-    - **Increasing stats** - Evolved pokemon will always have an equal or higher base
-        stat total than their pre-evolutions.
+    - **Multiple pre-evolutions** - Different pokemon species can evolve into
+        the same species.
+    - **More or less branches** - All species can evolve into more or less
+        different species than before. Requires **Random methods*.
+    - **Looping evolution lines** - Allows all species to evolve into one of
+        their pre-evolutions.
+    - **Every level** - Makes all species have (at least) one levelup
+        evolution on level 2. This potentially ignores some other modifiers and
+        disables **Consider evolutions** from the **Modify Logic** option.
+    - **Pair stats** - Always makes the stats-dependent methods of Tyrogue be
+        randomized together.
+    - **Pair 50 50** - Always makes the PID-dependent methods of Wurmple be
+        randomized together.
+    - **Increasing stats** - Evolved pokemon will always have an equal or
+        higher base stat total than their pre-evolutions.
     """
     display_name = "Randomize Evolutions"
     is_randomize = False
@@ -85,16 +87,18 @@ class RandomizeTypes(ToggleSet):
     - **Randomize** - Fully randomizes the type(s) of every pokemon species.
     - **Mono only** - All species will only get a single type.
     - **Dual only** - All species will only get two distinct types.
-    - **Follow evolutions** - Evolved species will share at least one type with (one of)
-        their pre-evolutions. Might not be fully ensured if combined with plando.
-    - **Force evolutions** - Evolved species will have the exact same type(s) as
-        (one of) their pre-evolutions. Might not be fully ensured if combined with
-        plando. Supersedes **Follow evolutions**.
-    - **Usual combinations** - Usual combinations in vanilla (e.g. Normal/Flying,
-        Rock/Ground, ...) and more prominent mono types are more likely to show up.
+    - **Follow evolutions** - Evolved species will share at least one type with
+        (one of) their pre-evolutions. Might not be fully ensured if combined
+        with plando.
+    - **Force evolutions** - Evolved species will have the exact same type(s)
+        as (one of) their pre-evolutions. Might not be fully ensured if
+        combined with plando. Supersedes **Follow evolutions**.
+    - **Usual combinations** - Usual combinations in vanilla (e.g.
+        Normal/Flying, Rock/Ground, ...) and more prominent mono types are more
+        likely to show up.
 
-    Including both **Mono only** and **Dual only** will cancel each other out, i.e.
-    it will be the same as including none of them.
+    Including both **Mono only** and **Dual only** will cancel each other out,
+    i.e. it will be the same as including none of them.
     """
     display_name = "Randomize Types"
     is_shuffle = False
@@ -230,13 +234,14 @@ class RandomizeAbilities(ToggleSet):
     Randomizes the abilities of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles abilities being randomized. Required for any other modifier.
+    - **Randomize** - Toggles abilities being randomized. Required for any
+        other modifier.
     - **One per pokemon** - Gives every species only one ability.
-    - **Follow evolutions** - Evolved pokemon will have the abilities of (one of) their
-        pre-evolution(s).
-    - **Include hidden abilities** - Includes hidden abilities being randomized.
-        Note that only a few select pokemon that originate from these games can have
-        their hidden ability.
+    - **Follow evolutions** - Evolved pokemon will have the abilities of (one
+        of) their pre-evolution(s).
+    - **Include hidden abilities** - Includes hidden abilities being
+        randomized. Note that only a few select pokemon that originate from
+        these games can have their hidden ability.
     """
     display_name = "Randomize Abilities"
     valid_keys_casefold = True
@@ -266,20 +271,20 @@ class RandomizeEggGroups(ToggleSet):
     Randomizes the egg groups of every pokemon species.
     You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles egg groups being randomized. Automatically added if any
-        other modifier is added.
+    - **Randomize** - Toggles egg groups being randomized. Automatically added
+        if any other modifier is added.
     - **Mono only** - Gives every species only one egg group.
     - **Dual only** - Gives every species exactly two egg group.
-    - **Correlate with types** - Prevents unreasonable combinations of types and egg
-        groups. Best effect if combined with randomized types.
-    - **Follow evolutions** - Evolved pokemon will have the same egg groups as their
-        pre-evolution(s). Takes priority over **Correlate with types**.
-    - **Allow baby stages** - If **Follow evolutions** is included, pre-evolutions of
-        non-Unknown pokemon are allowed to have the Unknown egg group (which is the case
-        for most vanilla baby pokemon).
-    - **Allow baby stages** - Allows custom, player-submitted groups to be used in
-        multiworld generation. Those can also be used in plando without having this
-        modifier included.
+    - **Correlate with types** - Prevents unreasonable combinations of types
+        and egg groups. Best effect if combined with randomized types.
+    - **Follow evolutions** - Evolved pokemon will have the same egg groups as
+        their pre-evolution(s). Takes priority over **Correlate with types**.
+    - **Allow baby stages** - If **Follow evolutions** is included,
+        pre-evolutions of non-Unknown pokemon are allowed to have the Unknown
+        egg group (which is the case for most vanilla baby pokemon).
+    - **Allow baby stages** - Allows custom, player-submitted groups to be used
+        in multiworld generation. Those can also be used in plando without
+        having this modifier included.
 
     **Mono only** and **Dual only** will cancel each other out.
     Note that Ditto and its egg group cannot be randomized at the moment.
@@ -305,22 +310,24 @@ class RandomizeEggGroups(ToggleSet):
 
 class RandomizeEggSpecies(ToggleSet):
     """
-    Randomizes the pokemon species that results from breeding specific other species.
-    Note that the resulting species is always either the mother's egg species
-    or whatever was bred with Ditto. Also, certain special conditions that lead to
-    non-standard egg species (e.g. baby stages, Nidoran, ...) will be removed.
-    You can add as many of the following modifiers as you want.
+    Randomizes the pokemon species that results from breeding specific other
+    species. Note that the resulting species is always either the mother's egg
+    species or whatever was bred with Ditto. Also, certain special conditions
+    that lead to non-standard egg species (e.g. baby stages, Nidoran, ...) will
+    be removed. You can add as many of the following modifiers as you want.
 
-    - **Fix evolutions** - Makes all species have an unevolved pre-evolution as their
-        egg species. Intended for evolution randomization and plando. Looping evolution
-        lines with no unevolved species will result in the same egg species as the
-        breeding species.
-    - **Randomize** - Toggles egg species being randomized. Automatically added if any
-        other of the modifiers below is added. Supersedes **Fix evolutions**.
-    - **Base stages only** - Only allows species with no pre-evolutions to be egg species.
-    - **Common type** - Breeding species and egg species always share at least one type.
-    - **Follow evolutions** - Evolved pokemon will have the same egg species as their
-        pre-evolution(s). Takes priority over **Common type**.
+    - **Fix evolutions** - Makes all species have an unevolved pre-evolution as
+        their egg species. Intended for evolution randomization and plando.
+        Looping evolution lines with no unevolved species will result in the
+        same egg species as the breeding species.
+    - **Randomize** - Toggles egg species being randomized. Automatically added
+        if any other of the modifiers below is added. Supersedes **Fix evolutions**.
+    - **Base stages only** - Only allows species with no pre-evolutions to be
+        egg species.
+    - **Common type** - Breeding species and egg species always share at least
+        one type.
+    - **Follow evolutions** - Evolved pokemon will have the same egg species as
+        their pre-evolution(s). Takes priority over **Common type**.
     """
     display_name = "Randomize Egg Species"
     is_fix_evolutions = False
@@ -333,20 +340,23 @@ class RandomizeEggSpecies(ToggleSet):
 class StatsRandomizationAdjustments(ExtendedOptionCounter):
     """
     Adjust various parameters in various randomization options.
-    Any minimum parameter cannot be higher than its corresponding maximum parameter.
-    Every parameter can be specified as unweighted/weighted lists, "random",
-    and "random-range-x-y" like usual range options.
+    Any minimum parameter cannot be higher than its corresponding maximum
+    parameter. Every parameter can be specified as unweighted/weighted lists,
+    "random", and "random-range-x-y" like usual range options.
 
-    - **Stats total minimum/maximum** (6-1530) - The minimum/maximum base stats total,
-        if randomized.
-    - **Levelup evo weight** (0-99) - If evolutions are randomized and **Random methods**
-        is included, this will determine how likely it is to roll the levelup method.
-        The lower this value, the more likely it is to get special methods (like using a
-        stone, high friendship, ...). Setting this to -1 disables other methods.
-    - **Maximum evo level** (10-100) - The maximum level at which levelup evolutions can occur.
-    - **Catch rates minimum/maximum** (3-255) - The minimum/maximum catch rates, if randomized.
-    - **Levelup moves amount minimum/maximum** (1-100) - The minimum/maximum amount of
-        levelup moves a species can get, if randomized.
+    - **Stats total minimum/maximum** (6-1530) - The minimum/maximum base stats
+        total, if randomized.
+    - **Levelup evo weight** (0-99) - If evolutions are randomized and
+        **Random methods** is included, this will determine how likely it is to
+        roll the levelup method. The lower this value, the more likely it is to
+        get special methods (like using a stone, high friendship, ...). Setting
+        this to -1 disables other methods.
+    - **Maximum evo level** (10-100) - The maximum level at which levelup
+        evolutions can occur.
+    - **Catch rates minimum/maximum** (3-255) - The minimum/maximum catch
+        rates, if randomized.
+    - **Levelup moves amount minimum/maximum** (1-100) - The minimum/maximum
+        amount of levelup moves a species can get, if randomized.
     """
     display_name = "Stats Randomization Adjustments"
     fill_defaults = True
@@ -458,7 +468,6 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
           stone: Water Stone
         - species: Eevee
           method: Friendship
-        override_evolutions: false
         levelup_moveset:
         - move: Earthquake
           level: 1

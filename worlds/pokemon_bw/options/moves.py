@@ -17,32 +17,26 @@ class RandomizeMoveData(ToggleSet):
     You can add as many of the following modifiers as you want.
 
     - **Shuffle power** - Gives every damaging move a commonly used power value
-        (e.g. 50, 75, 100, ...) in an adjustable range. Moves with a unique damage
-        calculation are not affected.
-    - **Randomize power** - Gives every move a completely random power value in an
-        adjustable range. Supersedes **Shuffle power**. Moves with a unique damage
-        calculation are not affected.
-    - **Randomize type** - Randomizes the type of each move, with the Normal type
-        having an adjustable chance.
+        (e.g. 50, 75, 100, ...). Ignores moves with a unique damage calculation.
+    - **Randomize power** - Supersedes **Shuffle power** with arbitrary power values.
+    - **Randomize type** - Randomizes the type of each move, with the Normal
+        type having an adjustable chance.
     - **Shuffle accuracy** - Gives every move a commonly used accuracy
-        (e.g. 100, 95, 50, ...) in an adjustable range. Moves with a guaranteed hit
-        chance are not affected.
-    - **Randomize accuracy** - Gives every move a completely random accuracy in an
-        adjustable range. Supersedes **Shuffle accuracy**. Moves with a guaranteed hit
-        chance are not affected.
-    - **Randomize category** - Randomizes the category of all physical and special moves.
-        Status moves are not affected.
+        (e.g. 100, 95, 50, ...). ignores moves with a guaranteed hit chance.
+    - **Randomize accuracy** - Supersedes **Shuffle accuracy** with arbitrary
+        accuracy values.
+    - **Randomize category** - Randomizes the category of all physical and
+        special moves. Ignores status moves.
     - **Shuffle PP** - Gives every move a commonly used maximum PP count
-        (e.g. 10, 15, 25, ...) in an adjustable range.
-    - **Randomize PP** - Gives every move a completely random maximum PP count in an
-        adjustable range. Supersedes **Shuffle PP**.
+        (e.g. 10, 15, 25, ...).
+    - **Randomize PP** - Supersedes **Shuffle PP** with arbitrary pp counts.
 
-    - **Correlate power and PP** - Moves with a higher PP count are more likely to be
-        less powerful, if any of the two are randomized.
-    - **Correlate power and accuracy** - Moves with a lower accuracy are more likely to
-        be more powerful, if any of the two are randomized.
-    - **Correlate PP and accuracy** - Moves with a lower PP count are more likely to
-        have a higher accuracy, if any of the two are randomized.
+    - **Correlate power and PP** - Moves with a higher PP count are more likely
+        to be less powerful, if any of the two are randomized.
+    - **Correlate power and accuracy** - Moves with a lower accuracy are more
+        likely to be more powerful, if any of the two are randomized.
+    - **Correlate PP and accuracy** - Moves with a lower PP count are more
+        likely to have a higher accuracy, if any of the two are randomized.
     """
     _: None
     """
@@ -83,12 +77,13 @@ class RandomizeTypeChart(ToggleSet):
     Randomizes the type effectiveness chart.
     You can add as many of the following modifiers as you want.
 
-    - **Shuffle** - Shuffles all type effectiveness, thereby keeping the overall amount
-        of weaknesses, resistances, and immunities. Automatically added if any other
-        modifier is added.
-    - **Randomize** - Completely randomizes all type effectiveness. Supersedes **Shuffle**.
-    - **Disable weaknesses/resistances/immunities** - Prevents all type matchups from
-        being a weakness/resistance/immunity (respectively).
+    - **Shuffle** - Shuffles all type effectiveness, thereby keeping the
+        overall amount of weaknesses, resistances, and immunities.
+        Automatically added if any other modifier is added.
+    - **Randomize** - Completely randomizes all type effectiveness.
+        Supersedes **Shuffle**.
+    - **Disable weaknesses/resistances/immunities** - Prevents all type
+        matchups from being a weakness/resistance/immunity (respectively).
     """
     display_name = "Randomize Type Chart"
     is_shuffle = False
@@ -101,16 +96,18 @@ class RandomizeTypeChart(ToggleSet):
 
 class MoveDataRandomizationAdjustments(ExtendedOptionCounter):
     """
-    Adjust various parameters in various randomization options.
-    Any minimum parameter cannot be higher than its corresponding maximum parameter.
+    Adjust various parameters in various randomization options. Any minimum
+    parameter cannot be higher than its corresponding maximum parameter.
     Every parameter can be specified as unweighted/weighted lists, "random",
     and "random-range-x-y" like usual range options.
 
-    - **Move power minimum/maximum** (5-250) - The minimum/maximum move power, if randomized.
-    - **Accuracy minimum/maximum** (5-100) - The minimum/maximum accuracy, if randomized.
-    - **PP minimum/maximum** (1-250) - The minimum/maximum PP, if randomized.
-    - **Normal type probability** (10-90) - The chance of a move becoming a normal type,
+    - **Move power minimum/maximum** (5-250) - The minimum/maximum move power,
         if randomized.
+    - **Accuracy minimum/maximum** (5-100) - The minimum/maximum accuracy,
+        if randomized.
+    - **PP minimum/maximum** (1-250) - The minimum/maximum PP, if randomized.
+    - **Normal type probability** (10-90) - The chance of a move becoming a
+        normal type, if randomized.
     """
     display_name = "Move Data Randomization Adjustments"
     fill_defaults = True
@@ -197,10 +194,11 @@ class MoveDataPlando(Option[dict[str, PlandoMoveData | PlandoTypeEffect | Plando
       Psychic_Bug:
         effectiveness: 0
 
-    Move Data Plando requires the corresponding host setting to be enabled, else it will
-    be ignored for all players. Be aware that this can lead to generation failures or
-    potential softlocks when combined with other restrictive options.
-    Refer to the Move Data Plando guide of this game for further information.
+    Move Data Plando requires the corresponding host setting to be enabled,
+    else it will be ignored for all players. Be aware that this can lead to
+    generation failures or potential softlocks when combined with other
+    restrictive options. Refer to the Move Data Plando guide of this game for
+    further information.
     """
     _ = None
     """
