@@ -75,7 +75,7 @@ table: dict[str, FlagLocationData] = {
         0x199, always_default, "Castelia City Plasma Hideout 1F", None, IF(shuffled_doors, has_confronted_plasma_castelia)),
     "Castelia City - Item from dancers": FlagLocationData(0x196, always_default, "Castelia City", None, IF(shuffled_doors, has_fought_castelia_dancers)),
     "Castelia City - Item from scientist in northern street for seeing 20 species": FlagLocationData(
-        328, always_default, "Castelia City Northern Street East Upper Building 1F", None, has_25_species),
+        328, always_default, "Castelia City Northern Street East Upper Building 1F", None, has_20_species),
     # The rom editor cannot decompile the script for the Passerby Analytics HQ properly
     # "Passerby Analytics HQ - Item for answering all questionnaires": FlagLocationData(0000000, always_default, "Castelia City", None, None),
     # I think this one requires connecting with other save files too

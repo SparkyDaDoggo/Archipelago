@@ -95,16 +95,17 @@ def randomize_types_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
     def do_evos(data: SpeciesEntry, pre: str | None):
         for evo_tup in data.evolutions:
             evo_spec = evo_tup.species.by_form(data.form)
-            if not evo_spec.types[0]:
-                roll(evo_spec, pre)
+            if not evo_spec.types[0] and evo_spec not in planned:
+                planned[evo_spec] = pre
 
+    planned: dict[SpeciesEntry, str | None] = {}
     if mods.is_follow_evolutions:
         for spec in plandod_ts:
             dat = all_species[spec]
             do_evos(dat, world.random.choice(dat.types))
     for spec, dat in all_species.items():
         if not dat.types[0] and (not dat.form or dat.is_custom_form):
-            roll(dat, None)
+            roll(dat, planned.get(dat, None))
 
 
 def randomize_types_post_evo(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
@@ -169,9 +170,10 @@ def randomize_types_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
     def do_evos(data: SpeciesEntry, pre: tuple[str, ...]):
         for evo_tup in data.evolutions:
             evo_spec = evo_tup.species.by_form(data.form)
-            if not evo_spec.types[0]:
-                roll(evo_spec, pre)
+            if not evo_spec.types[0] and evo_spec not in planned:
+                planned[evo_spec] = pre
 
+    planned: dict[SpeciesEntry, tuple[str, ...]] = {}
     if mods.is_follow_evolutions or mods.is_force_evolutions:
         for spec in plandod_ts:
             dat = all_species[spec]

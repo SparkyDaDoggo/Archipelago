@@ -14,12 +14,17 @@ if TYPE_CHECKING:
     from . import PokemonBWWorld
 
 
-class PokemonBlackPatch(APAutoPatchInterface):
+class BWPatchAttributes:
+    world: "PokemonBWWorld"
+
+    def get_file(self, file: str) -> bytes: ...
+
+
+
+class PokemonBlackPatch(APAutoPatchInterface, BWPatchAttributes):
     game = "Pokemon Black and White"
     patch_file_ending = ".apblack"
     result_file_ending = ".nds"
-
-    world: "PokemonBWWorld"
 
     def __init__(self, path: str, player=None, player_name="", world=None):
         self.world = world
@@ -43,12 +48,10 @@ class PokemonBlackPatch(APAutoPatchInterface):
         return PatchMethods.get_file(self, file)
 
 
-class PokemonWhitePatch(APAutoPatchInterface):
+class PokemonWhitePatch(APAutoPatchInterface, BWPatchAttributes):
     game = "Pokemon Black and White"
     patch_file_ending = ".apwhite"
     result_file_ending = ".nds"
-
-    world: "PokemonBWWorld"
 
     def __init__(self, path: str, player=None, player_name="", world=None):
         self.world = world
@@ -72,12 +75,10 @@ class PokemonWhitePatch(APAutoPatchInterface):
         return PatchMethods.get_file(self, file)
 
 
-class PokemonBWDynamicPatch(APAutoPatchInterface):
+class PokemonBWDynamicPatch(APAutoPatchInterface, BWPatchAttributes):
     game = "Pokemon Black and White"
     patch_file_ending = ".apbw"
     result_file_ending = ".nds"
-
-    world: "PokemonBWWorld"
 
     def __init__(self, path: str, player=None, player_name="", world=None):
         self.world = world

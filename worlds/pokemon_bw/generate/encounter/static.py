@@ -6,8 +6,7 @@ if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
-def generate_static_encounters(world: "PokemonBWWorld",
-                               species_checklist: SpeciesChecklist) -> dict[str, StaticEncounterEntry]:
+def generate_static_encounters(world: "PokemonBWWorld", species_checklist: SpeciesChecklist):
     from ...data.locations.encounters.static import static, legendary, fossils, gift
 
     is_dynamic = world.options.version == "dynamic"
@@ -22,7 +21,7 @@ def generate_static_encounters(world: "PokemonBWWorld",
                              480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493,
                              494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649]
     pseudos = [149, 248, 373, 376, 445, 635, 479]
-    encounters: dict[str, StaticEncounterEntry] = {}
+    encounters = world.static_encounter
     not_randomized: dict[str, StaticEncounterData] = {}
 
     if not world.options.randomize_static_pokemon.is_randomize:
@@ -67,11 +66,6 @@ def generate_static_encounters(world: "PokemonBWWorld",
                 small_mimics = (chosen.dex_number, chosen.form)
             if "Item" in name and name.endswith(("3", "4")):
                 big_mimics = (chosen.dex_number, chosen.form)
-            if not world.options.modify_logic.is_consider_static:
-                continue
-            if data.inclusion_rule and not data.inclusion_rule(world):
-                continue
-            species_checklist.check(world.species_entries_by_id[chosen.dex_number, chosen.form])
 
     if not world.options.randomize_gift_pokemon.is_randomize:
         not_randomized |= gift | fossils
@@ -103,11 +97,6 @@ def generate_static_encounters(world: "PokemonBWWorld",
                                                     data.inclusion_rule, data.access_rule, False, 0b1)
             if "Dreamyard" in name:
                 monkeys = (chosen.dex_number, chosen.form)
-            if not world.options.modify_logic.is_consider_static:
-                continue
-            if data.inclusion_rule and not data.inclusion_rule(world):
-                continue
-            species_checklist.check(world.species_entries_by_id[chosen.dex_number, chosen.form])
 
     if not world.options.randomize_legendary_pokemon.is_randomize:
         not_randomized |= legendary
@@ -115,6 +104,9 @@ def generate_static_encounters(world: "PokemonBWWorld",
         mods = world.options.randomize_legendary_pokemon
         vanilla_spec = None
         for name, data in legendary.items():
+            if data.fixed:
+                not_randomized[name] = data
+                continue
             if mods.is_keep_legendary and mods.is_no_legendaries:
                 possible = [spec for spec in world.species_entries.values()
                             if spec.dex_number in pseudos and not spec.form]
@@ -147,27 +139,19 @@ def generate_static_encounters(world: "PokemonBWWorld",
                 pseudos.remove(chosen.dex_number)
             elif mods.is_keep_legendary:
                 legendaries_mythicals.remove(chosen.dex_number)
-            if not world.options.modify_logic.is_consider_static:
-                continue
-            if data.inclusion_rule and not data.inclusion_rule(world):
-                continue
-            if is_dynamic and data.species_black != data.species_white:
-                continue
-            species_checklist.check(world.species_entries_by_id[chosen.dex_number, chosen.form])
 
     for name, data in not_randomized.items():
         encounters[name] = StaticEncounterEntry(versioned_species(data), data.encounter_region,
                                                 data.inclusion_rule, data.access_rule,
                                                 data.species_black != data.species_white, 0)
-        if not world.options.modify_logic.is_consider_static:
-            continue
-        if data.inclusion_rule and not data.inclusion_rule(world):
-            continue
-        if is_dynamic and data.species_black != data.species_white:
-            continue
-        species_checklist.check(world.species_entries_by_id[versioned_species(data)])
 
-    return encounters
+    if world.options.modify_logic.is_consider_static:
+        for name, entry in encounters.items():
+            if entry.inclusion_rule and not entry.inclusion_rule(world):
+                continue
+            if is_dynamic and entry.different_vanilla:
+                continue
+            species_checklist.check(world.species_entries_by_id[entry.species_id])
 
 
 def generate_trade_encounters(world: "PokemonBWWorld",
@@ -204,21 +188,23 @@ def generate_trade_encounters(world: "PokemonBWWorld",
     return encounters
 
 
-def generate_starters(world: "PokemonBWWorld") -> dict[str, StaticEncounterEntry]:
+def generate_starters(world: "PokemonBWWorld"):
     from ...data.locations.encounters.static import starters
 
     mods = world.options.randomize_starter_pokemon
 
     if not mods.is_randomize:
         # All three starters are the same in both versions, so no need to get the versioned species
-        return {name: StaticEncounterEntry(data.species_black, data.encounter_region, data.inclusion_rule,
-                                           data.access_rule, False, 0) for name, data in starters.items()}
+        world.static_encounter |= {name: StaticEncounterEntry(data.species_black, data.encounter_region,
+                                                              data.inclusion_rule, data.access_rule, False, 0)
+                                   for name, data in starters.items()}
+        return
 
     used_types = []
     official = (1, 4, 7, 152, 155, 158, 252, 255, 258, 387, 390, 393, 495, 498, 501)
     vanilla_types = ("Grass", "Fire", "Water")
 
-    encounters: dict[str, StaticEncounterEntry] = {}
+    encounters = world.static_encounter
     for name, data in starters.items():
         possible = [world.species_entries_by_id[i, 0] for i in (official if mods.is_only_official else range(1, 650))]
         if not mods.is_only_official and (mods.is_any_base or mods.is_base_2_evos):
@@ -246,5 +232,3 @@ def generate_starters(world: "PokemonBWWorld") -> dict[str, StaticEncounterEntry
         used_types += chosen.types
         encounters[name] = StaticEncounterEntry((chosen.dex_number, chosen.form), data.encounter_region,
                                                 data.inclusion_rule, data.access_rule, False, 0b1)
-
-    return encounters

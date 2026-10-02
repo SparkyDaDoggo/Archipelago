@@ -63,25 +63,28 @@ def randomize_egg_groups(world: "PokemonBWWorld", all_species: dict[str, Species
             do_evos(data, chosen)
 
     def do_evos(data: SpeciesEntry, pre: tuple[str, ...]):
-        if (
-            mods.is_allow_baby_stages and not data.pre_evolutions and data.evolutions
-            and pre[0] == "Unknown" and world.random.random() < 0.25
-        ):
-            pre = roll_groups(data)
-        for evo_tup in data.evolutions:
-            if evo_tup.species.egg_groups is None:
-                set_value(evo_tup.species, pre)
-                do_evos(evo_tup.species, pre)
-        for pre_evo_data in data.pre_evolutions:
-            if pre_evo_data.egg_groups is None:
-                new_pre = pre
-                if (
-                    mods.is_allow_baby_stages and not pre_evo_data.pre_evolutions
-                    and pre[0] != "Unknown" and world.random.random() < 0.0625
-                ):
-                    new_pre = ("Unknown", "Unknown")
-                set_value(pre_evo_data, new_pre)
-                do_evos(pre_evo_data, pre)
+        todo = {data: pre}
+        while todo:
+            data, pre = todo.popitem()
+            if (
+                mods.is_allow_baby_stages and not data.pre_evolutions and data.evolutions
+                and pre[0] == "Unknown" and world.random.random() < 0.25
+            ):
+                pre = roll_groups(data)
+            for evo_tup in data.evolutions:
+                if evo_tup.species.egg_groups is None:
+                    set_value(evo_tup.species, pre)
+                    todo[evo_tup.species] = todo.get(evo_tup.species, False) or pre
+            for pre_evo_data in data.pre_evolutions:
+                if pre_evo_data.egg_groups is None:
+                    new_pre = pre
+                    if (
+                        mods.is_allow_baby_stages and not pre_evo_data.pre_evolutions
+                        and pre[0] != "Unknown" and world.random.random() < 0.0625
+                    ):
+                        new_pre = ("Unknown", "Unknown")
+                    set_value(pre_evo_data, new_pre)
+                    todo[pre_evo_data] = todo.get(pre_evo_data, False) or pre
 
     allowed = list(g for g, d in groups.items() if d.vanilla) if not mods.is_allow_custom_groups else list(groups)
     keep_ditto = True  # Needs assembly changes

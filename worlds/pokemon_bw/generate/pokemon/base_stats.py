@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence
 from .. import SpeciesEntry
 
 if TYPE_CHECKING:
@@ -96,11 +96,20 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
     max_total = world.options.stats_randomization_adjustments["Stats total maximum"]
     min_total = world.options.stats_randomization_adjustments["Stats total minimum"]
 
-    def roll(data: SpeciesEntry, pre: list[int] | tuple[int, ...]):
+    def distribute(amount: int) -> list[int]:
+        assert amount >= 0, f"Negative amount to distribute: {amount}"
+        ret = [0] * 6
+        while amount:
+            d = min(world.random.randint(1, 100), amount)
+            ret[world.random.randint(0, 5)] += d
+            amount -= d
+        return ret
+
+    def roll(data: SpeciesEntry, pre: Sequence[int]):
         total = max(sum(pre) + 1, sum(data.base_stats_copy)) if not mods.is_random_total \
             else world.random.randint(max(min(sum(pre) + 1, max_total), min_total), max_total)
-        append = tuple(world.random.randint(1, 255) for _ in range(6))
-        dist = [pre[i] + int(append[i] / sum(append) * (total - sum(pre))) for i in range(6)]
+        append = distribute(total - sum(pre))
+        dist = [pre[i] + append[i] for i in range(6)]
         cache = total - sum(dist)
         for i in range(6):
             if dist[i] > 255:
@@ -116,7 +125,7 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
                     cache -= to_add
                     dist[i] += to_add
                 if cache < 0 and dist[i] > pre[i]:
-                    to_sub = min(cache, dist[i] - pre[i])
+                    to_sub = min(-cache, dist[i] - pre[i])
                     cache += to_sub
                     dist[i] -= to_sub
                 if cache == 0:
@@ -124,7 +133,7 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
             else:
                 raise Exception(f"Error with distributing cache in base stats rando: "
                                 f"cache = {cache}, dist = {dist}, total = {total}, max_total = {max_total}, "
-                                f"min_total = {min_total}, append = {append}")
+                                f"min_total = {min_total}, append = {append}, pre = {pre}")
         if any(evo.method in ("Level up higher defense", "Level up higher attack", "Level up equal physical")
                for evo in data.evolutions):
             both = dist[1] + dist[2]
@@ -144,21 +153,29 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
                              plando_stat.base_sp_defense or data.base_stats[4],
                              plando_stat.base_speed or data.base_stats[5]))
 
-    def upgrade(data: SpeciesEntry, pre: list[int] | tuple[int, ...]):
-        old = data.base_stats
-        set_value(data, tuple(max(data.base_stats[i], pre[i]) for i in range(6)))
-        apply_plando(data)
-        if data.base_stats != old:
-            do_evos(data, data.base_stats)
+    def get_max(b1: Sequence[int], b2: Sequence[int]) -> tuple[int, ...]:
+        ret = list(min(b1[i], b2[i]) for i in range(6))
+        for i in range(6):
+            if sum(ret) + abs(b1[i] - b2[i]) <= max_total:
+                ret[i] = max(b1[i], b2[i])
+        return tuple(ret)
 
-    def do_evos(data: SpeciesEntry, this: tuple[int, ...] | list[int]):
-        for evo_tup in data.evolutions:
-            evo_spec = evo_tup.species.by_form(data.form)
-            if not evo_spec.base_stats[0]:
-                roll(evo_spec, this)
-            else:
-                upgrade(evo_spec, this)
+    def do_evos(data: SpeciesEntry, this: Sequence[int]):
+        todo = {data: this}
+        while todo:
+            data, this = todo.popitem()
+            for evo_tup in data.evolutions:
+                evo_spec = evo_tup.species.by_form(data.form)
+                if not evo_spec.base_stats[0]:
+                    planned[evo_spec] = get_max(this, planned.get(evo_spec, (0, 0, 0, 0, 0, 0)))
+                else:
+                    old = evo_spec.base_stats
+                    set_value(evo_spec, get_max(evo_spec.base_stats, this))
+                    apply_plando(evo_spec)
+                    if evo_spec.base_stats != old:
+                        todo[evo_spec] = get_max(evo_spec.base_stats, todo.get(evo_spec, (0, 0, 0, 0, 0, 0)))
 
+    planned: dict[SpeciesEntry, Sequence[int]] = {}
     for dat in all_species.values():
         if not dat.base_stats[0] and (not dat.form or dat.is_custom_form):
-            roll(dat, (0, 0, 0, 0, 0, 0))
+            roll(dat, planned.get(dat, (0, 0, 0, 0, 0, 0)))

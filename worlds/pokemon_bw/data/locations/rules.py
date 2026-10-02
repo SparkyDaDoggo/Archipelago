@@ -325,6 +325,7 @@ has_legendary_beasts: ExtendedRule = lambda state, world: state.has_all(("Entei"
 has_genesect: ExtendedRule = lambda state, world: state.has("Genesect", world.player)
 has_shaymin: ExtendedRule = lambda state, world: state.has("Shaymin", world.player)
 has_other_locations_species: ExtendedRule = lambda state, world: state.has(world.other_locations_species, world.player)
+has_20_species: ExtendedRule = build_seen_ext_rule(20)
 has_25_species: ExtendedRule = build_seen_ext_rule(25)
 has_51_species: ExtendedRule = build_seen_ext_rule(51)
 has_60_species: ExtendedRule = build_seen_ext_rule(60)

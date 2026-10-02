@@ -73,13 +73,16 @@ def randomize_stats_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
         do_evos(data, chosen)
 
     def do_evos(data: SpeciesEntry, this: int):
-        for evo_tup in data.evolutions:
-            evo_spec = evo_tup.species.by_form(data.form)
-            set_value(evo_spec, this)
-            do_evos(evo_spec, this)
-        for pre in data.pre_evolutions:
-            set_value(pre, this)
-            do_evos(pre, this)
+        todo = {data: this}
+        while todo:
+            data, this = todo.popitem()
+            for evo_tup in data.evolutions:
+                evo_spec = evo_tup.species.by_form(data.form)
+                set_value(evo_spec, this)
+                todo[evo_spec] = todo.get(evo_spec, False) or this
+            for pre in data.pre_evolutions:
+                set_value(pre, this)
+                todo[pre] = todo.get(pre, False) or this
 
     for dat in all_species.values():
         if dat.gender_ratio != -1 and (not dat.form or dat.is_custom_form):

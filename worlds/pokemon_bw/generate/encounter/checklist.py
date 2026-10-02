@@ -179,10 +179,7 @@ def get_copy_checklist(world: "PokemonBWWorld") -> CopyChecklist | None:
         first_global: dict[tuple[int, int], EncounterEntry] = {}
         for slot in world.wild_encounter.values():
             group = copy_list[slot.file_index]
-            if group is None:
-                continue
-            group = group.search()
-            if group.head != slot:
+            if group and group.search().head != slot:
                 continue
             if slot.species_id not in first_global:
                 first_global[slot.species_id] = slot
@@ -191,14 +188,11 @@ def get_copy_checklist(world: "PokemonBWWorld") -> CopyChecklist | None:
                 copy_list.merge(f_slot, slot,
                                 rates_by_global_slot[f_slot.file_index[2]],
                                 rates_by_global_slot[slot.file_index[2]])
-    elif mods.is_dungeon_1_to_1:
+    elif mods.is_dungeon_1_to_1 and not mods.is_ensure_all:
         first_dungeon: dict[tuple[str, tuple[int, int]], EncounterEntry] = {}
         for slot in world.wild_encounter.values():
             group = copy_list[slot.file_index]
-            if group is None:
-                continue
-            group = group.search()
-            if group.head != slot:
+            if group and group.search().head != slot:
                 continue
             dungeon_name = slot.encounter_region[0]
             if " " in dungeon_name:
@@ -215,10 +209,7 @@ def get_copy_checklist(world: "PokemonBWWorld") -> CopyChecklist | None:
         first_area: dict[tuple[str, tuple[int, int]], EncounterEntry] = {}
         for slot in world.wild_encounter.values():
             group = copy_list[slot.file_index]
-            if group is None:
-                continue
-            group = group.search()
-            if group.head != slot:
+            if group and group.search().head != slot:
                 continue
             g_key = slot.encounter_region[0], slot.species_id
             if g_key not in first_area:

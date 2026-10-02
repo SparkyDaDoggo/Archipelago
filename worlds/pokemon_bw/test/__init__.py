@@ -2,6 +2,7 @@ import random
 import time
 from typing import Iterable, Callable, Type, Any, TYPE_CHECKING
 
+from Options import OptionError
 from test.bases import WorldTestBase
 
 if TYPE_CHECKING:
@@ -25,16 +26,19 @@ def multiply_random_combinations(option: str, mods: tuple, count: int, additiona
                 all_members = tuple(WorldTestBase.__dict__.items()) + tuple(cls.__dict__.items())
                 for name, value in all_members:
                     name: str
-                    if not (isinstance(value, Callable) and name[:5] in "test_mod_"):
+                    if not (isinstance(value, Callable) and name.startswith(("test_", "mod_"))):
                         continue
                     if name.startswith("test_combination"):
                         continue
                     with self.subTest("World setup", game=self.game):
-                        start_time = time.time()
-                        self.world_setup()
-                        print(f"...took {time.time() - start_time} seconds to generate")
-                    with self.subTest(name, game=self.game, seed=self.multiworld.seed):
-                        value(self)
+                        try:
+                            start_time = time.time()
+                            self.world_setup()
+                            print(f"...took {time.time() - start_time} seconds to generate")
+                            with self.subTest(name, game=self.game, seed=self.multiworld.seed):
+                                value(self)
+                        except OptionError as err:
+                            print("Skipped as a result of an OptionError:\n" + '\n'.join(err.args))
 
             return _test
 
@@ -57,7 +61,8 @@ def random_combination(mods: Iterable[str]) -> list[str]:
 # Options checklist:
 
 # version:
-#   always random
+#   default dynamic
+#   no tests for the other choices because idk
 # goal:
 #   default ghetsis
 #   one test for each other

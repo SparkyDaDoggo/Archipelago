@@ -38,8 +38,8 @@ def create_encounter(world: "PokemonBWWorld") -> None:
     # Static and trade encounter generation also remove and add species from/to checklist
     plando.generate_wild(world, species_checklist)  # only removes species
     world.trade_encounter = static.generate_trade_encounters(world, species_checklist)  # removes and adds species
-    world.static_encounter = (static.generate_static_encounters(world, species_checklist) |
-                              static.generate_starters(world))  # only removes species
+    static.generate_static_encounters(world, species_checklist)
+    static.generate_starters(world)  # only removes species
     wild.generate_wild_encounters(world, species_checklist, copy_checklist)  # only removes species
 
     trainers.generate_trainer_teams(world)

@@ -41,9 +41,9 @@ def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, Specie
     if not possible:
         possible = (min_rate, max_rate)
 
-    def roll(data: SpeciesEntry, maximum: int):
+    def roll(data: SpeciesEntry):
         max_index = len(possible) - 1
-        while possible[max_index] > maximum:
+        while possible[max_index] > planned[data]:
             max_index -= 1
         chosen = world.random.randrange(max_index + 1)
         if mods.is_correlate_with_base_stats:
@@ -58,22 +58,22 @@ def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, Specie
         if mods.is_follow_evolutions:
             do_evos(data, possible[chosen])
 
-    def downgrade(data: SpeciesEntry, maximum: int):
-        if data.catch_rate > maximum:
-            set_value(data, maximum)
-            do_evos(data, maximum)
-
     def do_evos(data: SpeciesEntry, maximum: int):
-        for evo_tup in data.evolutions:
-            evo_spec = evo_tup.species.by_form(data.form)
-            if not evo_spec.catch_rate:
-                roll(evo_spec, maximum)
-            else:
-                downgrade(evo_spec, maximum)
+        todo = {data: maximum}
+        while todo:
+            data, maximum = todo.popitem()
+            for evo_tup in data.evolutions:
+                evo_spec = evo_tup.species.by_form(data.form)
+                if not evo_spec.catch_rate:
+                    planned[evo_spec] = min(maximum, planned.get(evo_spec, max_rate))
+                elif evo_spec.catch_rate > maximum:
+                    set_value(evo_spec, maximum)
+                    todo[evo_spec] = min(maximum, todo.get(evo_spec, max_rate))
 
+    planned: dict[SpeciesEntry, int] = {d: max_rate for d in all_species.values()}
     if mods.is_follow_evolutions:
         for dat in all_plandod:
             do_evos(dat, dat.catch_rate)
     for dat in all_species.values():
         if not dat.catch_rate and (not dat.form or dat.is_custom_form):
-            roll(dat, max_rate)
+            roll(dat)

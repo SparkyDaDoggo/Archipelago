@@ -146,6 +146,12 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Field items (will also disable min_once items)
     - Abyssal Ruins
     - Excluded locations (always enabled)
+  - Customize roadblocks
+    - Extra cuttable trees
+    - Sudowodo trees
+    - Rock Smash rocks
+    - Something with the badge gates
+    - Something needed to cross quicksand in relic castle
 
 ### Stuff that would be nice to have in 1.0.0
 
@@ -157,28 +163,11 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - More or less per trainer
   - Trainersanity
   - Gendersanity
-  - All combinations of Dex/Seen/Form/Shiny/Gender/Count-sanities ("Dexsanitysanity")
-    - Will be hidden from template, simple webhost, and options creator, instead explained in options guide
-    - Internal flag that disables all combined sanities from doing anything in generation and being added to location lookup table
-      - Publishing a plugin that simply flips that flag
-    - Dex/Seen distinguishes between caught/seen flags, thereby always using exactly one of them
-    - Form uses form flags instead of dex flags, but doesn't distinguish gender and has only seen flags
-    - Shiny reduces to only shiny flags instead of shiny/nonshiny flags, activates shiny rate being changeable ingame, and has only seen flags
-    - Gender splits from any gender flag into male-or-female (if gender ratio not male-/female-/unknown-only) and has only seen flags
-    - Count turns specific flags into any flags but certain amount
-    - That makes 14 sanities with ~8700 locations in total, with only 6 being shown in template/simple webhost/options creator
-    - Fixed naming scheme:
-      - Dex+Form = Form, Dex+Shiny = Shiny, Dex+Gender = Gender, Dex+Count = Dexcount
-      - Seen+Form = Formseen, Seen+Shiny = Shinyseen, Seen+Gender = Genderseen, Seen+Count = Seencount
-      - Form+Shiny = Shinyform, Form+Gender = Formgender, Form+Count = Formcount
-      - Shiny+Gender = Shinygender, Shiny+Count = Shinycount
-      - Gender+Count = Gendercount
+  - Gendersanity
+  - Gendercountsanity
+  - Shinygendersanity
+  - Shinygendercountsanity
   - Trainer pokémon plando
-  - Customize roadblocks
-    - Extra cuttable trees
-    - Rock Smash rocks
-    - Something with the badge gates
-    - Something needed to cross quicksand in relic castle
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Fan club chairman levels checks modifier
   - Adjust encounters (like Adjust levels, but with species, based on base stats, mostly just devolve)
@@ -232,6 +221,10 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - BGM randomization
   - Cutscenes shortening
   - Dusk cloud hunt (dusk clouds have a chance to give a check)
+  - Sprite shuffle
+    - Overworld NPCs
+    - In-battle trainers
+    - Animated pokémon
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
   - Some features won't be compatible with, e.g. Dexsanity

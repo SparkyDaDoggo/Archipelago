@@ -172,14 +172,15 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             evo_spec = evo_tup.species.by_form(data.form)
             if evo_spec.form and not evo_spec.is_custom_form:
                 evo_spec = evo_spec.all_forms[0]
-            if not evo_spec.level_up_moves.level_up_moves:
-                roll(evo_spec, extra)
+            if not evo_spec.level_up_moves.level_up_moves and evo_spec not in planned:
+                planned[evo_spec] = extra
 
+    planned: dict[SpeciesEntry,  list[tuple[str, "MoveEntry"]]] = {}
     if mods.is_follow_evolutions:
         for spec, dat in all_species.items():
             if not dat.level_up_moves.level_up_moves and (not dat.form or dat.is_custom_form):
                 if not dat.pre_evolutions:
-                    roll(dat, [])
+                    roll(dat, planned.get(dat, []))
                 else:
                     done_candidates = {dat}  # Only for lookup!
                     base_candidates = list(spec for spec in dat.pre_evolutions if spec != dat)
@@ -192,8 +193,8 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
                             break
                         done_candidates.add(dat2)
                         base_candidates.extend(spec for spec in dat2.pre_evolutions if spec not in done_candidates)
-                    roll(dat2, [])
+                    roll(dat2, planned.get(dat2, []))
     else:
         for spec, dat in all_species.items():
             if not dat.level_up_moves.level_up_moves and (not dat.form or dat.is_custom_form):
-                roll(dat, [])
+                roll(dat, planned.get(dat, []))

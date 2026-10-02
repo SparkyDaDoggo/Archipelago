@@ -46,17 +46,20 @@ def randomize_egg_species(world: "PokemonBWWorld", all_species: dict[str, Specie
             do_evos(data, data.egg_species)
 
     def do_evos(data: SpeciesEntry, pre: str):
-        for evo_tup in data.evolutions:
-            if evo_tup.species.egg_species is None:
-                dat.write |= 0b1000000000
-                set_value(evo_tup.species, pre)
-                do_evos(evo_tup.species, pre)
-        if not fix_mode:
-            for pre_evo_data in data.pre_evolutions:
-                if pre_evo_data.egg_species is None:
+        todo = {data: pre}
+        while todo:
+            data, pre = todo.popitem()
+            for evo_tup in data.evolutions:
+                if evo_tup.species.egg_species is None:
                     dat.write |= 0b1000000000
-                    set_value(pre_evo_data, pre)
-                    do_evos(pre_evo_data, pre)
+                    set_value(evo_tup.species, pre)
+                    todo[evo_tup.species] = todo.get(evo_tup.species, False) or pre
+            if not fix_mode:
+                for pre_evo_data in data.pre_evolutions:
+                    if pre_evo_data.egg_species is None:
+                        dat.write |= 0b1000000000
+                        set_value(pre_evo_data, pre)
+                        todo[pre_evo_data] = todo.get(pre_evo_data, False) or pre
 
     if mods.is_follow_evolutions or fix_mode:
         for dat in all_plandod:

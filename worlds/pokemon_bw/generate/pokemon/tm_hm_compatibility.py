@@ -37,23 +37,23 @@ def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, "Spec
         if mods.is_follow_evolutions:
             do_evos(data, data.tm_hm_moves.tm_hm_moves)
 
-    def upgrade(data: "SpeciesEntry", pre: set[str]):
-        if any(tm not in data.tm_hm_moves.tm_hm_moves for tm in pre):
-            data.tm_hm_moves.tm_hm_moves.update(pre)
-            do_evos(data, pre)
-
     def do_evos(data: "SpeciesEntry", pre: set[str]):
-        for evo_tup in data.evolutions:
-            evo_spec = evo_tup.species.by_form(data.form)
-            if evo_spec.form and not evo_spec.is_custom_form:
-                evo_spec = evo_spec.all_forms[0]
-            if not evo_spec.write & 0b1000000:
-                roll(evo_spec, pre)
-            else:
-                upgrade(evo_spec, pre)
+        todo = {data: pre}
+        while todo:
+            data, pre = todo.popitem()
+            for evo_tup in data.evolutions:
+                evo_spec = evo_tup.species.by_form(data.form)
+                if evo_spec.form and not evo_spec.is_custom_form:
+                    evo_spec = evo_spec.all_forms[0]
+                if not evo_spec.write & 0b1000000:
+                    planned[evo_spec] = planned.get(evo_spec, set()) | pre
+                elif any(tm not in evo_spec.tm_hm_moves.tm_hm_moves for tm in pre):
+                    evo_spec.tm_hm_moves.tm_hm_moves.update(pre)
+                    todo[evo_spec] = todo.get(evo_spec, set()) | pre
 
+    planned: dict[SpeciesEntry, set[str]] = {}
     for dat in all_species.values():
         dat.tm_hm_moves = TMHMMovesetData(set())
     for nam, dat in all_species.items():
         if not dat.write & 0b1000000 and (not dat.form or dat.is_custom_form):
-            roll(dat, set())
+            roll(dat, planned.get(dat, set()))

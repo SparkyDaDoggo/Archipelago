@@ -1,5 +1,6 @@
 from . import multiply_random_combinations, PokemonBWTestBase
-from ..options import RandomizeWildPokemon, RandomizeTrainerPokemon
+from ..options import RandomizeWildPokemon, RandomizeTrainerPokemon, RandomizeStarterPokemon, RandomizeStaticPokemon, \
+    RandomizeLegendaryPokemon, RandomizeGiftPokemon
 from ..data.pokemon.species import by_name
 
 
@@ -12,7 +13,9 @@ class TestRandomizeWildPokemon(PokemonBWTestBase):
         if "Ensure all obtainable" not in self.options["randomize_wild_pokemon"]:
             return
         with self.subTest("Game", game=self.game, seed=self.multiworld.seed):
-            for name in by_name:
+            for name, data in by_name.items():
+                if data.form > 5:
+                    continue
                 self.assertIn(name, self.world.catchable_species_data,
                               f"Species {name} appears to not be catchable anywhere")
 
@@ -21,6 +24,34 @@ class TestRandomizeTrainerPokemonSimple(PokemonBWTestBase):
     options = {"randomize_trainer_pokemon": ["Randomize"]}
 @multiply_random_combinations("randomize_trainer_pokemon", tuple(RandomizeTrainerPokemon.valid_keys), 10)
 class TestRandomizeTrainerPokemon(PokemonBWTestBase):
+    pass
+
+
+class TestRandomizeStarterSimple(PokemonBWTestBase):
+    options = {"randomize_starter_pokemon": ["Randomize"]}
+@multiply_random_combinations("randomize_starter_pokemon", tuple(RandomizeStarterPokemon.valid_keys), 7)
+class TestRandomizeStarter(PokemonBWTestBase):
+    pass
+
+
+class TestRandomizeStaticsSimple(PokemonBWTestBase):
+    options = {"randomize_static_pokemon": ["Randomize"]}
+@multiply_random_combinations("randomize_static_pokemon", tuple(RandomizeStaticPokemon.valid_keys), 5)
+class TestRandomizeStatics(PokemonBWTestBase):
+    pass
+
+
+class TestRandomizeGiftSimple(PokemonBWTestBase):
+    options = {"randomize_gift_pokemon": ["Randomize"]}
+@multiply_random_combinations("randomize_gift_pokemon", tuple(RandomizeGiftPokemon.valid_keys), 5)
+class TestRandomizeGift(PokemonBWTestBase):
+    pass
+
+
+class TestRandomizeLegendariesSimple(PokemonBWTestBase):
+    options = {"randomize_legendary_pokemon": ["Randomize"]}
+@multiply_random_combinations("randomize_legendary_pokemon", tuple(RandomizeLegendaryPokemon.valid_keys), 5)
+class TestRandomizeLegendaries(PokemonBWTestBase):
     pass
 
 

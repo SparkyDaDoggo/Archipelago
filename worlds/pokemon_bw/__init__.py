@@ -185,7 +185,7 @@ class PokemonBWWorld(World):
         self.seed: int = 0
         self.to_be_locked_items: dict[str, list[items.PokemonBWItem] | dict[str, items.PokemonBWItem]] = {}
         self.wild_encounter: dict[tuple[int, int, int], EncounterEntry] = {}
-        self.static_encounter: dict[str, StaticEncounterEntry] | None = None
+        self.static_encounter: dict[str, StaticEncounterEntry] = {}
         self.trade_encounter: dict[str, TradeEncounterEntry] | None = None
         self.trainer_teams: list[TrainerPokemonEntry] | None = None
         self.level_by_region: dict[str, int] = {}
