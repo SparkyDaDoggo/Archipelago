@@ -11,9 +11,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Modes: `Multiply`, `Add`, `Power`
   - Advanced method
     - Same as simple, but accepts multiple chained calculations
-- Added a location group for season-dependant item locations
-- Added an item group for fossils and another one for TMs and HMs combined
-- Added glitched logic in UT for `Require Dowsing Machine` and `Require Flash` logic modifiers
 - Added `Funny Dialog` and `Text Plando` options
   - Both options require the text plando setting in the host yaml to be enabled
   - Added a setting to enable text extraction upon running a patch file
@@ -43,6 +40,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
     - Gym leaders now always have vanilla-type themed teams by default
   - `Rivals keep starter`
     - They also always evolve when possible
+  - `Exclude boss trainers`
 - Added `Wild Randomization Blacklist` and `Trainer Randomization Blacklist` options
   - The wild blacklist might not prevent some pokémon for various reasons (including other options)
   - Ignored by `Encounter Plando`
@@ -144,7 +142,6 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
   - `Village Bridge - Item from fisherman for showing a certain pokémon caught today #1` (+ `#2`, `#3`, `#4`, and `#5`) (now requesting a fixed pokémon)
 - Added combined goals
 - Added `Filler Items Blacklist` option
-- Made the NPC next to the Pokémon Center in Accumula Town tell some information about the world
 - Added `Randomize Move Data` option with the following modifiers:
   - `Shuffle power`
   - `Randomize power`
@@ -229,6 +226,9 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ### Bug fixes and technical stuff
 
+- Added a location group for season-dependant item locations
+- Added an item group for fossils and another one for TMs and HMs combined
+- Added glitched logic in UT for `Require Dowsing Machine` and `Require Flash` logic modifiers
 - Changed some locations' names
 - Added a missing hidden item location in Chargestone Cave B2F
 - Fixed "Striaton City - TM from Fennel" falsely not being able to contain an HM with certain options
@@ -245,6 +245,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed legendary hunt flags being reset after defeating Ghetsis/Alder and resetting statics
 - Fixed `Moor of Icirrus - Hidden item behind boulder (Spring/Summer/Autumn)` not showing up on the UT map tracker
 - Added option groups
+- Made the NPC next to the Pokémon Center in Accumula Town tell some information about the world
 - Merged both Aha quiz locations into one
 - Randomizing or plandoing evolutions will make all species of an evolution line have the same experience curve
 - Filled trainer names and regions

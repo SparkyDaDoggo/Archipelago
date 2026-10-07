@@ -56,6 +56,8 @@ class PokemonBWClient(BizHawkClient):
     berry_bag_offset = 0x19554  # 0x234864 in vanilla W
     badges_offset = 0x21ac0  # 0x23CDD0 in vanilla W
     map_id_offset = 0x3461c  # 0x24f92c in vanilla W
+    x_offset = 0x34622  # 0x24f932 in vanilla W, unused but better leave this offset here
+    z_offset = 0x3462a  # 0x24f93a in vanilla W, unused but better leave this offset here
     battle_ptr_offset = -0x24f54  # 0x1f63bc in vanilla W
 
     def __init__(self):
@@ -85,6 +87,7 @@ class PokemonBWClient(BizHawkClient):
         self.missing_shinyformcount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_forms_amount)]
         self.save_data_address = 0
         self.current_map = -1
+        self.current_32_chunk = -1, -1
         self.game_version = -1  # 0 for black, 1 for white
         self.tracker_game_version = -1  # 0 for black, 1 for white
         self.goal_checking_method: Callable[["PokemonBWClient", "BizHawkClientContext"],

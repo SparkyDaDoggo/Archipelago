@@ -147,6 +147,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Abyssal Ruins
     - Excluded locations (always enabled)
   - Customize roadblocks
+    - Enabling/Disabling all roadblocks
     - Extra cuttable trees
     - Sudowodo trees
     - Rock Smash rocks
@@ -163,11 +164,11 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - More or less per trainer
   - Trainersanity
   - Gendersanity
-  - Gendersanity
   - Gendercountsanity
   - Shinygendersanity
   - Shinygendercountsanity
   - Trainer pokémon plando
+  - Static pokémon plando
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Fan club chairman levels checks modifier
   - Adjust encounters (like Adjust levels, but with species, based on base stats, mostly just devolve)
@@ -193,23 +194,31 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Move data randomization
     - Move names
     - TM/HM content
+  - Trashsanity
+  - MetLocationsanity
+  - Visitsanity
+  - TMHMCountsanity
+  - TVsanity
   - Fairy type
   - Levelup curve modifier
   - Door shuffle
+  - Connections Plando
   - Shuffle roadblock requirements
   - Original content
     - Story scenes
     - Community-made trainers + teams
     - Types
     - Berry fields
+  - BW2 maps backport
+    - More encounter maps+slots
+    - More Visitsanity locations
+    - More connections for Door Shuffle
+    - More static encounters
+    - Altered logic in some places
+    - Requires BW2 ROM while patching
   - Free fly destination
   - Trainer randomization (i.e. what trainer you're actually battling against)
     - With plando capabilities
-  - Trashsanity
-  - MetLocationsanity
-  - Visitsanity
-  - TMHMCountsanity
-  - TVsanity
   - Boss Fight Plando (gym leaders, elite four (first+second run), Alder, N (N's Castle), Ghetsis, Cheren/Bianca (postgame))
     - Sounds kinda unnecessary, but is intended as a concept for the core PlandoBosses option
   - Story fight Plando (Cheren, Bianca, N, ...)
@@ -220,7 +229,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Phenomena activation (vanilla, any badge, Striaton Gym, always)
   - BGM randomization
   - Cutscenes shortening
-  - Dusk cloud hunt (dusk clouds have a chance to give a check)
+  - Dust cloud hunt (dust clouds have a chance to give a check)
   - Sprite shuffle
     - Overworld NPCs
     - In-battle trainers

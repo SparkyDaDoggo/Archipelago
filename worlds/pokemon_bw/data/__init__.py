@@ -198,8 +198,7 @@ class TrainerData(NamedTuple):
     do_not_adjust: bool = False
     logic_inc_rule: InclusionRule | None = None
     access_rule: ExtendedRule | ExtRulesTuple | None = None
-    # early: bool
-    # nearby_maps: tuple[int, ...]
+    is_boss: bool = False
 
 
 class TrainerPokemonData(NamedTuple):

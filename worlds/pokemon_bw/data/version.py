@@ -117,7 +117,13 @@ def stack(value: str) -> int:
 
 
 if __name__ == "__main__":
-    import orjson, os, zipfile
+    import time
+
+    start = time.time()
+
+    import orjson
+    import os
+    import zipfile
     from worlds.Files import container_version
 
     apworld = "pokemon_bw"
@@ -146,3 +152,5 @@ if __name__ == "__main__":
                 zipf2.write(os.path.join(root, file),
                             os.path.relpath(os.path.join(root, file),
                                             "../../"))
+
+    print(f"Build time: {time.time() - start} seconds")

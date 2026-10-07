@@ -144,6 +144,9 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
 
     for next_slot in world.trainer_teams:
         trainer = trainer_table[next_slot.trainer_id - 1]
+        # Sort out boss trainers if excluded
+        if mods.is_exclude_boss_trainers and trainer.is_boss:
+            continue
         # Sort out rivals' last pokémon
         if rivals_starter and trainer.rival not in (0, 7) and next_slot.team_number == trainer.pokemon_count - 1:
             rivals_slots[trainer.rival - 1].append(next_slot)

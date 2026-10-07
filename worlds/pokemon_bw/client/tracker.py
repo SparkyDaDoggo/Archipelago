@@ -53,17 +53,20 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
 
     read = await bizhawk.read(
         ctx.bizhawk_ctx, (
-            (client.save_data_address + client.map_id_offset, 2, client.ram_read_write_domain),
+            (client.save_data_address + client.map_id_offset, 0x10, client.ram_read_write_domain),
         )
     )
-    map_id = int.from_bytes(read[0], "little")
+    map_id = int.from_bytes(read[0][:2], "little")
     if 107 <= map_id <= 112 or 120 <= map_id <= 135:
         map_id += (client.game_version << 10)
+    x = int.from_bytes(read[0][6:8], "little")
+    z = int.from_bytes(read[0][14:16], "little")
 
+    messages = []
     if map_id != client.current_map:
         client.current_map = map_id
         if should_change(map_id):
-            messages = [{
+            messages.append({
                 "cmd": "Set",
                 "key": f"pokemon_bw_map_{ctx.team}_{ctx.slot}",
                 "default": {},
@@ -77,7 +80,7 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
                         "value": {client.coop_id: map_id},
                     }
                 ],
-            }]
+            })
             if not client.coop_id:
                 messages.append({
                     "cmd": "Set",
@@ -89,7 +92,19 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
                         "value": map_id,
                     }],
                 })
-            await ctx.send_msgs(messages)
+    if client.current_32_chunk != (x >> 5, z >> 5) or map_id != client.current_map:
+        messages.append({
+            "cmd": "Bounce",
+            "slots": [ctx.slot],
+            "data": {
+                "mapNumber": map_id,
+                "matrix32X": x >> 5,
+                "matrix32Z": z >> 5,
+            },
+        })
+        client.current_32_chunk = x >> 5, z >> 5
+    if messages:
+        await ctx.send_msgs(messages)
 
 
 async def set_wild_ids(client: "PokemonBWClient", ctx: "BizHawkClientContext"):

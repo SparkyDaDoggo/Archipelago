@@ -81,10 +81,10 @@ class RandomizeTrainerPokemon(ToggleSet):
     - **Type themed** - All pokemon of a trainer will share at least one randomly chosen type.
     - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader and elite 4
         member instead of using their vanilla type. Do note that they always have type themed teams.
-    - **Themed gym trainers** - All pokemon of gym trainers will share the type assigned
-        to their gym leader.
+    - **Themed gym trainers** - All pokemon of gym trainers will share the type of their gym leader.
     - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon
         in common, which will always evolve when possible.
+    - **Exclude boss trainers** - Excludes certain strong trainers like gym leaders and the champion.
 
     Combining multiple modifiers that affect all trainer pokémon (i.e. not just gym trainers, ...)
     might massively increase generation time. Also in that case, most options tend to be less
@@ -101,6 +101,7 @@ class RandomizeTrainerPokemon(ToggleSet):
     is_shuffle_gym_types = False, "Shuffle gym leader types"
     is_themed_gym_trainers = False
     is_rivals_keep_starter = False
+    is_exclude_boss_trainers = False
     # Not sure whether I really want to implement these:
     # is_randomize_abilities = False
     # is_randomize_natures = False
