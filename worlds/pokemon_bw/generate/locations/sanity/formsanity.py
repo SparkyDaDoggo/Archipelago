@@ -64,4 +64,5 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         if count >= len(forms_by_dex[dex]):
             full_formsanity_pokemon.append(dex)
     world.disallowed_all_seen.extend(dex for dex in full_formsanity_pokemon if dex not in world.disallowed_all_seen)
+    world.disallowed_all_seen_forms.extend(form for form in formsanity_ids if form not in world.disallowed_all_seen_forms)
     world.dexsanity_numbers["formsanity"] = formsanity_ids

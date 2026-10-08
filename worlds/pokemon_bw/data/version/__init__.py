@@ -116,7 +116,7 @@ def stack(value: str) -> int:
     return l
 
 
-if __name__ == "__main__":
+def build(pre: bool):
     import time
 
     start = time.time()
@@ -126,12 +126,13 @@ if __name__ == "__main__":
     import zipfile
     from worlds.Files import container_version
 
-    apworld = "pokemon_bw"
+    apworld = "pokemon_bw" + "_prerelease" * pre
     dev_dir = "D:/Games/Archipelago/custom_worlds/dev/"
+    game = "Pokemon Black and White" + " (Pre-Release)" * pre
 
     with zipfile.ZipFile(dev_dir + apworld + ".apworld", 'w', zipfile.ZIP_DEFLATED, True, 9) as zipf2:
         metadata = {
-            "game": "Pokemon Black and White",
+            "game": game,
             "minimum_ap_version": ".".join(str(i) for i in ap_minimum()),
             "authors": ["BlastSlimey"],
             "world_version": ".".join(str(i) for i in version),
@@ -139,9 +140,11 @@ if __name__ == "__main__":
             "compatible_version": 7,
         }
         manifest = orjson.dumps(metadata)
-        with open("../archipelago.json", "wb") as manifest_out:
+        with open("../../archipelago.json", "wb") as manifest_out:
             manifest_out.write(manifest)
-        for root, dirs, files in os.walk("../"):
+        with open("./game.py", "wt") as game_out:
+            game_out.write(f"name = \"{game}\"\n")
+        for root, dirs, files in os.walk("../../"):
             if "__pycache__" in root:
                 continue
             for file in files:
@@ -149,8 +152,15 @@ if __name__ == "__main__":
                     continue
                 if "_temp." in file:
                     continue
-                zipf2.write(os.path.join(root, file),
-                            os.path.relpath(os.path.join(root, file),
-                                            "../../"))
+                zipf2.write(
+                    os.path.join(root, file),
+                    os.path.join(
+                        apworld,
+                        os.path.relpath(
+                            os.path.join(root, file),
+                            "../../"
+                        )
+                    )
+                )
 
     print(f"Build time: {time.time() - start} seconds")

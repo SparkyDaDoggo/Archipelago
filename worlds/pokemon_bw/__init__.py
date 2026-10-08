@@ -11,6 +11,7 @@ from . import items, locations, options, bizhawk_client, rom, groups, tracker
 from .generate import EncounterEntry, StaticEncounterEntry, TradeEncounterEntry, TrainerPokemonEntry, SpeciesEntry, \
     MoveEntry
 from .data import RulesDict
+from .data.version.game import name as game_name
 from .plugins import Plugin
 from .options.groups import option_groups
 
@@ -131,7 +132,7 @@ class PokemonBWWorld(World):
     These games present themselves in 2.5D graphics,
     while still using the well-known grid-based movement mechanics and battle UI.
     """
-    game = "Pokemon Black and White"
+    game = game_name
     options_dataclass = options.PokemonBWOptions
     options: options.PokemonBWOptions
     topology_present = True
@@ -192,6 +193,7 @@ class PokemonBWWorld(World):
         self.tracker_evolutions: list[list[tuple[int, int, int]]]
         self.dexsanity_numbers: dict[str, list[int]] = {}
         self.disallowed_all_seen: list[int] = []
+        self.disallowed_all_seen_forms: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.region_distances: dict[str, int] | None = None
         self.max_distance: int = 0
@@ -321,7 +323,7 @@ class PokemonBWWorld(World):
 
     def calculate_distances_by_sphere(self):
         distances = PokemonBWWorld.distances_by_sphere  # already initialized on class definition
-        for player in self.multiworld.get_game_players("Pokemon Black and White"):
+        for player in self.multiworld.get_game_players(self.game):
             distances[player] = {}
         dist = 0
         for sphere in self.multiworld.get_spheres():
@@ -448,6 +450,7 @@ class PokemonBWWorld(World):
                 "driftveil_random_move_id": self.driftveil_random_move_id,
                 "other_locations_species": self.other_locations_species,
                 "disallowed_all_seen": self.disallowed_all_seen,
+                "disallowed_all_seen_forms": self.disallowed_all_seen_forms,
                 "starting_season": self.starting_season,
                 "relic_castle_roadblock": (slot.species_id[0], slot.max_level),
             }

@@ -64,3 +64,4 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
         create_location(maximum)
 
     world.disallowed_all_seen.extend(dex for dex in (world.species_entries[form].dex_number for form in all_forms) if dex not in world.disallowed_all_seen)
+    world.disallowed_all_seen_forms.extend(form for form in range(72) if form not in world.disallowed_all_seen_forms)

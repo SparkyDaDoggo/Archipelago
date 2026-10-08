@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Self
 from BaseClasses import Location, Region, MultiWorld, CollectionState, Entrance, ItemClassification
 from worlds.AutoWorld import LogicMixin
 from .data import TrainerData
+from .data.version.game import name as game_name
 
 if TYPE_CHECKING:
     from . import PokemonBWWorld
@@ -10,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class PokemonBWLocation(Location):
-    game = "Pokemon Black and White"
+    game = game_name
 
 
 def get_location_lookup_table() -> dict[str, int]:
@@ -349,7 +350,7 @@ class PokemonBWMixin(LogicMixin):
     pokemon_bw_lvl: dict[int, list[int]]
 
     def init_mixin(self, multiworld: MultiWorld) -> None:
-        self.pokemon_bw_lvl = {player: [0] * 21 for player in multiworld.get_game_players("Pokemon Black and White")}
+        self.pokemon_bw_lvl = {player: [0] * 21 for player in multiworld.get_game_players(game_name)}
 
     def copy_mixin(self, new_state: CollectionState | Self) -> CollectionState:
         new_state.pokemon_bw_lvl = {player: levels.copy() for player, levels in self.pokemon_bw_lvl.items()}

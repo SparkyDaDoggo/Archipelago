@@ -263,7 +263,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added static pointers for game data in RAM
 - Prevented plugin options and text plando from being put onto the multiserver
 - Added logic for seen trainer pokémon
-- Made Post-Ghetsis locations be automatically excluded if the goal is `ghetsis`
+- Made Post-Ghetsis locations be automatically excluded if the goal is `Ghetsis`
   - The `Post-Ghetsis locations` group is now empty due to that, but not removed in order to not break older yamls
 - Added scripting system
   - Moved most client setup to the init script as a part of that
@@ -277,7 +277,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Tweaked most of the Master Ball sellers to let you buy/obtain multiple Master Balls at once
 - Added `Max out` and `Reset` as choices for the ingame exp. multiplier
 - Added new entries for maps in UT
-- Proper handling for putting certain progression items into `Start Inventrory From Pool`
+- Proper handling for putting certain progression items into `Start Inventory From Pool`
 - Fixed the dynamic field items in White Forest giving `AP Items` without being a check
 
 ### Is this version compatible with older multiworld slots and save files?

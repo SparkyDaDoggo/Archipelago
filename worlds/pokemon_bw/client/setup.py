@@ -36,15 +36,18 @@ async def late_setup(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> 
         if opt["all_pokemon_seen"]:
             seen_flags = bytearray(b'\xff') * 0x54
             for dex in set(ctx.slot_data["disallowed_all_seen"]):  # iterating over set allowed here since this is not generation
-                seen_flags[dex // 8] -= 1 << (dex % 8)
+                seen_flags[dex // 8] -= 1 << ((dex - 1) % 8)
+            forms_flags = bytearray(b'\xff') * 9
+            for form in set(ctx.slot_data["disallowed_all_seen_forms"]):  # iterating over set allowed here since this is not generation
+                forms_flags[form // 8] -= 1 << (form % 8)
             await bizhawk.write(
                 ctx.bizhawk_ctx, (
                     (client.save_data_address + client.dex_seen_offsets[0], seen_flags, "Main RAM"),
                     (client.save_data_address + client.dex_seen_offsets[1], seen_flags, "Main RAM"),
                     (client.save_data_address + client.dex_display_offsets[0], seen_flags, "Main RAM"),
                     (client.save_data_address + client.dex_display_offsets[1], seen_flags, "Main RAM"),
-                    (client.save_data_address + client.dex_forms_offsets[0], b'\xff' * 9, "Main RAM"),
-                    (client.save_data_address + client.dex_forms_offsets[2], b'\xff' * 9, "Main RAM"),
+                    (client.save_data_address + client.dex_forms_offsets[0], forms_flags, "Main RAM"),
+                    (client.save_data_address + client.dex_forms_offsets[2], forms_flags, "Main RAM"),
                 )
             )
 

@@ -11,6 +11,7 @@ from .client.items import receive_items
 from .client.setup import early_setup, late_setup
 from .client.tracker import (set_map, set_dex_caught_seen, set_goal_bitmap, set_statics_bitmap, set_trades_bitmap,
                              set_wild_ids, set_coop_id, set_game_version)
+from .data.version.game import name as game_name
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
@@ -22,7 +23,7 @@ def register_client():
 
 
 class PokemonBWClient(BizHawkClient):
-    game = "Pokemon Black and White"
+    game = game_name
     system = "NDS"
     patch_suffix = (".apblack", ".apwhite", ".apbw")
 

@@ -4,6 +4,8 @@ from collections import ChainMap
 
 from BaseClasses import Item
 
+from .data.version.game import name as game_name
+
 if TYPE_CHECKING:
     from . import PokemonBWWorld
     from .data import AnyItemData
@@ -12,7 +14,7 @@ all_items_view: ChainMap[str, "AnyItemData"] | None = None
 
 
 class PokemonBWItem(Item):
-    game = 'Pokemon Black and White'
+    game = game_name
 
 
 def generate_item(name: str, world: "PokemonBWWorld") -> PokemonBWItem:
