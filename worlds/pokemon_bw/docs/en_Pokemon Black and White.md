@@ -18,12 +18,14 @@ while still using the well-known grid-based movement mechanics and battle UI.
 - [Credits](credits.md)
 - [Features roadmap](roadmap.md)
 - [Various options guides](options%20guides.md)
-  - Including `Encounter Plando`, `Stats Plando`, `Modify Encounter Rates`, etc.
+  - Including `Encounter Plando`, `Modify Encounter Rates`, etc.
 
 ## Known bugs (might be outdated)
 
 - Harmless/visual bugs:
   - Certain overworld item balls on route 13 don't disappear after pickup
+  - Randomizing the seasons will show the vanilla season at the start of the game, 
+    but switch to the correct one upon leaving the house
 
 ## FAQ (kinda)
 

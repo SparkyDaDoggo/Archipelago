@@ -323,7 +323,7 @@ class PokemonBWWorld(World):
         distances = PokemonBWWorld.distances_by_sphere  # already initialized on class definition
         for player in self.multiworld.get_game_players("Pokemon Black and White"):
             distances[player] = {}
-        dist = 1
+        dist = 0
         for sphere in self.multiworld.get_spheres():
             for loc in sphere:
                 if loc.player not in distances:

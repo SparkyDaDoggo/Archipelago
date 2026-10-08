@@ -22,7 +22,7 @@ def adjust_wild(slot: EncounterEntry, distances: dict[str, int],
 def adjust_trainer(t_entry: TrainerPokemonEntry, t_data: TrainerData, distances: dict[str, int],
                    first_level: dict[str, tuple[int, int]], max_distance: int) -> int:
     # 52 is what the first pokémon of Ghetsis will get, such that his last pokémon will be 54.
-    # furthest distance first level is 50, trainers will get a +2 bonus.
+    # furthest distance first level is 47, trainers will get a +5 bonus.
     # N's team in his throne room has a higher trainer id than Ghetsis,
     #  which means Ghetsis' Cofagrigus is expected to be what sets the first level.
     dist = distances[t_data.region]

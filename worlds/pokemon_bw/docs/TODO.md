@@ -3,10 +3,11 @@
 apworld
 
 rom
+- waking up the desert resort statues says "It was a Darmanitan" -> Change to actual pokemon name
 
 both
-- https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
+- kyurem not randomized (all legendaries???)
 
 # Not urgent
 
@@ -73,6 +74,7 @@ both
 - one case of goal not triggering reported in sync
 - master ball seller not showing up again?
 
-# Spreadsheet because I don't know where else to put it
+# Spreadsheet and sync bugs list because I don't know where else to put them
 
-https://docs.google.com/spreadsheets/d/1nTE-zLKvLuS_o0_4VnhBtydn03_-O1f130813sLqzuY/edit?gid=0#gid=0
+- https://docs.google.com/spreadsheets/d/1nTE-zLKvLuS_o0_4VnhBtydn03_-O1f130813sLqzuY/edit?gid=0#gid=0
+- https://docs.google.com/spreadsheets/d/1N6PfSe9zIasQOXFInW-dh5KCmem-PrmYzQROAqqA0SA/edit?gid=0#gid=0

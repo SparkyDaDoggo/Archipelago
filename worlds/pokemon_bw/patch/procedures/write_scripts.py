@@ -244,19 +244,19 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         fossils_addr = system_scripts.find_label(system_scripts.script_links[5])
         old_fossils_addr = system_scripts.find_label(system_scripts.lines[fossils_addr + 2].parts[2]) + 1
         new_fossils_addr = system_scripts.find_label(system_scripts.lines[fossils_addr + 4].parts[2]) + 1
-        gifts_data = bw_patch_instance.files["statics/fossils"]
+        fossils_data = bw_patch_instance.files["statics/fossils"]
         writes = {
-            0x8012: (gifts_data[0:2], True, b'\0\0'),
-            0x8013: (gifts_data[2], False, 255),
-            0x8014: (gifts_data[4:6], True, b'\0\0'),
-            0x8015: (gifts_data[6], False, 255),
-            0x8016: (gifts_data[8:10], True, b'\0\0'),
-            0x8017: (gifts_data[10], False, 255),
-            0x8018: (gifts_data[12:14], True, b'\0\0'),
-            0x8019: (gifts_data[14], False, 255),
-            0x801A: (gifts_data[16:18], True, b'\0\0'),
-            0x801B: (gifts_data[18], False, 255),
-            0x801C: (gifts_data[19], False, 0),
+            0x8012: (fossils_data[0:2], True, b'\0\0'),
+            0x8013: (fossils_data[2], False, 255),
+            0x8014: (fossils_data[4:6], True, b'\0\0'),
+            0x8015: (fossils_data[6], False, 255),
+            0x8016: (fossils_data[8:10], True, b'\0\0'),
+            0x8017: (fossils_data[10], False, 255),
+            0x8018: (fossils_data[12:14], True, b'\0\0'),
+            0x8019: (fossils_data[14], False, 255),
+            0x801A: (fossils_data[16:18], True, b'\0\0'),
+            0x801B: (fossils_data[18], False, 255),
+            0x801C: (fossils_data[19], False, 0),
         }
         while (line := system_scripts.lines[old_fossils_addr].parts)[0] != "VMJump":
             old_fossils_addr += 1
@@ -265,15 +265,15 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             if (p := writes.get(line[1], False)) and p[0] != p[2]:
                 line[2] = p[0] if not p[1] else int.from_bytes(p[0], "little")
         writes = {
-            0x8012: (gifts_data[20:22], True, b'\0\0'),
-            0x8013: (gifts_data[22], False, 255),
-            0x8014: (gifts_data[24:26], True, b'\0\0'),
-            0x8015: (gifts_data[26], False, 255),
-            0x8016: (gifts_data[28:30], True, b'\0\0'),
-            0x8017: (gifts_data[30], False, 255),
-            0x8018: (gifts_data[32:34], True, b'\0\0'),
-            0x8019: (gifts_data[34], False, 255),
-            0x801A: (gifts_data[35], False, 0),
+            0x8012: (fossils_data[20:22], True, b'\0\0'),
+            0x8013: (fossils_data[22], False, 255),
+            0x8014: (fossils_data[24:26], True, b'\0\0'),
+            0x8015: (fossils_data[26], False, 255),
+            0x8016: (fossils_data[28:30], True, b'\0\0'),
+            0x8017: (fossils_data[30], False, 255),
+            0x8018: (fossils_data[32:34], True, b'\0\0'),
+            0x8019: (fossils_data[34], False, 255),
+            0x801A: (fossils_data[35], False, 0),
         }
         while (line := system_scripts.lines[new_fossils_addr].parts)[0] != "VMJump":
             new_fossils_addr += 1
@@ -286,17 +286,17 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
         legends_addr = system_scripts.find_label(system_scripts.script_links[5])
         swords_addr = system_scripts.find_label(system_scripts.lines[legends_addr + 2].parts[2]) + 1
         other_legends_addr = system_scripts.find_label(system_scripts.lines[legends_addr + 4].parts[2]) + 1
-        gifts_data = bw_patch_instance.files["statics/legendaries"]
+        legends_data = bw_patch_instance.files["statics/legendaries"]
         writes = {
-            0x8012: (gifts_data[0:2], True, b'\0\0'),
-            0x8013: (gifts_data[2], False, 255),
-            0x8014: (gifts_data[3], False, 0),
-            0x8015: (gifts_data[4:6], True, b'\0\0'),
-            0x8016: (gifts_data[6], False, 255),
-            0x8017: (gifts_data[7], False, 0),
-            0x8018: (gifts_data[8:10], True, b'\0\0'),
-            0x8019: (gifts_data[10], False, 255),
-            0x801A: (gifts_data[11], False, 0),
+            0x8012: (legends_data[0:2], True, b'\0\0'),
+            0x8013: (legends_data[2], False, 255),
+            0x8014: (legends_data[3], False, 0),
+            0x8015: (legends_data[4:6], True, b'\0\0'),
+            0x8016: (legends_data[6], False, 255),
+            0x8017: (legends_data[7], False, 0),
+            0x8018: (legends_data[8:10], True, b'\0\0'),
+            0x8019: (legends_data[10], False, 255),
+            0x801A: (legends_data[11], False, 0),
         }
         while (line := system_scripts.lines[swords_addr].parts)[0] != "VMJump":
             swords_addr += 1
@@ -305,20 +305,20 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
             if (p := writes.get(line[1], False)) and p[0] != p[2]:
                 line[2] = p[0] if not p[1] else int.from_bytes(p[0], "little")
         writes = {
-            0x8012: (gifts_data[12:14], True, b'\0\0'),
-            0x8013: (gifts_data[14], False, 255),
-            0x8014: (gifts_data[15], False, 0),
-            0x8015: (gifts_data[16:18], True, b'\0\0'),
-            0x8016: (gifts_data[18], False, 255),
-            0x8017: (gifts_data[19], False, 0),
-            0x8018: (gifts_data[20:22], True, b'\0\0'),
-            0x8019: (gifts_data[22], False, 255),
-            0x801A: (gifts_data[23], False, 0),
-            0x801B: (gifts_data[24:26], True, b'\0\0'),
-            0x801C: (gifts_data[26], False, 255),
-            0x801D: (gifts_data[24:26], True, b'\0\0'),
-            0x801E: (gifts_data[26], False, 255),
-            0x801F: (gifts_data[27], False, 0),
+            0x8012: (legends_data[12:14], True, b'\0\0'),
+            0x8013: (legends_data[14], False, 255),
+            0x8014: (legends_data[15], False, 0),
+            0x8015: (legends_data[16:18], True, b'\0\0'),
+            0x8016: (legends_data[18], False, 255),
+            0x8017: (legends_data[19], False, 0),
+            0x8018: (legends_data[20:22], True, b'\0\0'),
+            0x8019: (legends_data[22], False, 255),
+            0x801A: (legends_data[23], False, 0),
+            0x801B: (legends_data[24:26], True, b'\0\0'),
+            0x801C: (legends_data[26], False, 255),
+            0x801D: (legends_data[24:26], True, b'\0\0'),
+            0x801E: (legends_data[26], False, 255),
+            0x801F: (legends_data[27], False, 0),
         }
         while (line := system_scripts.lines[other_legends_addr].parts)[0] != "VMJump":
             other_legends_addr += 1
