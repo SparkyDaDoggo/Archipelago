@@ -52,8 +52,10 @@ async def check_dex_locations(client: "PokemonBWClient", ctx: "BizHawkClientCont
     for eight_flags in range(client.dex_bytes_amount):
         client.dex_cache[eight_flags] = dex_buffer[eight_flags]
         for bit in range(8):
+            if (dex_num := eight_flags * 8 + bit + 1) >= client.dex_amount:
+                break
             if dex_buffer[eight_flags] & (1 << bit):
-                dex_nums.add(eight_flags * 8 + bit + 1)
+                dex_nums.add(dex_num)
 
     for dex_num in dex_nums:
         locations_to_check += client.missing_dex_flag_loc_ids[dex_num]
@@ -95,20 +97,22 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
         cache2[eight_flags] = shiny_male_buffer[eight_flags]
         cache3[eight_flags] = shiny_female_buffer[eight_flags]
         for bit in range(8):
+            if (dex_num := eight_flags * 8 + bit + 1) >= client.dex_amount:
+                break
             # seen male
             if cache0[eight_flags] & (1 << bit):
-                seen_dex_nums.add(eight_flags * 8 + bit + 1)
+                seen_dex_nums.add(dex_num)
             # seen female
             if cache1[eight_flags] & (1 << bit):
-                seen_dex_nums.add(eight_flags * 8 + bit + 1)
+                seen_dex_nums.add(dex_num)
             # shiny male
             if cache2[eight_flags] & (1 << bit):
-                seen_dex_nums.add(eight_flags * 8 + bit + 1)
-                shiny_dex_nums.add(eight_flags * 8 + bit + 1)
+                seen_dex_nums.add(dex_num)
+                shiny_dex_nums.add(dex_num)
             # shiny female
             if cache3[eight_flags] & (1 << bit):
-                seen_dex_nums.add(eight_flags * 8 + bit + 1)
-                shiny_dex_nums.add(eight_flags * 8 + bit + 1)
+                seen_dex_nums.add(dex_num)
+                shiny_dex_nums.add(dex_num)
 
     for dex_num in seen_dex_nums:
         locations_to_check += client.missing_seen_loc_ids[dex_num]
@@ -157,6 +161,8 @@ async def check_form_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
         cache4[eight_flags] = forms_buffer[eight_flags]
         cache5[eight_flags] = shiny_forms_buffer[eight_flags]
         for bit in range(8):
+            # Breaking this loop if form_flag >= client.dex_forms_amount is not need,
+            #  since bytes count is dividable by forms amount
             # forms
             if cache4[eight_flags] & (1 << bit):
                 forms_dex_nums.add(eight_flags * 8 + bit)

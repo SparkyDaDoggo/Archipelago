@@ -234,6 +234,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Overworld NPCs
     - In-battle trainers
     - Animated pokémon
+  - Higher chance of encountering uncaught species
+  - Multiple encounter rates tables
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
   - Some features won't be compatible with, e.g. Dexsanity

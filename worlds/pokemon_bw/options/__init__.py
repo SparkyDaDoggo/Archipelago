@@ -291,8 +291,8 @@ class AdjustLevels(ToggleSet):
     is_wild_by_distance = True
     is_trainer_by_distance = True
     # is_static_by_distance = True
-    is_wild_by_sphere = False
-    is_trainer_by_sphere = False
+    is_wild_by_sphere = True
+    is_trainer_by_sphere = True
     # is_static_by_sphere = True
     is_tolerance_0 = False
     is_tolerance_20 = True
@@ -492,11 +492,13 @@ class ModifyEncounterRates(Choice):
     - **Invasive** - Sets one slot to 65-80%, one slot to 10-15%, and the
         remaining slots to 5% or less each for all encounter methods.
     - **One per method** - Sets all slots (except one) to 1%. Best in
-        combination with **Prevent rare encounters**.
+        combination with **Prevent rare encounters** and **Rare encounters threshold**
+        set to at least 12.
     - **Dexsanity friendly** - Sets two slots to 33-34%, one slot to 24%, and
         the remaining slots to 1% for grass methods. For surfing and fishing
         methods, all slots (except one) are set to 1%. Best in combination with
-        **Prevent rare encounters**.
+        **Prevent rare encounters** and **Rare encounters threshold** set to
+        at least 12.
     - **Randomized (12)** - Distributes the encounter rates randomly between
         all 12 grass methods slots, 5 surfing methods slots, and 5 fishing
         methods slots. All slots will still have at least a 1% rate. Expect
