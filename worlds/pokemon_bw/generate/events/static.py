@@ -3,14 +3,14 @@ from typing import TYPE_CHECKING, Callable
 from ...locations import PokemonBWLocation
 from BaseClasses import ItemClassification, CollectionState, Region
 from ...items import PokemonBWItem
-from .. import SpeciesEntry
+from .. import SpeciesEntry, TradeEncounterEntry, StaticEncounterEntry
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
 def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
-    from ...generate import TradeEncounterEntry, StaticEncounterEntry
+    from ...data.locations.encounters.static import legendary
 
     catchable_species_data: dict[str, "SpeciesEntry"] = {}
     is_dynamic = world.options.version == "dynamic"
@@ -22,7 +22,9 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
         for name, data in table.items():
             if is_static and not ((data.inclusion_rule is None) or data.inclusion_rule(world)):
                 continue
-            if is_dynamic and data.different_vanilla:
+            if is_dynamic and data.different_vanilla and not (
+                name in legendary and world.options.randomize_legendary_pokemon.is_randomize
+            ):
                 continue
             r: "Region" = world.regions[data.encounter_region]
             l: PokemonBWLocation = PokemonBWLocation(world.player, "[Static] " + name, None, r)

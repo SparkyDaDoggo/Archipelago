@@ -149,7 +149,9 @@ def generate_static_encounters(world: "PokemonBWWorld", species_checklist: Speci
         for name, entry in encounters.items():
             if entry.inclusion_rule and not entry.inclusion_rule(world):
                 continue
-            if is_dynamic and entry.different_vanilla:
+            if is_dynamic and entry.different_vanilla and not (
+                name in legendary and world.options.randomize_legendary_pokemon.is_randomize
+            ):
                 continue
             species_checklist.check(world.species_entries_by_id[entry.species_id])
 

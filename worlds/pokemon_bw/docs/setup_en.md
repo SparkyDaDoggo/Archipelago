@@ -9,7 +9,8 @@ If you find one, please report it in the channel of this game on the Archipelago
 ## Required Software
 
 - BizHawk: [Bizhawk Releases from TASVideos](https://tasvideos.org/BizHawk/ReleaseHistory)
-  - Version 2.11.1 is recommended, 2.11 doesn't work with this game
+  - Version 2.11.1 is recommended
+    - 2.11 doesn't work with this game
     - **Important**: If you decide to play on 2.10 or lower, then you need to **disable AutoSaveRam**
        at `Config > Customize... > Advanced`. Else, your save data will be lost upon closing the emulator.
   - Detailed installation instructions for BizHawk can be found at the above link.
@@ -34,24 +35,27 @@ If you find one, please report it in the channel of this game on the Archipelago
 ### Obtain your NDS patch file
 
 When you join a multiworld game, you will be asked to provide your YAML file to whoever is hosting. Once that is done,
-the host will provide you with either a link to download your data file, or with a zip file containing everyone's data
-files. Your data file should have a `.apblack` or `.apwhite` extension. 
+the host will provide you with either a link to download your patch file, or with a zip file containing everyone's
+patch files. 
+Your patch file should have a `.apblack`, `.apwhite`, or `.apbw` extension. 
 
-Double-click on your `.apblack` or `.apwhite` file to start your client and start the ROM patch process. 
-If your PC asks you which program to open the patch file with, select the Archipelago Launcher (and **not** BizHawk**).
+Double-click on your patch file to start your client and start the ROM patch process. 
+If your PC asks you which program to open the patch file with, select the Archipelago Launcher (and **not BizHawk**).
 Once the process is finished, the client and the emulator will be started automatically, 
-if not set otherwise in the `host.yaml`.
+if not set otherwise in the `host.yaml`. 
+Alternatively, you can open the AP Launcher, select `Open Patch`, and then select your patch file to start the client
+and the emulator.
 
 ### Connect client to emulator
 
-Once both the client and the emulator are started, you must connect them, if this is not done automatically. Within the 
-emulator click on the "Tools" menu and select "Lua Console". Click the folder button or press Ctrl+O to open a Lua 
-script.
+Once both the client and the emulator are started, you must connect them, if this is not done automatically.
+Otherwise, within the emulator, click on the "Tools" menu and select "Lua Console". Click the folder button or press 
+Ctrl+O to open a Lua script.
 Navigate to your Archipelago install folder and open `data/lua/connector_bizhawk_generic.lua`.
 
 ### Connect to the Multiserver
 
-To connect the client to the multiserver simply put `<address>:<port>` on the textfield on top, 
+To connect the client to the multiserver, simply put `<address>:<port>` on the textfield on top, 
 press enter or `Connect`, and type your player and password when/if prompted. 
 An alternative way to connect is typing `/connect <address>:<port> [password]` into the bottom text field and then 
 typing your slot name (if prompted).

@@ -129,6 +129,7 @@ def build(pre: bool):
     apworld = "pokemon_bw" + "_prerelease" * pre
     dev_dir = "D:/Games/Archipelago/custom_worlds/dev/"
     game = "Pokemon Black and White" + " (Pre-Release)" * pre
+    patch_suffix = "_prerelease" * pre
 
     with zipfile.ZipFile(dev_dir + apworld + ".apworld", 'w', zipfile.ZIP_DEFLATED, True, 9) as zipf2:
         metadata = {
@@ -143,7 +144,7 @@ def build(pre: bool):
         with open("../../archipelago.json", "wb") as manifest_out:
             manifest_out.write(manifest)
         with open("./game.py", "wt") as game_out:
-            game_out.write(f"name = \"{game}\"\n")
+            game_out.write(f"name = \"{game}\"\npatch_suffix = \"{patch_suffix}\"\n")
         for root, dirs, files in os.walk("../../"):
             if "__pycache__" in root:
                 continue

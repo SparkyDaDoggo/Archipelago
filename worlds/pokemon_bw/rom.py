@@ -10,7 +10,7 @@ from settings import get_settings
 from worlds.Files import APAutoPatchInterface
 from typing import TYPE_CHECKING, Any, Dict, Callable
 
-from .data.version.game import name as game_name
+from .data.version.game import name as game_name, patch_suffix
 
 if TYPE_CHECKING:
     from . import PokemonBWWorld
@@ -25,7 +25,7 @@ class BWPatchAttributes:
 
 class PokemonBlackPatch(APAutoPatchInterface, BWPatchAttributes):
     game = game_name
-    patch_file_ending = ".apblack"
+    patch_file_ending = ".apblack" + patch_suffix
     result_file_ending = ".nds"
 
     def __init__(self, path: str, player=None, player_name="", world=None):
@@ -52,7 +52,7 @@ class PokemonBlackPatch(APAutoPatchInterface, BWPatchAttributes):
 
 class PokemonWhitePatch(APAutoPatchInterface, BWPatchAttributes):
     game = game_name
-    patch_file_ending = ".apwhite"
+    patch_file_ending = ".apwhite" + patch_suffix
     result_file_ending = ".nds"
 
     def __init__(self, path: str, player=None, player_name="", world=None):
@@ -79,7 +79,7 @@ class PokemonWhitePatch(APAutoPatchInterface, BWPatchAttributes):
 
 class PokemonBWDynamicPatch(APAutoPatchInterface, BWPatchAttributes):
     game = game_name
-    patch_file_ending = ".apbw"
+    patch_file_ending = ".apbw" + patch_suffix
     result_file_ending = ".nds"
 
     def __init__(self, path: str, player=None, player_name="", world=None):
