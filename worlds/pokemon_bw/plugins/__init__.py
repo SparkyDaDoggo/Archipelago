@@ -306,6 +306,8 @@ def load_plugins(patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld
         for module_name, module_type in sys.modules.items():
             if not module_name.startswith("worlds.pokemon_bw_"):
                 continue
+            if module_name[7:].startswith("pokemon_bw_prerelease"):
+                continue
             if hasattr(module_type, "Plugin"):
                 if not isinstance(module_type.Plugin, type):
                     logging.warning(f"{module_name[7:]}.Plugin is not a class")
