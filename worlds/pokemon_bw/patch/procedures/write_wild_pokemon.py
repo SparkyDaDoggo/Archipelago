@@ -28,8 +28,6 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         f"Sphere distances for player {bw_patch_instance.world.player} missing"
     distances = all_distances[bw_patch_instance.world.player]
     max_distance = bw_patch_instance.world.__class__.max_distance_by_sphere
-    print(distances)
-    print(f"Max sphere distance {max_distance}")
 
     # regarding modify levels
     mod_value = bw_patch_instance.world.options.modify_levels.value
@@ -47,12 +45,15 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
     ]
 
     for file, slot in bw_patch_instance.world.wild_encounter.items():
-        new_levels = adjust_wild(slot, distances, first_level, max_distance) if adjust_sphere else (slot.min_level, slot.max_level)
-        for calc in wild_calcs:
-            new_levels = (ModifyLevels.modify(calc["mode"], calc["value"], new_levels[0]),
-                          ModifyLevels.modify(calc["mode"], calc["value"], new_levels[1]))
-        new_levels = (max(new_levels[0], slot.min_level * (100 - tolerance) // 100, 1),
-                      max(new_levels[1], slot.max_level * (100 - tolerance) // 100, 1))
+        if adjust_sphere:
+            new_levels = adjust_wild(slot, distances, first_level, max_distance)
+            for calc in wild_calcs:
+                new_levels = (ModifyLevels.modify(calc["mode"], calc["value"], new_levels[0]),
+                              ModifyLevels.modify(calc["mode"], calc["value"], new_levels[1]))
+            new_levels = (max(new_levels[0], slot.min_level * (100 - tolerance) // 100, 1),
+                          max(new_levels[1], slot.max_level * (100 - tolerance) // 100, 1))
+        else:
+            new_levels = slot.min_level, slot.max_level
         if (slot.min_level, slot.max_level) != new_levels:
             slot.min_level, slot.max_level = new_levels
             slot.write |= 1

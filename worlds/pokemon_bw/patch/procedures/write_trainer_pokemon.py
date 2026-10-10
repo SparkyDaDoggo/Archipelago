@@ -48,12 +48,13 @@ def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Z
 
     for pokemon in bw_patch_instance.world.trainer_teams:
         t_data = trainer_table[pokemon.trainer_id - 1]
-        if t_data.do_not_adjust:
-            continue
-        new_level = adjust_trainer(pokemon, t_data, distances, first_level, max_distance) if adjust_sphere else pokemon.level
-        for calc in trainer_calcs:
-            new_level = ModifyLevels.modify(calc["mode"], calc["value"], new_level)
-        new_level = max(new_level, pokemon.level * (100 - tolerance) // 100, 1)
+        if adjust_sphere:
+            new_level = adjust_trainer(pokemon, t_data, distances, first_level, max_distance) if not t_data.do_not_adjust else pokemon.level
+            for calc in trainer_calcs:
+                new_level = ModifyLevels.modify(calc["mode"], calc["value"], new_level)
+            new_level = max(new_level, pokemon.level * (100 - tolerance) // 100, 1)
+        else:
+            new_level = pokemon.level
         if new_level != pokemon.level:
             pokemon.level = new_level
             pokemon.write |= 1

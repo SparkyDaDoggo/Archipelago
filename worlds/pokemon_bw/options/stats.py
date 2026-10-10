@@ -355,7 +355,7 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         evolutions can occur.
     - **Catch rates minimum/maximum** (3-255) - The minimum/maximum catch
         rates, if randomized.
-    - **Levelup moves amount minimum/maximum** (1-100) - The minimum/maximum
+    - **Levelup moves amount minimum/maximum** (1-22) - The minimum/maximum
         amount of levelup moves a species can get, if randomized.
     """
     display_name = "Stats Randomization Adjustments"
@@ -383,7 +383,7 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         # "Gender ratio minimum": 0,
         # "Gender ratio maximum": 254,
         "Levelup moves amount minimum": 10,
-        "Levelup moves amount maximum": 20,
+        "Levelup moves amount maximum": 15,
         # "No held item chance": 90,
     }
     individual_min_max = {
@@ -395,8 +395,8 @@ class StatsRandomizationAdjustments(ExtendedOptionCounter):
         "Catch rates maximum": (3, 255),
         # "Gender ratio minimum": (0, 254),
         # "Gender ratio maximum": (0, 254),
-        "Levelup moves amount minimum": (1, 100),
-        "Levelup moves amount maximum": (1, 100),
+        "Levelup moves amount minimum": (1, 22),
+        "Levelup moves amount maximum": (1, 22),
         # "No held item chance": (0, 100),
     }
     min_max_pairs = [
