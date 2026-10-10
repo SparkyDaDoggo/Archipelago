@@ -64,7 +64,6 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
 
     messages = []
     if map_id != client.current_map:
-        client.current_map = map_id
         if should_change(map_id):
             messages.append({
                 "cmd": "Set",
@@ -104,6 +103,7 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
             },
         })
         client.current_32_chunk = x >> 5, z >> 5
+    client.current_map = map_id
     if messages:
         await ctx.send_msgs(messages)
 
