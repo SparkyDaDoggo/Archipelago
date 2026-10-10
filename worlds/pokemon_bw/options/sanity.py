@@ -250,9 +250,9 @@ class Formsanity(Range, DexsanityResolver):
 
     @classmethod
     def from_any(cls, data: Any) -> Range:
-        if type(data) is int or isinstance(data, Iterable):
-            return cls(data)
-        return cls.from_text(str(data))
+        if isinstance(data, str):
+            return cls.from_text(str(data))
+        return cls(data)
 
 
 class Formcountsanity(ExtendedOptionCounter):
