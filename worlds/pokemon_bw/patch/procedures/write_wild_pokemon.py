@@ -24,10 +24,12 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
     tolerance = 20 if tolerance == -1 else tolerance
     all_distances = bw_patch_instance.world.__class__.distances_by_sphere
     first_level: dict[str, tuple[int, int]] = {}
-    if adjust_sphere and not all_distances:
-        bw_patch_instance.world.calculate_distances_by_sphere()
-    distances = all_distances.get(bw_patch_instance.world.player, {})
+    assert bw_patch_instance.world.player in all_distances, \
+        f"Sphere distances for player {bw_patch_instance.world.player} missing"
+    distances = all_distances[bw_patch_instance.world.player]
     max_distance = bw_patch_instance.world.__class__.max_distance_by_sphere
+    print(distances)
+    print(f"Max sphere distance {max_distance}")
 
     # regarding modify levels
     mod_value = bw_patch_instance.world.options.modify_levels.value

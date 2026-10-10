@@ -283,7 +283,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                 line[2] = p[0] if not p[1] else int.from_bytes(p[0], "little")
 
     if "statics/legendaries" in bw_patch_instance.files:
-        legends_addr = system_scripts.find_label(system_scripts.script_links[5])
+        legends_addr = system_scripts.find_label(system_scripts.script_links[6])
         swords_addr = system_scripts.find_label(system_scripts.lines[legends_addr + 2].parts[2]) + 1
         other_legends_addr = system_scripts.find_label(system_scripts.lines[legends_addr + 4].parts[2]) + 1
         legends_data = bw_patch_instance.files["statics/legendaries"]

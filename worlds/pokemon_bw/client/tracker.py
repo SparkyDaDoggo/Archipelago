@@ -100,6 +100,7 @@ async def set_map(client: "PokemonBWClient", ctx: "BizHawkClientContext"):
                 "mapNumber": map_id,
                 "matrix32X": x >> 5,
                 "matrix32Z": z >> 5,
+                "coop_id": client.coop_id,
             },
         })
         client.current_32_chunk = x >> 5, z >> 5

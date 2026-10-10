@@ -226,3 +226,7 @@ table: dict[str, FlagLocationData] = {
 seasonal: dict[str, FlagLocationData] = {
     "Route 6 - Item from scientist for all Deerling forms": FlagLocationData(350, deerling_dependant, "Season Research Lab", None, can_catch_all_deerlings),
 }
+
+dust_clouds: dict[str, FlagLocationData] = {
+
+}

@@ -39,7 +39,7 @@ class PokemonBWSettings(settings.Group):
             rom.validate("white", path)
 
     class PokemonBWDynamicRomFile(settings.UserFilePath):
-        """File name of your Pokémon White Version ROM"""
+        """File name of your Pokémon Black or White Version ROM"""
         description = "Pokemon Black or White Version ROM"
         copy_to = "PokemonBWDynamic.nds"
 
@@ -321,7 +321,7 @@ class PokemonBWWorld(World):
             state.pokemon_bw_lvl[self.player][int(item.name[6:]) // 5] -= 1
         return change
 
-    def calculate_distances_by_sphere(self):
+    def pre_output(self):
         distances = PokemonBWWorld.distances_by_sphere  # already initialized on class definition
         for player in self.multiworld.get_game_players(self.game):
             distances[player] = {}
