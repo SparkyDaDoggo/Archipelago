@@ -153,6 +153,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Rock Smash rocks
     - Something with the badge gates
     - Something needed to cross quicksand in relic castle
+    - Massive ocean that connects
 
 ### Stuff that would be nice to have in 1.0.0
 

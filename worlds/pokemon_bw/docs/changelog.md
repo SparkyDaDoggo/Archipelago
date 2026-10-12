@@ -280,6 +280,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added new entries for maps in UT
 - Proper handling for putting certain progression items into `Start Inventory From Pool`
 - Fixed the dynamic field items in White Forest giving `AP Items` without being a check
+- Renamed the `PC` modifier in `Master Ball Seller` to `AP Menu`
 
 ### Is this version compatible with older multiworld slots and save files?
 No

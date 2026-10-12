@@ -9,6 +9,7 @@ from ...ndspy.narc import NARC
 import pkgutil
 
 from .. import otpp
+from ...data.version.game import patch_suffix
 
 if TYPE_CHECKING:
     from ...rom import PokemonBWPatch
@@ -22,7 +23,10 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     if len(player_name) > 32:
         # player name is too long for available space in the rom's header, so make user put in manually instead
         player_name = b''
-    pad = rom.pad088[:0x15] + bytes(version.rom()) + player_name
+    rom_version = bytearray(version.rom())
+    if patch_suffix:
+        rom_version[0] |= 0x80
+    pad = rom.pad088[:0x15] + bytes(rom_version) + player_name
     rom.pad088 = pad + bytes(0x38 - len(pad))
 
     # open patch files zip and create dict of patch procedures

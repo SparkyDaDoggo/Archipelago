@@ -7,6 +7,17 @@ if TYPE_CHECKING:
     from ... import PokemonBWWorld
 
 
+def organize_for_tracker(world: "PokemonBWWorld") -> list[list[int]]:
+    from ...data.trainers.data import table as trainer_table
+    from ...data.pokemon.species import by_name
+    # +1 because we want to map trainer ID to exact index, but there is no trainer with ID 0
+    ret = [[] for _ in range(len(trainer_table) + 1)]
+    for poke in world.trainer_teams:
+        spec = by_name[poke.species]
+        ret[poke.trainer_id].append(spec.dex_number + (spec.form << 11))
+    return ret
+
+
 def generate_trainer_teams(world: "PokemonBWWorld"):
     from ...data.trainers.data import table as trainer_table
     from ...data.pokemon.species import get_weighted_random_species, forms_by_dex

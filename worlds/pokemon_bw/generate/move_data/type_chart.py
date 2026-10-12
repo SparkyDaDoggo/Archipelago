@@ -42,7 +42,7 @@ def randomize_type_chart(world: "PokemonBWWorld") -> dict[tuple[str, str], int]:
         weak = max(weak, 0) if not mods.is_disable_weaknesses else 0
         resist = max(resist, 0) if not mods.is_disable_resistances else 0
         immune = max(immune, 0) if not mods.is_disable_immunities else 0
-        to_fill = [matchup for matchup, effect in this_chart.items() if effect != 0xff]
+        to_fill = [matchup for matchup, effect in this_chart.items() if effect == 0xff]
         world.random.shuffle(to_fill)
         for matchup in to_fill[:weak]:
             this_chart[matchup] = 8

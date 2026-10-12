@@ -108,7 +108,7 @@ class SpeciesEntry:
         self.all_forms = None if not is_copy else data.all_forms
         self.level_up_moves = data.level_up_moves if is_copy else movesets_level_up.table[name]
         self.tm_hm_moves = data.tm_hm_moves if is_copy else movesets_tm_hm.table[name]
-        self.vanilla_moves_count = len(self.level_up_moves) if not is_copy else data.vanilla_moves_count
+        self.vanilla_moves_count = len(self.level_up_moves.level_up_moves) if not is_copy else data.vanilla_moves_count
         self.vanilla_move_levels = sorted(set(m[0] for m in self.level_up_moves.level_up_moves), reverse=True) \
             if not is_copy else data.vanilla_move_levels
         self.egg_groups = None if not is_copy else data.egg_groups

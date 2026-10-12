@@ -640,14 +640,13 @@ class MasterBallSeller(ToggleSet):
     Adds the possibility to buy or obtain an unlimited amount of Master Balls.
     You can select multiple sellers.
     If multiple cost modifiers are added, a random cost in range between them
-    (snapped to 500-steps) gets selected. Adding no cost modifier defaults
-    to 3000.
+    (in steps of 500) gets selected. Adding no cost modifier defaults to 3000.
 
     - **Ns Castle** - Repurposes an NPC in N's Castle, who can be found in the
         same room as the grunt giving Ultra Balls to the player, to give/sell
         Master Balls to the player.
-    - **PC** - Adds an option to every PC in Pokemon Centers to buy/obtain
-        Master Balls.
+    - **AP Menu** - Adds an option to the portable AP menu, which you can open
+        by pressing the Start button, to buy/obtain Master Balls.
     - **Cherens Mom** - Repurposes Cheren's Mom in Nuvema Town to give/sell
         Master Balls.
     - **Undella Mansion seller** - Adds the Master Ball to the pool of items
@@ -659,7 +658,7 @@ class MasterBallSeller(ToggleSet):
     """
     display_name = "Master Ball Seller"
     is_ns_castle = False, "Ns Castle"
-    is_pc = False, "PC"
+    is_ap_menu = False, "AP Menu"
     is_cherens_mom = False, "Cherens Mom"
     is_undella_mansion = False, "Undella Mansion seller"
     is_cost_free = False, "Cost Free"
@@ -673,6 +672,7 @@ class MasterBallSeller(ToggleSet):
         ("Cost: 10000", "Cost 10000"),
         ("N's Castle", "Ns Castle"),
         ("Cheren's Mom", "Cherens Mom"),
+        ("PC", "AP Menu"),
     ]
 
     def verify_keys(self) -> None:

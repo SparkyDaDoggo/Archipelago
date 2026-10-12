@@ -22,7 +22,6 @@ class BWPatchAttributes:
     def get_file(self, file: str) -> bytes: ...
 
 
-
 class PokemonBlackPatch(APAutoPatchInterface, BWPatchAttributes):
     game = game_name
     patch_file_ending = ".apblack" + patch_suffix

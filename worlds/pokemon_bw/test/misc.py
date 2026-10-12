@@ -171,7 +171,7 @@ class TestReplaceEvoMethodsAll(PokemonBWTestBase):
 class TestMasterBallSellerOneCost(PokemonBWTestBase):
     options = {"master_ball_seller": ["Ns Castle", "Cost 1000"]}
 class TestMasterBallSellerTwoCosts(PokemonBWTestBase):
-    options = {"master_ball_seller": ["PC", "Cherens Mom", "Cost Free", "Cost 10000"]}
+    options = {"master_ball_seller": ["AP Menu", "Cherens Mom", "Cost Free", "Cost 10000"]}
 class TestMasterBallSellerNoCost(PokemonBWTestBase):
     options = {"master_ball_seller": ["Undella Mansion seller"]}
 class TestMasterBallSellerCustomCosts(PokemonBWTestBase):

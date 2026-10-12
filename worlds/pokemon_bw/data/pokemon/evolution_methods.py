@@ -3,6 +3,7 @@ from typing import Callable
 from .. import EvolutionMethodData, ExtRulesTuple, AndExtRules as AND
 from . import moves as move_tables, species
 from ..locations.rules import *
+from ..version.game import name as game_name
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -48,7 +49,7 @@ hold_items = (0x002E, 0x002F, 0x0030, 110, 221, 226, 227, 233, 235, 252, 321, 32
 
 
 def build_lvlup_ext_rule(divided: int) -> ExtendedRule:
-    return lambda state, world: any(state.pokemon_bw_lvl[world.player][i] for i in range(divided, 21))
+    return lambda state, world: any(state.pokemon_bw_lvl[game_name][world.player][i] for i in range(divided, 21))
 
 
 lvlup_ext_rule_cache = [build_lvlup_ext_rule(d) for d in range(21)]

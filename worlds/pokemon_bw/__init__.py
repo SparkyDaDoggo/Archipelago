@@ -94,7 +94,7 @@ class PokemonBWSettings(settings.Group):
 
     black_rom: PokemonBlackRomFile = PokemonBlackRomFile(PokemonBlackRomFile.copy_to)
     white_rom: PokemonWhiteRomFile = PokemonWhiteRomFile(PokemonWhiteRomFile.copy_to)
-    dynamic_rom: PokemonWhiteRomFile = PokemonBWDynamicRomFile(PokemonBWDynamicRomFile.copy_to)
+    dynamic_rom: PokemonBWDynamicRomFile = PokemonBWDynamicRomFile(PokemonBWDynamicRomFile.copy_to)
     ut_pack_path: UTPackPath | str = UTPackPath()
     # remove_collected_field_items: RemoveCollectedFieldItems | bool = False
     enable_encounter_plando: EnableEncounterPlando | bool = True
@@ -312,13 +312,13 @@ class PokemonBWWorld(World):
     def collect(self, state: CollectionState | locations.PokemonBWMixin, item: Item) -> bool:
         change = super().collect(state, item)
         if change and item.name.startswith("[Lvl]"):
-            state.pokemon_bw_lvl[self.player][int(item.name[6:]) // 5] += 1
+            state.pokemon_bw_lvl[game_name][self.player][int(item.name[6:]) // 5] += 1
         return change
 
     def remove(self, state: CollectionState | locations.PokemonBWMixin, item: Item) -> bool:
         change = super().remove(state, item)
         if change and item.name.startswith("[Lvl]"):
-            state.pokemon_bw_lvl[self.player][int(item.name[6:]) // 5] -= 1
+            state.pokemon_bw_lvl[game_name][self.player][int(item.name[6:]) // 5] -= 1
         return change
 
     def pre_output(self):
@@ -459,7 +459,8 @@ class PokemonBWWorld(World):
     def fill_slot_data(self) -> Mapping[str, Any]:
         from .data import version
         from .generate.encounter.wild import organize_by_method, organize_trades
-        from .generate.pokemon.evolutions import organize_for_tracker
+        from .generate.pokemon.evolutions import organize_for_tracker as organize_evos
+        from .generate.encounter.trainers import organize_for_tracker as organize_trainers
 
         slot_data = self.extended_slot_data()
         slot_data["options"]["text_plando"] = []
@@ -472,8 +473,9 @@ class PokemonBWWorld(World):
             "encounter_by_method": organize_by_method(self),
             "trade_data": organize_trades(self),
             "level_by_region": self.level_by_region,
-            "tracker_evolutions": organize_for_tracker(self),
+            "tracker_evolutions": organize_evos(self),
             "all_dexsanity_numbers": self.dexsanity_numbers,
+            "trainer_teams": organize_trainers(self),
         }
 
     @staticmethod

@@ -347,11 +347,17 @@ def temporary_debugging(world: "PokemonBWWorld"):
 
 
 class PokemonBWMixin(LogicMixin):
-    pokemon_bw_lvl: dict[int, list[int]]
+    pokemon_bw_lvl: dict[str, dict[int, list[int]]]
 
     def init_mixin(self, multiworld: MultiWorld) -> None:
-        self.pokemon_bw_lvl = {player: [0] * 21 for player in multiworld.get_game_players(game_name)}
+        if hasattr(self, "pokemon_bw_lvl") and isinstance(self.pokemon_bw_lvl, dict):
+            self.pokemon_bw_lvl[game_name] = {player: [0] * 21 for player in multiworld.get_game_players(game_name)}
+        else:
+            self.pokemon_bw_lvl = {game_name: {player: [0] * 21 for player in multiworld.get_game_players(game_name)}}
 
     def copy_mixin(self, new_state: CollectionState | Self) -> CollectionState:
-        new_state.pokemon_bw_lvl = {player: levels.copy() for player, levels in self.pokemon_bw_lvl.items()}
+        if hasattr(new_state, "pokemon_bw_lvl") and isinstance(new_state.pokemon_bw_lvl, dict):
+            new_state.pokemon_bw_lvl[game_name] = {player: levels.copy() for player, levels in self.pokemon_bw_lvl[game_name].items()}
+        else:
+            new_state.pokemon_bw_lvl = {game_name: {player: levels.copy() for player, levels in self.pokemon_bw_lvl[game_name].items()}}
         return new_state

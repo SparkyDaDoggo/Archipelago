@@ -3,11 +3,8 @@
 apworld
 
 rom
-- waking up the desert resort statues says "It was a Darmanitan" -> Change to actual pokemon name
 
 both
-- trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
-- kyurem not randomized (all legendaries???)
 
 # Not urgent
 
@@ -24,11 +21,14 @@ both
 - make client use static game data pointers
 - turn plugin options into actual options (can you even add more options after initial class creation?)
 - import plugin packages and classes while the main apworld itself is getting imported
+- correlate mods in move data rando not working? => Special unit test cases
+- trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
 - rom script changes, some to comply with regions rework:
   - inject item receiver into code that executes AP menu script
   - Go Home button (only after all rom changes listed below are implemented)
   - ############################
   - various events force-teleporting you should be removed
+  - cheren+bianca after ghetsis in nuvema town are set to in front of the lab if not triggered immediately
   - accumula guards send you both ways
   - move striaton gym guide a bit south
   - striaton parcel man send both ways
@@ -38,7 +38,9 @@ both
   - move rumination field rocks a bit
   - make liberty garden grunts not disappearing
   - remove victini shiny lock
+  - waking up the desert resort statues says "It was a Darmanitan" -> Change to actual pokemon name
   - relic castle 1f worker send both ways
+  - relic castle worker that sends you back down to sand filled room once you reached that at least once
   - relic castle chased grunt running towards all entrances
   - driftveil cheren and clay scene talking as alternate trigger
   - add more clerks to driftveil gym entrance

@@ -113,6 +113,10 @@ class PokemonBWClient(BizHawkClient):
         )
         if header[0][:18] not in (b'POKEMON B\0\0\0IRBO01', b'POKEMON W\0\0\0IRAO01'):
             return False
+        if patch_suffix and not header[0][0x9D] & 0x80:  # Pre-release apworld, but release ROM
+            return False
+        if not patch_suffix and header[0][0x9D] & 0x80:  # Release apworld, but pre-release ROM
+            return False
 
         self.player_name = header[0][0xa0:].strip(b'\0').decode()
         if header[0][8] == b'B'[0]:
@@ -130,7 +134,7 @@ class PokemonBWClient(BizHawkClient):
         name in your patched ROM. If ctx.auth is not set after calling, the player will be prompted to enter their
         username."""
 
-        if self.player_name is not None:
+        if self.player_name:
             ctx.auth = self.player_name
 
     def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:
