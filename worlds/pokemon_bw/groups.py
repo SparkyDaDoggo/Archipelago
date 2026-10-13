@@ -20,18 +20,19 @@ def get_item_groups() -> dict[str, set[str]]:
 def get_location_groups() -> dict[str, set[str]]:
     from .data.locations.sanity import countsanity, dexsanity, shinysanity, seensanity, formsanity, shinyformsanity
     from .data.locations.ingame_items import overworld_items, hidden_items, other, special
+    from .options.sanity import DEXSANITYSANITY_ENABLED
 
     return {
         "Dexsanity": set(dexsanity.location_table),
         "Dexcountsanity": set(countsanity.dexcountsanity),
         "Seensanity": set(seensanity.location_table),
-        "Seencountsanity": set(countsanity.seencountsanity),
+        "Seencountsanity": set(countsanity.seencountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Formsanity": set(formsanity.table),
-        "Formcountsanity": set(countsanity.formcountsanity),
+        "Formcountsanity": set(countsanity.formcountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Shinysanity": set(shinysanity.location_table),
-        "Shinycountsanity": set(countsanity.shinycountsanity),
-        "Shinyformsanity": set(shinyformsanity.table),
-        "Shinyformcountsanity": set(countsanity.shinyformcountsanity),
+        "Shinycountsanity": set(countsanity.shinycountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
+        "Shinyformsanity": set(shinyformsanity.table) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
+        "Shinyformcountsanity": set(countsanity.shinyformcountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Overworld items": {*overworld_items.table, *overworld_items.abyssal_ruins, *overworld_items.seasonal},
         "Abyssal Ruins items": set(overworld_items.abyssal_ruins),
         "Hidden items": {*hidden_items.table, *hidden_items.seasonal},
