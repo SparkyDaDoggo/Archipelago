@@ -1,6 +1,7 @@
 # Important stuff
 
 apworld
+- region connections rework
 
 rom
 
