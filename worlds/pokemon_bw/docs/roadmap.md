@@ -15,6 +15,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 ## What features are **not** planned to be implemented
 
 - Shopsanity (due to technical limitations)
+- Co-op event sync
 
 ## Road to 1.0.0 (Required for core)
 
@@ -139,18 +140,26 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Legendaries
   - Other statics
 
-### Required for 1.0.0
+### 0.5.0: TBD
 
 - Expand plugins to client
+- Proper plugin options
+- Decrease trainer eyesight
+- Disable certain location groups
+  - Hidden items (only filler)
+  - Field items (will put all min_once items into them and, if there's still some space, other fillers)
+  - Abyssal Ruins (only filler)
+  - Trainer prizes (only filler)
+  - Excluded locations (always enabled, only filler)
+
+### Required for 1.0.0
+
 - Options:
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
-  - Decrease trainer eyesight
+  - Trainersanity
   - Trade pokémon randomization
-  - Disable certain location groups
-    - Hidden items
-    - Field items (will also disable min_once items)
-    - Abyssal Ruins
-    - Excluded locations (always enabled)
+  - Seen count checks modifier, e.g. Prof Juniper TM rewards
+  - Fan club chairman levels checks modifier
   - Customize roadblocks
     - Enabling/Disabling all roadblocks
     - Extra cuttable trees
@@ -158,7 +167,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Rock Smash rocks
     - Something with the badge gates
     - Something needed to cross quicksand in relic castle
-    - Massive ocean that connects
+    - Massive ocean that connects route 18, Liberty Island, and Undella Town
 
 ### Stuff that would be nice to have in 1.0.0
 
@@ -168,15 +177,14 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Rivals take from box
     - N uses pokemon from nearby
     - More or less per trainer
-  - Trainersanity
+  - More statics rando modifiers
+    - Force unique
   - Gendersanity
   - Gendercountsanity
   - Shinygendersanity
   - Shinygendercountsanity
   - Trainer pokémon plando
   - Static pokémon plando
-  - Seen count checks modifier, e.g. Prof Juniper TM rewards
-  - Fan club chairman levels checks modifier
   - Adjust encounters (like Adjust levels, but with species, based on base stats, mostly just devolve)
   - Synced encounter tables
   - Ingame options (things changeable in PC, moving Experience modifier here)
@@ -242,6 +250,8 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Animated pokémon
   - Higher chance of encountering uncaught species
   - Multiple encounter rates tables
+  - Rivals goal
+  - Many QoL things that require assembly to make them toggleable
 - Offline singleplayer
   - i.e. generating a single world will produce a romhack playable without connecting to a server
   - Some features won't be compatible with, e.g. Dexsanity
