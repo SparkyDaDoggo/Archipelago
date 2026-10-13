@@ -33,18 +33,18 @@ def get_item_lookup_table() -> dict[str, int]:
     from .data.items import all_items_dict_view
 
     table = {name: data.item_id for name, data in all_items_dict_view.items()}
-    table["Out of logic"] = 1000000
     return table
 
 
 def get_main_item_pool(world: "PokemonBWWorld") -> list[PokemonBWItem]:
-    from .generate.items import badges, key_items, main_items, seasons, tm_hm
+    from .generate.items import badges, key_items, main_items, seasons, tm_hm, other
 
     return (badges.generate_default(world) +
             key_items.generate_default(world) +
             main_items.generate_default(world) +
             seasons.generate_default(world) +
-            tm_hm.generate_default(world))
+            tm_hm.generate_default(world) +
+            other.generate_default(world))
 
 
 def generate_filler(world: "PokemonBWWorld") -> str:

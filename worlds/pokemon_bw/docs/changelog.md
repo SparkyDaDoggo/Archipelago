@@ -17,17 +17,15 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added plando mode to `Dexsanity` option
 - Added more modifiers for `Randomize Wild Pokémon`:
   - `Prevent overpowered pokemon`
-    - Other modifiers take priority over this, except `Similar base stats`
     - Adjustable threshold (`Overpowered threshold` in `Pokémon Randomization Adjustments`)
   - `Prevent bad early pokemon`
     - Prevents Wonder Guard and fixed HP attacks before Castelia City
   - `Dungeon 1 to 1`
-    - Same as `Area 1 to 1`, but also merges slots between areas of the same dungeon
+    - Same as `Area 1 to 1`, but also merges slots across areas of the same dungeon
   - `Global 1 to 1`
     - Same as `Area 1 to 1`, but merges slots across all areas
 - Added more modifiers for `Randomize Trainer Pokémon`:
   - `Prevent overpowered pokemon`
-    - Takes priority over most other modifiers, except `Rivals take from box`
     - Adjustable threshold (`Overpowered threshold` in `Pokémon Randomization Adjustments`)
   - `Evolve when possible`
   - `Force fully evolved`
@@ -224,6 +222,32 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added dynamic version selection
 - Added optional rebattling regular trainers by talking to them again
 - Added Repel re-use prompt (Credits to OnlySpaghettiCode and RadisNoir)
+- Added `Randomize Starter Pokémon` option with the following modifiers:
+  - `Randomize`
+  - `Any base`
+  - `Base with 2 evolutions`
+  - `Only official starters`
+  - `Similar base stats`
+  - `Type variety`
+  - `Vanilla types`
+- Added `Randomize Static Pokémon` option with the following modifiers:
+  - `Randomize`
+  - `Similar base stats`
+  - `No legendaries`
+  - `Split statues`
+  - `Split mimics`
+- Added `Randomize Gift Pokémon` option with the following modifiers:
+  - `Randomize`
+  - `Similar base stats`
+  - `Any base`
+  - `No legendaries`
+  - `Split monkeys`
+- Added `Randomize Legendary Pokémon` option with the following modifiers:
+  - `Randomize`
+  - `Keep legendary`
+  - `No legendaries`
+  - `Similar base stats`
+  - `Same type`
 
 ### Bug fixes and technical stuff
 

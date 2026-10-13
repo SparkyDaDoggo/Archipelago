@@ -195,8 +195,8 @@ class DoorShuffle(ToggleSet):
 
     - **Gates** - Shuffles all gate entrances, leading to the region having a
         slightly different layout than normally.
-    - **Buildings per map** - Shuffles the building entrances (not gates)
-        within every city or route.
+    - **Buildings per city** - Shuffles the building entrances (not gates)
+        within every city.
     - **Buildings anywhere** - Shuffles building entrances (not gates) all over
         Unova. Supersedes **Building per map**.
     - **Dungeons** - Shuffles the locations of all dungeons with two entrances
@@ -218,22 +218,18 @@ class DoorShuffle(ToggleSet):
         Not included in **Full**.
     """
     display_name = "Door Shuffle"
-    valid_keys_casefold = True
-    valid_keys = [
-        "Gates",
-        "Buildings per map",
-        "Buildings anywhere",
-        "Dungeons",
-        "Dungeon interiors",
-        "Dungeon interiors anywhere",
-        "Bridges",
-        "Castelia layout",
-        "Full",
-        # "Elevators",
-        # "Quicksand",
-        "Decoupled",
-    ]
-    default = []
+    is_gates = False
+    is_buildings_per_city = False
+    is_buildings_anywhere = False
+    is_dungeons = False
+    is_dungeon_interiors = False
+    is_dungeon_interiors_anywhere = False
+    is_bridges = False
+    is_castelia_layout = False
+    is_full = False
+    # is_elevators = False
+    # is_quicksand = False
+    is_decoupled = False
 
 
 class SeasonControl(Choice):

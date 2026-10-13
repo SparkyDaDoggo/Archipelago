@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from collections import ChainMap
 
-from . import main_items, key_items, medicine, tm_hm, berries, badges, seasons
+from . import main_items, key_items, medicine, tm_hm, berries, badges, seasons, other
 
 if TYPE_CHECKING:
     from .. import ItemData, AnyItemData
@@ -54,4 +54,5 @@ all_items_dict_view: ChainMap[str, "AnyItemData"] = ChainMap[str, "AnyItemData"]
     seasons.table,
     tm_hm.tm,
     tm_hm.hm,
+    other.special,
 )

@@ -254,6 +254,43 @@ class RegionConnectionData(NamedTuple):
     fixed: bool = False  # flag for warp/elevator connections that should not be shuffled
 
 
+class NewRegionConnectionData(NamedTuple):
+    region_1: str
+    region_2: str
+    type: Literal[
+        "Gate", "Building", "Dungeon", "Dungeon inner entrance",
+        "Bridge",
+        "Dungeon inner", "Castelia transition",
+        "Inner door", "Stairs", "Open transition", "Warp",
+        "Adjacent maps", "Virtual",
+        "Elevator", "Quicksand",
+        "Other script",
+    ]
+    """
+    - Shuffle-relevant, always from outside to inside
+    - Shuffle-relevant, always into bridge
+    - Shuffle-relevant
+    - Various stuff, can be shuffled on full
+    - Always fixed
+    - Controlled by a script, but can be shuffled amongst each other
+    - Controlled by a script, never shuffled
+    """
+    warp_id: tuple[int | tuple[int, ...], int | tuple[int, ...]] | tuple
+    """
+    empty tuple for non-warp connections
+    tuple instead of int for places where a long warp is split into multiple ones, first ID is the preferred destination
+    """
+    entrance_name: tuple[str, str] | str | None
+    """
+    What will be appended to each region's name in brackets.
+    First r1 then r2 if tuple, else appended to both.
+    """
+    rule: ExtendedRule | ExtRulesTuple | None = None
+    rule_2: ExtendedRule | ExtRulesTuple | None | Literal[False] = False  # for r2->r1 connection, False means copy the rules above
+    one_way: bool = False  # r1->r2 only
+    fixed: bool = False  # flag for warp/elevator connections that should not be shuffled
+
+
 class EncounterRegionData(NamedTuple):
     file: int
     seasons: bool

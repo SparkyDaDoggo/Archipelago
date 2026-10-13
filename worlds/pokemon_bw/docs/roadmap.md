@@ -133,6 +133,11 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Scripting system (required for many other features)
 - Dynamic choice in Game Version option
 - Trainer rebattling
+- Statics randomization
+  - Starter
+  - Gifts
+  - Legendaries
+  - Other statics
 
 ### Required for 1.0.0
 
@@ -140,7 +145,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Options:
   - Goals: Regional Pokédex, National Pokédex, Custom Pokédex
   - Decrease trainer eyesight
-  - Starter/Static/Gift/Trade/Legendary pokémon randomization
+  - Trade pokémon randomization
   - Disable certain location groups
     - Hidden items
     - Field items (will also disable min_once items)
