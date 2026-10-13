@@ -289,7 +289,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
                 places_for_location[dex] = set(), [], [], StrVar(), StrVar(), set()
             places_for_location[dex][5].add(trainer)
 
-    def build_string(_dex: int, _seen=False) -> str:
+    def build_string(_dex: int, _seen=False, loop=0) -> str:
         if places_for_location[_dex][3 + _seen].value:
             return places_for_location[_dex][3 + _seen].value
         _buffer = list(places_for_location[_dex][0])
@@ -298,13 +298,14 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             _buffer += sorted(f"{_t.trainer_class} {_t.name} ({_t.region})" for _t in places_for_location[_dex][5])
         for _loc, _wanted_dex in places_for_location[_dex][1]:
             _wanted_name = by_number[_wanted_dex]
-            if _wanted_dex in places_for_location and sum(len(_s) for _s in _buffer) < 100:
-                _buffer.append(f"{_loc} (wants {_wanted_name}, found at {build_string(_wanted_dex)})")
+            if _wanted_dex in places_for_location and loop < 20 and sum(len(_s) for _s in _buffer) < 100:
+                _buffer.append(f"{_loc} (wants {_wanted_name}, found at {build_string(_wanted_dex, False, loop+1)})")
             else:
                 _buffer.append(f"{_loc} (wants {_wanted_name})")
         for _pre_evo in places_for_location[_dex][2]:
-            if _pre_evo.dex_number in places_for_location and sum(len(_s) for _s in _buffer) < 100:
-                _buffer.append(f"Evolving {_pre_evo.dex_name} (found at {build_string(_pre_evo.dex_number)})")
+            if _pre_evo.dex_number in places_for_location and loop < 20 and sum(len(_s) for _s in _buffer) < 100:
+                _buffer.append(f"Evolving {_pre_evo.dex_name} "
+                               f"(found at {build_string(_pre_evo.dex_number, False, loop+1)})")
             else:
                 _buffer.append(f"Evolving {_pre_evo.dex_name}")
         _built = ", ".join(_buffer)

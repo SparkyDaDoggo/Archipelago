@@ -162,7 +162,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
 
     any_species_by_type: dict[str, dict[int, list[SpeciesEntry]]] = {t: {} for t in types_by_name}
     any_species: dict[int, list[SpeciesEntry]] = {}
-    # Always do RNG calculation forst, else there will be problems with UT
+    # Always do RNG calculation first, else there will be problems with UT
     if not world.random.randint(0, 999) and len(set(w.game for w in world.multiworld.worlds.values())) > 3:
         print(world.prepare_text(prepare))
     if mods.is_type_themed_areas:
@@ -191,6 +191,9 @@ def generate_wild_encounters(world: "PokemonBWWorld",
     if mods.is_type_themed_areas and not all(any_species_by_type.values()):
         raise OptionError("At least one type has all its species prevented in wild randomization due to some option. "
                           "Please remove some restrictions in your yaml.")
+    if not mods.is_type_themed_areas and not any_species:
+        raise OptionError("No pokémon species is available for wild randomization due to either a tool long blacklist "
+                          "or a too low overpowered threshold. Please remove some restrictions in your yaml.")
     for slot in itertools.chain(logic_slots, other_slots):
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
         area = slot.encounter_region[0]

@@ -47,7 +47,7 @@ def randomize_catch_rates(world: "PokemonBWWorld", all_species: dict[str, Specie
             max_index -= 1
         chosen = world.random.randrange(max_index + 1)
         if mods.is_correlate_with_base_stats:
-            rate_cor = 1 - (possible[chosen] - min_rate) / (max_rate - min_rate)
+            rate_cor = 1 - (possible[chosen] - min_rate) / max(max_rate - min_rate, 1)
             stats_cor = min(max(sum(data.base_stats) - 250, 0), 400) / 400
             if not rate_cor - 0.2 <= stats_cor <= rate_cor + 0.2:
                 if stats_cor > rate_cor:
