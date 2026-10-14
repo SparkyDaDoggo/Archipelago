@@ -87,7 +87,7 @@ class Goal(Choice):
     option_tmhm_hunt = 7
     option_seven_sages_hunt = 8
     option_legendary_hunt = 9
-    # option_pokemon_master = 10  # Alias, gets converted to list of all other
+    option_pokemon_master = 10  # Alias, gets converted to list of all other
     default = 0
 
     def __init__(self, value: int | list[str]):
@@ -96,13 +96,16 @@ class Goal(Choice):
     @classmethod
     def from_any(cls, data: typing.Any):
         if data in ("pokemon_master", 10):
-            data = list(cls.options)
+            data = list(o for o in cls.options if o != "pokemon_master")
         if isinstance(data, list):
             if not data:
                 raise OptionError("Combined goals list must not be empty")
             data = list((d.casefold() if isinstance(d, str) else d) for d in data)
             if all((d in cls.options or d in cls.name_lookup) for d in data):
-                return cls([(d if isinstance(d, str) else cls.name_lookup[d]) for d in data])
+                comb = [(d if isinstance(d, str) else cls.name_lookup[d]) for d in data]
+                if "pokemon_master" in comb:
+                    raise OptionError("Combined goals list itself must not contain the pokemon_master goal")
+                return cls(comb)
             raise OptionError(f"Combined goals list has invalid entries: {data}")
         return super().from_any(data)
 
