@@ -1,7 +1,6 @@
 # Important stuff
 
 apworld
-- options guide for nested random lists
 
 rom
 

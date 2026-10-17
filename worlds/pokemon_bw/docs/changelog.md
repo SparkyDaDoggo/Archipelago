@@ -1,6 +1,14 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.4.2
+
+- Fixed logic of some Opelucid City Battle House trainers
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.4.0
+However, UT might be inaccurate when tracking worlds generated before 0.4.1
+
 ## 0.4.1: "After all, there were still critical bugs" update
 
 - Fixed equal minimum and maximum for catch rates rando failing generation

@@ -519,7 +519,7 @@ table: list[TrainerData] = [
     TrainerData(511, "", "", "PkMn Trainer", 1, None, False, False, 8, None, 0, logic_inc_rule=disabled),
     TrainerData(512, "", "", "PkMn Trainer", 1, None, False, False, 8, None, 0, logic_inc_rule=disabled),
     TrainerData(513, "Eileen", "Opelucid City Battle House 1F", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=black_version),
-    TrainerData(514, "Lou", "Opelucid City Battle House 1F", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=black_version),
+    TrainerData(514, "Lou", "Opelucid City Battle House 2F", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=black_version),
     # Making Kyle/Dye never in-logic because of the traded pokémon being used in the fight
     TrainerData(515, "Kyle", "Driftveil City Upper Right House East of Market", "Youngster", 1, None, False, False, 8, None, 0, logic_inc_rule=disabled),
     TrainerData(516, "Dye", "Nacrene City South East Left House", "Lass", 1, None, False, False, 8, None, 0, logic_inc_rule=disabled),
@@ -622,7 +622,7 @@ table: list[TrainerData] = [
                 access_rule=IF(shuffled_doors, has_fought_dancer_mickey)),
     TrainerData(603, "Charles", "Driftveil City", "Motorcyclist", 3, None, False, False, 8, None, 0, logic_inc_rule=white_version),
     TrainerData(604, "Eileen", "Opelucid City Battle House 2F", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=white_version),
-    TrainerData(605, "Lou", "Opelucid City Battle House 2F", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=white_version),
+    TrainerData(605, "Lou", "Opelucid City Battle House 1F", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=white_version),
     TrainerData(606, "Elmer", "Route 7", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=black_version),
     TrainerData(607, "Elmer", "Route 7", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=white_version),
     TrainerData(608, "Glinda", "Marvelous Bridge", "Ace Trainer", 3, None, False, False, 8, None, 0, logic_inc_rule=black_version),
