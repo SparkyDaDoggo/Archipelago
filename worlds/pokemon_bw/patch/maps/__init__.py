@@ -143,12 +143,122 @@ class Area:
 
 @dataclass
 class Permissions:
-    pass
+    # Everything 2 bytes, but in certain order
+    width: int
+    height: int
+    unknown: list[bytes]
+    inclinations: list[int]
+    distances: list[int]
+    behaviors: list[int]
+    flags: list[int]
+    corner_top_incs: list[int]
+    corner_bottom_incs: list[int]
+    corner_top_dists: list[int]
+    corner_bottom_dists: list[int]
+
+    def to_bytes(self) -> bytes:
+        start = (self.width + (self.height << 16)).to_bytes(4, "little")
+        if not self.unknown:
+            tiles = b''.join(
+                (self.inclinations[i] + (self.distances[i] << 16) +
+                 (self.behaviors[i] << 32) + (self.flags[i] << 48)).to_bytes(8, "little")
+                for i in range(self.width * self.height)
+            )
+        else:
+            tiles = b''.join(
+                self.unknown[i] + (self.behaviors[i] + (self.flags[i] << 16)).to_bytes(4, "little")
+                for i in range(self.width * self.height)
+            )
+        corners = b''.join(
+            (self.corner_top_incs[i] + (self.corner_bottom_incs[i] << 16) +
+             (self.corner_top_dists[i] << 32) + (self.corner_bottom_dists[i] << 48)).to_bytes(8, "little")
+            for i in range(len(self.corner_top_incs))
+        )
+        return start + tiles + corners
+
+    @classmethod
+    def from_bytes(cls, data: bytes | bytearray, signature: bytes, offset: int = 0, offset_end: int = 0):
+        offset_end = offset_end or len(data)
+        width = int.from_bytes(data[0:2], "little")
+        height = int.from_bytes(data[2:4], "little")
+        if signature == b'RD':
+            corner_offset = offset + 24 * width * height + 4
+            unknown = [b''] * (width * height)
+            inclinations = []
+            distances = []
+            behaviors = [0] * (width * height)
+            flags = [0] * (width * height)
+            for i in range(width * height):
+                unknown[i] = data[offset+24*i+4:offset+24*i+24]
+                behaviors[i] = int.from_bytes(data[offset+24*i+24:offset+24*i+26], "little")
+                flags[i] = int.from_bytes(data[offset+24*i+26:offset+24*i+28], "little")
+        else:
+            corner_offset = offset + 8 * width * height + 4
+            unknown = []
+            inclinations = [0] * (width * height)
+            distances = [0] * (width * height)
+            behaviors = [0] * (width * height)
+            flags = [0] * (width * height)
+            for i in range(width * height):
+                inclinations[i] = int.from_bytes(data[offset+8*i+4:offset+8*i+6], "little")
+                distances[i] = int.from_bytes(data[offset+8*i+6:offset+8*i+8], "little")
+                behaviors[i] = int.from_bytes(data[offset+8*i+8:offset+8*i+10], "little")
+                flags[i] = int.from_bytes(data[offset+8*i+10:offset+8*i+12], "little")
+        corner_count = (offset_end - corner_offset) // 8
+        corner_top_incs = [0] * corner_count
+        corner_bottom_incs = [0] * corner_count
+        corner_top_dists = [0] * corner_count
+        corner_bottom_dists = [0] * corner_count
+        for i in range(corner_count):
+            corner_top_incs[i] = int.from_bytes(data[offset+8*i+0:offset+8*i+2], "little")
+            corner_bottom_incs[i] = int.from_bytes(data[offset+8*i+2:offset+8*i+4], "little")
+            corner_top_dists[i] = int.from_bytes(data[offset+8*i+4:offset+8*i+6], "little")
+            corner_bottom_dists[i] = int.from_bytes(data[offset+8*i+6:offset+8*i+8], "little")
+        return cls(
+            width, height,
+            unknown,
+            inclinations, distances, behaviors, flags,
+            corner_top_incs, corner_bottom_incs, corner_top_dists, corner_bottom_dists,
+        )
+
+
+@dataclass
+class BuildingProperties:
+    # Cannot figure out how to handle fx<1.19.12> in Python
+    x: bytes
+    y: bytes
+    z: bytes
+    rotation: int
+    id: int
+
+    @classmethod
+    def from_bytes(cls, data: bytes | bytearray, offset=0):
+        return cls(
+            data[offset:offset+4],
+            data[offset+4:offset+8],
+            data[offset+8:offset+12],
+            int.from_bytes(data[offset+12:offset+14], "little"),
+            int.from_bytes(data[offset+14:offset+16], "big"),
+        )
+
+    def to_bytes(self) -> bytes:
+        return self.x + self.y + self.z + self.rotation.to_bytes(2, "little") + self.id.to_bytes(2, "big")
 
 
 @dataclass
 class Buildings:
-    pass
+    count: int
+    props: list[BuildingProperties]
+
+    @classmethod
+    def from_bytes(cls, data: bytes | bytearray, offset=0):
+        return cls(
+            (count := int.from_bytes(data[offset:offset+2], "little")),
+            [BuildingProperties.from_bytes(data, 2+i*10) for i in range(count)],
+        )
+
+    def to_bytes(self) -> bytes:
+        return self.count.to_bytes(2, "little") + b''.join(p.to_bytes() for p in self.props)
 
 
 @dataclass
@@ -176,10 +286,10 @@ class Container:
     def from_bytes(cls, data: bytes | bytearray):
         count = int.from_bytes(data[2:4], "little")
         offsets = [int.from_bytes(data[4+c*4:8+c+4], "little") for c in range(count)]
-        length = int.from_bytes(data[4+count:8+count], "little")
+        # length = int.from_bytes(data[4+count:8+count], "little")
         return cls(
             data[:2],
             data[offsets[0]:offsets[1]],
-            [Permissions.from_bytes(data[offsets[i]:offsets[i+1]]) for i in range(count)],
-            Buildings.from_bytes(data[offsets[-1]:length]),
+            [Permissions.from_bytes(data, data[:2], offsets[i], offsets[i+1]) for i in range(count)],
+            Buildings.from_bytes(data, offsets[-1]),
         )
