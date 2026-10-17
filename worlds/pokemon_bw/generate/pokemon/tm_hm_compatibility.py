@@ -16,6 +16,10 @@ def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, "Spec
             if plando_stat.tm_hm_compatibility:
                 dat = all_species[species]
                 dat.tm_hm_moves = TMHMMovesetData(dat.tm_hm_moves.tm_hm_moves | set(plando_stat.tm_hm_compatibility))
+                if not dat.form:
+                    for form_spec in dat.all_forms:
+                        if not dat.is_custom_form:
+                            form_spec.tm_hm_moves = dat.tm_hm_moves
                 dat.write |= 0b1000000
         return
 
@@ -34,6 +38,10 @@ def randomize_tm_hm_compat(world: "PokemonBWWorld", all_species: dict[str, "Spec
         if data.species_name in world.options.stats_plando:
             new_set.update(world.options.stats_plando[data.species_name].tm_hm_compatibility)
         data.tm_hm_moves.tm_hm_moves.update(new_set)
+        if not dat.form:
+            for form_spec in dat.all_forms:
+                if not dat.is_custom_form:
+                    form_spec.tm_hm_moves = dat.tm_hm_moves
         if mods.is_follow_evolutions:
             do_evos(data, data.tm_hm_moves.tm_hm_moves)
 

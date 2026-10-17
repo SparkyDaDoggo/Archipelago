@@ -14,6 +14,28 @@ def set_value(data: SpeciesEntry, types: tuple):
                 form_data.types = data.types
 
 
+def get_most_base(data: SpeciesEntry) -> SpeciesEntry:
+    done_candidates = set()  # Only for lookup!
+    base_candidates = [data]
+    fallback = data
+    while base_candidates:
+        data = base_candidates.pop()
+        if data in done_candidates:
+            continue  # Already checked and not most basic
+        if not data.pre_evolutions:
+            return data  # Base stage
+        if all(spec.types[0] for spec in data.pre_evolutions):
+            return data  # All pre-evos have already been rolled
+        if any(spec.types[0] for spec in data.pre_evolutions):
+            fallback = data  # Remember any species with partially rolled pre-evos
+        done_candidates.add(data)
+        base_candidates.extend(
+            spec for spec in data.pre_evolutions
+            if spec not in done_candidates and not spec.types[0]
+        )
+    return fallback
+
+
 def plando_types(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]) -> list[str]:
 
     all_plandod = []
@@ -98,14 +120,31 @@ def randomize_types_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
             if not evo_spec.types[0] and evo_spec not in planned:
                 planned[evo_spec] = pre
 
+    def follow_evos(data: SpeciesEntry):
+        evos = [e.species for e in data.evolutions if not e.species.types[0]]
+        while evos:
+            data = evos.pop()
+            if data.types[0]:
+                continue  # Already filled, possibly due to Levelup item day/night evo
+            if any(not spec.types[0] for spec in data.pre_evolutions):
+                continue  # Some pre-evo needs to be done first
+            roll(data, planned.get(data, None))
+            evos.extend(e.species for e in data.evolutions if not e.species.types[0])
+
     planned: dict[SpeciesEntry, str | None] = {}
     if mods.is_follow_evolutions:
         for spec in plandod_ts:
             dat = all_species[spec]
             do_evos(dat, world.random.choice(dat.types))
+            follow_evos(dat)
     for spec, dat in all_species.items():
         if not dat.types[0] and (not dat.form or dat.is_custom_form):
-            roll(dat, planned.get(dat, None))
+            if mods.is_follow_evolutions:
+                dat = get_most_base(dat)
+                roll(dat, planned.get(dat, None))
+                follow_evos(dat)
+            else:
+                roll(dat, None)
 
 
 def randomize_types_post_evo(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
@@ -173,11 +212,28 @@ def randomize_types_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
             if not evo_spec.types[0] and evo_spec not in planned:
                 planned[evo_spec] = pre
 
+    def follow_evos(data: SpeciesEntry):
+        evos = [e.species for e in data.evolutions if not e.species.types[0]]
+        while evos:
+            data = evos.pop()
+            if data.types[0]:
+                continue  # Already filled, possibly due to Levelup item day/night evo
+            if any(not spec.types[0] for spec in data.pre_evolutions):
+                continue  # Some pre-evo needs to be done first
+            roll(data, planned.get(data, ()))
+            evos.extend(e.species for e in data.evolutions if not e.species.types[0])
+
     planned: dict[SpeciesEntry, tuple[str, ...]] = {}
     if mods.is_follow_evolutions or mods.is_force_evolutions:
         for spec in plandod_ts:
             dat = all_species[spec]
             do_evos(dat, dat.types)
+            follow_evos(dat)
     for spec, dat in all_species.items():
         if not dat.types[0] and (not dat.form or dat.is_custom_form):
-            roll(dat, ())
+            if mods.is_follow_evolutions or mods.is_force_evolutions:
+                dat = get_most_base(dat)
+                roll(dat, ())
+                follow_evos(dat)
+            else:
+                roll(dat, ())

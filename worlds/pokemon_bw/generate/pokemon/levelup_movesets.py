@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable
+
+from Options import OptionError
 from .. import SpeciesEntry
 from ...data import LevelUpMovesetData
 from ...generate import MoveEntry
@@ -39,8 +41,16 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
                 new_moves = [(plando_move.level, plando_move.move) for plando_move in plando_stat.levelup_moveset]
                 if not plando_stat.override_levelup_moveset:
                     new_moves += dat.level_up_moves.level_up_moves
+                    if len(new_moves) > 22:
+                        raise OptionError(f"Player {world.player_name} appended too many levelup moves "
+                                          f"({len(plando_stat.levelup_moveset)}) onto {dat.species_name} in plando, "
+                                          f"such that it exceeds the allowed moves count of 22")
                 new_moves.sort(key=sort_by_level)
                 dat.level_up_moves = LevelUpMovesetData(new_moves)
+                if not dat.form:
+                    for form_spec in dat.all_forms:
+                        if not dat.is_custom_form:
+                            form_spec.level_up_moves = dat.level_up_moves
                 dat.write |= 0b10000
         return
 
@@ -55,6 +65,10 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             new_moves = [(plando_move.level, plando_move.move) for plando_move in plando_stat.levelup_moveset]
             if plando_stat.override_levelup_moveset:
                 dat.level_up_moves = LevelUpMovesetData(new_moves)
+                if not dat.form:
+                    for form_spec in dat.all_forms:
+                        if not dat.is_custom_form:
+                            form_spec.level_up_moves = dat.level_up_moves
             else:
                 plando_append[species] = [LvlupSlot(m[0], m[1]) for m in new_moves]
 
@@ -62,7 +76,10 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
     moves_amount_min = world.options.stats_randomization_adjustments["Levelup moves amount minimum"]
     moves_amount_max = world.options.stats_randomization_adjustments["Levelup moves amount maximum"]
 
-    def roll(data: SpeciesEntry, extra: list[tuple[str, "MoveEntry"]]):
+    def roll(data: SpeciesEntry, extra: Iterable[tuple[str, "MoveEntry"]]):
+
+        assert not data.level_up_moves.level_up_moves, f"Rolling levelup moves for non-empty {data.species_name}"
+
         final_list: list[LvlupSlot] = []
         amount = data.vanilla_moves_count if mods.is_keep_levels_and_amount \
             else world.random.randrange(moves_amount_min, moves_amount_max + 1)
@@ -163,6 +180,12 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
                     slot.move, slot.data = moves_to_distribute.pop(0)
 
         data.level_up_moves.level_up_moves.extend([(slot.level, slot.move) for slot in final_list])
+        if not data.form:
+            for spec in data.all_forms:
+                if not spec.is_custom_form:
+                    spec.level_up_moves = data.level_up_moves
+        assert len(data.level_up_moves.level_up_moves) <= 22, (f"Species {data.species_name} got more than 22 levelup "
+                                                               f"moves: {len(data.level_up_moves.level_up_moves)}")
 
         if mods.is_follow_evolutions:
             do_evos(data, [(slot.move, slot.data) for slot in final_list])
@@ -175,26 +198,49 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             if not evo_spec.level_up_moves.level_up_moves and evo_spec not in planned:
                 planned[evo_spec] = extra
 
+    def get_most_base(data: SpeciesEntry) -> SpeciesEntry:
+        done_candidates = set()  # Only for lookup!
+        base_candidates = [data]
+        fallback = data
+        while base_candidates:
+            data = base_candidates.pop()
+            if data in done_candidates:
+                continue  # Already checked and not most basic
+            if not data.pre_evolutions:
+                return data  # Base stage
+            if all(spec.level_up_moves.level_up_moves for spec in data.pre_evolutions):
+                return data  # All pre-evos have already been rolled
+            if any(spec.level_up_moves.level_up_moves for spec in data.pre_evolutions):
+                fallback = data  # Remember any species with partially rolled pre-evos
+            done_candidates.add(data)
+            base_candidates.extend(
+                spec for spec in data.pre_evolutions
+                if spec not in done_candidates and not spec.level_up_moves.level_up_moves
+            )
+        return fallback
+
+    def follow_evos(data: SpeciesEntry):
+        evos = [e.species for e in data.evolutions if not e.species.level_up_moves.level_up_moves]
+        while evos:
+            data = evos.pop()
+            if data.level_up_moves.level_up_moves:
+                continue  # Already filled, possibly due to Levelup item day/night evo
+            if any(not spec.level_up_moves.level_up_moves for spec in data.pre_evolutions):
+                continue  # Some pre-evo needs to be done first
+            roll(data, planned.get(data, ()))
+            evos.extend(e.species for e in data.evolutions if not e.species.level_up_moves.level_up_moves)
+
     planned: dict[SpeciesEntry,  list[tuple[str, "MoveEntry"]]] = {}
     if mods.is_follow_evolutions:
-        for spec, dat in all_species.items():
+        for dat in all_species.values():
             if not dat.level_up_moves.level_up_moves and (not dat.form or dat.is_custom_form):
                 if not dat.pre_evolutions:
-                    roll(dat, planned.get(dat, []))
+                    roll(dat, ())
                 else:
-                    done_candidates = {dat}  # Only for lookup!
-                    base_candidates = list(spec for spec in dat.pre_evolutions if spec != dat)
-                    dat2 = dat
-                    while base_candidates:
-                        dat2 = base_candidates.pop(0)
-                        if dat2 in done_candidates:
-                            continue
-                        if not dat2.pre_evolutions:
-                            break
-                        done_candidates.add(dat2)
-                        base_candidates.extend(spec for spec in dat2.pre_evolutions if spec not in done_candidates)
-                    roll(dat2, planned.get(dat2, []))
+                    dat = get_most_base(dat)
+                    roll(dat, planned.get(dat, []))
+                follow_evos(dat)
     else:
-        for spec, dat in all_species.items():
+        for dat in all_species.values():
             if not dat.level_up_moves.level_up_moves and (not dat.form or dat.is_custom_form):
-                roll(dat, planned.get(dat, []))
+                roll(dat, ())

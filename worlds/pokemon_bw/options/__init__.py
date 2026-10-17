@@ -17,7 +17,7 @@ from .stats import (RandomizeLevelUpMovesets, RandomizeEvolutions, RandomizeType
                     RandomizeBaseStats, RandomizeCatchRates, RandomizeGenderRatio, RandomizeTMHMCompatibility,
                     StatsRandomizationAdjustments, StatsPlando, RandomizeEggGroups, RandomizeEggSpecies)
 from .moves import RandomizeMoveData, RandomizeTypeChart, MoveDataRandomizationAdjustments, MoveDataPlando
-from ..data.common_options import ToggleSet
+from ..data.common_options import ToggleSet, resolve_nested_random
 
 if typing.TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -97,10 +97,12 @@ class Goal(Choice):
     def from_any(cls, data: typing.Any):
         if data in ("pokemon_master", 10):
             data = list(o for o in cls.options if o != "pokemon_master")
-        if isinstance(data, list):
+        if isinstance(data, list | tuple):
             if not data:
                 raise OptionError("Combined goals list must not be empty")
-            data = list((d.casefold() if isinstance(d, str) else d) for d in data)
+            data = list(ddd for d in data
+                        if (dd := resolve_nested_random(d, comma_strings=2, casefold=True)) is not None
+                        for ddd in (dd if isinstance(dd, tuple) else (dd, )))
             if all((d in cls.options or d in cls.name_lookup) for d in data):
                 comb = [(d if isinstance(d, str) else cls.name_lookup[d]) for d in data]
                 if "pokemon_master" in comb:

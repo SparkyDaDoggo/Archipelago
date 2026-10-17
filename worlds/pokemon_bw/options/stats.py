@@ -554,6 +554,8 @@ class StatsPlando(Option[dict[str, PlandoStat]]):
                                 if move_entry_key not in PlandoLevelupMove._fields:
                                     raise OptionError(f"Unknown levelup move entry key: {move_entry_key}")
                             plando_levelup_moves.append(PlandoLevelupMove(**move_entry))
+                    if len(plando_levelup_moves) > 22:
+                        raise OptionError(f"No more than 22 levelup moves are allowed per species, but found {len(plando_levelup_moves)}")
                 if plando_key == "types":
                     if isinstance(value, list) or isinstance(value, tuple):
                         plando_types = list(value)

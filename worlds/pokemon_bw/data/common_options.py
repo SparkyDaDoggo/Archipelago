@@ -6,6 +6,30 @@ from Options import OptionSet, OptionError, OptionCounter, FreezeValidKeys
 from worlds.AutoWorld import World
 
 
+def resolve_nested_random(value: Any, comma_strings=1, numerical_strings=True, casefold=False) -> Any:
+    """Expects value to not be recursive.
+
+    comma_strings: 0 = raw string, 1 = random list, 2 = literal list"""
+
+    while True:
+        if isinstance(value, tuple | list):
+            value = random.choice(value)
+        elif isinstance(value, dict):
+            weights = tuple(int(v) if isinstance(v, str) and v.isnumeric() else v for v in value.values())
+            if not all(isinstance(v, int) for v in weights):
+                raise OptionError(f"Weighted list contains non-numeric weights: {value}")
+            value = random.choices(tuple(value), weights)[0]
+        elif comma_strings and isinstance(value, str) and "," in value:
+            value = tuple(v.strip() for v in value.split(","))
+            if comma_strings == 2:
+                return value
+            value = random.choice(value)
+        elif numerical_strings and isinstance(value, str) and value.isnumeric():
+            return int(value)
+        else:
+            return value if not casefold or not isinstance(value, str) else value.casefold()
+
+
 class AssembleToggles(FreezeValidKeys):
 
     def __new__(mcs, name: str, bases: tuple[type, ...], attrs: dict[str, Any]):
@@ -51,6 +75,17 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
 
     def __contains__(self, item: str):
         return item.casefold() in self.value
+
+    @classmethod
+    def from_any(cls, data: Any):
+        if isinstance(data, str):
+            return cls.from_text(str(data))
+        if isinstance(data, list | tuple | set):
+            data = list(ddd for d in data
+                        if (dd := resolve_nested_random(d, comma_strings=2)) is not None
+                        for ddd in (dd if isinstance(dd, tuple) else (dd,)))
+            return cls(data)
+        raise OptionError(f"Cannot Convert from non-list, got {type(data)}")
 
     def verify_keys(self) -> None:
         if self.valid_keys:
