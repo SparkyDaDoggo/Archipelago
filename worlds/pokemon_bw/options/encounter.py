@@ -64,31 +64,30 @@ class RandomizeWildPokemon(ToggleSet):
 
 class RandomizeTrainerPokemon(ToggleSet):
     """
-    Randomizes trainer pokemon.
-    You can add as many of the following modifiers as you want.
+    Randomizes trainer pokemon. You can add as many of the following modifiers as you want.
 
-    - **Randomize** - Toggles trainer pokemon being randomized. Automatically added if any other
-        modifier is added.
-    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stats
-        total as the replaced one.
-    - **Prevent overpowered pokemon** - Prevents trainers from having pokemon with a base stats
-        total above an adjustable threshold. Takes priority over most other modifiers.
-    - **Evolve when possible** - Tries to evolve pokemon if they are able to (based on their
-        level). Pokémon that evolve independently of their level are evolved at level 25.
+    - **Randomize** - Toggles trainer pokemon being randomized. Automatically added if any other modifier is added.
+    - **Similar base stats** - Tries to keep the randomized pokemon at a similar base stats total as the
+        replaced one.
+    - **Prevent overpowered pokemon** - Prevents trainers from having pokemon with a base stats total above an
+        adjustable threshold. Takes priority over most other modifiers.
+    - **Evolve when possible** - Tries to evolve pokemon if they are able to (based on their level). Pokémon that
+        evolve independently of their level are evolved at level 25.
     - **Force fully evolved** - Always fully evolves pokemon above a certain (adjustable) level.
-    - **Force not underpowered** - Prevents pokemon above a certain (adjustable) level from
-        having base stats below a certain (adjustable) total.
+    - **Force not underpowered** - Prevents pokemon above a certain (adjustable) level from having base stats below
+        a certain (adjustable) total.
     - **Type themed** - All pokemon of a trainer will share at least one randomly chosen type.
-    - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader and elite 4
-        member instead of using their vanilla type. Do note that they always have type themed teams.
+    - **Shuffle gym leader types** - Assigns a (unique) random type to each gym leader and elite 4 member instead
+        of using their vanilla type. Do note that they always have type themed teams.
     - **Themed gym trainers** - All pokemon of gym trainers will share the type of their gym leader.
-    - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon
-        in common, which will always evolve when possible.
+    - **Rivals keep starter** - Makes all Bianca/Cheren fights have one pokemon in common, which will always
+        evolve when possible.
     - **Exclude boss trainers** - Excludes certain strong trainers like gym leaders and the champion.
 
-    Combining multiple modifiers that affect all trainer pokémon (i.e. not just gym trainers, ...)
-    might massively increase generation time. Also in that case, most options tend to be less
-    strict in order to reduce generation time.
+    Combining multiple modifiers that affect all trainer pokémon (i.e. not just gym trainers, ...) might massively
+    increase generation time. Also in that case, most options tend to be less strict in order to reduce generation
+    time. This, as well as other modifier-based options, supports nested randomness. Check the options guides for
+    more information.
     """
     display_name = "Randomize Trainer Pokemon"
     is_randomize = False
