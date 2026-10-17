@@ -1,7 +1,7 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
-## 0.4.1
+## 0.4.1: "After all, there were still critical bugs" update
 
 - Fixed equal minimum and maximum for catch rates rando failing generation
 - Fixed recursion errors with extended hints if `Consider trades` or `Consider evolutions` is included
