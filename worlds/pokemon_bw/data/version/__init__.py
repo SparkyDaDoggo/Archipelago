@@ -10,9 +10,10 @@ class VersionCompatibility(NamedTuple):
 
 
 # DO NOT put any number higher than 255
-version: tuple[int, int, int] = (0, 4, 2)
+version: tuple[int, int, int] = (0, 5, 0)
 
 compatibility: dict[tuple[int, int, int], VersionCompatibility] = {
+    (0, 5, 0): VersionCompatibility((0, 5, 0), (0, 5, 0), (0, 5, 0), (0, 5, 0), (0, 6, 7)),
     (0, 4, 2): VersionCompatibility((0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 4, 1), (0, 6, 7)),
     (0, 4, 1): VersionCompatibility((0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 4, 1), (0, 6, 7)),
     (0, 4, 0): VersionCompatibility((0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 4, 0), (0, 6, 7)),

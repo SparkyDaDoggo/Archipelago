@@ -1,6 +1,13 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.5.0: TBD
+
+TBD
+
+### Is this version compatible with older multiworld slots and save files?
+No
+
 ## 0.4.2
 
 - Fixed logic of some Opelucid City Battle House trainers

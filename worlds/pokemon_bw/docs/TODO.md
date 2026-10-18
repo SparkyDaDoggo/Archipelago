@@ -2,10 +2,34 @@
 
 apworld
 - region connections rework
+- Expand plugins to client
+- Proper plugin options
+- import plugin packages and classes while the main apworld itself is getting imported
+- map data documentation
+- "Include HM moves" modifier for levelup moves rando, otherwise HM moves are excluded by default
 
 rom
+- re-enable bianca walk in Nuvema cutscene
+- make liberty garden grunts not disappearing
+- remove victini shiny lock
+- waking up the desert resort statues says "It was a Darmanitan" -> Change to actual pokemon name
+- relic castle worker that sends you back down to sand filled room once you reached that at least once
+- make dragonspiral grunt trainers not disappear
+- remove reshiram/zekrom shiny lock
+- remove time requirement of tubeline bridge bikers
+- remove once-per-day access to the riches
 
 both
+- Decrease trainer eyesight
+- Insert code into AP menu hook, that waits for a variable being set to a script id and execute that script id
+  - keep executing while id in variable, the script itself needs to remove it
+  - used for receiving items, deathlinks, traps
+- Disable certain location groups
+  - Hidden items (only filler)
+  - Field items (will put all min_once items into them and, if there's still some space, other fillers)
+  - Abyssal Ruins (only filler)
+  - Trainer prizes (only filler)
+  - Excluded locations (always enabled, only filler)
 
 # Not urgent
 
@@ -15,13 +39,10 @@ both
 - a way to check whether map or fly menu is opened, used for switching to ow map in UT
 - Running shoes as an item, making mom cutscene on route 2 a check
 - fill more funny dialog
-- send plugin options over slot data as string (breaks backwards compatibility)
 - reload_key_items sometimes has index out of range error
 - items receiving in client has rare cases of recursion errors
 - specialized unittests for rando modifiers
 - make client use static game data pointers
-- turn plugin options into actual options (can you even add more options after initial class creation?)
-- import plugin packages and classes while the main apworld itself is getting imported
 - correlate mods in move data rando not working? => Special unit test cases
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
 - any options with custom code should bundle error messages instead of raising immediately
@@ -40,11 +61,7 @@ both
   - make n in nacrene trigger independently of nacrene stuff, but together with cheren
   - pinwheel shadow triad member send both ways
   - move rumination field rocks a bit
-  - make liberty garden grunts not disappearing
-  - remove victini shiny lock
-  - waking up the desert resort statues says "It was a Darmanitan" -> Change to actual pokemon name
   - relic castle 1f worker send both ways
-  - relic castle worker that sends you back down to sand filled room once you reached that at least once
   - relic castle chased grunt running towards all entrances
   - driftveil cheren and clay scene talking as alternate trigger
   - add more clerks to driftveil gym entrance
@@ -52,9 +69,6 @@ both
   - add traffic cones to mistralton gym entrance
   - both icirrus city scenes by trigger
   - dragonspiral rocks inside, cleared after bryce fight
-  - make dragonspiral grunt trainers not disappear
-  - remove reshiram/zekrom shiny lock
-  - remove time requirement of tubeline bridge bikers
   - fix route 9 infielder script
   - add rocks to challengers cave entrance
   - remove giant chasm warps to snow
@@ -63,7 +77,6 @@ both
   - remove closing doors in league
   - add rock on landing stage that is cleared exactly when champion room is messed up
   - some way to still get back to landing stage from champion room after champion room is repaired
-  - remove once-per-day access to the riches
 
 # Single reports, cannot recreate, need to wait for more reports
 
