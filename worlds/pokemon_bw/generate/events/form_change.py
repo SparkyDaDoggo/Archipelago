@@ -46,39 +46,46 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
                     location.access_rule = has_any_and_has(forms, season)
                 else:
                     location.access_rule = has_any(forms)
+                location.show_in_spoiler = False
                 region.locations.append(location)
 
     rotom_machines = ("Heat", "Wash", "Frost", "Fan", "Mow", "Default")
     rotom_forms = (*(f"Rotom ({machine})" for machine in rotom_machines[:5]), "Rotom")
     if any(form in catchable_species_data for form in rotom_forms):
-        region = world.regions["Route 9"]
+        region = world.regions["Shopping Mall Nine Back Room"]
         for form_num in range(6):
             location = PokemonBWLocation(world.player, "[FormChng] Rotom to "+rotom_machines[form_num], None, region)
             item = PokemonBWItem(rotom_forms[form_num], ItemClassification.progression, None, world.player)
             location.place_locked_item(item)
             location.access_rule = has_any(rotom_forms)
+            location.show_in_spoiler = False
             region.locations.append(location)
 
     deoxys_appends = ("Attack", "Defense", "Speed", "Default")
     deoxys_forms = (*(f"Deoxys ({append})" for append in deoxys_appends[:3]), "Deoxys")
     if any(form in catchable_species_data for form in deoxys_forms):
-        region = world.regions["Nacrene City"]
+        region = world.regions["Nacrene Museum"]
         for form_num in range(4):
             location = PokemonBWLocation(world.player, "[FormChng] Deoxys to "+deoxys_appends[form_num], None, region)
             item = PokemonBWItem(deoxys_forms[form_num], ItemClassification.progression, None, world.player)
             location.place_locked_item(item)
             location.access_rule = has_any(deoxys_forms)
+            location.show_in_spoiler = False
             region.locations.append(location)
 
     if "Shaymin" in catchable_species_data or "Shaymin (Sky)" in catchable_species_data:
         region = world.regions["Form Change"]
+
         location = PokemonBWLocation(world.player, "[FormChng] Shaymin to Sky", None, region)
         item = PokemonBWItem("Shaymin (Sky)", ItemClassification.progression, None, world.player)
         location.place_locked_item(item)
         location.access_rule = lambda state: state.has_all(("Shaymin", "Gracidea"), world.player)
+        location.show_in_spoiler = False
         region.locations.append(location)
+
         location = PokemonBWLocation(world.player, "[FormChng] Shaymin to Land", None, region)
         item = PokemonBWItem("Shaymin", ItemClassification.progression, None, world.player)
         location.place_locked_item(item)
         location.access_rule = lambda state: state.has_all(("Shaymin (Sky)", "Gracidea"), world.player)
+        location.show_in_spoiler = False
         region.locations.append(location)
