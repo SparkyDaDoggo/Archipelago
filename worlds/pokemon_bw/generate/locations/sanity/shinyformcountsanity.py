@@ -33,11 +33,7 @@ def create(world: "PokemonBWWorld", catchable_species_data: dict[str, "SpeciesEn
 
     r: "Region" = world.regions["Pokédex"]
     all_forms = tuple(form_alias.get(f, f) for f in unique_forms)
-    catchable_forms = set()  # Only for counting
-    for data in catchable_species_data.values():
-        if data.species_name in all_forms:
-            catchable_forms.add(data.dex_number)
-    maximum = min(len(catchable_forms), option_value["Maximum"])
+    maximum = min(sum(f in catchable_species_data for f in all_forms), option_value["Maximum"])
 
     def get_rule(x: int) -> "AccessRule":
         x = min(x, 72)

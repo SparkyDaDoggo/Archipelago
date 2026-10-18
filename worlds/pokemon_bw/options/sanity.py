@@ -315,7 +315,7 @@ class Shinysanity(Toggle, DexsanityResolver):
         elif isinstance(value, int):
             if not 0 <= value <= 649:
                 raise OptionError(f"Option {self.__class__.__name__}'s value {value} is not in range 0-649")
-            self.value = value
+            self.value = int(value)
         else:
             super().__init__(value)
 
@@ -377,7 +377,7 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
             self.value = {key: val for key, val in value.items()}
         elif isinstance(value, int):
             self.value = {
-                "Maximum": value,
+                "Maximum": int(value),
                 "Steps": 1,
                 "Leniency": 0,
             }
@@ -386,6 +386,14 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
 
     @classmethod
     def from_any(cls, data: Any) -> Self:
+        if not DEXSANITYSANITY_ENABLED:
+            return cls(cls.default)
+        if type(data) is str:
+            return cls.from_text(data)
+        if isinstance(data, int):
+            return cls(data)
+        if not isinstance(data, dict):
+            raise OptionError(f"Option {cls.__name__} does not support a value of type {type(data)}")
         default = {
             "Maximum": 0,
             "Steps": 1,
@@ -396,14 +404,6 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
             "Steps",
             "Leniency",
         ]
-        if not DEXSANITYSANITY_ENABLED:
-            return cls(cls.default)
-        if type(data) is str:
-            return cls.from_text(data)
-        if isinstance(data, int):
-            return cls(data)
-        if not isinstance(data, dict):
-            raise OptionError(f"Option {cls.__name__} does not support a value of type {type(data)}")
         data = data.copy()
         if cls.fill_defaults:
             for key in valid_keys:
@@ -417,7 +417,8 @@ class Shinycountsanity(Toggle, ExtendedOptionCounter):
 
     @classmethod
     def get_option_name(cls, value):
-        return ["No", "Yes"][int(value)] if value in (0, 1) else str(value)
+        count = value if isinstance(value, int) else value["Maximum"]
+        return ["No", "Yes"][count] if count in (0, 1) else str(value)
 
 
 class Shinyformsanity(Toggle, DexsanityResolver):
@@ -439,6 +440,10 @@ class Shinyformsanity(Toggle, DexsanityResolver):
     def __init__(self, value: Any):
         if isinstance(value, Iterable):
             self.value = sorted(set(self.resolve_plando_form(v) for v in value))  # Get rid of duplicates and stay deterministic
+        elif isinstance(value, int):
+            if not 0 <= value <= 72:
+                raise OptionError(f"Option {self.__class__.__name__}'s value {value} is not in range 0-72")
+            self.value = int(value)
         else:
             super().__init__(value)
 
@@ -449,7 +454,7 @@ class Shinyformsanity(Toggle, DexsanityResolver):
             if len(parts) != 4 or not parts[2].isnumeric() or not parts[3].isnumeric():
                 raise OptionError(f"Option {cls.__name__} does not support a value of {text}")
             range_min, range_max = int(parts[2]), int(parts[3])
-            if range_max > 649 or range_min < 0:
+            if range_max > 72 or range_min < 0:
                 raise OptionError(f"Option {cls.__name__}'s random range {text} is out of bounds")
             return cls(random.randint(range_min, range_max))
         return super().from_text(text)
@@ -496,7 +501,7 @@ class Shinyformcountsanity(Toggle, ExtendedOptionCounter):
             self.value = {key: val for key, val in value.items()}
         elif isinstance(value, int):
             self.value = {
-                "Maximum": value,
+                "Maximum": int(value),
                 "Steps": 1,
                 "Leniency": 0,
             }
@@ -536,7 +541,8 @@ class Shinyformcountsanity(Toggle, ExtendedOptionCounter):
 
     @classmethod
     def get_option_name(cls, value):
-        return ["No", "Yes"][int(value)] if value in (0, 1) else str(value)
+        count = value if isinstance(value, int) else value["Maximum"]
+        return ["No", "Yes"][count] if count in (0, 1) else str(value)
 
 
 # Gendersanity
