@@ -1,9 +1,9 @@
 # Important stuff
 
 apworld
-- check whether hms learned by levelup can be considered in logic
 - specialized unittests for rando modifiers
 - correlate mods in move data rando not working? => Special unit test cases
+- Keep levels and amount still broken, see unittests
 
 rom
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage

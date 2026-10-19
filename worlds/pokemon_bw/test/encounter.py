@@ -1,7 +1,6 @@
-from . import multiply_random_combinations, PokemonBWTestBase
+from . import multiply_random_combinations, PokemonBWTestBase, requires_modifier
 from ..options import RandomizeWildPokemon, RandomizeTrainerPokemon, RandomizeStarterPokemon, RandomizeStaticPokemon, \
     RandomizeLegendaryPokemon, RandomizeGiftPokemon
-from ..data.pokemon.species import by_name
 
 
 class TestRandomizeWildPokemonSimple(PokemonBWTestBase):
@@ -9,15 +8,16 @@ class TestRandomizeWildPokemonSimple(PokemonBWTestBase):
 @multiply_random_combinations("randomize_wild_pokemon", tuple(RandomizeWildPokemon.valid_keys), 11)
 class TestRandomizeWildPokemon(PokemonBWTestBase):
 
+    @requires_modifier("Ensure all obtainable", "randomize_wild_pokemon")
     def mod_ensure_all_obtainable(self):
-        if "Ensure all obtainable" not in self.options["randomize_wild_pokemon"]:
-            return
-        with self.subTest("Game", game=self.game, seed=self.multiworld.seed):
-            for name, data in by_name.items():
-                if data.form > 5:
-                    continue
-                self.assertIn(name, self.world.catchable_species_data,
-                              f"Species {name} appears to not be catchable anywhere")
+        from ..data.pokemon.species import by_name
+
+        for name, data in by_name.items():
+            if data.form > 5:
+                continue
+            self.assertIn(name, self.world.catchable_species_data,
+                          f"Species {name} appears to not be catchable anywhere")
+        print("All species obtainable")
 
 
 class TestRandomizeTrainerPokemonSimple(PokemonBWTestBase):

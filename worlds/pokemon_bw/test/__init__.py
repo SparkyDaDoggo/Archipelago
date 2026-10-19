@@ -14,6 +14,21 @@ class PokemonBWTestBase(WorldTestBase):
     world: "PokemonBWWorld"
 
 
+class ModifierTest(Callable):
+    modifier: str
+    option: str
+
+    def __call__(self, *args, **kwargs): ...
+
+
+def requires_modifier(modifier: str, option: str) -> Callable:
+    def decorator(c: Callable) -> Callable:
+        c.modifier = modifier
+        c.option = option
+        return c
+    return decorator
+
+
 def multiply_random_combinations(option: str, mods: tuple, count: int, additional: dict[str, Any] = None) -> Callable:
     combs = tuple(random_combination(mods) for _ in range(count))
     additional = additional or {}
@@ -24,21 +39,25 @@ def multiply_random_combinations(option: str, mods: tuple, count: int, additiona
                 self.options = {option: combs[index]} | additional
                 print("Modifiers: " + ", ".join(self.options[option]))
                 all_members = tuple(WorldTestBase.__dict__.items()) + tuple(cls.__dict__.items())
-                for name, value in all_members:
-                    name: str
-                    if not (isinstance(value, Callable) and name.startswith(("test_", "mod_"))):
-                        continue
-                    if name.startswith("test_combination"):
-                        continue
-                    with self.subTest("World setup", game=self.game):
-                        try:
+                try:
+                    for name, value in all_members:
+                        if not (isinstance(value, Callable) and name.startswith(("test_", "mod_"))
+                                and not name.startswith("test_combination")):
+                            continue
+                        with self.subTest("World setup", game=self.game):
                             start_time = time.time()
                             self.world_setup()
                             print(f"...took {time.time() - start_time} seconds to generate")
+                        name: str
+                        value: ModifierTest
+                        if name[:5] == "test_" and not name.startswith("test_combination"):
                             with self.subTest(name, game=self.game, seed=self.multiworld.seed):
                                 value(self)
-                        except OptionError as err:
-                            print("Skipped as a result of an OptionError:\n" + '\n'.join(err.args))
+                        if name[:4] == "mod_" and value.modifier in self.options[value.option]:
+                            with self.subTest(f"Testing {value.modifier}", game=self.game, seed=self.multiworld.seed):
+                                value(self)
+                except OptionError as err:
+                    print("Skipped as a result of an OptionError:\n" + '\n'.join(err.args))
 
             return _test
 
