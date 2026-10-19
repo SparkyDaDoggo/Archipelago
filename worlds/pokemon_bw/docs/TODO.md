@@ -4,8 +4,6 @@ apworld
 - specialized unittests for rando modifiers
 - correlate mods in move data rando not working? => Special unit test cases
 - Keep levels and amount still broken, see unittests
-- empty types
-- switching slot without reopening client bleeds goal and possibly other data
 
 rom
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage

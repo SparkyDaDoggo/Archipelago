@@ -11,6 +11,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed `Shinyformsanity` not generating more than one location without using plando mode
 - Fixed `Shinyformsanity` mistakenly accepting values higher than 72
 - Fixed `Shinyformcountsanity` never generating more than 16 locations
+- Fixed generation failures caused by the `Follow/Force evolutions` modifiers in types rando
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.4.0

@@ -140,9 +140,10 @@ def randomize_types_pre_evo(world: "PokemonBWWorld", all_species: dict[str, Spec
     for spec, dat in all_species.items():
         if not dat.types[0] and (not dat.form or dat.is_custom_form):
             if mods.is_follow_evolutions:
-                dat = get_most_base(dat)
-                roll(dat, planned.get(dat, None))
-                follow_evos(dat)
+                while not dat.types[0]:
+                    dat2 = get_most_base(dat)
+                    roll(dat2, planned.get(dat2, None))
+                    follow_evos(dat2)
             else:
                 roll(dat, None)
 
@@ -232,8 +233,9 @@ def randomize_types_post_evo(world: "PokemonBWWorld", all_species: dict[str, Spe
     for spec, dat in all_species.items():
         if not dat.types[0] and (not dat.form or dat.is_custom_form):
             if mods.is_follow_evolutions or mods.is_force_evolutions:
-                dat = get_most_base(dat)
-                roll(dat, ())
-                follow_evos(dat)
+                while not dat.types[0]:
+                    dat2 = get_most_base(dat)
+                    roll(dat2, planned.get(dat2, ()))
+                    follow_evos(dat2)
             else:
                 roll(dat, ())
