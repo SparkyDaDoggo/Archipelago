@@ -282,8 +282,8 @@ class RandomizeEggGroups(ToggleSet):
     - **Allow baby stages** - If **Follow evolutions** is included,
         pre-evolutions of non-Unknown pokemon are allowed to have the Unknown
         egg group (which is the case for most vanilla baby pokemon).
-    - **Allow baby stages** - Allows custom, player-submitted groups to be used
-        in multiworld generation. Those can also be used in plando without
+    - **Allow custom groups** - Allows custom, player-submitted groups to be
+        used in multiworld generation. Those can also be used in plando without
         having this modifier included.
 
     **Mono only** and **Dual only** will cancel each other out.

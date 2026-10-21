@@ -91,11 +91,17 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     rom.files[ov10.fileID] = ov10.save(compress=True)
     files_dump["ov10"] = rom.files[ov10.fileID]
 
-    # Apply portable AP menu
+    # Portable AP menu and remote scripts
     ov21 = overlay_table[21]
     ov21_data = bytearray(ov21.data)
     ov21_data[0x241e:0x241e+4] = b'\x1f\xf2\x6f\xfe'
     ov21_data[0x1eda:0x1eda+4] = b'\x20\xf2\x19\xf9'
+    # ov21_data[0x214a:0x214a+36] = (b'\x0a\xd0\x98\xf6\xa8\xf8\x00\x28\x06\xd0\x28\x1c\x0a\xa9\x89\x8a\x20\xf2'
+    #                                b'\x49\xf8\x00\x28\x05\xd1\x15\x9a\x20\x1c\x29\x1c\xf1\xf7\xd2\xf9\x00\x1c')
+    # ov21_data[0x2580:0x2580+2] = b'\x01\x27'
+    # ov21_data[0x2584:0x2584+2] = b'\x00\x27'
+    # ov21_data[0x258c:0x258c+2] = b'\x39\x1c'
+    # ov21_data[0x25a6:0x25a6+10] = b'\x28\x1c\x31\x8b\x1f\xf2\x21\xfe\x00\xe0'
     ov21.data = bytes(ov21_data)
     rom.files[ov21.fileID] = ov21.save(compress=True)
     files_dump["ov21"] = rom.files[ov21.fileID]
@@ -122,8 +128,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     # arm7 expansion, tailored to white version
     expansion = bytearray(pkgutil.get_data(world_package, "patch/arm7_expansion.bin"))
     if rom.name[8:9] != b'W':  # Fix portable AP menu branch links to arm9 for black version
-        expansion[0x24] = 0x6c
-        expansion[0x34] = 0x64
+        expansion[0xf8:0xfc] = b'\xdc\x62\x03\x02'
     arm7.extend(bytes((0x2a000 if rom.name[8:9] == b'W' else 0x29fe0) - len(rom.arm7)))
     arm7.extend(expansion)
 
