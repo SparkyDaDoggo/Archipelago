@@ -114,7 +114,7 @@ class Area:
     textures: int
     animations: int
     frames: int
-    environment: int
+    exterior: bool
     lights: int
     outlines: int
     model_colors: int
@@ -127,7 +127,7 @@ class Area:
             int.from_bytes(data[entry+2:entry+4], "little"),
             data[entry+4],
             data[entry+5],
-            data[entry+6],
+            bool(data[entry+6]),
             data[entry+7],
             data[entry+8],
             data[entry+9],
@@ -137,7 +137,7 @@ class Area:
         return (
             self.building.to_bytes(2, "little") +
             self.textures.to_bytes(2, "little") +
-            bytes((self.animations, self.frames, self.environment, self.lights, self.outlines, self.model_colors))
+            bytes((self.animations, self.frames, self.exterior, self.lights, self.outlines, self.model_colors))
         )
 
 
@@ -290,6 +290,34 @@ class Container:
         return cls(
             data[:2],
             data[offsets[0]:offsets[1]],
-            [Permissions.from_bytes(data, data[:2], offsets[i], offsets[i+1]) for i in range(count)],
+            [Permissions.from_bytes(data, data[:2], offsets[i], offsets[i+1]) for i in range(count-2)],
             Buildings.from_bytes(data, offsets[-1]),
+        )
+
+
+@dataclass
+class Matrix:
+    width: int
+    height: int
+    chunks: list[int]
+    zones: list[int]
+
+    def to_bytes(self) -> bytes:
+        assert not self.zones or len(self.chunks) == len(self.zones), \
+            f"{len(self.chunks)} chunks, but {len(self.zones)} zones"
+        return (bool(self.zones).to_bytes(4, "little") +
+                self.width.to_bytes(2, "little") + self.height.to_bytes(2, "little") +
+                b''.join(chunk.to_bytes(4, "little", signed=True) for chunk in self.chunks) +
+                b''.join(zone.to_bytes(4, "little", signed=True) for zone in self.zones))
+
+    @classmethod
+    def from_bytes(cls, data: bytes | bytearray):
+        width = int.from_bytes(data[4:6], "little")
+        height = int.from_bytes(data[6:8], "little")
+        return cls(
+            width,
+            height,
+            [int.from_bytes(data[8+i*4:12+i*4], "little", signed=True) for i in range(width * height)],
+            [] if not bool(data[0]) else [int.from_bytes(data[8+i*4:12+i*4], "little", signed=True)
+                                          for i in range(width * height, width * height * 2)],
         )
