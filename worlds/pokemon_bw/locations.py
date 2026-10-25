@@ -87,7 +87,8 @@ def create_and_place_event_locations(world: "PokemonBWWorld") -> tuple[dict[str,
     seeable_species_data: dict[str, "SpeciesEntry"] = trainers.create(world)
 
     # some niche locations' data
-    chosen = world.random.choice(tuple(a for a in catchable_species_data.items() if a[1].tm_hm_moves.tm_hm_moves))
+    chosen = world.random.choice(tuple(a for a in catchable_species_data.items()
+                                       if a[1].tm_hm_moves.tm_hm_moves and (not a[1].form or a[1].is_custom_form)))
     world.other_locations_species = chosen[0]
     world.studio_castelia_type = world.random.choice(chosen[1].types)
     chosen_tms = list(chosen[1].tm_hm_moves.tm_hm_moves)
