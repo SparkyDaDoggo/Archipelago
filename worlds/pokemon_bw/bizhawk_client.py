@@ -61,8 +61,9 @@ class PokemonBWClient(BizHawkClient):
     z_offset = 0x3462a  # 0x24f93a in vanilla W, unused but better leave this offset here
     battle_ptr_offset = -0x24f54  # 0x1f63bc in vanilla W
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, reset=False):
+        if not reset:
+            super().__init__()
         self.flags_cache: bytearray = bytearray(self.flag_bytes_amount)
         self.dex_cache: bytearray = bytearray(self.dex_bytes_amount)
         self.dex_seen_caches: tuple[bytearray, ...] = tuple(bytearray(self.dex_bytes_amount) for _ in range(4))
@@ -99,12 +100,6 @@ class PokemonBWClient(BizHawkClient):
         self.coop_id = -1
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
-        """Should return whether the currently loaded ROM should be handled by this client. You might read the game name
-        from the ROM header, for example. This function will only be asked to validate ROMs from the system set by the
-        client class, so you do not need to check the system yourself.
-
-        Once this function has determined that the ROM should be handled by this client, it should also modify `ctx`
-        as necessary (such as setting `ctx.game = self.game`, modifying `ctx.items_handling`, etc...)."""
 
         header = await bizhawk.read(
             ctx.bizhawk_ctx, (
@@ -118,6 +113,8 @@ class PokemonBWClient(BizHawkClient):
         if not patch_suffix and header[0][0x9D] & 0x80:  # Release apworld, but pre-release ROM
             return False
 
+        if self.player_name:
+            self.__init__(True)
         self.player_name = header[0][0xa0:].strip(b'\0').decode()
         if header[0][8] == b'B'[0]:
             self.game_version = 0
@@ -130,15 +127,11 @@ class PokemonBWClient(BizHawkClient):
         return True
 
     async def set_auth(self, ctx: "BizHawkClientContext") -> None:
-        """Should set ctx.auth in anticipation of sending a `Connected` packet. You may override this if you store slot
-        name in your patched ROM. If ctx.auth is not set after calling, the player will be prompted to enter their
-        username."""
 
         if self.player_name:
             ctx.auth = self.player_name
 
     def on_package(self, ctx: "BizHawkClientContext", cmd: str, args: dict) -> None:
-        """For handling packages from the server. Called from `BizHawkClientContext.on_package`."""
 
         if cmd == 'Connected':
             from .data.locations import all_item_locations
@@ -183,8 +176,6 @@ class PokemonBWClient(BizHawkClient):
             print(loc_name)
 
     async def game_watcher(self, ctx: "BizHawkClientContext") -> None:
-        """Runs on a loop with the approximate interval `ctx.watcher_timeout`. The currently loaded ROM is guaranteed
-        to have passed your validator when this function is called, and the emulator is very likely to be connected."""
 
         try:
             if (
