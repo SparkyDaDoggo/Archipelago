@@ -97,6 +97,8 @@ def patch_species(rom: NintendoDSRom, world_package: str, bw_patch_instance: "Po
 
             patch_address = team_slot * 4
             file_address = team_slot * entry_length + 4
+            if file_address >= len(pokemon_file):
+                break  # Band-aid fix
             if any(patch_file[patch_address:patch_address+3]):
                 pokemon_file[file_address:file_address+3] = patch_file[patch_address:patch_address+3]
                 if unique_moves:
