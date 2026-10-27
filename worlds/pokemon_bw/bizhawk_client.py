@@ -82,11 +82,11 @@ class PokemonBWClient(BizHawkClient):
         self.missing_seen_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.missing_seencount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.missing_form_loc_ids: list[list[int]] = [[] for _ in range(self.dex_forms_amount)]
-        self.missing_formcount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_forms_amount)]
+        self.missing_formcount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_forms_amount+1)]
         self.missing_shiny_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.missing_shinycount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_amount)]
         self.missing_shinyform_loc_ids: list[list[int]] = [[] for _ in range(self.dex_forms_amount)]
-        self.missing_shinyformcount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_forms_amount)]
+        self.missing_shinyformcount_loc_ids: list[list[int]] = [[] for _ in range(self.dex_forms_amount+1)]
         self.save_data_address = 0
         self.current_map = -1
         self.current_32_chunk = -1, -1
