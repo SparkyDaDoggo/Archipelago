@@ -8,6 +8,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed the client crashing when setting `"(Shiny)Formcountsanity` to maximum
 - Fixed patching crashing due to an unknown problem with trainer pokémon
   - It's only a band-aid fix for now
+- Fixed all `[...]countsanity` options sending checks for one number less than the actual amount
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.4.0

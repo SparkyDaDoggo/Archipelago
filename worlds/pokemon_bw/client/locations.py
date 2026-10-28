@@ -60,7 +60,7 @@ async def check_dex_locations(client: "PokemonBWClient", ctx: "BizHawkClientCont
     for dex_num in dex_nums:
         locations_to_check += client.missing_dex_flag_loc_ids[dex_num]
         client.missing_dex_flag_loc_ids[dex_num].clear()
-    for count in range(len(dex_nums)):
+    for count in range(1, len(dex_nums) + 1):
         locations_to_check += client.missing_dexcount_loc_ids[count]
         client.missing_dexcount_loc_ids[count].clear()
 
@@ -117,7 +117,7 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
     for dex_num in seen_dex_nums:
         locations_to_check += client.missing_seen_loc_ids[dex_num]
         client.missing_seen_loc_ids[dex_num].clear()
-    for count in range(len(seen_dex_nums)):
+    for count in range(1, len(seen_dex_nums) + 1):
         locations_to_check += client.missing_seencount_loc_ids[count]
         client.missing_seencount_loc_ids[count].clear()
 
@@ -126,7 +126,7 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
         client.missing_seen_loc_ids[dex_num].clear()
         locations_to_check += client.missing_shiny_loc_ids[dex_num]
         client.missing_shiny_loc_ids[dex_num].clear()
-    for count in range(len(shiny_dex_nums)):
+    for count in range(1, len(shiny_dex_nums) + 1):
         locations_to_check += client.missing_seencount_loc_ids[count]
         client.missing_seencount_loc_ids[count].clear()
         locations_to_check += client.missing_shinycount_loc_ids[count]
@@ -174,7 +174,7 @@ async def check_form_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
     for form_flag in forms_dex_nums:
         locations_to_check += client.missing_form_loc_ids[form_flag]
         client.missing_form_loc_ids[form_flag].clear()
-    for count in range(len(forms_dex_nums)):
+    for count in range(1, len(forms_dex_nums) + 1):
         locations_to_check += client.missing_formcount_loc_ids[count]
         client.missing_formcount_loc_ids[count].clear()
 
@@ -183,7 +183,7 @@ async def check_form_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
         client.missing_form_loc_ids[form_flag].clear()
         locations_to_check += client.missing_shinyform_loc_ids[form_flag]
         client.missing_shinyform_loc_ids[form_flag].clear()
-    for count in range(len(shiny_forms_dex_nums)):
+    for count in range(1, len(shiny_forms_dex_nums) + 1):
         locations_to_check += client.missing_formcount_loc_ids[count]
         client.missing_formcount_loc_ids[count].clear()
         locations_to_check += client.missing_shinyformcount_loc_ids[count]

@@ -128,7 +128,9 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     # arm7 expansion, tailored to white version
     expansion = bytearray(pkgutil.get_data(world_package, "patch/arm7_expansion.bin"))
     if rom.name[8:9] != b'W':  # Fix portable AP menu branch links to arm9 for black version
-        expansion[0xf8:0xfc] = b'\xdc\x62\x03\x02'
+        expansion[0x24] = 0x6c
+        expansion[0x34] = 0x64
+        # expansion[0xf8:0xfc] = b'\xdc\x62\x03\x02'
     arm7.extend(bytes((0x2a000 if rom.name[8:9] == b'W' else 0x29fe0) - len(rom.arm7)))
     arm7.extend(expansion)
 
