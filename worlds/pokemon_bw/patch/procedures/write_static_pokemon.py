@@ -15,7 +15,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
     from ...data.locations.encounters.static import static, starters, gift, fossils, legendary
 
     starter_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
-                         for name, data in starters.items())
+                         for name, data in starters.items() if data.patch_id != -1)
     if any(enc.write for enc, _ in starter_encs):
         data = bytearray(12)
         for enc, patch_id in starter_encs:
@@ -25,7 +25,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         opened_zipfile.writestr("statics/starters", bytes(data))
 
     statics_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
-                         for name, data in static.items())
+                         for name, data in static.items() if data.patch_id != -1)
     if any(enc.write for enc, _ in statics_encs):
         data = bytearray(56)
         for enc, patch_id in statics_encs:
@@ -38,7 +38,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         opened_zipfile.writestr("statics/statics", bytes(data))
 
     gift_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
-                      for name, data in gift.items())
+                      for name, data in gift.items() if data.patch_id != -1)
     if any(enc.write for enc, _ in gift_encs):
         data = bytearray(24)
         for enc, patch_id in gift_encs:
@@ -51,7 +51,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         opened_zipfile.writestr("statics/gifts", bytes(data))
 
     fossils_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
-                         for name, data in fossils.items())
+                         for name, data in fossils.items() if data.patch_id != -1)
     if any(enc.write for enc, _ in fossils_encs):
         data = bytearray(36)
         for enc, patch_id in fossils_encs:
@@ -64,7 +64,7 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         opened_zipfile.writestr("statics/fossils", bytes(data))
 
     legend_encs = tuple((bw_patch_instance.world.static_encounter[name], data.patch_id)
-                        for name, data in legendary.items())
+                        for name, data in legendary.items() if data.patch_id != -1)
     if any(enc.write for enc, _ in legend_encs):
         data = bytearray(32)
         for enc, patch_id in legend_encs:
