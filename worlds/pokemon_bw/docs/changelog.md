@@ -1,6 +1,15 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.4.4
+
+- Fixed plugins crashing when trying to import anything in `stage_init(cls)`
+- Added support for plugins changing location data and adding static encounters, regions, and region connections
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.4.0
+However, UT might be inaccurate when tracking worlds generated before 0.4.3
+
 ## 0.4.3
 
 - Fixed a rare case of patch files failing due to internal species forms
