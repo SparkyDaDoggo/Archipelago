@@ -323,11 +323,12 @@ def load_plugins(patch_instance: "PokemonBWPatch" = None, world: "PokemonBWWorld
                         if not isinstance(value, Callable | classmethod) or hasattr(module_type.Plugin, key):
                             continue
                         setattr(module_type.Plugin, key, value)
-                    getattr(module_type.Plugin, "stage_init")()
                     all_plugin_classes.append(module_type.Plugin)
             elif "." not in module_name[7:]:
                 logging.warning(f"{module_name[7:]} has the plugin naming scheme, "
                                 f"but doesn't contain a class named 'Plugin' in __init__.py")
+        for plugin_class in all_plugin_classes:
+            getattr(plugin_class, "stage_init")()
     plugins: list[Plugin] = []
     for plugin_class in all_plugin_classes:
         plugins.append(plugin_class(plugins, patch_instance, world))
