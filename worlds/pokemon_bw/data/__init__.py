@@ -219,6 +219,7 @@ class RegionData(NamedTuple):
     map_id: int  # -1 for virtual maps
     has_encounters: bool  # referring to map id
     full_map: bool = True  # Not a full map are e.g. Route 1 East/West
+    inclusion_rule: InclusionRule | None = None
 
 
 class RegionConnectionData(NamedTuple):
@@ -238,7 +239,7 @@ class RegionConnectionData(NamedTuple):
     - Controlled by a script, never shuffled
     - Between non-full maps or with virtual maps involved, never shuffled
     """
-    warp_id: tuple[int | tuple[int, ...], int | tuple[int, ...]] | tuple  #
+    warp_id: tuple[int | tuple[int, ...], int | tuple[int, ...]] | tuple
     """
     empty tuple for non-warp connections
     tuple instead of int for places where a long warp is split into multiple ones, first ID is the preferred destination
@@ -250,6 +251,7 @@ class RegionConnectionData(NamedTuple):
     """
     rule: ExtendedRule | ExtRulesTuple | None = None
     rule_2: ExtendedRule | ExtRulesTuple | None | Literal[False] = False  # for r2->r1 connection, False means copy the rules above
+    inclusion_rule: InclusionRule | None = None
     one_way: bool = False  # r1->r2 only
     fixed: bool = False  # flag for warp/elevator connections that should not be shuffled
 
