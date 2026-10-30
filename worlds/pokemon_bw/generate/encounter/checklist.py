@@ -77,7 +77,7 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                 break
 
         # cannot use world.disallowed_all_seen since that will only be filled at a later point
-        seen_amount = world.options.seensanity if isinstance(world.options.seensanity.value, int) else len(world.options.seensanity.value)
+        seen_amount = world.options.seensanity.value if isinstance(world.options.seensanity.value, int) else len(world.options.seensanity.value)
         form_amount = 16  # for simplicity, let's just assume all forms are included
         auto_seen = 649 - max(seen_amount, form_amount) if world.options.all_pokemon_seen else 0
         if auto_seen < 115:

@@ -261,7 +261,8 @@ Pokemon Black and White:
 
 # Dexsanity Plando guide
 
-(This guide also applies to `Seensanity`, `Formsanity`, `Shinysanity`, and `Shinyformsanity`.)
+(This guide also applies to `Seensanity`, `Formsanity`, `Gendersanity`, `Shinysanity`, `Shinyformsanity`, 
+and `Shinygendersanity`.)
 
 ## How does this work?
 

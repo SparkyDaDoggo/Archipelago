@@ -70,7 +70,13 @@ async def check_dex_locations(client: "PokemonBWClient", ctx: "BizHawkClientCont
 async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientContext") -> list[int]:
 
     if not (any(client.missing_seen_loc_ids) or any(client.missing_seencount_loc_ids) or
-            any(client.missing_shiny_loc_ids) or any(client.missing_shinycount_loc_ids)):
+            any(client.missing_gender_loc_ids[0]) or any(client.missing_gender_loc_ids[1]) or
+            any(client.missing_gendercount_loc_ids["male"]) or any(client.missing_gendercount_loc_ids["female"]) or
+            any(client.missing_gendercount_loc_ids["any"]) or
+            any(client.missing_shiny_loc_ids) or any(client.missing_shinycount_loc_ids) or
+            any(client.missing_shinygender_loc_ids[0]) or any(client.missing_shinygender_loc_ids[1]) or
+            any(client.missing_shinygendercount_loc_ids["male"]) or any(client.missing_shinygendercount_loc_ids["female"]) or
+            any(client.missing_shinygendercount_loc_ids["any"])):
         return []
 
     read = await bizhawk.read(
@@ -91,6 +97,10 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
     locations_to_check: list[int] = []
     seen_dex_nums = set()
     shiny_dex_nums = set()
+    male_dex_nums = set()
+    female_dex_nums = set()
+    shiny_male_dex_nums = set()
+    shiny_female_dex_nums = set()
     for eight_flags in range(client.dex_bytes_amount):
         cache0[eight_flags] = seen_male_buffer[eight_flags]
         cache1[eight_flags] = seen_female_buffer[eight_flags]
@@ -102,17 +112,21 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
             # seen male
             if cache0[eight_flags] & (1 << bit):
                 seen_dex_nums.add(dex_num)
+                male_dex_nums.add(dex_num)
             # seen female
             if cache1[eight_flags] & (1 << bit):
                 seen_dex_nums.add(dex_num)
+                female_dex_nums.add(dex_num)
             # shiny male
             if cache2[eight_flags] & (1 << bit):
                 seen_dex_nums.add(dex_num)
                 shiny_dex_nums.add(dex_num)
+                shiny_male_dex_nums.add(dex_num)
             # shiny female
             if cache3[eight_flags] & (1 << bit):
                 seen_dex_nums.add(dex_num)
                 shiny_dex_nums.add(dex_num)
+                shiny_female_dex_nums.add(dex_num)
 
     for dex_num in seen_dex_nums:
         locations_to_check += client.missing_seen_loc_ids[dex_num]
@@ -121,16 +135,54 @@ async def check_seen_locations(client: "PokemonBWClient", ctx: "BizHawkClientCon
         locations_to_check += client.missing_seencount_loc_ids[count]
         client.missing_seencount_loc_ids[count].clear()
 
+    for dex_num in male_dex_nums:
+        if loc_id := client.missing_gender_loc_ids[0][dex_num]:
+            locations_to_check.append(loc_id)
+            client.missing_gender_loc_ids[0][dex_num] = 0
+    for dex_num in female_dex_nums:
+        if loc_id := client.missing_gender_loc_ids[1][dex_num]:
+            locations_to_check.append(loc_id)
+            client.missing_gender_loc_ids[1][dex_num] = 0
+    for count in range(len(male_dex_nums)):
+        if loc_id := client.missing_gendercount_loc_ids["male"][count]:
+            locations_to_check.append(loc_id)
+            client.missing_gendercount_loc_ids["male"][count] = 0
+    for count in range(len(female_dex_nums)):
+        if loc_id := client.missing_gendercount_loc_ids["female"][count]:
+            locations_to_check.append(loc_id)
+            client.missing_gendercount_loc_ids["female"][count] = 0
+    for count in range(len(male_dex_nums) + len(female_dex_nums)):
+        if loc_id := client.missing_gendercount_loc_ids["any"][count]:
+            locations_to_check.append(loc_id)
+            client.missing_gendercount_loc_ids["any"][count] = 0
+
     for dex_num in shiny_dex_nums:
-        locations_to_check += client.missing_seen_loc_ids[dex_num]
-        client.missing_seen_loc_ids[dex_num].clear()
         locations_to_check += client.missing_shiny_loc_ids[dex_num]
         client.missing_shiny_loc_ids[dex_num].clear()
     for count in range(len(shiny_dex_nums)):
-        locations_to_check += client.missing_seencount_loc_ids[count]
-        client.missing_seencount_loc_ids[count].clear()
         locations_to_check += client.missing_shinycount_loc_ids[count]
         client.missing_shinycount_loc_ids[count].clear()
+
+    for dex_num in shiny_male_dex_nums:
+        if loc_id := client.missing_shinygender_loc_ids[0][dex_num]:
+            locations_to_check.append(loc_id)
+            client.missing_shinygender_loc_ids[0][dex_num] = 0
+    for dex_num in shiny_female_dex_nums:
+        if loc_id := client.missing_shinygender_loc_ids[1][dex_num]:
+            locations_to_check.append(loc_id)
+            client.missing_shinygender_loc_ids[1][dex_num] = 0
+    for count in range(len(shiny_male_dex_nums)):
+        if loc_id := client.missing_shinygendercount_loc_ids["male"][count]:
+            locations_to_check.append(loc_id)
+            client.missing_shinygendercount_loc_ids["male"][count] = 0
+    for count in range(len(shiny_female_dex_nums)):
+        if loc_id := client.missing_shinygendercount_loc_ids["female"][count]:
+            locations_to_check.append(loc_id)
+            client.missing_shinygendercount_loc_ids["female"][count] = 0
+    for count in range(len(shiny_male_dex_nums) + len(shiny_female_dex_nums)):
+        if loc_id := client.missing_shinygendercount_loc_ids["any"][count]:
+            locations_to_check.append(loc_id)
+            client.missing_shinygendercount_loc_ids["any"][count] = 0
 
     return locations_to_check
 
