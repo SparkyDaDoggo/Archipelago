@@ -70,7 +70,7 @@ def get_regions(world: "PokemonBWWorld") -> dict[str, Region]:
     return {
         name: Region(name, world.player, world.multiworld)
         for name, data in regions.region_list.items()
-        if data.inclusion_rule(world)
+        if not data.inclusion_rule or data.inclusion_rule(world)
     } | enc
 
 
@@ -156,7 +156,7 @@ def connect_regions(world: "PokemonBWWorld") -> None:
     from .data import AndExtRules as AND
 
     for connection in gameplay_connections.connections:
-        if not connection.inclusion_rule(world):
+        if connection.inclusion_rule and not connection.inclusion_rule(world):
             continue
         reg1 = world.regions[connection.region_1]
         reg2 = world.regions[connection.region_2]

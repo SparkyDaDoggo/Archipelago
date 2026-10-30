@@ -5,6 +5,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 - Fixed plugins crashing when trying to import anything in `stage_init(cls)`
 - Added support for plugins changing location data and adding static encounters, regions, and region connections
+- Fixed the Abundant Shrine cutscene freezing the game
+- Fixed potential bugs on route 7
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.4.0
