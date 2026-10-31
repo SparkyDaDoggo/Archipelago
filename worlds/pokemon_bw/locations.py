@@ -256,7 +256,7 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
     # Static encounter
     if logic_mods.is_consider_static:
         for static_slot, entry in world.static_encounter.items():
-            catching_place = static_slot[:static_slot.rfind("Encounter")]
+            catching_place = static_slot[:max(static_slot.rfind("Encounter"), static_slot.rfind("Reanimation"))]
             dex = entry.species_id[0]
             if dex not in places_for_location:
                 places_for_location[dex] = set(), [], [], StrVar(), StrVar(), set()

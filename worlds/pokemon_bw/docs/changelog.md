@@ -7,6 +7,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added support for plugins changing location data and adding static encounters, regions, and region connections
 - Fixed the Abundant Shrine cutscene freezing the game
 - Fixed potential bugs on route 7
+- Fixed fossil reanimation names being cut off by one character in extended hint data
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.4.0
