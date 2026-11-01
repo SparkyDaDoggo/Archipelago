@@ -166,8 +166,9 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
         this_type = ""
         if trainer.gym and (trainer.gym[2] or mods.is_themed_gym_trainers):
             if trainer.gym[0] not in gym_types:
+                possible_types = tuple(t for t in types_by_name if t not in gym_types.values())
                 gym_types[trainer.gym[0]] = (trainer.gym[1] if not mods.is_shuffle_gym_types
-                                             else world.random.choice(tuple(types_by_name)))
+                                             else world.random.choice(possible_types))
             this_type = gym_types[trainer.gym[0]]
         elif mods.is_type_themed:
             if not t_types[next_slot.trainer_id - 1]:

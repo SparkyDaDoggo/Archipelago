@@ -113,7 +113,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         skip_type = skip_bad = False
         while True:
             skipped_stat = skipped_type = skipped_bad = False
-            for slot in logic_slots:
+            for slot_index in range(len(logic_slots)):
+                slot = logic_slots[slot_index]
                 # Why this order:
                 # Stats increase is not that bad, so this first
                 # Skipping themed areas is bad game design, but still manageable
@@ -143,7 +144,8 @@ def generate_wild_encounters(world: "PokemonBWWorld",
                 slot.species_id = spec_entry.dex_number, spec_entry.form
                 slot.write |= 2
                 species_checklist.check(spec_entry)
-                logic_slots.remove(slot)
+                logic_slots.pop(slot_index)
+                world.random.shuffle(logic_slots)
                 break
             else:
                 if skipped_stat:
@@ -192,7 +194,7 @@ def generate_wild_encounters(world: "PokemonBWWorld",
         raise OptionError("At least one type has all its species prevented in wild randomization due to some option. "
                           "Please remove some restrictions in your yaml.")
     if not mods.is_type_themed_areas and not any_species:
-        raise OptionError("No pokémon species is available for wild randomization due to either a tool long blacklist "
+        raise OptionError("No pokémon species is available for wild randomization due to either a too long blacklist "
                           "or a too low overpowered threshold. Please remove some restrictions in your yaml.")
     for slot in itertools.chain(logic_slots, other_slots):
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
