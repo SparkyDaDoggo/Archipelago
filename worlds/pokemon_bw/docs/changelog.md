@@ -13,7 +13,7 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.4.0
-However, UT might be inaccurate when tracking worlds generated before 0.4.3
+However, UT might be inaccurate when tracking worlds generated before 0.4.4
 
 ## 0.4.3
 
