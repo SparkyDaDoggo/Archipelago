@@ -5,6 +5,11 @@ apworld
 - correlate mods in move data rando not working? => Special unit test cases
 - Keep levels and amount still broken, see unittests
 - too many pokemon for a trainer written into patch file
+- location group for show-a-pokemon locations
+- scaling by sphere makes Clay stronger than skyla when getting Tidal Bell and Quake Badge at the same time.
+  - Probably caused by Clay requiring many more events than skyla
+  - Brycen gets same treatment
+- trainers change deerling form with season, regardless of what species was set in trainer teams data
 
 rom
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage

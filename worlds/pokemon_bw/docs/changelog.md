@@ -1,6 +1,16 @@
 # Changelog
 Versions are sorted in ascending order, i.e. the most recent changes are at the top.
 
+## 0.4.5
+
+- Added the Legendary Hunt NPC to the tracker goal bitmap
+- Made damage-inflicting moves more likely in levelup moveset randomization
+- Fixed `Route 13 - Item on cliff #2` not appearing anymore when receiving any Gram before talking to the Wingull girl
+
+### Is this version compatible with older multiworld slots and save files?
+Yes, back to 0.4.0
+However, UT might be inaccurate when tracking worlds generated before 0.4.5
+
 ## 0.4.4
 
 - Fixed plugins crashing when trying to import anything in `stage_init(cls)`
