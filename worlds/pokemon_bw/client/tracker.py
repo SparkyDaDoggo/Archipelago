@@ -160,32 +160,19 @@ async def set_statics_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientConte
     # Excludes legendaries and Volcarona since they're already in the goals bitmap
 
     bitmap = 0
-    if client.get_flag(665):  # Darmanitan left
-        bitmap |= 0b1
-    if client.get_flag(663):  # Darmanitan middle left
-        bitmap |= 0b10
-    if client.get_flag(664):  # Darmanitan middle
-        bitmap |= 0b100
-    if client.get_flag(666):  # Darmanitan middle right
-        bitmap |= 0b1000
-    if client.get_flag(667):  # Darmanitan right
-        bitmap |= 0b1_0000
-    if client.get_flag(2748):  # Musharna
-        bitmap |= 0b10_0000
-    if client.get_flag(344):  # Zoroark
-        bitmap |= 0b100_0000
-    if client.get_flag(768):  # Route 6 Foongus left
-        bitmap |= 0b1000_0000
-    if client.get_flag(767):  # Route 6 Foongus right
-        bitmap |= 0b1_0000_0000
-    if client.get_flag(772):  # Route 10 Foongus left
-        bitmap |= 0b10_0000_0000
-    if client.get_flag(771):  # Route 10 Foongus right
-        bitmap |= 0b100_0000_0000
-    if client.get_flag(770):  # Route 10 Amoongus left
-        bitmap |= 0b1000_0000_0000
-    if client.get_flag(769):  # Route 10 Amoongus right
-        bitmap |= 0b1_0000_0000_0000
+    bitmap |= 0b1 * client.get_flag(665)  # Darmanitan left
+    bitmap |= 0b10 * client.get_flag(663)  # Darmanitan middle left
+    bitmap |= 0b100 * client.get_flag(664)  # Darmanitan middle
+    bitmap |= 0b1000 * client.get_flag(666)  # Darmanitan middle right
+    bitmap |= 0b1_0000 * client.get_flag(667)  # Darmanitan right
+    bitmap |= 0b10_0000 * client.get_flag(2748)  # Musharna
+    bitmap |= 0b100_0000 * client.get_flag(344)  # Zoroark
+    bitmap |= 0b1000_0000 * client.get_flag(768)  # Route 6 Foongus left
+    bitmap |= 0b1_0000_0000 * client.get_flag(767)  # Route 6 Foongus right
+    bitmap |= 0b10_0000_0000 * client.get_flag(772)  # Route 10 Foongus left
+    bitmap |= 0b100_0000_0000 * client.get_flag(771)  # Route 10 Foongus right
+    bitmap |= 0b1000_0000_0000 * client.get_flag(770)  # Route 10 Amoongus left
+    bitmap |= 0b1_0000_0000_0000 * client.get_flag(769)  # Route 10 Amoongus right
     if client.get_flag(339):  # Sold Magikarp
         bitmap |= 0b10_0000_0000_0000
     if client.get_flag(315):  # Larvesta egg
@@ -294,7 +281,7 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
         bitmap |= 0b1000_0000_0000_0000
     if client.get_flag(0x1D4):  # Alder
         bitmap |= 0b1_0000_0000_0000_0000
-    if client.get_flag(0x191):  # TM/HM scientist
+    if client.get_flag(0x191):  # TM/HM Hunt scientist
         bitmap |= 0b10_0000_0000_0000_0000
     if client.get_flag(0x178):  # Gym leader Brycen
         bitmap |= 0b100_0000_0000_0000_0000
@@ -312,8 +299,8 @@ async def set_goal_bitmap(client: "PokemonBWClient", ctx: "BizHawkClientContext"
         bitmap |= 0b1_0000_0000_0000_0000_0000_0000
     if client.get_flag(0x177):  # Mistralton gym leader
         bitmap |= 0b10_0000_0000_0000_0000_0000_0000
-    if client.get_flag(0x179):  # Opelucid gym leader
-        bitmap |= 0b100_0000_0000_0000_0000_0000_0000
+    bitmap |= 0b100_0000_0000_0000_0000_0000_0000 * client.get_flag(0x179)  # Opelucid gym leader
+    bitmap |= 0b1000_0000_0000_0000_0000_0000_0000 * client.get_flag(0x1EA)  # Legendary Hunt ranger
     if bitmap != client.goal_bitmap:
         client.goal_bitmap |= bitmap
         await ctx.send_msgs([{
