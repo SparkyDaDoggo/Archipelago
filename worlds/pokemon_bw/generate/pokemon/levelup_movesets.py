@@ -150,6 +150,8 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
         for slot in final_list:
             if not slot.move:
                 slot.move, slot.data = world.random.choice(possible_moves)
+                if slot.data.category == "Status":  # Re-roll once if status to make offensive moves more likely
+                    slot.move, slot.data = world.random.choice(possible_moves)
             elif not slot.data:
                 slot.data = world.move_entries[slot.move]
         # Redistribute moves for progressive power, if enabled
