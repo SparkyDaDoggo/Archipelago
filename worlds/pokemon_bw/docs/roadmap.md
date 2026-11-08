@@ -142,15 +142,28 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 
 ### 0.5.0: TBD
 
+- Gendersanity
+- Gendercountsanity
+- Shinygendersanity
+- Shinygendercountsanity
 - Expand plugins to client
 - Proper plugin options
 - Decrease trainer eyesight
+- Remote script
+  - On-screen items receiving
 - Disable certain location groups
   - Hidden items (only filler)
   - Field items (will put all min_once items into them and, if there's still some space, other fillers)
   - Abyssal Ruins (only filler)
   - Trainer prizes (only filler)
   - Excluded locations (always enabled, only filler)
+- BW2 maps backport
+  - More encounter maps+slots
+  - More Visitsanity locations
+  - More connections for Door Shuffle
+  - More static encounters
+  - Altered logic in some places
+  - Requires BW2 ROM while patching
 
 ### Required for 1.0.0
 
@@ -160,7 +173,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
   - Trade pokémon randomization
   - Seen count checks modifier, e.g. Prof Juniper TM rewards
   - Fan club chairman levels checks modifier
-  - Customize roadblocks
+  - Customize roadblocks and overworld
     - Enabling/Disabling all roadblocks
     - Extra cuttable trees
     - Sudowodo trees
@@ -168,6 +181,7 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Something with the badge gates
     - Something needed to cross quicksand in relic castle
     - Massive ocean that connects route 18, Liberty Island, and Undella Town
+    - Relic Castle floors and maze rooms
 
 ### Stuff that would be nice to have in 1.0.0
 
@@ -179,10 +193,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - More or less per trainer
   - More statics rando modifiers
     - Force unique
-  - Gendersanity
-  - Gendercountsanity
-  - Shinygendersanity
-  - Shinygendercountsanity
   - Trainer pokémon plando
   - Static pokémon plando
   - Adjust encounters (like Adjust levels, but with species, based on base stats, mostly just devolve)
@@ -195,7 +205,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
 - Xtransceiver being required to see certain story sequences (with some of them giving items)
   - Also, dynamic Xtransceiver item that automatically adds the correctly gendered version to the game
 - Castelia badge info NPC giving hints to in which game the badges are
-- Use portable AP menu code to make on-screen item receiving possible
 
 ## Post-1.0.0 stuff
 
@@ -225,13 +234,6 @@ resulted in that not really being followed, so it was changed to "whatever I wan
     - Types
     - Berry fields
     - Spinning puzzles
-  - BW2 maps backport
-    - More encounter maps+slots
-    - More Visitsanity locations
-    - More connections for Door Shuffle
-    - More static encounters
-    - Altered logic in some places
-    - Requires BW2 ROM while patching
   - Free fly destination
   - Trainer randomization (i.e. what trainer you're actually battling against)
     - With plando capabilities

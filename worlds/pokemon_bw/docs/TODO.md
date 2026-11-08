@@ -6,18 +6,24 @@ apworld
 - Proper plugin options
 - import plugin packages and classes while the main apworld itself is getting imported
 - map data documentation
-- "Include HM moves" modifier for levelup moves rando, otherwise HM moves are excluded by default
+- Proper patching cache, which is also provided to plugins
+- encounter logic rework using logicmixin
+- BW2 maps backport
+- Customize roadblocks and overworld
+  - Enabling/Disabling all roadblocks
+  - Extra cuttable trees
+  - Sudowodo trees
+  - Rock Smash rocks
+  - Something with the badge gates
+  - Something needed to cross quicksand in relic castle
+  - Massive ocean that connects route 18, Liberty Island, and Undella Town
+  - Relic Castle floors and maze rooms
 
 rom
 - re-enable bianca walk in Nuvema cutscene
-- make liberty garden grunts not disappearing
 - remove victini shiny lock
 - waking up the desert resort statues says "It was a Darmanitan" -> Change to actual pokemon name
 - relic castle worker that sends you back down to sand filled room once you reached that at least once
-- make dragonspiral grunt trainers not disappear
-- remove reshiram/zekrom shiny lock
-- remove time requirement of tubeline bridge bikers
-- remove once-per-day access to the riches
 
 both
 - Decrease trainer eyesight

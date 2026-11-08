@@ -3,7 +3,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 
 ## 0.5.0: TBD
 
-TBD
+- Added `Gendersanity`, `Gendercountsanity`, `Shinygendersanity`, and `Shinygendercountsanity` options
+  - All of them are locked behind the `Dexsanitysanity` plugin
 
 ### Is this version compatible with older multiworld slots and save files?
 No
