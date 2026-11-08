@@ -334,6 +334,105 @@ class TestFormcountsanityFullEnsureAll(PokemonBWTestBase):
 
 
 ###################################################
+# Gendersanity                                      #
+###################################################
+
+
+class TestGendersanityPartialVanilla(PokemonBWTestBase):
+    options = {
+        "gendersanity": 100,
+        "all_pokemon_seen": True,
+    }
+class TestGendersanityPartialRando(PokemonBWTestBase):
+    options = {
+        "gendersanity": 100,
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestGendersanityPartialEnsureAll(PokemonBWTestBase):
+    options = {
+        "gendersanity": 100,
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+class TestGendersanityFullVanilla(PokemonBWTestBase):
+    options = {
+        "gendersanity": 1298,
+        "all_pokemon_seen": True,
+    }
+class TestGendersanityFullRando(PokemonBWTestBase):
+    options = {
+        "gendersanity": 1298,
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestGendersanityFullEnsureAll(PokemonBWTestBase):
+    options = {
+        "gendersanity": 1298,
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+class TestGendersanityPlandoVanilla(PokemonBWTestBase):
+    options = {
+        "gendersanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "all_pokemon_seen": True,
+    }
+class TestGendersanityPlandoRando(PokemonBWTestBase):
+    options = {
+        "gendersanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestGendersanityPlandoEnsureAll(PokemonBWTestBase):
+    options = {
+        "gendersanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+
+
+###################################################
+# Seencountsanity                                 #
+###################################################
+
+
+class TestGendercountsanityPartialVanilla(PokemonBWTestBase):
+    options = {
+        "gendercountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "all_pokemon_seen": True,
+    }
+class TestGendercountsanityPartialRando(PokemonBWTestBase):
+    options = {
+        "gendercountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestGendercountsanityPartialEnsureAll(PokemonBWTestBase):
+    options = {
+        "gendercountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+class TestGendercountsanityFullVanilla(PokemonBWTestBase):
+    options = {
+        "gendercountsanity": {"Maximum": 1298, "Steps": 10, "Leniency": 10},
+        "all_pokemon_seen": True,
+    }
+class TestGendercountsanityFullRando(PokemonBWTestBase):
+    options = {
+        "gendercountsanity": {"Maximum": 1298, "Steps": 10, "Leniency": 10},
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestGendercountsanityFullEnsureAll(PokemonBWTestBase):
+    options = {
+        "gendercountsanity": {"Maximum": 1298, "Steps": 10, "Leniency": 10},
+        "all_pokemon_seen": True,
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+
+
+###################################################
 # Shinysanity                                     #
 ###################################################
 
@@ -513,5 +612,97 @@ class TestShinyformcountsanityFullRando(PokemonBWTestBase):
 class TestShinyformcountsanityFullEnsureAll(PokemonBWTestBase):
     options = {
         "shinyformcountsanity": {"Maximum": 72, "Steps": 2, "Leniency": 2},
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+
+
+###################################################
+# Shinysanity                                     #
+###################################################
+
+
+class TestShinygendersanityTrue(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": True,
+    }
+class TestShinygendersanityPartialVanilla(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": 100,
+    }
+class TestShinygendersanityPartialRando(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": 100,
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestShinygendersanityPartialEnsureAll(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": 100,
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+class TestShinygendersanityFullVanilla(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": 1298,
+    }
+class TestShinygendersanityFullRando(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": 1298,
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestShinygendersanityFullEnsureAll(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": 1298,
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+class TestShinygendersanityPlandoVanilla(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+    }
+class TestShinygendersanityPlandoRando(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestShinygendersanityPlandoEnsureAll(PokemonBWTestBase):
+    options = {
+        "shinygendersanity": [random.randint(1, 649) for _ in range(98)] + ["10-20", "450-500"],
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+
+
+###################################################
+# Shinycountsanity                                 #
+###################################################
+
+
+class TestShinygendercountsanityTrue(PokemonBWTestBase):
+    options = {
+        "shinygendercountsanity": True,
+    }
+class TestShinygendercountsanityPartialVanilla(PokemonBWTestBase):
+    options = {
+        "shinygendercountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+    }
+class TestShinygendercountsanityPartialRando(PokemonBWTestBase):
+    options = {
+        "shinygendercountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestShinygendercountsanityPartialEnsureAll(PokemonBWTestBase):
+    options = {
+        "shinygendercountsanity": {"Maximum": 100, "Steps": 10, "Leniency": 10},
+        "randomize_wild_pokemon": ["Ensure all obtainable"],
+    }
+class TestShinygendercountsanityFullVanilla(PokemonBWTestBase):
+    options = {
+        "shinygendercountsanity": {"Maximum": 1298, "Steps": 10, "Leniency": 10},
+    }
+class TestShinygendercountsanityFullRando(PokemonBWTestBase):
+    options = {
+        "shinygendercountsanity": {"Maximum": 1298, "Steps": 10, "Leniency": 10},
+        "randomize_wild_pokemon": ["Randomize"],
+    }
+class TestShinygendercountsanityFullEnsureAll(PokemonBWTestBase):
+    options = {
+        "shinygendercountsanity": {"Maximum": 1298, "Steps": 10, "Leniency": 10},
         "randomize_wild_pokemon": ["Ensure all obtainable"],
     }

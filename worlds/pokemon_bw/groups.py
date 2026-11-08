@@ -18,7 +18,8 @@ def get_item_groups() -> dict[str, set[str]]:
 
 
 def get_location_groups() -> dict[str, set[str]]:
-    from .data.locations.sanity import countsanity, dexsanity, shinysanity, seensanity, formsanity, shinyformsanity
+    from .data.locations.sanity import (countsanity, dexsanity, shinysanity, seensanity, formsanity, shinyformsanity,
+                                        gendersanity, shinygendersanity)
     from .data.locations.ingame_items import overworld_items, hidden_items, other, special
     from .options.sanity import DEXSANITYSANITY_ENABLED
 
@@ -29,10 +30,14 @@ def get_location_groups() -> dict[str, set[str]]:
         "Seencountsanity": set(countsanity.seencountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Formsanity": set(formsanity.table),
         "Formcountsanity": set(countsanity.formcountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
+        "Gendersanity": set(gendersanity.location_table) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
+        "Gendercountsanity": set(countsanity.gendercountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Shinysanity": set(shinysanity.location_table),
         "Shinycountsanity": set(countsanity.shinycountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Shinyformsanity": set(shinyformsanity.table) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Shinyformcountsanity": set(countsanity.shinyformcountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
+        "Shinygendersanity": set(shinygendersanity.location_table) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
+        "Shinygendercountsanity": set(countsanity.shinygendercountsanity) if DEXSANITYSANITY_ENABLED else set("Pokédex - Catch 1 Pokémon"),
         "Overworld items": {*overworld_items.table, *overworld_items.abyssal_ruins, *overworld_items.seasonal},
         "Abyssal Ruins items": set(overworld_items.abyssal_ruins),
         "Hidden items": {*hidden_items.table, *hidden_items.seasonal},

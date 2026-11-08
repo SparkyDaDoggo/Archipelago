@@ -8,7 +8,8 @@ from BaseClasses import PlandoOptions
 from Options import (Choice, PerGameCommonOptions, Range, Toggle, PlandoTexts, OptionError,
                      OptionCounter, StartInventoryPool, OptionDict, ItemSet, Visibility)
 from .sanity import (Dexsanity, Dexcountsanity, Shinysanity, Shinycountsanity, Seensanity, Seencountsanity, Formsanity,
-                     Formcountsanity, Shinyformcountsanity, Shinyformsanity)
+                     Formcountsanity, Shinyformcountsanity, Shinyformsanity, Gendersanity, Gendercountsanity,
+                     Shinygendersanity, Shinygendercountsanity, GendercountMode)
 from .encounter import (RandomizeWildPokemon, RandomizeGiftPokemon, RandomizeTradePokemon, RandomizeStarterPokemon,
                         RandomizeLegendaryPokemon, RandomizeStaticPokemon, RandomizeTrainerPokemon,
                         WildRandomizationBlacklist, TrainerRandomizationBlacklist, PokemonRandomizationAdjustments,
@@ -999,10 +1000,15 @@ class PokemonBWOptions(PerGameCommonOptions):
     seencountsanity: Seencountsanity
     formsanity: Formsanity
     formcountsanity: Formcountsanity
+    gendersanity: Gendersanity
+    gendercountsanity: Gendercountsanity
     shinysanity: Shinysanity
     shinycountsanity: Shinycountsanity
     shinyformsanity: Shinyformsanity
     shinyformcountsanity: Shinyformcountsanity
+    shinygendersanity: Shinygendersanity
+    shinygendercountsanity: Shinygendercountsanity
+    gendercountmode: GendercountMode
     # trainersanity: Trainersanity
     # door_shuffle: DoorShuffle
     season_control: SeasonControl

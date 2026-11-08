@@ -26,7 +26,7 @@ shinyformcountsanity: dict[str, int] = {
 }
 
 shinygendercountsanity: dict[str, tuple[int, str]] = {
-    f"Pokédex - See {count} shiny {g} Pokémon": (count, g) for g in ("male", "female") for count in range(1, 650)
+    f"Pokédex - Find {count} shiny {g} Pokémon": (count, g) for g in ("male", "female") for count in range(1, 650)
 } | {
-    f"Pokédex - See {count} shiny gendered Pokémon": (count, "any") for count in range(1, 1299)
+    f"Pokédex - Find {count} shiny gendered Pokémon": (count, "any") for count in range(1, 1299)
 }

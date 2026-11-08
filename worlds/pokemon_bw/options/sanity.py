@@ -2,7 +2,7 @@ import random
 from pathlib import Path
 from typing import Any, Iterable, Self, Dict
 
-from Options import Range, Toggle, OptionError, Visibility
+from Options import Range, Toggle, OptionError, Visibility, Choice
 from ..data.common_options import ExtendedOptionCounter
 from ..data.pokemon.pokedex import by_name as dex_by_name
 from ..data.pokemon.species import unique_forms
@@ -12,7 +12,12 @@ DEXSANITYSANITY_ENABLED = any(Path(source.path).stem == "pokemon_bw_dexsanitysan
 DEXSANITYSANITY_VISIBILITY = Visibility.spoiler if not DEXSANITYSANITY_ENABLED else Visibility.all
 
 
+class GenderTuple(tuple[int, int]):
+    pass
+
+
 class DexsanityResolver:
+    gender_threshold = range(31, 223)
 
     def resolve_plando_dex(self, value: int | str | list | dict) -> tuple[int, ...]:
         while not isinstance(value, int | range):
@@ -44,6 +49,44 @@ class DexsanityResolver:
                 raise OptionError(f"Option {self.__class__.__name__} as a list expects integers, ranges, "
                                   f"nested lists, and nested weighted lists, but instead found {type(value)}")
         return tuple(value) if isinstance(value, range) else (value, )
+
+    def resolve_plando_gender(self, value: int | str | list | dict) -> tuple[GenderTuple, ...]:
+        while not isinstance(value, GenderTuple | range):
+            if isinstance(value, str):
+                if "," in value:
+                    value = value.split(",")
+                elif "-" in value and all(a.strip().isnumeric() for a in value.split("-")):
+                    res = tuple(int(r) for r in value.split("-"))
+                    for r in res:
+                        if not 1 <= r <= 649:
+                            raise OptionError(f"Option {self.__class__.__name__} contains dex number {r}, "
+                                              f"which is not in range 1-649")
+                    value = range(res[0], res[1] + 1)
+                elif value.strip().isnumeric():
+                    value = range(int(value), int(value) + 1)
+                elif (
+                    len(split := value.split()) == 2 and split[1].casefold() in ("male", "female") and
+                    (res_ := dex_by_name.get(value, False))
+                ):
+                    value = GenderTuple((res_, {"male": 0, "female": 1}[split[1].casefold()]))
+                elif res_ := dex_by_name.get(value, False):
+                    value = range(res_, res_ + 1)
+                else:
+                    raise OptionError(f"Option {self.__class__.__name__} contains invalid string value {value}")
+            elif isinstance(value, list):
+                value = random.choice(value)
+            elif isinstance(value, int):
+                value = range(value, value + 1)
+            elif isinstance(value, dict):
+                for v in value.values():
+                    if not isinstance(v, int):
+                        raise OptionError(f"Option {self.__class__.__name__} contains a list with a non-integer "
+                                          f"weight {v} ({type(v)})")
+                value = random.choices(tuple(value), tuple(value.values()))
+            else:
+                raise OptionError(f"Option {self.__class__.__name__} as a list expects integers, ranges, "
+                                  f"nested lists, and nested weighted lists, but instead found {type(value)}")
+        return tuple(GenderTuple((v, i)) for i in (0, 1) for v in value) if isinstance(value, range) else (value, )
 
     def resolve_plando_form(self, value: str | list | dict) -> str:
         while True:
@@ -281,6 +324,84 @@ class Formcountsanity(ExtendedOptionCounter):
         "Maximum": (0, 72),
         "Steps": (1, 72),
         "Leniency": (0, 71),
+    }
+
+    @classmethod
+    def from_any(cls, data: Dict[str, Any]):
+        return super().from_any(data if DEXSANITYSANITY_ENABLED else cls.default)
+
+
+class Gendersanity(Range, DexsanityResolver):
+    """
+    Adds a number of locations that can be checked by seeing a certain
+    gender of a certain Pokemon species, which is marked in the pokedex.
+    The actual maximum number of added checks depends on what pokemon
+    species are actually observable in the wild or in trainer battles
+    and which of those can actually appear as male **and** female.
+
+    If you want to have as many of the theoretical 1298 checks as
+    possible, then you need to randomize wild encounters and add the
+    **Ensure all obtainable** modifier.
+
+    Alternatively, you can plando your Gendersanity checks similar
+    to Dexsanity. See the options guides for more information.
+
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
+    """
+    display_name = "Gendersanity"
+    value: int | list[GenderTuple]
+    visibility = DEXSANITYSANITY_VISIBILITY
+    default = 0
+    range_start = 0
+    range_end = 1298
+
+    def __init__(self, value: Any):
+        if isinstance(value, Iterable):  # Strings should be caught in from_any
+            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_gender(v)))  # Get rid of duplicates and stay deterministic
+        else:
+            super().__init__(value)
+
+    @classmethod
+    def from_any(cls, data: Any) -> Self:
+        if not DEXSANITYSANITY_ENABLED:
+            return cls(cls.default)
+        if isinstance(data, str):
+            return cls.from_text(str(data))
+        if isinstance(data, (Iterable, int)):
+            return cls(data)
+        raise OptionError(f"Unsupported type for {cls.__name__}: {type(data)}")
+
+
+class Gendercountsanity(ExtendedOptionCounter):
+    """
+    A combination of Dexcountsanity and Gendersanity.
+    This option can be edited like Dexcountsanity, while requiring
+    to see a certain amount of male and female pokemon species.
+
+    There are two modes on how the locations get checked. They can
+    be toggled in the **Gendercount Mode** option below.
+
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
+    """
+    display_name = "Gendercountsanity"
+    fill_defaults = True
+    visibility = DEXSANITYSANITY_VISIBILITY
+    valid_keys = [
+        "Maximum",
+        "Steps",
+        "Leniency",
+    ]
+    default = {
+        "Maximum": 0,
+        "Steps": 1,
+        "Leniency": 0,
+    }
+    individual_min_max = {
+        "Maximum": (0, 1298),
+        "Steps": (1, 1298),
+        "Leniency": (0, 1297),
     }
 
     @classmethod
@@ -539,9 +660,154 @@ class Shinyformcountsanity(Toggle, ExtendedOptionCounter):
         return ["No", "Yes"][int(value)] if value in (0, 1) else str(value)
 
 
-# Gendersanity
+class Shinygendersanity(Toggle, DexsanityResolver):
+    """
+    A combination for **Shinysanity** and **Gendersanity**.
+    It works pretty much like **Shinysanity**, including being shown as a
+    simple toggle outside the template yaml, while only requiring to find the
+    shiny version of specific male or female pokemon. It also contains plando
+    capabilities in the way that **Gendersanity** has them.
 
-# Gendercountsanity
-# Shinygendersanity
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
+    """
+    display_name = "Shinygendersanity"
+    value: int | list[GenderTuple]
+    default = 0
 
-# Shinygendercountsanity
+    def __init__(self, value: Any):
+        if isinstance(value, Iterable):  # Strings should be caught in from_any
+            self.value = sorted(set(vv for v in value for vv in self.resolve_plando_gender(v)))  # Get rid of duplicates and stay deterministic
+        elif isinstance(value, int):
+            if not 0 <= value <= 1298:
+                raise OptionError(f"Option {self.__class__.__name__}'s value {value} is not in range 0-1298")
+            self.value = value
+        else:
+            super().__init__(value)
+
+    @classmethod
+    def from_text(cls, text: str) -> Self:
+        if text.startswith("random-range-"):
+            parts = text.split("-")
+            if len(parts) != 4 or not parts[2].isnumeric() or not parts[3].isnumeric():
+                raise OptionError(f"Option {cls.__name__} does not support a value of {text}")
+            range_min, range_max = int(parts[2]), int(parts[3])
+            if range_max > 1298 or range_min < 0:
+                raise OptionError(f"Option {cls.__name__}'s random range {text} is out of bounds")
+            return cls(random.randint(range_min, range_max))
+        return super().from_text(text)
+
+    @classmethod
+    def get_option_name(cls, value):
+        return ["No", "Yes"][int(value)] if value in (0, 1) else str(value)
+
+    @classmethod
+    def from_any(cls, data: Any) -> Self:
+        if isinstance(data, str):
+            return cls.from_text(str(data))
+        if isinstance(data, (Iterable, int)):
+            return cls(data)
+        raise OptionError(f"Unsupported type for {cls.__name__}: {type(data)}")
+
+
+class Shinygendercountsanity(Toggle, ExtendedOptionCounter):
+    """
+    A combination of **Shinysanity** and **Dexcountsanity**.
+    This can, like with **Shinysanity**, be edited in a text editor to
+    work like the regular **Dexcountsanity** option. Otherwise, it will
+    be shown as a toggle. However, using this like **Dexcountsanity**
+    requires you to put the key-value pairs as a list entry, i.e.:
+
+    shinycountsanity:
+    - Maximum: 10
+      Steps: 2
+      Leniency: 5
+
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
+
+
+
+    A combination of **Shinysanity**, **Gendersanity**, and **Dexcountsanity**.
+    It works pretty much like **Shinycountsanity**, including being shown as a
+    simple toggle outside the template yaml, while only requiring to find a
+    certain amount of male or female pokemon in their shiny variant.
+
+    This option requires installing the Dexsanitysanity plugin.
+    Otherwise, it will be ignored.
+    """
+    display_name = "Shinygendercountsanity"
+    value: int | dict[str, int]
+    default = 0
+    fill_defaults = True
+    supports_weighting = True
+    visibility = DEXSANITYSANITY_VISIBILITY
+    individual_min_max = {
+        "Maximum": (0, 1298),
+        "Steps": (1, 1298),
+        "Leniency": (0, 1297),
+    }
+
+    def __init__(self, value: int | dict[str, int]) -> None:
+        if isinstance(value, dict):
+            self.value = {key: val for key, val in value.items()}
+        elif isinstance(value, int):
+            self.value = {
+                "Maximum": value,
+                "Steps": 1,
+                "Leniency": 0,
+            }
+        else:
+            raise OptionError(f"Option {self.__class__.__name__} does not support a value of type {type(value)}")
+
+    @classmethod
+    def from_any(cls, data: Any) -> Self:
+        default = {
+            "Maximum": 0,
+            "Steps": 1,
+            "Leniency": 0,
+        }
+        valid_keys = [
+            "Maximum",
+            "Steps",
+            "Leniency",
+        ]
+        if not DEXSANITYSANITY_ENABLED:
+            return cls(cls.default)
+        if type(data) is str:
+            return cls.from_text(data)
+        if isinstance(data, int):
+            return cls(data)
+        if not isinstance(data, dict):
+            raise OptionError(f"Option {cls.__name__} does not support a value of type {type(data)}")
+        data = data.copy()
+        if cls.fill_defaults:
+            for key in valid_keys:
+                if key not in data:
+                    if key in default:
+                        data[key] = default[key]
+                    else:
+                        data[key] = 0
+                data[key] = cls.resolve_value(data[key], key)
+        return cls(data)
+
+    @classmethod
+    def get_option_name(cls, value):
+        return ["No", "Yes"][int(value)] if value in (0, 1) else str(value)
+
+
+class GendercountMode(Choice):
+    """
+    Decides how to generate/handle **Gendercountsanity** and
+    **Shinygendercountsanity** checks.
+
+    - **Split* - Half of the checks require you to see/find male
+        pokemon and the other half to see/find female pokemon.
+    - **Any* - All checks require you to see/find a certain amount
+        of gendered pokemon.
+    """
+    display_name = "Gendercount Mode"
+    visibility = DEXSANITYSANITY_VISIBILITY
+    option_split = 0
+    option_any = 1
+    default = 0

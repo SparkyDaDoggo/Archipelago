@@ -38,35 +38,55 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
             "Deerling (Winter)",
         )]
         blacklist = world.options.wild_randomization_blacklist.value
+        dexsanity = world.options.dexsanity.value
+        seensanity = world.options.seensanity.value
+        formsanity = world.options.formsanity.value
+        gendersanity = world.options.gendersanity.value
+        shinysanity = world.options.shinysanity.value
+        shinyformsanity = world.options.shinyformsanity.value
+        shinygendersanity = world.options.shinygendersanity.value
 
-        if isinstance(world.options.dexsanity.value, list):
-            for dex_num in world.options.dexsanity.value:
+
+        if isinstance(dexsanity, list):
+            for dex_num in dexsanity:
                 spec = world.species_entries_by_id[(dex_num, 0)]
                 if spec not in always_required:
                     always_required.append(spec)
 
-        if isinstance(world.options.seensanity.value, list):
-            for dex_num in world.options.seensanity.value:
+        if isinstance(seensanity, list):
+            for dex_num in seensanity:
                 spec = world.species_entries_by_id[(dex_num, 0)]
                 if spec not in always_required:
                     always_required.append(spec)
 
-        if isinstance(world.options.formsanity.value, list):
-            for form_name in world.options.formsanity.value:
+        if isinstance(formsanity, list):
+            for form_name in formsanity:
                 spec = world.species_entries[form_alias.get(form_name, form_name)]
                 if spec not in always_required:
                     always_required.append(spec)
 
-        if isinstance(world.options.shinysanity.value, list):
-            for dex_num in world.options.shinysanity.value:
+        if isinstance(gendersanity, list):
+            for dex_num, gender_id in gendersanity:
+                spec = world.species_entries_by_id[(dex_num, 0)]
+                if spec.gender_ratio in world.options.gendersanity.gender_threshold and spec not in always_required:
+                    always_required.append(spec)
+
+        if isinstance(shinysanity, list):
+            for dex_num in shinysanity:
                 spec = world.species_entries_by_id[(dex_num, 0)]
                 if spec not in always_required:
                     always_required.append(spec)
 
-        if isinstance(world.options.shinyformsanity.value, list):
-            for form_name in world.options.shinyformsanity.value:
+        if isinstance(shinyformsanity, list):
+            for form_name in shinyformsanity:
                 spec = world.species_entries[form_alias.get(form_name, form_name)]
                 if spec not in always_required:
+                    always_required.append(spec)
+
+        if isinstance(shinygendersanity, list):
+            for dex_num, gender_id in shinygendersanity:
+                spec = world.species_entries_by_id[(dex_num, 0)]
+                if spec.gender_ratio in world.options.gendersanity.gender_threshold and spec not in always_required:
                     always_required.append(spec)
 
         # Ensure one fighting type for challenge rock
@@ -77,9 +97,12 @@ def get_species_checklist(world: "PokemonBWWorld") -> SpeciesChecklist:
                 break
 
         # cannot use world.disallowed_all_seen since that will only be filled at a later point
-        seen_amount = world.options.seensanity.value if isinstance(world.options.seensanity.value, int) else len(world.options.seensanity.value)
-        form_amount = 16  # for simplicity, let's just assume all forms are included
-        auto_seen = 649 - max(seen_amount, form_amount) if world.options.all_pokemon_seen else 0
+        # for simplicity, let's just assume either all forms or none are included
+        # and gendersanity picks equal male and female
+        seen_amount = seensanity if isinstance(seensanity, int) else len(seensanity)
+        form_amount = 16 if formsanity else 0
+        gender_amount = (gendersanity if isinstance(gendersanity, int) else len(gendersanity)) // 2
+        auto_seen = 649 - max(seen_amount, form_amount, gender_amount) if world.options.all_pokemon_seen else 0
         if auto_seen < 115:
             # Get list of ALL pokémon
             pool_115 = list(data for spec_name, data in world.species_entries.items()
@@ -124,13 +147,6 @@ def random_percentage_distribution(world: "PokemonBWWorld", length: int) -> list
         remaining -= value
     ret.append(remaining)
     return ret
-
-
-def track_down_copy_from(copy_from: dict[str, str | None], slot: str) -> str:
-    current = slot
-    while copy_from[current] is not None:
-        current = copy_from[current]
-    return current
 
 
 def get_copy_checklist(world: "PokemonBWWorld") -> CopyChecklist | None:

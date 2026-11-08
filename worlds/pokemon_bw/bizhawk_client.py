@@ -170,7 +170,7 @@ class PokemonBWClient(BizHawkClient):
 
                 elif loc_name in gendersanity.location_table:
                     loc = gendersanity.location_table[loc_name]
-                    self.missing_gender_loc_ids[loc.gender][loc.dex_number] = loc_id
+                    self.missing_gender_loc_ids[bool(loc.gender)][loc.dex_number] = loc_id
                 elif loc_name in countsanity.gendercountsanity:
                     loc_dat = countsanity.gendercountsanity[loc_name]
                     self.missing_gendercount_loc_ids[loc_dat[1]][loc_dat[0]] = loc_id
@@ -187,7 +187,7 @@ class PokemonBWClient(BizHawkClient):
 
                 elif loc_name in shinygendersanity.location_table:
                     loc = shinygendersanity.location_table[loc_name]
-                    self.missing_shinygender_loc_ids[loc.gender][loc.dex_number] = loc_id
+                    self.missing_shinygender_loc_ids[bool(loc.gender)][loc.dex_number] = loc_id
                 elif loc_name in countsanity.shinygendercountsanity:
                     loc_dat = countsanity.shinygendercountsanity[loc_name]
                     self.missing_shinygendercount_loc_ids[loc_dat[1]][loc_dat[0]] = loc_id

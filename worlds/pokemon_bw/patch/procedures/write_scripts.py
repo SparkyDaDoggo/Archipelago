@@ -67,13 +67,16 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
     )
 
     # Shiny rate activation
-    shcosanity, shfocosanity = opt["shinycountsanity"], opt["shinyformcountsanity"]
+    shcosanity, shfocosanity, shgecosanity = opt["shinycountsanity"], opt["shinyformcountsanity"], opt["shinygendercountsanity"]
     if isinstance(shcosanity, int):
         shcosanity = {"Maximum": shcosanity}
     if isinstance(shfocosanity, int):
         shfocosanity = {"Maximum": shfocosanity}
+    if isinstance(shgecosanity, int):
+        shgecosanity = {"Maximum": shgecosanity}
     active_shiny_rate = any((opt["shinysanity"], shcosanity["Maximum"],
-                             opt["shinyformsanity"], shfocosanity["Maximum"]))
+                             opt["shinyformsanity"], shfocosanity["Maximum"],
+                             opt["shinygendersanity"], shgecosanity["Maximum"]))
     to_insert += (
         Line("command", ["FlagSet" if active_shiny_rate else "FlagReset", 0x1E8]),
         Line("command", ["WorkSetConst", 0x40F3, 1024 if active_shiny_rate else 8]),

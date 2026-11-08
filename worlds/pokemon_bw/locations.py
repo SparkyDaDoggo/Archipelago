@@ -18,7 +18,8 @@ def get_location_lookup_table() -> dict[str, int]:
     from .generate.locations import (overworld_items, hidden_items, other, badge_rewards, tm_hm)
     from .generate.locations.sanity import (dexsanity, shinysanity, seensanity, shinycountsanity, seencountsanity,
                                             dexcountsanity, formsanity, formcountsanity, shinyformsanity,
-                                            shinyformcountsanity)
+                                            shinyformcountsanity, gendersanity, gendercountsanity, shinygendersanity,
+                                            shinygendercountsanity)
     from .options.sanity import DEXSANITYSANITY_ENABLED
     ret = {
         **overworld_items.lookup(100000),
@@ -39,6 +40,10 @@ def get_location_lookup_table() -> dict[str, int]:
             **shinycountsanity.lookup(704000),
             **shinyformsanity.lookup(706000),
             **shinyformcountsanity.lookup(708000),
+            **gendersanity.lookup(710000),
+            **gendercountsanity.lookup(712000),
+            **shinygendersanity.lookup(714000),
+            **shinygendercountsanity.lookup(717000),
         }
     return ret
 
@@ -129,7 +134,8 @@ def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: 
     from .generate.locations import overworld_items, hidden_items, other, badge_rewards, tm_hm
     from .generate.locations.sanity import (dexsanity, shinysanity, seensanity, shinycountsanity, seencountsanity,
                                             dexcountsanity, formsanity, formcountsanity, shinyformsanity,
-                                            shinyformcountsanity)
+                                            shinyformcountsanity, gendersanity, gendercountsanity, shinygendersanity,
+                                            shinygendercountsanity)
 
     overworld_items.create(world)
     hidden_items.create(world)
@@ -142,10 +148,14 @@ def create_and_place_locations(world: "PokemonBWWorld", catchable_species_data: 
     seencountsanity.create(world, catchable_species_data, seeable_species_data)
     formsanity.create(world, catchable_species_data, seeable_species_data)
     formcountsanity.create(world, catchable_species_data, seeable_species_data)
+    gendersanity.create(world, catchable_species_data, seeable_species_data)
+    gendercountsanity.create(world, catchable_species_data, seeable_species_data)
     shinysanity.create(world, catchable_species_data)
     shinycountsanity.create(world, catchable_species_data)
     shinyformsanity.create(world, catchable_species_data)
     shinyformcountsanity.create(world, catchable_species_data)
+    shinygendersanity.create(world, catchable_species_data)
+    shinygendercountsanity.create(world, catchable_species_data)
 
 
 def connect_regions(world: "PokemonBWWorld") -> None:
@@ -334,6 +344,21 @@ def extend_species_hints(world: "PokemonBWWorld", hint_data: dict[int, dict[int,
             hint_data[world.player][loc_id] = build_string(loc_data.species_id[0], True)
 
     if DEXSANITYSANITY_ENABLED:
+        gender_numb = world.dexsanity_numbers.get("gendersanity", ())
+        shinygender_numb = world.dexsanity_numbers.get("shinygendersanity", ())
+        for dex in places_for_location:
+            if dex in gender_numb:
+                dex_string = build_string(dex)
+                loc_id = world.location_name_to_id[f"Pokédex - See a male {by_number[dex]}"]
+                hint_data[world.player][loc_id] = dex_string
+                loc_id = world.location_name_to_id[f"Pokédex - See a female {by_number[dex]}"]
+                hint_data[world.player][loc_id] = dex_string
+            if dex in shinygender_numb:
+                dex_string = build_string(dex)
+                loc_id = world.location_name_to_id[f"Pokédex - Find a shiny male {by_number[dex]}"]
+                hint_data[world.player][loc_id] = dex_string
+                loc_id = world.location_name_to_id[f"Pokédex - Find a shiny female {by_number[dex]}"]
+                hint_data[world.player][loc_id] = dex_string
         for loc_name, loc_data in shinyformsanity.table.items():
             if loc_data.species_id[0] in places_for_location:
                 loc_id = world.location_name_to_id[loc_name]

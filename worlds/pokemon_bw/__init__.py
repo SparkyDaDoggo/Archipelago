@@ -194,6 +194,8 @@ class PokemonBWWorld(World):
         self.dexsanity_numbers: dict[str, list[int]] = {}
         self.disallowed_all_seen: list[int] = []
         self.disallowed_all_seen_forms: list[int] = []
+        self.disallowed_all_seen_male: list[int] = []
+        self.disallowed_all_seen_female: list[int] = []
         self.regions: dict[str, Region] | None = None
         self.region_distances: dict[str, int] | None = None
         self.max_distance: int = 0
@@ -412,10 +414,15 @@ class PokemonBWWorld(World):
                     "seencountsanity": self.options.seencountsanity.value,
                     "formsanity": self.options.formsanity.value,
                     "formcountsanity": self.options.formcountsanity.value,
+                    "gendersanity": self.options.gendersanity.value,
+                    "gendercountsanity": self.options.gendercountsanity.value,
                     "shinysanity": self.options.shinysanity.value,
                     "shinycountsanity": self.options.shinycountsanity.value,
                     "shinyformsanity": self.options.shinyformsanity.value,
                     "shinyformcountsanity": self.options.shinyformcountsanity.value,
+                    "shinygendersanity": self.options.shinygendersanity.value,
+                    "shinygendercountsanity": self.options.shinygendercountsanity.value,
+                    "gendercountmode": self.options.gendercountmode.current_key,
                     "season_control": self.options.season_control.current_key,
                     "adjust_levels": self.options.adjust_levels.value,
                     "modify_levels": self.options.modify_levels.value,

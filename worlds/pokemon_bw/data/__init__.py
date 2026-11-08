@@ -121,7 +121,7 @@ class DexLocationData(NamedTuple):
 
 class DexGenderLocationData(NamedTuple):
     dex_number: int
-    gender: int
+    gender: Literal[0, 254]
     """0 is male, 254 is female"""
     ut_alias: str | None = None
 

@@ -145,7 +145,7 @@ def patch(rom: NintendoDSRom, world_package: str, bw_patch_instance: "PokemonBWP
                f"[Scroll][NextLine]"
                f"- Season control: {slotdata['options']['season_control'].replace('_', ' ').capitalize()}"
                f"[Scroll][NextLine]")
-    for sanity in ("dex", "seen", "form", "shiny", "shinyform"):
+    for sanity in ("dex", "seen", "form", "gender", "shiny", "shinyform", "shinygender"):
         opt_val, opt_params = slotdata['options'][sanity + 'sanity'], slotdata['options'][sanity + 'countsanity']
         if isinstance(opt_val, list):
             info44 += f"- {len(opt_val)} fixed {sanity.capitalize()}sanity checks[Scroll][NextLine]"
