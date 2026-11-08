@@ -211,6 +211,7 @@ class MoveEntry:
     pp: int
     name: str
     locked: bool
+    progression: bool
     write: int = 0
     """b0 = general data
     b1 = name"""
@@ -224,6 +225,7 @@ class MoveEntry:
         self.pp = data.pp
         self.name = name
         self.locked = data.locked
+        self.progression = data.progression
 
 
 class SpeciesChecklist:

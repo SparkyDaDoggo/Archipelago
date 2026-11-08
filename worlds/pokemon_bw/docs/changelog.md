@@ -6,6 +6,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Added the Legendary Hunt NPC to the tracker goal bitmap
 - Made damage-inflicting moves more likely in levelup moveset randomization
 - Fixed `Route 13 - Item on cliff #2` not appearing anymore when receiving any Gram before talking to the Wingull girl
+- Added `Include progression moves` to `Randomize Level Up Movesets`
+  - This includes HM moves and Flash, now they will be excluded by default
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.4.0

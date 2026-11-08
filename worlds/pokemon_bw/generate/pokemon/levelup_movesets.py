@@ -72,7 +72,10 @@ def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, S
             else:
                 plando_append[species] = [LvlupSlot(m[0], m[1]) for m in new_moves]
 
-    all_moves = tuple((n, d) for n, d in world.move_entries.items() if not d.locked)
+    if mods.is_include_progression_moves:
+        all_moves = tuple((n, d) for n, d in world.move_entries.items() if not d.locked)
+    else:
+        all_moves = tuple((n, d) for n, d in world.move_entries.items() if not d.locked and not d.progression)
     moves_amount_min = world.options.stats_randomization_adjustments["Levelup moves amount minimum"]
     moves_amount_max = world.options.stats_randomization_adjustments["Levelup moves amount maximum"]
 

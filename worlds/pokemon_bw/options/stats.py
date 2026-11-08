@@ -185,6 +185,8 @@ class RandomizeLevelUpMovesets(ToggleSet):
         other modifiers. Might not be applied to all species if plando is used.
     - **Start with 4** - Ensures that each species learns at least 4 moves at
         level 1. Has priority over other modifiers.
+    - **Include progression moves** - Includes moves that can help you progress
+        in the game (mostly HM moves).
     """
     display_name = "Randomize Level Up Movesets"
     is_randomize = False
@@ -193,6 +195,7 @@ class RandomizeLevelUpMovesets(ToggleSet):
     is_keep_levels_and_amount = False
     is_follow_evolutions = False
     is_start_with_4 = False
+    is_include_progression_moves = False
     auto_add_if_any = "Randomize"
     aliases_convert = [
         ("Keep types", "Match types"),
