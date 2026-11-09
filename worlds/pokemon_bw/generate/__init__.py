@@ -1,11 +1,15 @@
 from dataclasses import dataclass
-from typing import Self, TYPE_CHECKING, Iterator, Literal
+from typing import Self, TYPE_CHECKING, Iterator, Literal, Callable, TypeVar
+from random import Random
 
 from ..data import InclusionRule, ExtendedRule, SpeciesData, LevelUpMovesetData, TMHMMovesetData, MoveData
 from ..data.pokemon import movesets_level_up, movesets_tm_hm
 
 if TYPE_CHECKING:
     from .. import PokemonBWWorld
+
+
+T = TypeVar("T")
 
 
 class EvoLine:
@@ -333,3 +337,17 @@ class CopyChecklist:
     def __setitem__(self, key: tuple[int, int, int], value: CopyGroup):
         """Only use from inside!"""
         self.by_file[key[0]][key[1]][key[2]] = value
+
+
+def reseed(func: Callable[["PokemonBWWorld", ...], T]) -> Callable[["PokemonBWWorld", ...], T]:
+    def wrapper(world: "PokemonBWWorld", *args, **kwargs) -> T:
+        seed = world.random.getrandbits(64)
+        world.random.seed(seed)
+        ret = func(world, *args, **kwargs)
+        world.random.seed(seed)
+        # previous_random = world.random
+        # world.random = Random(previous_random.getrandbits(64))
+        # ret = func(world, *args, **kwargs)
+        # world.random = previous_random
+        return ret
+    return wrapper

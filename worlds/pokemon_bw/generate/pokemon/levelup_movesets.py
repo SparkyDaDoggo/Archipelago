@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Iterable
 from Options import OptionError
 from .. import SpeciesEntry
 from ...data import LevelUpMovesetData
-from ...generate import MoveEntry
+from ...generate import MoveEntry, reseed
 
 if TYPE_CHECKING:
     from ... import PokemonBWWorld
@@ -29,6 +29,7 @@ def sort_by_power(move: tuple[str, "MoveEntry"]) -> int:
     return move[1].power
 
 
+@reseed
 def randomize_levelup_movesets(world: "PokemonBWWorld", all_species: dict[str, SpeciesEntry]):
     from ...data.pokemon.moves import by_id as move_by_id
 
