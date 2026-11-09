@@ -216,7 +216,7 @@ table: dict[str, FlagLocationData] = {
     "Opelucid Gym - Gym guide item": FlagLocationData(125, always_default, "Opelucid Gym", None, None),
     # Don't know how to handle pokémon from other version, so not changing the script
     # "Opelucid City - Item from NPC for showing a pokémon knowing Charge from opposite version": FlagLocationData(0000000, always_default, "Opelucid City", None, None),
-    "Opelucid City - Item from Professor Juniper": FlagLocationData(0x1B1, always_default, "Opelucid City", None, has_defeated_opelucid_gym),
+    "Opelucid City - Item from Professor Juniper": FlagLocationData(0x1B1, always_default, "Opelucid City", None, IF(shuffled_doors, has_defeated_opelucid_gym)),
     "Route 10 - Item from veteran near northern bridge": FlagLocationData(263, always_default, "Route 10", None, None),
     "Route 10 - Item from Bianca #1": FlagLocationData(0x1B2, always_default, "Route 10", None, has_heard_weather_route_10),
     "Route 10 - Item from Bianca #2": FlagLocationData(0x1B2, always_default, "Route 10", None, has_heard_weather_route_10),
