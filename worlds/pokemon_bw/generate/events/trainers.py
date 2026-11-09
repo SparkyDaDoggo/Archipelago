@@ -17,11 +17,6 @@ def create(world: "PokemonBWWorld") -> dict[str, "SpeciesEntry"]:
 
     if world.options.modify_logic.is_consider_trainers:
         for data in world.trainer_teams:
-            if "Deerling" in data.species or "Sawsbuck" in data.species:
-                # Trainers seemingly change their pokémons' seasonal forms accordingly, which is a problem for
-                # Formsanity, so Deerling and Sawsbuck are always excluded from logic.
-                # Maybe fix this later on the ROM side.
-                continue
             trainer = table[data.trainer_id - 1]
             if trainer.logic_inc_rule and not trainer.logic_inc_rule(world):
                 continue

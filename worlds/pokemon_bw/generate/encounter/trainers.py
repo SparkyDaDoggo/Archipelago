@@ -23,6 +23,7 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     from ...data.pokemon.species import get_weighted_random_species, forms_by_dex
     from ...data.pokemon.evolution_methods import methods
     from ...data.pokemon.types import by_name as types_by_name
+    from ...data.locations.rules import disabled
 
     if not world.options.randomize_trainer_pokemon.is_randomize:
         return
@@ -63,9 +64,12 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
         raise OptionError("At least one type has all its species prevented in wild randomization due to some option. "
                           "Please remove some restrictions in your yaml.")
 
-    def can_evolve(spec: SpeciesEntry, level: int) -> SpeciesEntry | None:
+    def can_evolve(spec: SpeciesEntry, level: int, is_trainer_disabled: bool) -> SpeciesEntry | None:
         for evo_tup in spec.evolutions:
             evo_spec = evo_tup.species.by_form(spec.form)
+            if evo_spec.dex_number in (585, 586) and not is_trainer_disabled:
+                # Disable Deerling and Sawsbuck for not-always-logic-disabled trainers because of automatic form change
+                continue
             if evo_spec.virtual:
                 evo_spec = evo_spec.by_form(0)
             if evo_spec.dex_number == spec.dex_number:
@@ -82,17 +86,18 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     if mods.is_rivals_keep_starter:
 
         def get_rival_last(slot: TrainerPokemonEntry) -> SpeciesEntry:
-            rival_id = trainer_table[slot.trainer_id - 1].rival - 1
+            t_data = trainer_table[slot.trainer_id - 1]
+            rival_id = t_data.rival - 1
             stages = rivals_starter[rival_id]
             if not stages:
-                stages.append(get_random(slot, ""))
+                stages.append(get_random(slot, "", t_data.logic_inc_rule == disabled))
                 return stages[0]
             for stage in stages[:-1]:
-                if not can_evolve(stage, slot.level):
+                if not can_evolve(stage, slot.level, t_data.logic_inc_rule == disabled):
                     # Checking for whether it can evolve into that specific next species isn't necessary
                     return stage
             while True:
-                stage = can_evolve(stages[-1], slot.level)
+                stage = can_evolve(stages[-1], slot.level, t_data.logic_inc_rule == disabled)
                 if stage and stage not in stages:
                     stages.append(stage)
                 else:
@@ -118,15 +123,18 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
     #                 continue
     #             if similar_stats:
 
-    def get_random(slot: TrainerPokemonEntry, typ: str) -> SpeciesEntry:
+    def get_random(slot: TrainerPokemonEntry, typ: str, is_trainer_disabled: bool) -> SpeciesEntry:
         stat_tolerance = world.options.pokemon_randomization_adjustments["Stats leniency"]
-        op_skipped = possible_skipped = force_skipped = 0
+        op_skipped = possible_skipped = force_skipped = season_skipped = 0
         vanilla_total = sum(world.species_entries[slot.species].base_stats)
         while True:
             spec = (get_weighted_random_species(world.random, any_species_by_type[typ])
                     if typ else get_weighted_random_species(world.random, any_species))
+            if not is_trainer_disabled and spec.dex_number in (585, 586) and season_skipped < 30:
+                season_skipped += 1
+                continue
             if mods.is_evolve_possible:
-                evo_spec = can_evolve(spec, slot.level)
+                evo_spec = can_evolve(spec, slot.level, is_trainer_disabled)
                 if evo_spec:
                     if possible_skipped < 10:
                         possible_skipped += 1
@@ -175,7 +183,7 @@ def generate_trainer_teams(world: "PokemonBWWorld"):
                 t_types[next_slot.trainer_id - 1] = world.random.choice(tuple(types_by_name))
             this_type = t_types[next_slot.trainer_id - 1]
         # Roll species
-        next_slot.species = get_random(next_slot, this_type).species_name
+        next_slot.species = get_random(next_slot, this_type, trainer.logic_inc_rule == disabled).species_name
         next_slot.write |= 2
     # fill rivals' last pokémon
     if rivals_starter:
