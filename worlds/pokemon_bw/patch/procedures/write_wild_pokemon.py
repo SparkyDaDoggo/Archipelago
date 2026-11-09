@@ -32,11 +32,11 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
     # regarding modify levels
     mod_value = bw_patch_instance.world.options.modify_levels.value
     if isinstance(mod_value, dict):
-        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"]},
-                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"]}]
+        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"], "cap": False},
+                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"], "cap": False}]
     else:
-        calcs: list[dict[str, int | str]] = mod_value
-    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"])]
+        calcs: list[dict[str, int | str | bool]] = mod_value
+    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"], calc["cap"])]
     wild_calcs = tuple(calc for calc in calcs if calc["type"] == "Wild")
 
     slots: list[list[bytearray]] = [
@@ -48,10 +48,10 @@ def write_patch(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Zip
         if adjust_sphere:
             new_levels = adjust_wild(slot, distances, first_level, max_distance)
             for calc in wild_calcs:
-                new_levels = (ModifyLevels.modify(calc["mode"], calc["value"], new_levels[0]),
-                              ModifyLevels.modify(calc["mode"], calc["value"], new_levels[1]))
-            new_levels = (max(new_levels[0], slot.min_level * (100 - tolerance) // 100, 1),
-                          max(new_levels[1], slot.max_level * (100 - tolerance) // 100, 1))
+                new_levels = (ModifyLevels.modify(calc["mode"], calc["value"], new_levels[0], calc["cap"]),
+                              ModifyLevels.modify(calc["mode"], calc["value"], new_levels[1], calc["cap"]))
+            new_levels = (ModifyLevels.cap(max(new_levels[0], slot.min_level * (100 - tolerance) // 100, 1)),
+                          ModifyLevels.cap(max(new_levels[1], slot.max_level * (100 - tolerance) // 100, 1)))
         else:
             new_levels = slot.min_level, slot.max_level
         if (slot.min_level, slot.max_level) != new_levels:

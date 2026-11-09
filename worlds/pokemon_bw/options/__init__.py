@@ -315,10 +315,10 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
     either the name of the mode or the corresponding number:
     - **Multiply** or **0** - Multiply each level with the value being seen as
         a percentage, i.e. 100 means no modifying. Allowed values are in range
-        1 to 10000.
+        -10000 to 10000.
     - **Add** or **1** - Add the value directly to each level (with negative
         values being allowed), i.e. 0 means no modifying. Allowed values are in
-        range -99 to 99.
+        range -1000 to 1000.
     - **Power** or **2** - Raise each level to the power of the value (which is
         seen as a percentage), i.e. 100 means no modifying. Allowed values are
         in range 1 to 700.
@@ -340,7 +340,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
         "Trainer mode": 0,
         "Wild mode": 0,
     }
-    value: dict[str, int] | list[dict[str, int | str]]
+    value: dict[str, int] | list[dict[str, int | str | bool]]
 
     def __init__(self, data: typing.Any):
         if isinstance(data, dict):
@@ -382,6 +382,7 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
                 "type": "Trainer",
                 "mode": 0,
                 "value": 100,
+                "cap": True,
             }
             for entry in data:
                 if not isinstance(entry, dict):
@@ -400,8 +401,8 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
 
         errors = []
         mode_min_max: dict[int, tuple[int, int]] = {
-            0: (1, 10000),
-            1: (-99, 99),
+            0: (-10000, 10000),
+            1: (-1000, 1000),
             2: (1, 700),
         }
 
@@ -434,50 +435,27 @@ class ModifyLevels(OptionCounter):  # Not ExtendedOptionCounter because too much
             raise OptionError("\n".join(errors))
 
     @staticmethod
-    def is_modified(mode: int, value: int) -> bool:
-        return {0: 100, 1: 0, 2: 100}[mode] != value
+    def is_modified(mode: int, value: int, cap: bool) -> bool:
+        return cap or {0: 100, 1: 0, 2: 100}[mode] != value
 
     @staticmethod
     def cap(level: int):
         return max(min(level, 100), 1)
 
     @classmethod
-    def modify_trainer(cls, value: dict[str, int] | list[dict[str, int | str]], level) -> int:
-        if isinstance(value, dict):
-            return cls.modify(value["Trainer mode"], value["Trainer value"], level)
-        elif isinstance(value, list):
-            calc = level
-            for entry in value:
-                if entry["type"] == "Trainer":
-                    calc = cls.modify(entry["mode"], entry["value"], calc)
-            return calc
-        else:
-            raise OptionError(f"Cannot convert from non-dictionary, got {type(value)}")
-
-    @classmethod
-    def modify_wild(cls, value: dict[str, int] | list[dict[str, int | str]], level: int) -> int:
-        if isinstance(value, dict):
-            return cls.modify(value["Wild mode"], value["Wild value"], level)
-        elif isinstance(value, list):
-            calc = level
-            for entry in value:
-                if entry["type"] == "Wild":
-                    calc = cls.modify(entry["mode"], entry["value"], calc)
-            return calc
-        else:
-            raise OptionError(f"Cannot convert from non-dictionary, got {type(value)}")
-
-    @classmethod
-    def modify(cls, mode: int, value: int, level: int) -> int:
+    def modify(cls, mode: int, value: int, level: int, cap: bool) -> int:
         match mode:
             case 0:
-                return cls.cap((level * value) // 100)
+                ret = (level * value) // 100
             case 1:
-                return cls.cap(level + value)
+                ret = level + value
             case 2:
-                return cls.cap(int(level ** (value / 100)))
+                ret = int((level ** (value / 100)).real)
             case _:
                 raise Exception(f"Bad mode {mode} in Modify Levels option")
+        if cap:
+            ret = cls.cap(ret)
+        return ret
 
 
 class ModifyEncounterRates(Choice):

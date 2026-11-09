@@ -41,11 +41,11 @@ def adjust_and_modify(world: "PokemonBWWorld"):
     trainer_adjust = world.options.adjust_levels.is_trainer_by_distance
     mod_value = world.options.modify_levels.value
     if isinstance(mod_value, dict):
-        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"]},
-                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"]}]
+        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"], "cap": False},
+                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"], "cap": False}]
     else:
-        calcs: list[dict[str, int | str]] = mod_value
-    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"])]
+        calcs: list[dict[str, int | str | bool]] = mod_value
+    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"], calc["cap"])]
     wild_calcs, trainer_calcs = (tuple(calc for calc in calcs if calc["type"] == "Wild"),
                                  tuple(calc for calc in calcs if calc["type"] == "Trainer"))
 
@@ -58,9 +58,11 @@ def adjust_and_modify(world: "PokemonBWWorld"):
         if wild_adjust or wild_calcs:
             for data in world.wild_encounter.values():
                 new_level = adjust_wild(data, distances, first_level, max_distance) if wild_adjust else (data.min_level, data.max_level)
-                for calc in wild_calcs:
-                    new_level = (ModifyLevels.modify(calc["mode"], calc["value"], new_level[0]),
-                                 ModifyLevels.modify(calc["mode"], calc["value"], new_level[1]))
+                if wild_calcs:
+                    for calc in wild_calcs:
+                        new_level = (ModifyLevels.modify(calc["mode"], calc["value"], new_level[0], calc["cap"]),
+                                     ModifyLevels.modify(calc["mode"], calc["value"], new_level[1], calc["cap"]))
+                    new_level = ModifyLevels.cap(new_level[0]), ModifyLevels.cap(new_level[1])
                 if (data.min_level, data.max_level) != new_level:
                     data.min_level, data.max_level = new_level
                     data.write |= 1
@@ -68,11 +70,14 @@ def adjust_and_modify(world: "PokemonBWWorld"):
         if trainer_adjust or trainer_calcs:
             for t_entry in world.trainer_teams:
                 t_data = trainer_table[t_entry.trainer_id - 1]
-                if t_data.do_not_adjust:
-                    continue
-                new_level = adjust_trainer(t_entry, t_data, distances, first_level, max_distance) if trainer_adjust else t_entry.level
-                for calc in trainer_calcs:
-                    new_level = ModifyLevels.modify(calc["mode"], calc["value"], new_level)
+                if not t_data.do_not_adjust and trainer_adjust:
+                    new_level = adjust_trainer(t_entry, t_data, distances, first_level, max_distance)
+                else:
+                    new_level = t_entry.level
+                if trainer_calcs:
+                    for calc in trainer_calcs:
+                        new_level = ModifyLevels.modify(calc["mode"], calc["value"], new_level, calc["cap"])
+                    new_level = ModifyLevels.cap(new_level)
                 if new_level != t_entry.level:
                     t_entry.level = new_level
                     t_entry.write |= 1

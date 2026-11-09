@@ -34,11 +34,11 @@ def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Z
     # regarding modify levels
     mod_value = bw_patch_instance.world.options.modify_levels.value
     if isinstance(mod_value, dict):
-        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"]},
-                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"]}]
+        calcs = [{"type": "Wild", "mode": mod_value["Wild mode"], "value": mod_value["Wild value"], "cap": False},
+                 {"type": "Trainer", "mode": mod_value["Trainer mode"], "value": mod_value["Trainer value"], "cap": False}]
     else:
-        calcs: list[dict[str, int | str]] = mod_value
-    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"])]
+        calcs: list[dict[str, int | str | bool]] = mod_value
+    calcs = [calc for calc in calcs if ModifyLevels.is_modified(calc["mode"], calc["value"], calc["cap"])]
     trainer_calcs = tuple(calc for calc in calcs if calc["type"] == "Trainer")
 
     slots: list[bytearray] = [
@@ -48,11 +48,11 @@ def write_species(bw_patch_instance: "PokemonBWPatch", opened_zipfile: zipfile.Z
 
     for pokemon in bw_patch_instance.world.trainer_teams:
         t_data = trainer_table[pokemon.trainer_id - 1]
-        if adjust_sphere:
-            new_level = adjust_trainer(pokemon, t_data, distances, first_level, max_distance) if not t_data.do_not_adjust else pokemon.level
+        if adjust_sphere and not t_data.do_not_adjust:
+            new_level = adjust_trainer(pokemon, t_data, distances, first_level, max_distance)
             for calc in trainer_calcs:
-                new_level = ModifyLevels.modify(calc["mode"], calc["value"], new_level)
-            new_level = max(new_level, pokemon.level * (100 - tolerance) // 100, 1)
+                new_level = ModifyLevels.modify(calc["mode"], calc["value"], new_level, calc["cap"])
+            new_level = ModifyLevels.cap(max(new_level, pokemon.level * (100 - tolerance) // 100, 1))
         else:
             new_level = pokemon.level
         if new_level != pokemon.level:
