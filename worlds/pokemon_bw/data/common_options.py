@@ -58,8 +58,8 @@ class ToggleSet(OptionSet, metaclass=AssembleToggles):
     aliases_convert: list[tuple[str, str]] = []
     ignore_deprecated: list[str] = []
 
-    def __init__(self, value: Iterable[str]):
-        super().__init__(value)
+    def __init__(self, value: Iterable[str], random_str: str | None = None):
+        super().__init__(value, random_str)
         self.value: set[str] = set(val.casefold() for val in value)
         for alias, actual in self.aliases_convert:
             if alias.casefold() in self.value:
