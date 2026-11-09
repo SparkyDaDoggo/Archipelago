@@ -4,22 +4,20 @@ apworld
 - specialized unittests for rando modifiers
 - correlate mods in move data rando not working? => Special unit test cases
 - Keep levels and amount still broken, see unittests
-- too many pokemon for a trainer written into patch file
-- location group for show-a-pokemon locations
-- scaling by sphere makes Clay stronger than skyla when getting Tidal Bell and Quake Badge at the same time.
-  - Probably caused by Clay requiring many more events than skyla
-  - Brycen gets same treatment
-- trainers change deerling form with season, regardless of what species was set in trainer teams data
 
 rom
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
 - give national dex at start, will be turned into an item later on like running shoes
+- make liberty garden grunts not disappearing
+- make dragonspiral grunt trainers not disappear
+- remove reshiram/zekrom shiny lock
+- remove time requirement of tubeline bridge bikers
+- remove once-per-day access to the riches
+- remove victini shiny lock
 
 both
 - fill more funny dialog
 - add funny text "your free trial has ended" to old man in Striaton
-- loot sack grunts broken? apparently not moving even after beating lenora
-- frequent white screens
 
 # Not urgent
 
@@ -49,8 +47,6 @@ both
   - make n in nacrene trigger independently of nacrene stuff, but together with cheren
   - pinwheel shadow triad member send both ways
   - move rumination field rocks a bit
-  - make liberty garden grunts not disappearing
-  - remove victini shiny lock
   - waking up the desert resort statues says "It was a Darmanitan" -> Change to actual pokemon name
   - relic castle 1f worker send both ways
   - relic castle worker that sends you back down to sand filled room once you reached that at least once
@@ -61,9 +57,6 @@ both
   - add traffic cones to mistralton gym entrance
   - both icirrus city scenes by trigger
   - dragonspiral rocks inside, cleared after bryce fight
-  - make dragonspiral grunt trainers not disappear
-  - remove reshiram/zekrom shiny lock
-  - remove time requirement of tubeline bridge bikers
   - fix route 9 infielder script
   - add rocks to challengers cave entrance
   - remove giant chasm warps to snow
@@ -72,7 +65,6 @@ both
   - remove closing doors in league
   - add rock on landing stage that is cleared exactly when champion room is messed up
   - some way to still get back to landing stage from champion room after champion room is repaired
-  - remove once-per-day access to the riches
 
 # Single reports, cannot recreate, need to wait for more reports
 
@@ -88,6 +80,9 @@ both
 - liberty garden blackscreen
 - one case of goal not triggering reported in sync
 - master ball seller not showing up again?
+- too many pokemon for a trainer written into patch file
+- frequent white screens in player room
+- loot sack grunts broken? apparently not moving even after beating lenora
 
 # Spreadsheet and sync bugs list because I don't know where else to put them
 

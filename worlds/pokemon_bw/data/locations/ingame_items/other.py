@@ -5,7 +5,6 @@ from ... import FlagLocationData, IfExtRules as IF
 table: dict[str, FlagLocationData] = {
     "Nuvema Town - Item from Mom after first fight": FlagLocationData(0x189, always_default, "Player's House", None, None),
     "Nuvema Town - Item #2 from Mom": FlagLocationData(0x185, always_default, "Nuvema Town", None, IF(shuffled_doors, has_introduced_junipers_lab)),
-    # Vanilla location of Super Rod
     "Nuvema Town - Item from Looker after beating Ghetsis": FlagLocationData(0x18A, post_ghetsis, "Player's House", None, has_beaten_ghetsis),
     "Route 1 - Item after catching tutorial #1": FlagLocationData(0x18B, always_default, "Route 1 East", None, None),
     "Route 1 - Item after catching tutorial #2": FlagLocationData(0x18B, always_default, "Route 1 East", None, None),
@@ -15,7 +14,6 @@ table: dict[str, FlagLocationData] = {
     "Route 1 - Item from woman": FlagLocationData(132, always_default, "Route 1 East", None, None),
     "Route 1 - Item from ranger Brenda": FlagLocationData(1420+531, always_default, "Route 1 West", None, None),
     "Route 1 - Item from ranger Claude": FlagLocationData(1420+532, always_default, "Route 1 West", None, None),
-    # Requires pokémon being randomized
     "P2 Laboratory - Item from scientist #1": FlagLocationData(0x1E0, wild_rando_dependant, "P2 Laboratory", None, IF(randomized_wild, has_genesect)),
     "P2 Laboratory - Item from scientist #2": FlagLocationData(0x1E0, wild_rando_dependant, "P2 Laboratory", None, IF(randomized_wild, has_genesect)),
     "Accumula Town - Item from man in north west building": FlagLocationData(109, always_default, "Accumula Town North Left House 2F", None, None),
@@ -39,7 +37,6 @@ table: dict[str, FlagLocationData] = {
     "Nacrene City - Item from girl in west building": FlagLocationData(301, always_default, "Nacrene City South West Left House", None, None),
     "Nacrene City - Item from waitress in Café Warehouse": FlagLocationData(0x1B7, always_default, "Café Warehouse", None, None),
     "Nacrene City - Item from Bianca": FlagLocationData(0x18F, always_default, "Nacrene City", None, IF(shuffled_doors, has_defeated_nacrene_gym)),
-    # Vanilla location of Light/Dark Stone
     "Nacrene City - Item from Lenora after Relic Castle": FlagLocationData(0x195, always_default, "Nacrene City", None, has_confronted_ghetsis_relic_castle),
     "Nacrene Gym - Gym guide item": FlagLocationData(119, always_default, "Nacrene Gym", None, None),
     "Pinwheel Forest Outside - Item from challenge rock": FlagLocationData(0x1B8, always_default, "Pinwheel Forest Outside", None, has_fighting_type_species),
@@ -47,7 +44,6 @@ table: dict[str, FlagLocationData] = {
     "Pinwheel Forest - Item from ranger Audra": FlagLocationData(1420+29, always_default, "Pinwheel Forest West", None, None),
     "Pinwheel Forest - Item from ranger Irene": FlagLocationData(1420+27, always_default, "Pinwheel Forest West", None, None),
     "Pinwheel Forest - Item from ranger Miguel": FlagLocationData(1420+28, always_default, "Pinwheel Forest West", None, None),
-    # Vanilla location of Dragon Skull
     "Pinwheel Forest - Stolen item from Plasma grunt": FlagLocationData(0x187, always_default, "Pinwheel Forest West", None, None),
     "Pinwheel Forest - Item from Lenora": FlagLocationData(0x188, always_default, "Pinwheel Forest West", None, None),
     "Skyarrow Bridge - Item from hiker in gate": FlagLocationData(268, always_default, "Skyarrow Bridge South Gate", None, None),
@@ -82,7 +78,6 @@ table: dict[str, FlagLocationData] = {
     # Not changing the script
     # "Passerby Analytics HQ - Item for completing all survey requests": FlagLocationData(0000000, always_default, "Castelia City", None, None),
     "Castelia Gym - Gym guide item": FlagLocationData(120, always_default, "Castelia Gym Entrance", None, None),
-    # Royal Unova only accessible at season-dependant day times
     "Royal Unova - Item for defeating every trainer": FlagLocationData(0x198, post_ghetsis, "Castelia City Cruise Dock", None, has_beaten_ghetsis),
     "Route 4 - Item from Professor Juniper #1": FlagLocationData(0x19B, always_default, "Nimbasa South Gate", None, None),
     "Route 4 - Item from Professor Juniper #2": FlagLocationData(0x19B, always_default, "Nimbasa South Gate", None, None),
@@ -166,7 +161,6 @@ table: dict[str, FlagLocationData] = {
     # This is not only unreasonable, but also has an astronomically low softlock chance if we don't document breeding data and consider it during generation
     "Icirrus City - Item from Pokémon Fan Club chairman for gaining 99 levels": FlagLocationData(
         253, always_excluded, "Icirrus City Pokémon Fan Club", disabled, has_beaten_ghetsis),
-    "Icirrus City - Item from the former Team Rocket member's wife (Winter)": FlagLocationData(134, season_dependant, "Icirrus City South House", None, None),
     "Icirrus Gym - Gym guide item": FlagLocationData(124, always_default, "Icirrus Gym", None, None),
     "Dragonspiral Tower - Item from Cedric Juniper": FlagLocationData(310, always_default, "Dragonspiral Tower Entrance", None, has_defeated_icirrus_gym),
     "Route 8 - Item from Bianca": FlagLocationData(0x1A8, always_default, "Route 8", None, None),
@@ -225,6 +219,7 @@ table: dict[str, FlagLocationData] = {
 
 seasonal: dict[str, FlagLocationData] = {
     "Route 6 - Item from scientist for all Deerling forms": FlagLocationData(350, deerling_dependant, "Season Research Lab", None, can_catch_all_deerlings),
+    "Icirrus City - Item from the former Team Rocket member's wife (Winter)": FlagLocationData(134, season_dependant, "Icirrus City South House", None, None),
 }
 
 dust_clouds: dict[str, FlagLocationData] = {

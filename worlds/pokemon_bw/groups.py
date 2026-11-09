@@ -44,4 +44,20 @@ def get_location_groups() -> dict[str, set[str]]:
         # Leftover from before these were auto excluded, not removing it to prevent breaking old yamls
         # Also, having an empty group raises unittest failures
         "Post-Ghetsis locations": {"Nuvema Town - Item from Looker after beating Ghetsis"},
+        "Show-a-pokémon locations": {
+            "Route 6 - Item from scientist for all Deerling forms",
+            "Pinwheel Forest Outside - Item from challenge rock",
+            "Driftveil City - Item from lady asking for a pokémon knowing a certain TM move",
+            "Icirrus City - Item from Pokémon Fan Club chairman for gaining 25 levels",
+            "Icirrus City - Item from Pokémon Fan Club chairman for gaining 50 levels",
+            "Lacunosa Town - Item from girl for showing a Shaymin",
+            "P2 Laboratory - Item from scientist #1",
+            "P2 Laboratory - Item from scientist #2",
+            "Village Bridge - Item from fisherman for showing a certain pokémon caught today #1",
+            "Village Bridge - Item from fisherman for showing a certain pokémon caught today #2",
+            "Village Bridge - Item from fisherman for showing a certain pokémon caught today #3",
+            "Village Bridge - Item from fisherman for showing a certain pokémon caught today #4",
+            "Village Bridge - Item from fisherman for showing a certain pokémon caught today #5",
+            "Castelia City - Item from harlequin in Studio Castelia",
+        },
     }
