@@ -14,6 +14,8 @@ Versions are sorted in ascending order, i.e. the most recent changes are at the 
 - Fixed Clay and Iris/Drayden having higher leveled pokémon in sphere-based scaling when becoming accessible at the same time as later gym leaders
 - Added `Show-a-pokémon locations` location group
 - Fixed `Icirrus City - Item from the former Team Rocket member's wife (Winter)` not being in the `Season-dependant items` location group
+- Fixed incorrect levels for certain boss trainers when using `Modify Levels`
+- Added the `cap` argument to `Modify Levels` (advanced mode) and increased allowed value ranges
 
 ### Is this version compatible with older multiworld slots and save files?
 Yes, back to 0.4.0
