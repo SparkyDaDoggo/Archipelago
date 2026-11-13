@@ -6,6 +6,7 @@ apworld
 - Keep levels and amount still broken, see unittests
 - route 17 trainer apparently vanilla levels despite distance and sphere scaling
 - big jumps in sphere scaling => remove empty spheres from calculations
+- charles and elmer are just annoying
 
 rom
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
