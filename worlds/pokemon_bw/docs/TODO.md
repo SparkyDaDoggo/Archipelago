@@ -5,6 +5,7 @@ apworld
 - correlate mods in move data rando not working? => Special unit test cases
 - Keep levels and amount still broken, see unittests
 - route 17 trainer apparently vanilla levels despite distance and sphere scaling
+- big jumps in sphere scaling => remove empty spheres from calculations
 
 rom
 - trainer flags setzen lassen wo es in den scripts fehlt und dann besiegte trainer IDs ins datastorage
